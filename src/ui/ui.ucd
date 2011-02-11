@@ -1,0 +1,229 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<editmodel:ClassDiagramEditModel xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:editmodel="editmodel.xmi" xmlns:options="options.xmi" size="1515,928" id="ui" metadata="uml2-1.0" initialized="true" scrolledX="810" scrolledY="197" tag="1000" key="32303037303533312D3130303020526174204D6F6E69746F722F4372656174697665">
+  <children xsi:type="editmodel:ClassEditModel" name="FormZoneType" location="50,695" size="136,67" id="ui/FormZoneType">
+    <children xsi:type="editmodel:CompartmentEditModel"/>
+    <children xsi:type="editmodel:CompartmentEditModel" size="54,18">
+      <children xsi:type="editmodel:MethodEditModel" name="open" id="ui/FormZoneType#open(I)"/>
+    </children>
+    <children xsi:type="editmodel:CompartmentEditModel"/>
+    <classifierPreferences xsi:type="editmodel:UMLClassDiagramClassifierPreference" showStereotype="true" attributeSorter="Natural" methodSorter="Natural" innerClassSorter="Natural" showPublicAttributes="true" showPackageAttributes="true" showStaticAttributes="true" showPublicMethods="true" showPackageMethods="true" showStaticMethods="true" showPublicInnerClasses="true" showPackageInnerClasses="true" showStaticInnerClasses="true" packageIndication="3" showAttributeProperty="true"/>
+  </children>
+  <children xsi:type="editmodel:ClassEditModel" name="MainGUI" location="915,239" size="174,319" id="ui/MainGUI" runTimeClassModel="awt_video_main,loadData([Ljava.lang.String;),btn_start_record_enable(Z),btn_stop_record_enable(Z),MainGUI(),updateStats(JIFIIFI),setController(Lcontrol.ui.ControllerUI;),btn_not_rearing_enable(Z),clearForm(),btn_rearing_now_enable(Z),getShell(),getStatusLabel(),controller,awt_video_sec,closeWindow()">
+    <children xsi:type="editmodel:CompartmentEditModel" size="134,54">
+      <children xsi:type="editmodel:AttributeEditModel" name="awt_video_main" id="ui/MainGUI#awt_video_main"/>
+      <children xsi:type="editmodel:AttributeEditModel" name="awt_video_sec" id="ui/MainGUI#awt_video_sec"/>
+      <children xsi:type="editmodel:AttributeEditModel" name="controller" id="ui/MainGUI#controller"/>
+    </children>
+    <children xsi:type="editmodel:CompartmentEditModel" size="151,216">
+      <children xsi:type="editmodel:MethodEditModel" name="MainGUI" id="ui/MainGUI#MainGUI()"/>
+      <children xsi:type="editmodel:MethodEditModel" name="btn_not_rearing_enable" id="ui/MainGUI#btn_not_rearing_enable(Z)"/>
+      <children xsi:type="editmodel:MethodEditModel" name="btn_rearing_now_enable" id="ui/MainGUI#btn_rearing_now_enable(Z)"/>
+      <children xsi:type="editmodel:MethodEditModel" name="btn_start_record_enable" id="ui/MainGUI#btn_start_record_enable(Z)"/>
+      <children xsi:type="editmodel:MethodEditModel" name="btn_stop_record_enable" id="ui/MainGUI#btn_stop_record_enable(Z)"/>
+      <children xsi:type="editmodel:MethodEditModel" name="clearForm" id="ui/MainGUI#clearForm()"/>
+      <children xsi:type="editmodel:MethodEditModel" name="closeWindow" id="ui/MainGUI#closeWindow()"/>
+      <children xsi:type="editmodel:MethodEditModel" name="getShell" id="ui/MainGUI#getShell()"/>
+      <children xsi:type="editmodel:MethodEditModel" name="getStatusLabel" id="ui/MainGUI#getStatusLabel()"/>
+      <children xsi:type="editmodel:MethodEditModel" name="loadData" id="ui/MainGUI#loadData([Ljava.lang.String;)"/>
+      <children xsi:type="editmodel:MethodEditModel" name="setController" id="ui/MainGUI#setController(Lcontrol.ui.ControllerUI;)"/>
+      <children xsi:type="editmodel:MethodEditModel" name="updateStats" id="ui/MainGUI#updateStats(JIFIIFI)"/>
+    </children>
+    <children xsi:type="editmodel:CompartmentEditModel" size="0,0"/>
+    <sourceConnections xsi:type="editmodel:DependencyEditModel" autoLocated="true" id="ui/MainGUI-Soyatec::Access->ui/BaseUI*ui/MainGUI-Standard::Derive->ui/BaseUI" source="//@children.1" target="//@children.8" targetEnd="//@children.1/@sourceConnections.0/@children.2" label="//@children.1/@sourceConnections.0/@children.0" sourceEnd="//@children.1/@sourceConnections.0/@children.1" connectionRouterKind="Manual">
+      <children xsi:type="editmodel:WireLabelEditModel" name="«Access, Derive»" size="87,14" anchorKind="MiddlePart"/>
+      <children xsi:type="editmodel:AssociationEndEditModel" location="0,49" attachSource="true"/>
+      <children xsi:type="editmodel:AssociationEndEditModel" location="129,139"/>
+    </sourceConnections>
+    <sourceConnections xsi:type="editmodel:GeneralizationEditModel" autoLocated="true" id="ui/BaseUI&lt;-ui/MainGUI" source="//@children.1" target="//@children.7/@sourceConnections.1" targetEnd="//@children.1/@sourceConnections.1/@children.1" sourceEnd="//@children.1/@sourceConnections.1/@children.0" connectionRouterKind="GeneralizationManhattan">
+      <children xsi:type="editmodel:AssociationEndEditModel" location="87,0" anchorKind="FixedAtEdge" attachSource="true"/>
+      <children xsi:type="editmodel:AssociationEndEditModel"/>
+    </sourceConnections>
+    <classifierPreferences xsi:type="editmodel:UMLClassDiagramClassifierPreference" showStereotype="true" attributeSorter="Natural" methodSorter="Natural" innerClassSorter="Natural" showPublicAttributes="true" showPackageAttributes="true" showStaticAttributes="true" showPublicMethods="true" showPackageMethods="true" showStaticMethods="true" showPublicInnerClasses="true" showPackageInnerClasses="true" showStaticInnerClasses="true" packageIndication="3" showAttributeProperty="true"/>
+  </children>
+  <children xsi:type="editmodel:ClassEditModel" name="RatInfoForm" location="1322,239" size="173,175" id="ui/RatInfoForm" runTimeClassModel="clearForm(),RatInfoForm(),loadData([Ljava.lang.String;),show(Z),getShell(),controller,setController(Lcontrol.ui.ControllerUI;)">
+    <children xsi:type="editmodel:CompartmentEditModel" size="150,18">
+      <children xsi:type="editmodel:AttributeEditModel" name="controller" id="ui/RatInfoForm#controller"/>
+    </children>
+    <children xsi:type="editmodel:CompartmentEditModel" size="91,108">
+      <children xsi:type="editmodel:MethodEditModel" name="RatInfoForm" id="ui/RatInfoForm#RatInfoForm()"/>
+      <children xsi:type="editmodel:MethodEditModel" name="clearForm" id="ui/RatInfoForm#clearForm()"/>
+      <children xsi:type="editmodel:MethodEditModel" name="getShell" id="ui/RatInfoForm#getShell()"/>
+      <children xsi:type="editmodel:MethodEditModel" name="loadData" id="ui/RatInfoForm#loadData([Ljava.lang.String;)"/>
+      <children xsi:type="editmodel:MethodEditModel" name="setController" id="ui/RatInfoForm#setController(Lcontrol.ui.ControllerUI;)"/>
+      <children xsi:type="editmodel:MethodEditModel" name="show" id="ui/RatInfoForm#show(Z)"/>
+    </children>
+    <children xsi:type="editmodel:CompartmentEditModel" size="0,0"/>
+    <sourceConnections xsi:type="editmodel:DependencyEditModel" autoLocated="true" id="ui/RatInfoForm-Soyatec::Access->ui/BaseUI*ui/RatInfoForm-Standard::Derive->ui/BaseUI" source="//@children.2" target="//@children.8" targetEnd="//@children.2/@sourceConnections.0/@children.2" label="//@children.2/@sourceConnections.0/@children.0" sourceEnd="//@children.2/@sourceConnections.0/@children.1" connectionRouterKind="Manual">
+      <children xsi:type="editmodel:WireLabelEditModel" name="«Access, Derive»" size="87,14" anchorKind="MiddlePart"/>
+      <children xsi:type="editmodel:AssociationEndEditModel" location="0,59" attachSource="true"/>
+      <children xsi:type="editmodel:AssociationEndEditModel" location="148,93"/>
+    </sourceConnections>
+    <sourceConnections xsi:type="editmodel:GeneralizationEditModel" autoLocated="true" id="ui/BaseUI&lt;-ui/RatInfoForm" source="//@children.2" target="//@children.7/@sourceConnections.1" targetEnd="//@children.2/@sourceConnections.1/@children.1" sourceEnd="//@children.2/@sourceConnections.1/@children.0" connectionRouterKind="GeneralizationManhattan">
+      <children xsi:type="editmodel:AssociationEndEditModel" location="86,0" anchorKind="FixedAtEdge" attachSource="true"/>
+      <children xsi:type="editmodel:AssociationEndEditModel"/>
+    </sourceConnections>
+    <classifierPreferences xsi:type="editmodel:UMLClassDiagramClassifierPreference" showStereotype="true" attributeSorter="Natural" methodSorter="Natural" innerClassSorter="Natural" showPublicAttributes="true" showPackageAttributes="true" showStaticAttributes="true" showPublicMethods="true" showPackageMethods="true" showStaticMethods="true" showPublicInnerClasses="true" showPackageInnerClasses="true" showStaticInnerClasses="true" packageIndication="3" showAttributeProperty="true"/>
+  </children>
+  <children xsi:type="editmodel:ClassEditModel" name="CamOptions" location="1119,239" size="173,139" id="ui/CamOptions" runTimeClassModel="clearForm(),loadData([Ljava.lang.String;),controller,CamOptions(),setController(Lcontrol.ui.ControllerUI;)">
+    <children xsi:type="editmodel:CompartmentEditModel" size="150,18">
+      <children xsi:type="editmodel:AttributeEditModel" name="controller" id="ui/CamOptions#controller"/>
+    </children>
+    <children xsi:type="editmodel:CompartmentEditModel" size="91,72">
+      <children xsi:type="editmodel:MethodEditModel" name="CamOptions" id="ui/CamOptions#CamOptions()"/>
+      <children xsi:type="editmodel:MethodEditModel" name="clearForm" id="ui/CamOptions#clearForm()"/>
+      <children xsi:type="editmodel:MethodEditModel" name="loadData" id="ui/CamOptions#loadData([Ljava.lang.String;)"/>
+      <children xsi:type="editmodel:MethodEditModel" name="setController" id="ui/CamOptions#setController(Lcontrol.ui.ControllerUI;)"/>
+    </children>
+    <children xsi:type="editmodel:CompartmentEditModel" size="0,0"/>
+    <sourceConnections xsi:type="editmodel:DependencyEditModel" autoLocated="true" id="ui/CamOptions-Soyatec::Access->ui/BaseUI*ui/CamOptions-Standard::Derive->ui/BaseUI" source="//@children.3" target="//@children.8" targetEnd="//@children.3/@sourceConnections.0/@children.2" label="//@children.3/@sourceConnections.0/@children.0" sourceEnd="//@children.3/@sourceConnections.0/@children.1" connectionRouterKind="Manual">
+      <children xsi:type="editmodel:WireLabelEditModel" name="«Access, Derive»" size="87,14" anchorKind="MiddlePart"/>
+      <children xsi:type="editmodel:AssociationEndEditModel" location="0,31" attachSource="true"/>
+      <children xsi:type="editmodel:AssociationEndEditModel" location="148,102"/>
+    </sourceConnections>
+    <sourceConnections xsi:type="editmodel:GeneralizationEditModel" autoLocated="true" id="ui/BaseUI&lt;-ui/CamOptions" source="//@children.3" target="//@children.7/@sourceConnections.1" targetEnd="//@children.3/@sourceConnections.1/@children.1" sourceEnd="//@children.3/@sourceConnections.1/@children.0" connectionRouterKind="GeneralizationManhattan">
+      <children xsi:type="editmodel:AssociationEndEditModel" location="86,0" anchorKind="FixedAtEdge" attachSource="true"/>
+      <children xsi:type="editmodel:AssociationEndEditModel"/>
+    </sourceConnections>
+    <classifierPreferences xsi:type="editmodel:UMLClassDiagramClassifierPreference" showStereotype="true" attributeSorter="Natural" methodSorter="Natural" innerClassSorter="Natural" showPublicAttributes="true" showPackageAttributes="true" showStaticAttributes="true" showPublicMethods="true" showPackageMethods="true" showStaticMethods="true" showPublicInnerClasses="true" showPackageInnerClasses="true" showStaticInnerClasses="true" packageIndication="3" showAttributeProperty="true"/>
+  </children>
+  <children xsi:type="editmodel:ClassEditModel" name="GroupsForm" location="475,239" size="188,406" id="ui/GroupsForm" runTimeClassModel="addNewTab(ILjava.lang.String;Ljava.lang.String;Ljava.lang.String;Ljava.lang.String;),clearForm(),loadData([Ljava.lang.String;),controller,setController(Lcontrol.ui.ControllerUI;),ui.GroupsForm.TabContents,GroupsForm()">
+    <children xsi:type="editmodel:CompartmentEditModel" size="152,18">
+      <children xsi:type="editmodel:AttributeEditModel" name="controller" id="ui/GroupsForm#controller"/>
+    </children>
+    <children xsi:type="editmodel:CompartmentEditModel" size="91,90">
+      <children xsi:type="editmodel:MethodEditModel" name="GroupsForm" id="ui/GroupsForm#GroupsForm()"/>
+      <children xsi:type="editmodel:MethodEditModel" name="addNewTab" id="ui/GroupsForm#addNewTab(ILjava.lang.String;Ljava.lang.String;Ljava.lang.String;Ljava.lang.String;)"/>
+      <children xsi:type="editmodel:MethodEditModel" name="clearForm" id="ui/GroupsForm#clearForm()"/>
+      <children xsi:type="editmodel:MethodEditModel" name="loadData" id="ui/GroupsForm#loadData([Ljava.lang.String;)"/>
+      <children xsi:type="editmodel:MethodEditModel" name="setController" id="ui/GroupsForm#setController(Lcontrol.ui.ControllerUI;)"/>
+    </children>
+    <children xsi:type="editmodel:CompartmentEditModel" size="165,239">
+      <children xsi:type="editmodel:ClassEditModel" targetConnections="//@children.4/@sourceConnections.0" name="TabContents" location="4698,2611" size="165,237" id="ui/GroupsForm$TabContents" runTimeClassModel="lbl_notes,lbl_name,cmpst,txt_notes,lbl_no_rats,txt_name,lbl_rats_numbering,txt_rats_numbers,tab,txt_no_rats,grp_id">
+        <children xsi:type="editmodel:CompartmentEditModel" size="142,198">
+          <children xsi:type="editmodel:AttributeEditModel" name="cmpst" id="ui/GroupsForm$TabContents#cmpst"/>
+          <children xsi:type="editmodel:AttributeEditModel" name="grp_id" id="ui/GroupsForm$TabContents#grp_id"/>
+          <children xsi:type="editmodel:AttributeEditModel" name="lbl_name" id="ui/GroupsForm$TabContents#lbl_name"/>
+          <children xsi:type="editmodel:AttributeEditModel" name="lbl_no_rats" id="ui/GroupsForm$TabContents#lbl_no_rats"/>
+          <children xsi:type="editmodel:AttributeEditModel" name="lbl_notes" id="ui/GroupsForm$TabContents#lbl_notes"/>
+          <children xsi:type="editmodel:AttributeEditModel" name="lbl_rats_numbering" id="ui/GroupsForm$TabContents#lbl_rats_numbering"/>
+          <children xsi:type="editmodel:AttributeEditModel" name="tab" id="ui/GroupsForm$TabContents#tab"/>
+          <children xsi:type="editmodel:AttributeEditModel" name="txt_name" id="ui/GroupsForm$TabContents#txt_name"/>
+          <children xsi:type="editmodel:AttributeEditModel" name="txt_no_rats" id="ui/GroupsForm$TabContents#txt_no_rats"/>
+          <children xsi:type="editmodel:AttributeEditModel" name="txt_notes" id="ui/GroupsForm$TabContents#txt_notes"/>
+          <children xsi:type="editmodel:AttributeEditModel" name="txt_rats_numbers" id="ui/GroupsForm$TabContents#txt_rats_numbers"/>
+        </children>
+        <children xsi:type="editmodel:CompartmentEditModel" size="0,0"/>
+        <children xsi:type="editmodel:CompartmentEditModel" size="0,0"/>
+        <classifierPreferences xsi:type="editmodel:UMLClassDiagramClassifierPreference" showStereotype="true" attributeSorter="Natural" methodSorter="Natural" innerClassSorter="Natural" showPublicAttributes="true" showPackageAttributes="true" showStaticAttributes="true" showPublicMethods="true" showPackageMethods="true" showStaticMethods="true" showPublicInnerClasses="true" showPackageInnerClasses="true" showStaticInnerClasses="true" packageIndication="3" showAttributeProperty="true"/>
+      </children>
+    </children>
+    <sourceConnections xsi:type="editmodel:DependencyEditModel" autoLocated="true" id="ui/GroupsForm-Soyatec::Import->ui/GroupsForm$TabContents" source="//@children.4" target="//@children.4/@children.2/@children.0" targetEnd="//@children.4/@sourceConnections.0/@children.2" label="//@children.4/@sourceConnections.0/@children.0" sourceEnd="//@children.4/@sourceConnections.0/@children.1" connectionRouterKind="Manual">
+      <children xsi:type="editmodel:WireLabelEditModel" name="«Import»" size="41,14" anchorKind="MiddlePart"/>
+      <children xsi:type="editmodel:AssociationEndEditModel" location="188,254" attachSource="true"/>
+      <children xsi:type="editmodel:AssociationEndEditModel" location="0,74"/>
+    </sourceConnections>
+    <sourceConnections xsi:type="editmodel:DependencyEditModel" autoLocated="true" id="ui/GroupsForm-Soyatec::Access->ui/BaseUI*ui/GroupsForm-Standard::Derive->ui/BaseUI" source="//@children.4" target="//@children.8" targetEnd="//@children.4/@sourceConnections.1/@children.2" label="//@children.4/@sourceConnections.1/@children.0" sourceEnd="//@children.4/@sourceConnections.1/@children.1" connectionRouterKind="Manual">
+      <children xsi:type="editmodel:WireLabelEditModel" name="«Access, Derive»" size="87,14" anchorKind="MiddlePart"/>
+      <children xsi:type="editmodel:AssociationEndEditModel" location="188,60" attachSource="true"/>
+      <children xsi:type="editmodel:AssociationEndEditModel" location="28,139"/>
+    </sourceConnections>
+    <sourceConnections xsi:type="editmodel:GeneralizationEditModel" autoLocated="true" id="ui/BaseUI&lt;-ui/GroupsForm" source="//@children.4" target="//@children.7/@sourceConnections.1" targetEnd="//@children.4/@sourceConnections.2/@children.1" sourceEnd="//@children.4/@sourceConnections.2/@children.0" connectionRouterKind="GeneralizationManhattan">
+      <children xsi:type="editmodel:AssociationEndEditModel" location="94,0" anchorKind="FixedAtEdge" attachSource="true"/>
+      <children xsi:type="editmodel:AssociationEndEditModel"/>
+    </sourceConnections>
+    <classifierPreferences xsi:type="editmodel:UMLClassDiagramClassifierPreference" showStereotype="true" attributeSorter="Natural" methodSorter="Natural" innerClassSorter="Natural" showPublicAttributes="true" showPackageAttributes="true" showStaticAttributes="true" showPublicMethods="true" showPackageMethods="true" showStaticMethods="true" showPublicInnerClasses="true" showPackageInnerClasses="true" showStaticInnerClasses="true" packageIndication="3" showAttributeProperty="true"/>
+  </children>
+  <children xsi:type="editmodel:ClassEditModel" name="OptionsWindow" location="693,239" size="192,139" id="ui/OptionsWindow" runTimeClassModel="clearForm(),loadData([Ljava.lang.String;),controller,setController(Lcontrol.ui.ControllerUI;),OptionsWindow()">
+    <children xsi:type="editmodel:CompartmentEditModel" size="169,18">
+      <children xsi:type="editmodel:AttributeEditModel" name="controller" id="ui/OptionsWindow#controller"/>
+    </children>
+    <children xsi:type="editmodel:CompartmentEditModel" size="107,72">
+      <children xsi:type="editmodel:MethodEditModel" name="OptionsWindow" id="ui/OptionsWindow#OptionsWindow()"/>
+      <children xsi:type="editmodel:MethodEditModel" name="clearForm" id="ui/OptionsWindow#clearForm()"/>
+      <children xsi:type="editmodel:MethodEditModel" name="loadData" id="ui/OptionsWindow#loadData([Ljava.lang.String;)"/>
+      <children xsi:type="editmodel:MethodEditModel" name="setController" id="ui/OptionsWindow#setController(Lcontrol.ui.ControllerUI;)"/>
+    </children>
+    <children xsi:type="editmodel:CompartmentEditModel" size="0,0"/>
+    <sourceConnections xsi:type="editmodel:DependencyEditModel" autoLocated="true" id="ui/OptionsWindow-Soyatec::Access->ui/BaseUI*ui/OptionsWindow-Standard::Derive->ui/BaseUI" source="//@children.5" target="//@children.8" targetEnd="//@children.5/@sourceConnections.0/@children.2" label="//@children.5/@sourceConnections.0/@children.0" sourceEnd="//@children.5/@sourceConnections.0/@children.1" connectionRouterKind="Manual">
+      <children xsi:type="editmodel:WireLabelEditModel" name="«Access, Derive»" size="87,14" anchorKind="MiddlePart"/>
+      <children xsi:type="editmodel:AssociationEndEditModel" location="88,0" attachSource="true"/>
+      <children xsi:type="editmodel:AssociationEndEditModel" location="73,139"/>
+    </sourceConnections>
+    <sourceConnections xsi:type="editmodel:GeneralizationEditModel" autoLocated="true" id="ui/BaseUI&lt;-ui/OptionsWindow" source="//@children.5" target="//@children.7/@sourceConnections.1" targetEnd="//@children.5/@sourceConnections.1/@children.1" sourceEnd="//@children.5/@sourceConnections.1/@children.0" connectionRouterKind="GeneralizationManhattan">
+      <children xsi:type="editmodel:AssociationEndEditModel" location="96,0" anchorKind="FixedAtEdge" attachSource="true"/>
+      <children xsi:type="editmodel:AssociationEndEditModel"/>
+    </sourceConnections>
+    <classifierPreferences xsi:type="editmodel:UMLClassDiagramClassifierPreference" showStereotype="true" attributeSorter="Natural" methodSorter="Natural" innerClassSorter="Natural" showPublicAttributes="true" showPackageAttributes="true" showStaticAttributes="true" showPublicMethods="true" showPackageMethods="true" showStaticMethods="true" showPublicInnerClasses="true" showPackageInnerClasses="true" showStaticInnerClasses="true" packageIndication="3" showAttributeProperty="true"/>
+  </children>
+  <children xsi:type="editmodel:ClassEditModel" name="DrawZones" location="272,239" size="173,283" id="ui/DrawZones" runTimeClassModel="is_drawing_now,DrawZones(),loadData([Ljava.lang.String;),clearTable(),addMeasurePoint(Ljava.awt.Point;),editZoneDataInTable(ILjava.lang.String;Ljava.lang.String;),setController(Lcontrol.ui.ControllerUI;),addZoneToTable(Ljava.lang.String;Ljava.lang.String;Ljava.lang.String;),selectZoneInTable(I),clearForm(),getGFXPanel(),show(Z),controller">
+    <children xsi:type="editmodel:CompartmentEditModel" size="150,36">
+      <children xsi:type="editmodel:AttributeEditModel" name="controller" id="ui/DrawZones#controller"/>
+      <children xsi:type="editmodel:AttributeEditModel" name="is_drawing_now" id="ui/DrawZones#is_drawing_now"/>
+    </children>
+    <children xsi:type="editmodel:CompartmentEditModel" size="127,198">
+      <children xsi:type="editmodel:MethodEditModel" name="DrawZones" id="ui/DrawZones#DrawZones()"/>
+      <children xsi:type="editmodel:MethodEditModel" name="addMeasurePoint" id="ui/DrawZones#addMeasurePoint(Ljava.awt.Point;)"/>
+      <children xsi:type="editmodel:MethodEditModel" name="addZoneToTable" id="ui/DrawZones#addZoneToTable(Ljava.lang.String;Ljava.lang.String;Ljava.lang.String;)"/>
+      <children xsi:type="editmodel:MethodEditModel" name="clearForm" id="ui/DrawZones#clearForm()"/>
+      <children xsi:type="editmodel:MethodEditModel" name="clearTable" id="ui/DrawZones#clearTable()"/>
+      <children xsi:type="editmodel:MethodEditModel" name="editZoneDataInTable" id="ui/DrawZones#editZoneDataInTable(ILjava.lang.String;Ljava.lang.String;)"/>
+      <children xsi:type="editmodel:MethodEditModel" name="getGFXPanel" id="ui/DrawZones#getGFXPanel()"/>
+      <children xsi:type="editmodel:MethodEditModel" name="loadData" id="ui/DrawZones#loadData([Ljava.lang.String;)"/>
+      <children xsi:type="editmodel:MethodEditModel" name="selectZoneInTable" id="ui/DrawZones#selectZoneInTable(I)"/>
+      <children xsi:type="editmodel:MethodEditModel" name="setController" id="ui/DrawZones#setController(Lcontrol.ui.ControllerUI;)"/>
+      <children xsi:type="editmodel:MethodEditModel" name="show" id="ui/DrawZones#show(Z)"/>
+    </children>
+    <children xsi:type="editmodel:CompartmentEditModel" size="0,0"/>
+    <sourceConnections xsi:type="editmodel:DependencyEditModel" autoLocated="true" id="ui/DrawZones-Soyatec::Access->ui/BaseUI*ui/DrawZones-Standard::Derive->ui/BaseUI" source="//@children.6" target="//@children.8" targetEnd="//@children.6/@sourceConnections.0/@children.2" label="//@children.6/@sourceConnections.0/@children.0" sourceEnd="//@children.6/@sourceConnections.0/@children.1" connectionRouterKind="Manual">
+      <children xsi:type="editmodel:WireLabelEditModel" name="«Access, Derive»" size="87,14" anchorKind="MiddlePart"/>
+      <children xsi:type="editmodel:AssociationEndEditModel" location="173,87" attachSource="true"/>
+      <children xsi:type="editmodel:AssociationEndEditModel" location="0,115"/>
+    </sourceConnections>
+    <sourceConnections xsi:type="editmodel:GeneralizationEditModel" autoLocated="true" id="ui/BaseUI&lt;-ui/DrawZones" source="//@children.6" target="//@children.7/@sourceConnections.1" targetEnd="//@children.6/@sourceConnections.1/@children.1" sourceEnd="//@children.6/@sourceConnections.1/@children.0" connectionRouterKind="GeneralizationManhattan">
+      <children xsi:type="editmodel:AssociationEndEditModel" location="86,0" anchorKind="FixedAtEdge" attachSource="true"/>
+      <children xsi:type="editmodel:AssociationEndEditModel"/>
+    </sourceConnections>
+    <classifierPreferences xsi:type="editmodel:UMLClassDiagramClassifierPreference" showStereotype="true" attributeSorter="Natural" methodSorter="Natural" innerClassSorter="Natural" showPublicAttributes="true" showPackageAttributes="true" showStaticAttributes="true" showPublicMethods="true" showPackageMethods="true" showStaticMethods="true" showPublicInnerClasses="true" showPackageInnerClasses="true" showStaticInnerClasses="true" packageIndication="3" showAttributeProperty="true"/>
+  </children>
+  <children xsi:type="editmodel:ClassEditModel" name="ExperimentForm" location="50,239" size="192,139" id="ui/ExperimentForm" runTimeClassModel="clearForm(),loadData([Ljava.lang.String;),controller,setController(Lcontrol.ui.ControllerUI;),ExperimentForm()">
+    <children xsi:type="editmodel:CompartmentEditModel" size="169,18">
+      <children xsi:type="editmodel:AttributeEditModel" name="controller" id="ui/ExperimentForm#controller"/>
+    </children>
+    <children xsi:type="editmodel:CompartmentEditModel" size="107,72">
+      <children xsi:type="editmodel:MethodEditModel" name="ExperimentForm" id="ui/ExperimentForm#ExperimentForm()"/>
+      <children xsi:type="editmodel:MethodEditModel" name="clearForm" id="ui/ExperimentForm#clearForm()"/>
+      <children xsi:type="editmodel:MethodEditModel" name="loadData" id="ui/ExperimentForm#loadData([Ljava.lang.String;)"/>
+      <children xsi:type="editmodel:MethodEditModel" name="setController" id="ui/ExperimentForm#setController(Lcontrol.ui.ControllerUI;)"/>
+    </children>
+    <children xsi:type="editmodel:CompartmentEditModel" size="0,0"/>
+    <sourceConnections xsi:type="editmodel:DependencyEditModel" autoLocated="true" id="ui/ExperimentForm-Soyatec::Access->ui/BaseUI*ui/ExperimentForm-Standard::Derive->ui/BaseUI" source="//@children.7" target="//@children.8" targetEnd="//@children.7/@sourceConnections.0/@children.2" label="//@children.7/@sourceConnections.0/@children.0" sourceEnd="//@children.7/@sourceConnections.0/@children.1" connectionRouterKind="Manual">
+      <children xsi:type="editmodel:WireLabelEditModel" name="«Access, Derive»" size="87,14" anchorKind="MiddlePart"/>
+      <children xsi:type="editmodel:AssociationEndEditModel" location="192,40" attachSource="true"/>
+      <children xsi:type="editmodel:AssociationEndEditModel" location="0,91"/>
+    </sourceConnections>
+    <sourceConnections xsi:type="editmodel:GeneralizationEditModel" targetConnections="//@children.6/@sourceConnections.1 //@children.4/@sourceConnections.2 //@children.5/@sourceConnections.1 //@children.1/@sourceConnections.1 //@children.3/@sourceConnections.1 //@children.2/@sourceConnections.1" autoLocated="true" id="ui/BaseUI&lt;-ui/ExperimentForm" source="//@children.7" target="//@children.8" targetEnd="//@children.7/@sourceConnections.1/@children.1" sourceEnd="//@children.7/@sourceConnections.1/@children.0" connectionRouterKind="GeneralizationManhattan">
+      <children xsi:type="editmodel:AssociationEndEditModel" location="192,30" anchorKind="FixedAtEdge" attachSource="true"/>
+      <children xsi:type="editmodel:AssociationEndEditModel" location="0,101" anchorKind="FixedAtEdge"/>
+    </sourceConnections>
+    <classifierPreferences xsi:type="editmodel:UMLClassDiagramClassifierPreference" showStereotype="true" attributeSorter="Natural" methodSorter="Natural" innerClassSorter="Natural" showPublicAttributes="true" showPackageAttributes="true" showStaticAttributes="true" showPublicMethods="true" showPackageMethods="true" showStaticMethods="true" showPublicInnerClasses="true" showPackageInnerClasses="true" showStaticInnerClasses="true" packageIndication="3" showAttributeProperty="true"/>
+  </children>
+  <children xsi:type="editmodel:ClassEditModel" targetConnections="//@children.7/@sourceConnections.0 //@children.7/@sourceConnections.1 //@children.6/@sourceConnections.0 //@children.4/@sourceConnections.1 //@children.5/@sourceConnections.0 //@children.1/@sourceConnections.0 //@children.3/@sourceConnections.0 //@children.2/@sourceConnections.0" name="BaseUI" location="708,50" size="148,139" id="ui/BaseUI">
+    <children xsi:type="editmodel:CompartmentEditModel" size="125,18">
+      <children xsi:type="editmodel:AttributeEditModel" name="controller" id="ui/BaseUI#controller"/>
+    </children>
+    <children xsi:type="editmodel:CompartmentEditModel" size="91,72">
+      <children xsi:type="editmodel:MethodEditModel" name="clearForm" id="ui/BaseUI#clearForm()"/>
+      <children xsi:type="editmodel:MethodEditModel" name="loadData" id="ui/BaseUI#loadData([Ljava.lang.String;)"/>
+      <children xsi:type="editmodel:MethodEditModel" name="setController" id="ui/BaseUI#setController(Lcontrol.ui.ControllerUI;)"/>
+      <children xsi:type="editmodel:MethodEditModel" name="show" id="ui/BaseUI#show(Z)"/>
+    </children>
+    <children xsi:type="editmodel:CompartmentEditModel"/>
+    <classifierPreferences xsi:type="editmodel:UMLClassDiagramClassifierPreference" showStereotype="true" attributeSorter="Natural" methodSorter="Natural" innerClassSorter="Natural" showPublicAttributes="true" showPackageAttributes="true" showStaticAttributes="true" showPublicMethods="true" showPackageMethods="true" showStaticMethods="true" showPublicInnerClasses="true" showPackageInnerClasses="true" showStaticInnerClasses="true" packageIndication="3" showAttributeProperty="true"/>
+  </children>
+  <diagramOptions xsi:type="options:ClassDiagramOptions" level="-1" showScope="InPackage" properties="wireOptions=7;Product=eUML2"/>
+  <boardSetting snapToGeometry="true" gridEnabled="true" gridSpacing="15,15" gridOrigin="0,0" rulerUnit="pixel" gridVisibility="false">
+    <leftRuler/>
+    <topRuler/>
+  </boardSetting>
+  <classDiagramPreferences xsi:type="editmodel:UMLClassDiagramPreference" showPopupBars="true" showConnectionHandles="true" attributeSorter="Natural" methodSorter="Natural" showClassStereotype="true" showPackageStereotype="true" showDependencyStereotype="true" showInterfaceStereotype="true" innerClassSorter="Natural" showPublicAttributes="true" showPackageAttributes="true" showStaticAttributes="true" showPublicMethods="true" showPackageMethods="true" showStaticMethods="true" showPublicInnerClasses="true" showPackageInnerClasses="true" showStaticInnerClasses="true" packageIndication="3" showAttributeProperty="true"/>
+</editmodel:ClassDiagramEditModel>

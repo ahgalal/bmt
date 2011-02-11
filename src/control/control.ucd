@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<editmodel:ClassDiagramEditModel xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:editmodel="editmodel.xmi" xmlns:options="options.xmi" size="1115,567" id="control" metadata="uml2-1.0" initialized="true" tag="1000" key="32303037303533312D3130303020526174204D6F6E69746F722F4372656174697665">
+  <children xsi:type="editmodel:ClassEditModel" targetConnections="//@children.1/@sourceConnections.0" name="ShapeController" location="15,41" size="209,373" id="control/ShapeController">
+    <children xsi:type="editmodel:CompartmentEditModel" size="186,18">
+      <children xsi:type="editmodel:AttributeEditModel" name="default_controller" id="control/ShapeController#default_controller"/>
+    </children>
+    <children xsi:type="editmodel:CompartmentEditModel" size="131,306">
+      <children xsi:type="editmodel:MethodEditModel" name="ShapeController" id="control/ShapeController#ShapeController()"/>
+      <children xsi:type="editmodel:MethodEditModel" name="addShape" id="control/ShapeController#addShape(Lgfx_panel.Shape;)"/>
+      <children xsi:type="editmodel:MethodEditModel" name="clearAllShapes" id="control/ShapeController#clearAllShapes()"/>
+      <children xsi:type="editmodel:MethodEditModel" name="dragOccured" id="control/ShapeController#dragOccured(II)"/>
+      <children xsi:type="editmodel:MethodEditModel" name="drawAllShapes" id="control/ShapeController#drawAllShapes()"/>
+      <children xsi:type="editmodel:MethodEditModel" name="drawaAllShapes" id="control/ShapeController#drawaAllShapes(Ljava.awt.Graphics;)"/>
+      <children xsi:type="editmodel:MethodEditModel" name="getDefault" id="control/ShapeController#getDefault()"/>
+      <children xsi:type="editmodel:MethodEditModel" name="getNumberOfShapes" id="control/ShapeController#getNumberOfShapes()"/>
+      <children xsi:type="editmodel:MethodEditModel" name="getShapeByIndex" id="control/ShapeController#getShapeByIndex(I)"/>
+      <children xsi:type="editmodel:MethodEditModel" name="getShapeByNumber" id="control/ShapeController#getShapeByNumber(I)"/>
+      <children xsi:type="editmodel:MethodEditModel" name="init" id="control/ShapeController#init()"/>
+      <children xsi:type="editmodel:MethodEditModel" name="linkWithGFXPanel" id="control/ShapeController#linkWithGFXPanel(Lgfx_panel.GfxPanel;)"/>
+      <children xsi:type="editmodel:MethodEditModel" name="mouseClicked" id="control/ShapeController#mouseClicked(Ljava.awt.Point;)"/>
+      <children xsi:type="editmodel:MethodEditModel" name="shapeAdded" id="control/ShapeController#shapeAdded(I)"/>
+      <children xsi:type="editmodel:MethodEditModel" name="shapeDeleted" id="control/ShapeController#shapeDeleted(I)"/>
+      <children xsi:type="editmodel:MethodEditModel" name="shapeModified" id="control/ShapeController#shapeModified(I)"/>
+      <children xsi:type="editmodel:MethodEditModel" name="shapeSelected" id="control/ShapeController#shapeSelected(I)"/>
+    </children>
+    <children xsi:type="editmodel:CompartmentEditModel" size="0,0"/>
+    <sourceConnections xsi:type="editmodel:DependencyEditModel" autoLocated="true" id="control/ShapeController-Standard::Call->control/ZonesController*control/ShapeController-Soyatec::Import->control/ZonesController" source="//@children.0" target="//@children.1" targetEnd="//@children.0/@sourceConnections.0/@children.2" label="//@children.0/@sourceConnections.0/@children.0" sourceEnd="//@children.0/@sourceConnections.0/@children.1" connectionRouterKind="Manual">
+      <children xsi:type="editmodel:WireLabelEditModel" name="«Call, Import»" size="64,14" anchorKind="MiddlePart"/>
+      <children xsi:type="editmodel:AssociationEndEditModel" location="209,166" attachSource="true"/>
+      <children xsi:type="editmodel:AssociationEndEditModel" location="0,157"/>
+    </sourceConnections>
+    <classifierPreferences xsi:type="editmodel:UMLClassDiagramClassifierPreference" showStereotype="true" attributeSorter="Natural" methodSorter="Natural" innerClassSorter="Natural" showPublicAttributes="true" showPackageAttributes="true" showStaticAttributes="true" showPublicMethods="true" showPackageMethods="true" showStaticMethods="true" showPublicInnerClasses="true" showPackageInnerClasses="true" showStaticInnerClasses="true" packageIndication="3" showAttributeProperty="true"/>
+  </children>
+  <children xsi:type="editmodel:ClassEditModel" targetConnections="//@children.0/@sourceConnections.0 //@children.2/@sourceConnections.0" name="ZonesController" location="330,50" size="206,355" id="control/ZonesController">
+    <children xsi:type="editmodel:CompartmentEditModel" size="183,18">
+      <children xsi:type="editmodel:AttributeEditModel" name="shape_controller" id="control/ZonesController#shape_controller"/>
+    </children>
+    <children xsi:type="editmodel:CompartmentEditModel" size="135,288">
+      <children xsi:type="editmodel:MethodEditModel" name="ZonesController" id="control/ZonesController#ZonesController()"/>
+      <children xsi:type="editmodel:MethodEditModel" name="addAllZonesToGUI" id="control/ZonesController#addAllZonesToGUI()"/>
+      <children xsi:type="editmodel:MethodEditModel" name="addZone" id="control/ZonesController#addZone(ILmodel.Zone.ZoneType;)"/>
+      <children xsi:type="editmodel:MethodEditModel" name="deleteZone" id="control/ZonesController#deleteZone(I)"/>
+      <children xsi:type="editmodel:MethodEditModel" name="editZone" id="control/ZonesController#editZone(ILmodel.Zone.ZoneType;)"/>
+      <children xsi:type="editmodel:MethodEditModel" name="getDefault" id="control/ZonesController#getDefault()"/>
+      <children xsi:type="editmodel:MethodEditModel" name="getNumberOfZones" id="control/ZonesController#getNumberOfZones()"/>
+      <children xsi:type="editmodel:MethodEditModel" name="getZone" id="control/ZonesController#getZone(II)"/>
+      <children xsi:type="editmodel:MethodEditModel" name="getZoneByNumber" id="control/ZonesController#getZoneByNumber(I)"/>
+      <children xsi:type="editmodel:MethodEditModel" name="init" id="control/ZonesController#init()"/>
+      <children xsi:type="editmodel:MethodEditModel" name="loadZonesFromFile" id="control/ZonesController#loadZonesFromFile(Ljava.lang.String;)"/>
+      <children xsi:type="editmodel:MethodEditModel" name="saveZonesToFile" id="control/ZonesController#saveZonesToFile(Ljava.lang.String;)"/>
+      <children xsi:type="editmodel:MethodEditModel" name="selectZoneInGUI" id="control/ZonesController#selectZoneInGUI(I)"/>
+      <children xsi:type="editmodel:MethodEditModel" name="setWidthandHeight" id="control/ZonesController#setWidthandHeight(II)"/>
+      <children xsi:type="editmodel:MethodEditModel" name="updateZoneDataInGUI" id="control/ZonesController#updateZoneDataInGUI(I)"/>
+      <children xsi:type="editmodel:MethodEditModel" name="updateZoneMap" id="control/ZonesController#updateZoneMap()"/>
+    </children>
+    <children xsi:type="editmodel:CompartmentEditModel" size="0,0"/>
+    <sourceConnections xsi:type="editmodel:DependencyEditModel" autoLocated="true" id="control/ZonesController-Standard::Call->control/ShapeController*control/ZonesController-Soyatec::Import->control/ShapeController" source="//@children.1" target="//@children.0" targetEnd="//@children.1/@sourceConnections.0/@children.2" label="//@children.1/@sourceConnections.0/@children.0" sourceEnd="//@children.1/@sourceConnections.0/@children.1" connectionRouterKind="Manual">
+      <children xsi:type="editmodel:WireLabelEditModel" name="«Call, Import»" size="64,14" anchorKind="MiddlePart"/>
+      <children xsi:type="editmodel:AssociationEndEditModel" location="0,177" attachSource="true"/>
+      <children xsi:type="editmodel:AssociationEndEditModel" location="209,186"/>
+    </sourceConnections>
+    <classifierPreferences xsi:type="editmodel:UMLClassDiagramClassifierPreference" showStereotype="true" attributeSorter="Natural" methodSorter="Natural" innerClassSorter="Natural" showPublicAttributes="true" showPackageAttributes="true" showStaticAttributes="true" showPublicMethods="true" showPackageMethods="true" showStaticMethods="true" showPublicInnerClasses="true" showPackageInnerClasses="true" showStaticInnerClasses="true" packageIndication="3" showAttributeProperty="true"/>
+  </children>
+  <children xsi:type="editmodel:ClassEditModel" targetConnections="//@children.3/@sourceConnections.0" name="StatsController" location="643,29" size="203,427" id="control/StatsController">
+    <children xsi:type="editmodel:CompartmentEditModel" size="180,90">
+      <children xsi:type="editmodel:AttributeEditModel" name="all_entrance" id="control/StatsController#all_entrance"/>
+      <children xsi:type="editmodel:AttributeEditModel" name="central_entrance" id="control/StatsController#central_entrance"/>
+      <children xsi:type="editmodel:AttributeEditModel" name="default_controller" id="control/StatsController#default_controller"/>
+      <children xsi:type="editmodel:AttributeEditModel" name="require_update_gui" id="control/StatsController#require_update_gui"/>
+      <children xsi:type="editmodel:AttributeEditModel" name="scale" id="control/StatsController#scale"/>
+    </children>
+    <children xsi:type="editmodel:CompartmentEditModel" size="143,288">
+      <children xsi:type="editmodel:MethodEditModel" name="StatsController" id="control/StatsController#StatsController()"/>
+      <children xsi:type="editmodel:MethodEditModel" name="endSession" id="control/StatsController#endSession()"/>
+      <children xsi:type="editmodel:MethodEditModel" name="getAll_entrance" id="control/StatsController#getAll_entrance()"/>
+      <children xsi:type="editmodel:MethodEditModel" name="getCentralTime" id="control/StatsController#getCentralTime()"/>
+      <children xsi:type="editmodel:MethodEditModel" name="getCentral_entrance" id="control/StatsController#getCentral_entrance()"/>
+      <children xsi:type="editmodel:MethodEditModel" name="getCurrentZoneNumber" id="control/StatsController#getCurrentZoneNumber()"/>
+      <children xsi:type="editmodel:MethodEditModel" name="getDefault" id="control/StatsController#getDefault()"/>
+      <children xsi:type="editmodel:MethodEditModel" name="getRearingCtr" id="control/StatsController#getRearingCtr()"/>
+      <children xsi:type="editmodel:MethodEditModel" name="getSessionTimeTillNow" id="control/StatsController#getSessionTimeTillNow()"/>
+      <children xsi:type="editmodel:MethodEditModel" name="getTotalDistance" id="control/StatsController#getTotalDistance()"/>
+      <children xsi:type="editmodel:MethodEditModel" name="getTotalSessionTime" id="control/StatsController#getTotalSessionTime()"/>
+      <children xsi:type="editmodel:MethodEditModel" name="init" id="control/StatsController#init()"/>
+      <children xsi:type="editmodel:MethodEditModel" name="setHysteresis" id="control/StatsController#setHysteresis(I)"/>
+      <children xsi:type="editmodel:MethodEditModel" name="setScale" id="control/StatsController#setScale(Ljava.awt.Point;Ljava.awt.Point;F)"/>
+      <children xsi:type="editmodel:MethodEditModel" name="startSession" id="control/StatsController#startSession()"/>
+      <children xsi:type="editmodel:MethodEditModel" name="updateStats" id="control/StatsController#updateStats(Ljava.awt.Point;Z)"/>
+    </children>
+    <children xsi:type="editmodel:CompartmentEditModel" size="0,0"/>
+    <sourceConnections xsi:type="editmodel:DependencyEditModel" autoLocated="true" id="control/StatsController-Standard::Call->control/ZonesController*control/StatsController-Soyatec::Import->control/ZonesController" source="//@children.2" target="//@children.1" targetEnd="//@children.2/@sourceConnections.0/@children.2" label="//@children.2/@sourceConnections.0/@children.0" sourceEnd="//@children.2/@sourceConnections.0/@children.1" connectionRouterKind="Manual">
+      <children xsi:type="editmodel:WireLabelEditModel" name="«Call, Import»" size="64,14" anchorKind="MiddlePart"/>
+      <children xsi:type="editmodel:AssociationEndEditModel" location="0,198" attachSource="true"/>
+      <children xsi:type="editmodel:AssociationEndEditModel" location="206,177"/>
+    </sourceConnections>
+    <classifierPreferences xsi:type="editmodel:UMLClassDiagramClassifierPreference" showStereotype="true" attributeSorter="Natural" methodSorter="Natural" innerClassSorter="Natural" showPublicAttributes="true" showPackageAttributes="true" showStaticAttributes="true" showPublicMethods="true" showPackageMethods="true" showStaticMethods="true" showPublicInnerClasses="true" showPackageInnerClasses="true" showStaticInnerClasses="true" packageIndication="3" showAttributeProperty="true"/>
+  </children>
+  <children xsi:type="editmodel:ClassEditModel" name="InfoController" location="945,30" size="196,319" id="control/InfoController">
+    <children xsi:type="editmodel:CompartmentEditModel" size="173,18">
+      <children xsi:type="editmodel:AttributeEditModel" name="default_controller" id="control/InfoController#default_controller"/>
+    </children>
+    <children xsi:type="editmodel:CompartmentEditModel" size="147,252">
+      <children xsi:type="editmodel:MethodEditModel" name="InfoController" id="control/InfoController#InfoController()"/>
+      <children xsi:type="editmodel:MethodEditModel" name="getDefault" id="control/InfoController#getDefault()"/>
+      <children xsi:type="editmodel:MethodEditModel" name="getGroupsNames" id="control/InfoController#getGroupsNames()"/>
+      <children xsi:type="editmodel:MethodEditModel" name="isExperimentPresent" id="control/InfoController#isExperimentPresent()"/>
+      <children xsi:type="editmodel:MethodEditModel" name="isThereAnyGroups" id="control/InfoController#isThereAnyGroups()"/>
+      <children xsi:type="editmodel:MethodEditModel" name="loadInfoFromTXTFile" id="control/InfoController#loadInfoFromTXTFile(Ljava.lang.String;)"/>
+      <children xsi:type="editmodel:MethodEditModel" name="saveExpInfo" id="control/InfoController#saveExpInfo(Ljava.lang.String;Ljava.lang.String;Ljava.lang.String;Ljava.lang.String;)"/>
+      <children xsi:type="editmodel:MethodEditModel" name="saveGrpInfo" id="control/InfoController#saveGrpInfo(ILjava.lang.String;ILjava.lang.String;Ljava.lang.String;)"/>
+      <children xsi:type="editmodel:MethodEditModel" name="saveRatInfo" id="control/InfoController#saveRatInfo()"/>
+      <children xsi:type="editmodel:MethodEditModel" name="setCurrentRatAndGroup" id="control/InfoController#setCurrentRatAndGroup(ILjava.lang.String;Z)"/>
+      <children xsi:type="editmodel:MethodEditModel" name="setExpFileName" id="control/InfoController#setExpFileName(Ljava.lang.String;)"/>
+      <children xsi:type="editmodel:MethodEditModel" name="unloadExperiment" id="control/InfoController#unloadExperiment()"/>
+      <children xsi:type="editmodel:MethodEditModel" name="writeToExcelFile" id="control/InfoController#writeToExcelFile(Ljava.lang.String;)"/>
+      <children xsi:type="editmodel:MethodEditModel" name="writeToTXTFile" id="control/InfoController#writeToTXTFile(Ljava.lang.String;)"/>
+    </children>
+    <children xsi:type="editmodel:CompartmentEditModel" size="0,0"/>
+    <sourceConnections xsi:type="editmodel:DependencyEditModel" autoLocated="true" id="control/InfoController-Standard::Call->control/StatsController*control/InfoController-Soyatec::Import->control/StatsController" source="//@children.3" target="//@children.2" targetEnd="//@children.3/@sourceConnections.0/@children.2" label="//@children.3/@sourceConnections.0/@children.0" sourceEnd="//@children.3/@sourceConnections.0/@children.1" connectionRouterKind="Manual">
+      <children xsi:type="editmodel:WireLabelEditModel" name="«Call, Import»" size="64,14" anchorKind="MiddlePart"/>
+      <children xsi:type="editmodel:AssociationEndEditModel" location="0,159" attachSource="true"/>
+      <children xsi:type="editmodel:AssociationEndEditModel" location="203,160"/>
+    </sourceConnections>
+    <classifierPreferences xsi:type="editmodel:UMLClassDiagramClassifierPreference" showStereotype="true" attributeSorter="Natural" methodSorter="Natural" innerClassSorter="Natural" showPublicAttributes="true" showPackageAttributes="true" showStaticAttributes="true" showPublicMethods="true" showPackageMethods="true" showStaticMethods="true" showPublicInnerClasses="true" showPackageInnerClasses="true" showStaticInnerClasses="true" packageIndication="3" showAttributeProperty="true"/>
+  </children>
+  <diagramOptions xsi:type="options:ClassDiagramOptions" level="-1" showScope="InPackage" properties="wireOptions=7;Product=eUML2"/>
+  <boardSetting snapToGeometry="true" gridEnabled="true" gridSpacing="15,15" gridOrigin="0,0" rulerUnit="pixel" gridVisibility="false">
+    <leftRuler/>
+    <topRuler/>
+  </boardSetting>
+  <classDiagramPreferences xsi:type="editmodel:UMLClassDiagramPreference" showPopupBars="true" showConnectionHandles="true" attributeSorter="Natural" methodSorter="Natural" showClassStereotype="true" showPackageStereotype="true" showDependencyStereotype="true" showInterfaceStereotype="true" innerClassSorter="Natural" showPublicAttributes="true" showPackageAttributes="true" showStaticAttributes="true" showPublicMethods="true" showPackageMethods="true" showStaticMethods="true" showPublicInnerClasses="true" showPackageInnerClasses="true" showStaticInnerClasses="true" showAttributeProperty="true"/>
+</editmodel:ClassDiagramEditModel>

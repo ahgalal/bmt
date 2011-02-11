@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<editmodel:ClassDiagramEditModel xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:editmodel="editmodel.xmi" xmlns:options="options.xmi" name="Dependencies" size="1028,834" id="." metadata="uml2-1.0" initialized="true" scrolledX="330" scrolledY="252" tag="1000" key="32303037303533312D3130303020526174204D6F6E69746F722F4372656174697665">
+  <children xsi:type="editmodel:PackageEditModel" name="lib_avi" location="180,754" size="80,60" id="lib_avi"/>
+  <children xsi:type="editmodel:PackageEditModel" targetConnections="//@children.4/@sourceConnections.0 //@children.2/@sourceConnections.1" name="gfx_panel" location="696,582" size="98,60" id="gfx_panel"/>
+  <children xsi:type="editmodel:PackageEditModel" name="ui" location="900,405" size="108,92" id="ui">
+    <children xsi:type="editmodel:PackageEditModel" name="ui.box" location="17,27" size="80,60" id="ui.box"/>
+    <sourceConnections xsi:type="editmodel:DependencyEditModel" autoLocated="true" id="ui-Soyatec::Import->control.ui" source="//@children.2" target="//@children.4/@children.0" targetEnd="//@children.2/@sourceConnections.0/@children.2" label="//@children.2/@sourceConnections.0/@children.0" sourceEnd="//@children.2/@sourceConnections.0/@children.1" connectionRouterKind="Manual">
+      <children xsi:type="editmodel:WireLabelEditModel" name="«Import»" size="41,14" anchorKind="MiddlePart"/>
+      <children xsi:type="editmodel:AssociationEndEditModel" location="0,12" attachSource="true"/>
+      <children xsi:type="editmodel:AssociationEndEditModel" location="95,48"/>
+    </sourceConnections>
+    <sourceConnections xsi:type="editmodel:DependencyEditModel" autoLocated="true" id="ui-Standard::Call->gfx_panel*ui-Standard::Instantiate->gfx_panel*ui-Soyatec::Import->gfx_panel" source="//@children.2" target="//@children.1" targetEnd="//@children.2/@sourceConnections.1/@children.2" label="//@children.2/@sourceConnections.1/@children.0" sourceEnd="//@children.2/@sourceConnections.1/@children.1" connectionRouterKind="Manual">
+      <children xsi:type="editmodel:WireLabelEditModel" name="«Instantiate, Call, Import»" size="119,14" anchorKind="MiddlePart"/>
+      <children xsi:type="editmodel:AssociationEndEditModel" location="0,88" attachSource="true"/>
+      <children xsi:type="editmodel:AssociationEndEditModel" location="88,0"/>
+    </sourceConnections>
+  </children>
+  <children xsi:type="editmodel:PackageEditModel" targetConnections="//@children.4/@sourceConnections.4" name="model" location="825,105" size="196,151" id="model">
+    <children xsi:type="editmodel:PackageEditModel" targetConnections="//@children.4/@sourceConnections.5" name="model.business" location="26,51" size="133,60" id="model.business"/>
+  </children>
+  <children xsi:type="editmodel:PackageEditModel" targetConnections="//@children.5/@children.0/@sourceConnections.1" name="control" location="592,317" size="197,159" id="control">
+    <children xsi:type="editmodel:PackageEditModel" targetConnections="//@children.4/@sourceConnections.2 //@children.2/@sourceConnections.0" name="control.ui" location="46,52" size="95,60" id="control.ui"/>
+    <sourceConnections xsi:type="editmodel:DependencyEditModel" autoLocated="true" id="control-Standard::Call->gfx_panel*control-Standard::Instantiate->gfx_panel*control-Soyatec::Import->gfx_panel*control-Soyatec::Implement->gfx_panel" source="//@children.4" target="//@children.1" targetEnd="//@children.4/@sourceConnections.0/@children.2" label="//@children.4/@sourceConnections.0/@children.0" sourceEnd="//@children.4/@sourceConnections.0/@children.1" connectionRouterKind="Manual">
+      <children xsi:type="editmodel:WireLabelEditModel" name="«Implement, Instantiate, Call, Import»" size="172,14" anchorKind="MiddlePart"/>
+      <children xsi:type="editmodel:AssociationEndEditModel" location="150,159" attachSource="true"/>
+      <children xsi:type="editmodel:AssociationEndEditModel" location="46,0"/>
+    </sourceConnections>
+    <sourceConnections xsi:type="editmodel:DependencyEditModel" id="control-Standard::Call->utils.saveengines*control-Standard::Instantiate->utils.saveengines*control-Soyatec::Import->utils.saveengines" source="//@children.4" target="//@children.5/@children.1" targetEnd="//@children.4/@sourceConnections.1/@children.2" label="//@children.4/@sourceConnections.1/@children.0" sourceEnd="//@children.4/@sourceConnections.1/@children.1" connectionRouterKind="Manual">
+      <children xsi:type="editmodel:WireLabelEditModel" name="«Instantiate, Call, Import»" size="119,14" anchorKind="MiddlePart"/>
+      <children xsi:type="editmodel:AssociationEndEditModel" location="0,132" attachSource="true"/>
+      <children xsi:type="editmodel:AssociationEndEditModel" location="207,29"/>
+    </sourceConnections>
+    <sourceConnections xsi:type="editmodel:DependencyEditModel" autoLocated="true" id="control-Standard::Call->control.ui" source="//@children.4" target="//@children.4/@children.0" targetEnd="//@children.4/@sourceConnections.2/@children.2" label="//@children.4/@sourceConnections.2/@children.0" sourceEnd="//@children.4/@sourceConnections.2/@children.1" connectionRouterKind="Manual">
+      <children xsi:type="editmodel:WireLabelEditModel" name="«Call»" size="29,14" anchorKind="MiddlePart"/>
+      <children xsi:type="editmodel:AssociationEndEditModel" location="197,82" attachSource="true"/>
+      <children xsi:type="editmodel:AssociationEndEditModel" location="95,30"/>
+    </sourceConnections>
+    <sourceConnections xsi:type="editmodel:DependencyEditModel" autoLocated="true" id="control-Standard::Call->utils*control-Soyatec::Access->utils*control-Soyatec::Import->utils" source="//@children.4" target="//@children.5" targetEnd="//@children.4/@sourceConnections.3/@children.2" label="//@children.4/@sourceConnections.3/@children.0" sourceEnd="//@children.4/@sourceConnections.3/@children.1" connectionRouterKind="Manual">
+      <children xsi:type="editmodel:WireLabelEditModel" name="«Call, Access, Import»" size="107,14" anchorKind="MiddlePart"/>
+      <children xsi:type="editmodel:AssociationEndEditModel" location="0,79" attachSource="true"/>
+      <children xsi:type="editmodel:AssociationEndEditModel" location="341,106"/>
+    </sourceConnections>
+    <sourceConnections xsi:type="editmodel:DependencyEditModel" id="control-Standard::Call->model*control-Soyatec::Access->model*control-Standard::Instantiate->model*control-Soyatec::Import->model" source="//@children.4" target="//@children.3" targetEnd="//@children.4/@sourceConnections.4/@children.2" label="//@children.4/@sourceConnections.4/@children.0" sourceEnd="//@children.4/@sourceConnections.4/@children.1" connectionRouterKind="Manual">
+      <children xsi:type="editmodel:WireLabelEditModel" name="«Instantiate, Call, Access, Import»" size="162,14" anchorKind="MiddlePart"/>
+      <children xsi:type="editmodel:AssociationEndEditModel" location="61,0" attachSource="true"/>
+      <children xsi:type="editmodel:AssociationEndEditModel" location="0,116"/>
+    </sourceConnections>
+    <sourceConnections xsi:type="editmodel:DependencyEditModel" id="control-Standard::Call->model.business*control-Standard::Instantiate->model.business*control-Soyatec::Import->model.business" source="//@children.4" target="//@children.3/@children.0" targetEnd="//@children.4/@sourceConnections.5/@children.2" label="//@children.4/@sourceConnections.5/@children.0" sourceEnd="//@children.4/@sourceConnections.5/@children.1" connectionRouterKind="Manual">
+      <children xsi:type="editmodel:WireLabelEditModel" name="«Instantiate, Call, Import»" size="119,14" anchorKind="MiddlePart"/>
+      <children xsi:type="editmodel:AssociationEndEditModel" location="197,44" attachSource="true"/>
+      <children xsi:type="editmodel:AssociationEndEditModel" location="34,60"/>
+    </sourceConnections>
+  </children>
+  <children xsi:type="editmodel:PackageEditModel" targetConnections="//@children.4/@sourceConnections.3 //@children.5/@children.0/@sourceConnections.2" name="utils" location="115,290" size="341,353" id="utils">
+    <children xsi:type="editmodel:PackageEditModel" name="utils.video" location="107,55" size="211,201" id="utils.video">
+      <children xsi:type="editmodel:PackageEditModel" targetConnections="//@children.5/@children.0/@sourceConnections.3" name="utils.video.input" location="36,60" size="136,60" id="utils.video.input"/>
+      <children xsi:type="editmodel:PackageEditModel" targetConnections="//@children.5/@children.0/@sourceConnections.0" name="utils.video.processors" location="22,132" size="171,60" id="utils.video.processors"/>
+      <sourceConnections xsi:type="editmodel:DependencyEditModel" autoLocated="true" id="utils.video-Standard::Call->utils.video.processors*utils.video-Standard::Instantiate->utils.video.processors*utils.video-Soyatec::Import->utils.video.processors" source="//@children.5/@children.0" target="//@children.5/@children.0/@children.1" targetEnd="//@children.5/@children.0/@sourceConnections.0/@children.2" label="//@children.5/@children.0/@sourceConnections.0/@children.0" sourceEnd="//@children.5/@children.0/@sourceConnections.0/@children.1" connectionRouterKind="Manual">
+        <children xsi:type="editmodel:WireLabelEditModel" name="«Instantiate, Call, Import»" size="119,14" anchorKind="MiddlePart"/>
+        <children xsi:type="editmodel:AssociationEndEditModel" location="211,162" attachSource="true"/>
+        <children xsi:type="editmodel:AssociationEndEditModel" location="171,30"/>
+      </sourceConnections>
+      <sourceConnections xsi:type="editmodel:DependencyEditModel" autoLocated="true" id="utils.video-Standard::Call->control" source="//@children.5/@children.0" target="//@children.4" targetEnd="//@children.5/@children.0/@sourceConnections.1/@children.2" label="//@children.5/@children.0/@sourceConnections.1/@children.0" sourceEnd="//@children.5/@children.0/@sourceConnections.1/@children.1" connectionRouterKind="Manual">
+        <children xsi:type="editmodel:WireLabelEditModel" name="«Call»" size="29,14" anchorKind="MiddlePart"/>
+        <children xsi:type="editmodel:AssociationEndEditModel" location="211,65" attachSource="true"/>
+        <children xsi:type="editmodel:AssociationEndEditModel" location="0,93"/>
+      </sourceConnections>
+      <sourceConnections xsi:type="editmodel:DependencyEditModel" id="utils.video-Standard::Call->utils*utils.video-Soyatec::Access->utils*utils.video-Soyatec::Import->utils" source="//@children.5/@children.0" target="//@children.5" targetEnd="//@children.5/@children.0/@sourceConnections.2/@children.2" label="//@children.5/@children.0/@sourceConnections.2/@children.0" sourceEnd="//@children.5/@children.0/@sourceConnections.2/@children.1" connectionRouterKind="Manual">
+        <children xsi:type="editmodel:WireLabelEditModel" name="«Call, Access, Import»" size="107,14" anchorKind="MiddlePart"/>
+        <children xsi:type="editmodel:AssociationEndEditModel" location="0,126" attachSource="true"/>
+        <children xsi:type="editmodel:AssociationEndEditModel" location="0,183"/>
+      </sourceConnections>
+      <sourceConnections xsi:type="editmodel:DependencyEditModel" id="utils.video-Standard::Call->utils.video.input*utils.video-Standard::Instantiate->utils.video.input*utils.video-Soyatec::Import->utils.video.input" source="//@children.5/@children.0" target="//@children.5/@children.0/@children.0" targetEnd="//@children.5/@children.0/@sourceConnections.3/@children.2" label="//@children.5/@children.0/@sourceConnections.3/@children.0" sourceEnd="//@children.5/@children.0/@sourceConnections.3/@children.1" connectionRouterKind="Manual">
+        <children xsi:type="editmodel:WireLabelEditModel" name="«Instantiate, Call, Import»" size="119,14" anchorKind="MiddlePart"/>
+        <children xsi:type="editmodel:AssociationEndEditModel" location="0,78" attachSource="true"/>
+        <children xsi:type="editmodel:AssociationEndEditModel" location="0,30"/>
+      </sourceConnections>
+    </children>
+    <children xsi:type="editmodel:PackageEditModel" targetConnections="//@children.4/@sourceConnections.1" name="utils.saveengines" location="108,273" size="207,60" id="utils.saveengines"/>
+  </children>
+  <diagramOptions xsi:type="options:ClassDiagramOptions" interactive="false" properties="open=control,control.ui,gfx_panel,lib_avi,model,model.business,tst,ui,ui.box,utils,utils.saveengines,utils.video,utils.video.input,utils.video.processors;wireOptions=4;Product=eUML2;displayOptions=1"/>
+  <boardSetting snapToGeometry="true" gridEnabled="true" gridSpacing="15,15" gridOrigin="0,0" rulerUnit="pixel" gridVisibility="false">
+    <leftRuler/>
+    <topRuler/>
+  </boardSetting>
+  <classDiagramPreferences xsi:type="editmodel:UMLClassDiagramPreference" showPopupBars="true" showConnectionHandles="true" attributeSorter="Natural" methodSorter="Natural" showClassStereotype="true" showPackageStereotype="true" showDependencyStereotype="true" showInterfaceStereotype="true" innerClassSorter="Natural" showPublicInnerClasses="true" showPackageInnerClasses="true" showStaticInnerClasses="true" packageIndication="3"/>
+</editmodel:ClassDiagramEditModel>

@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<editmodel:ClassDiagramEditModel xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:editmodel="editmodel.xmi" xmlns:options="options.xmi" name="video" size="688,2270" id="utils.video" metadata="uml2-1.0" initialized="true" scrolledX="219" tag="1000" key="32303037303533312D3130303020526174204D6F6E69746F722F4372656174697665">
+  <children xsi:type="editmodel:ClassEditModel" targetConnections="//@children.3/@sourceConnections.0" name="ImageManipulator" location="943,299" size="188,121" id="utils.video/ImageManipulator">
+    <children xsi:type="editmodel:CompartmentEditModel"/>
+    <children xsi:type="editmodel:CompartmentEditModel" size="165,72">
+      <children xsi:type="editmodel:MethodEditModel" name="gray2RGBInt" id="utils.video/ImageManipulator#gray2RGBInt([B)"/>
+      <children xsi:type="editmodel:MethodEditModel" name="loadImage" id="utils.video/ImageManipulator#loadImage(Ljava.lang.String;)"/>
+      <children xsi:type="editmodel:MethodEditModel" name="rgbIntArray2GrayByteArray" id="utils.video/ImageManipulator#rgbIntArray2GrayByteArray([I)"/>
+      <children xsi:type="editmodel:MethodEditModel" name="rgbIntArray2GrayIntArray" id="utils.video/ImageManipulator#rgbIntArray2GrayIntArray([I)"/>
+    </children>
+    <children xsi:type="editmodel:CompartmentEditModel"/>
+    <classifierPreferences xsi:type="editmodel:UMLClassDiagramClassifierPreference" showStereotype="true" attributeSorter="Natural" methodSorter="Natural" innerClassSorter="Natural" showPublicAttributes="true" showPackageAttributes="true" showStaticAttributes="true" showPublicMethods="true" showPackageMethods="true" showStaticMethods="true" showPublicInnerClasses="true" showPackageInnerClasses="true" showStaticInnerClasses="true" packageIndication="3" showAttributeProperty="true"/>
+  </children>
+  <children xsi:type="editmodel:ClassEditModel" targetConnections="//@children.2/@sourceConnections.0 //@children.3/@sourceConnections.1" name="FrameIntArray" location="360,315" size="145,75" id="utils.video/FrameIntArray">
+    <children xsi:type="editmodel:CompartmentEditModel" size="122,36">
+      <children xsi:type="editmodel:AttributeEditModel" name="busy" id="utils.video/FrameIntArray#busy"/>
+      <children xsi:type="editmodel:AttributeEditModel" name="frame_data" id="utils.video/FrameIntArray#frame_data"/>
+    </children>
+    <children xsi:type="editmodel:CompartmentEditModel"/>
+    <children xsi:type="editmodel:CompartmentEditModel"/>
+    <classifierPreferences xsi:type="editmodel:UMLClassDiagramClassifierPreference" showStereotype="true" attributeSorter="Natural" methodSorter="Natural" innerClassSorter="Natural" showPublicAttributes="true" showPackageAttributes="true" showStaticAttributes="true" showPublicMethods="true" showPackageMethods="true" showStaticMethods="true" showPublicInnerClasses="true" showPackageInnerClasses="true" showStaticInnerClasses="true" packageIndication="3" showAttributeProperty="true"/>
+  </children>
+  <children xsi:type="editmodel:ClassEditModel" name="AnalysisEffect" location="50,50" size="203,643" id="utils.video/AnalysisEffect">
+    <children xsi:type="editmodel:CompartmentEditModel" size="149,270">
+      <children xsi:type="editmodel:AttributeEditModel" name="bg_frame" id="utils.video/AnalysisEffect#bg_frame"/>
+      <children xsi:type="editmodel:AttributeEditModel" name="c" id="utils.video/AnalysisEffect#c"/>
+      <children xsi:type="editmodel:AttributeEditModel" name="center_point" id="utils.video/AnalysisEffect#center_point"/>
+      <children xsi:type="editmodel:AttributeEditModel" name="curr_frame" id="utils.video/AnalysisEffect#curr_frame"/>
+      <children xsi:type="editmodel:AttributeEditModel" name="height" id="utils.video/AnalysisEffect#height"/>
+      <children xsi:type="editmodel:AttributeEditModel" name="hori_sum" id="utils.video/AnalysisEffect#hori_sum"/>
+      <children xsi:type="editmodel:AttributeEditModel" name="max_thresh" id="utils.video/AnalysisEffect#max_thresh"/>
+      <children xsi:type="editmodel:AttributeEditModel" name="null_data" id="utils.video/AnalysisEffect#null_data"/>
+      <children xsi:type="editmodel:AttributeEditModel" name="res_bi" id="utils.video/AnalysisEffect#res_bi"/>
+      <children xsi:type="editmodel:AttributeEditModel" name="res_frame" id="utils.video/AnalysisEffect#res_frame"/>
+      <children xsi:type="editmodel:AttributeEditModel" name="risen" id="utils.video/AnalysisEffect#risen"/>
+      <children xsi:type="editmodel:AttributeEditModel" name="status" id="utils.video/AnalysisEffect#status"/>
+      <children xsi:type="editmodel:AttributeEditModel" name="tmp_max" id="utils.video/AnalysisEffect#tmp_max"/>
+      <children xsi:type="editmodel:AttributeEditModel" name="vert_sum" id="utils.video/AnalysisEffect#vert_sum"/>
+      <children xsi:type="editmodel:AttributeEditModel" name="width" id="utils.video/AnalysisEffect#width"/>
+    </children>
+    <children xsi:type="editmodel:CompartmentEditModel" size="180,324">
+      <children xsi:type="editmodel:MethodEditModel" name="AnalysisEffect" id="utils.video/AnalysisEffect#AnalysisEffect(IILutils.video.FrameIntArray;)"/>
+      <children xsi:type="editmodel:MethodEditModel" name="byteArr2RGBIntArr" id="utils.video/AnalysisEffect#byteArr2RGBIntArr([B)"/>
+      <children xsi:type="editmodel:MethodEditModel" name="close" id="utils.video/AnalysisEffect#close()"/>
+      <children xsi:type="editmodel:MethodEditModel" name="getControl" id="utils.video/AnalysisEffect#getControl(Ljava.lang.String;)"/>
+      <children xsi:type="editmodel:MethodEditModel" name="getControls" id="utils.video/AnalysisEffect#getControls()"/>
+      <children xsi:type="editmodel:MethodEditModel" name="getName" id="utils.video/AnalysisEffect#getName()"/>
+      <children xsi:type="editmodel:MethodEditModel" name="getStatus" id="utils.video/AnalysisEffect#getStatus()"/>
+      <children xsi:type="editmodel:MethodEditModel" name="getSupportedInputFormats" id="utils.video/AnalysisEffect#getSupportedInputFormats()"/>
+      <children xsi:type="editmodel:MethodEditModel" name="getSupportedOutputFormats" id="utils.video/AnalysisEffect#getSupportedOutputFormats(Ljavax.media.Format;)"/>
+      <children xsi:type="editmodel:MethodEditModel" name="gray2RGBInt" id="utils.video/AnalysisEffect#gray2RGBInt([B)"/>
+      <children xsi:type="editmodel:MethodEditModel" name="grayByteArray2RGBByteArray" id="utils.video/AnalysisEffect#grayByteArray2RGBByteArray([B)"/>
+      <children xsi:type="editmodel:MethodEditModel" name="matches" id="utils.video/AnalysisEffect#matches(Ljavax.media.Format;[Ljavax.media.Format;)"/>
+      <children xsi:type="editmodel:MethodEditModel" name="open" id="utils.video/AnalysisEffect#open()"/>
+      <children xsi:type="editmodel:MethodEditModel" name="process" id="utils.video/AnalysisEffect#process(Ljavax.media.Buffer;Ljavax.media.Buffer;)"/>
+      <children xsi:type="editmodel:MethodEditModel" name="reset" id="utils.video/AnalysisEffect#reset()"/>
+      <children xsi:type="editmodel:MethodEditModel" name="setInputFormat" id="utils.video/AnalysisEffect#setInputFormat(Ljavax.media.Format;)"/>
+      <children xsi:type="editmodel:MethodEditModel" name="setOutputFormat" id="utils.video/AnalysisEffect#setOutputFormat(Ljavax.media.Format;)"/>
+      <children xsi:type="editmodel:MethodEditModel" name="validateByteArraySize" id="utils.video/AnalysisEffect#validateByteArraySize(Ljavax.media.Buffer;I)"/>
+    </children>
+    <children xsi:type="editmodel:CompartmentEditModel"/>
+    <sourceConnections xsi:type="editmodel:DependencyEditModel" autoLocated="true" id="utils.video/AnalysisEffect-Soyatec::Access->utils.video/FrameIntArray*utils.video/AnalysisEffect-Soyatec::Import->utils.video/FrameIntArray" source="//@children.2" target="//@children.1" targetEnd="//@children.2/@sourceConnections.0/@children.2" label="//@children.2/@sourceConnections.0/@children.0" sourceEnd="//@children.2/@sourceConnections.0/@children.1" connectionRouterKind="Manual">
+      <children xsi:type="editmodel:WireLabelEditModel" name="«Access, Import»" size="85,14" anchorKind="MiddlePart"/>
+      <children xsi:type="editmodel:AssociationEndEditModel" location="203,302" attachSource="true"/>
+      <children xsi:type="editmodel:AssociationEndEditModel" location="0,37"/>
+    </sourceConnections>
+    <classifierPreferences xsi:type="editmodel:UMLClassDiagramClassifierPreference" showStereotype="true" attributeSorter="Natural" methodSorter="Natural" innerClassSorter="Natural" showPublicAttributes="true" showPackageAttributes="true" showStaticAttributes="true" showPublicMethods="true" showPackageMethods="true" showStaticMethods="true" showPublicInnerClasses="true" showPackageInnerClasses="true" showStaticInnerClasses="true" packageIndication="3" showAttributeProperty="true"/>
+  </children>
+  <children xsi:type="editmodel:ClassEditModel" name="VideoProcessor" location="660,122" size="173,499" id="utils.video/VideoProcessor">
+    <children xsi:type="editmodel:CompartmentEditModel" size="93,54">
+      <children xsi:type="editmodel:AttributeEditModel" name="format" id="utils.video/VideoProcessor#format"/>
+      <children xsi:type="editmodel:AttributeEditModel" name="max_thresh" id="utils.video/VideoProcessor#max_thresh"/>
+      <children xsi:type="editmodel:AttributeEditModel" name="thresh" id="utils.video/VideoProcessor#thresh"/>
+    </children>
+    <children xsi:type="editmodel:CompartmentEditModel" size="150,396">
+      <children xsi:type="editmodel:MethodEditModel" name="VideoProcessor" id="utils.video/VideoProcessor#VideoProcessor(Ljava.awt.Component;Ljava.awt.Component;)"/>
+      <children xsi:type="editmodel:MethodEditModel" name="displayMoreSettings" id="utils.video/VideoProcessor#displayMoreSettings()"/>
+      <children xsi:type="editmodel:MethodEditModel" name="enableSecondaryScreen" id="utils.video/VideoProcessor#enableSecondaryScreen(Z)"/>
+      <children xsi:type="editmodel:MethodEditModel" name="getNumCams" id="utils.video/VideoProcessor#getNumCams(Ljava.lang.String;)"/>
+      <children xsi:type="editmodel:MethodEditModel" name="getRGBBackground" id="utils.video/VideoProcessor#getRGBBackground()"/>
+      <children xsi:type="editmodel:MethodEditModel" name="getThresh" id="utils.video/VideoProcessor#getThresh()"/>
+      <children xsi:type="editmodel:MethodEditModel" name="initialize" id="utils.video/VideoProcessor#initialize(Ljava.lang.String;IIIII)"/>
+      <children xsi:type="editmodel:MethodEditModel" name="isBg_set" id="utils.video/VideoProcessor#isBg_set()"/>
+      <children xsi:type="editmodel:MethodEditModel" name="process" id="utils.video/VideoProcessor#process()"/>
+      <children xsi:type="editmodel:MethodEditModel" name="rearingNow" id="utils.video/VideoProcessor#rearingNow(Z)"/>
+      <children xsi:type="editmodel:MethodEditModel" name="saveVideoFile" id="utils.video/VideoProcessor#saveVideoFile(Ljava.lang.String;)"/>
+      <children xsi:type="editmodel:MethodEditModel" name="setBg_image" id="utils.video/VideoProcessor#setBg_image([I)"/>
+      <children xsi:type="editmodel:MethodEditModel" name="setBg_image" id="utils.video/VideoProcessor#setBg_image()"/>
+      <children xsi:type="editmodel:MethodEditModel" name="setFormat" id="utils.video/VideoProcessor#setFormat(Ljava.lang.String;)"/>
+      <children xsi:type="editmodel:MethodEditModel" name="setFrameRate" id="utils.video/VideoProcessor#setFrameRate(I)"/>
+      <children xsi:type="editmodel:MethodEditModel" name="setThreshold" id="utils.video/VideoProcessor#setThreshold(II)"/>
+      <children xsi:type="editmodel:MethodEditModel" name="startProcessing" id="utils.video/VideoProcessor#startProcessing()"/>
+      <children xsi:type="editmodel:MethodEditModel" name="startRecordingVideo" id="utils.video/VideoProcessor#startRecordingVideo()"/>
+      <children xsi:type="editmodel:MethodEditModel" name="startStreaming" id="utils.video/VideoProcessor#startStreaming()"/>
+      <children xsi:type="editmodel:MethodEditModel" name="stopProcessing" id="utils.video/VideoProcessor#stopProcessing()"/>
+      <children xsi:type="editmodel:MethodEditModel" name="stopRecordingVideo" id="utils.video/VideoProcessor#stopRecordingVideo()"/>
+      <children xsi:type="editmodel:MethodEditModel" name="unloadLibrary" id="utils.video/VideoProcessor#unloadLibrary()"/>
+    </children>
+    <children xsi:type="editmodel:CompartmentEditModel"/>
+    <sourceConnections xsi:type="editmodel:DependencyEditModel" autoLocated="true" id="utils.video/VideoProcessor-Standard::Call->utils.video/ImageManipulator" source="//@children.3" target="//@children.0" targetEnd="//@children.3/@sourceConnections.0/@children.2" label="//@children.3/@sourceConnections.0/@children.0" sourceEnd="//@children.3/@sourceConnections.0/@children.1" connectionRouterKind="Manual">
+      <children xsi:type="editmodel:WireLabelEditModel" name="«Call»" size="29,14" anchorKind="MiddlePart"/>
+      <children xsi:type="editmodel:AssociationEndEditModel" location="173,237" attachSource="true"/>
+      <children xsi:type="editmodel:AssociationEndEditModel" location="0,60"/>
+    </sourceConnections>
+    <sourceConnections xsi:type="editmodel:DependencyEditModel" autoLocated="true" id="utils.video/VideoProcessor-Soyatec::Access->utils.video/FrameIntArray*utils.video/VideoProcessor-Standard::Instantiate->utils.video/FrameIntArray*utils.video/VideoProcessor-Soyatec::Import->utils.video/FrameIntArray" source="//@children.3" target="//@children.1" targetEnd="//@children.3/@sourceConnections.1/@children.2" label="//@children.3/@sourceConnections.1/@children.0" sourceEnd="//@children.3/@sourceConnections.1/@children.1" connectionRouterKind="Manual">
+      <children xsi:type="editmodel:WireLabelEditModel" name="«Instantiate, Access, Import»" size="139,14" anchorKind="MiddlePart"/>
+      <children xsi:type="editmodel:AssociationEndEditModel" location="0,230" attachSource="true"/>
+      <children xsi:type="editmodel:AssociationEndEditModel" location="145,37"/>
+    </sourceConnections>
+    <classifierPreferences xsi:type="editmodel:UMLClassDiagramClassifierPreference" showStereotype="true" attributeSorter="Natural" methodSorter="Natural" innerClassSorter="Natural" showPublicAttributes="true" showPackageAttributes="true" showStaticAttributes="true" showPublicMethods="true" showPackageMethods="true" showStaticMethods="true" showPublicInnerClasses="true" showPackageInnerClasses="true" showStaticInnerClasses="true" packageIndication="3" showAttributeProperty="true"/>
+  </children>
+  <diagramOptions xsi:type="options:ClassDiagramOptions" level="-1" showScope="InPackage" properties="wireOptions=7;Product=eUML2"/>
+  <boardSetting snapToGeometry="true" gridEnabled="true" gridSpacing="15,15" gridOrigin="0,0" rulerUnit="pixel" gridVisibility="false">
+    <leftRuler/>
+    <topRuler/>
+  </boardSetting>
+  <classDiagramPreferences xsi:type="editmodel:UMLClassDiagramPreference" showPopupBars="true" showConnectionHandles="true" attributeSorter="Natural" methodSorter="Natural" showClassStereotype="true" showPackageStereotype="true" showDependencyStereotype="true" showInterfaceStereotype="true" innerClassSorter="Natural" showPublicAttributes="true" showPackageAttributes="true" showStaticAttributes="true" showPublicMethods="true" showPackageMethods="true" showStaticMethods="true" showPublicInnerClasses="true" showPackageInnerClasses="true" showStaticInnerClasses="true" packageIndication="3" showAttributeProperty="true"/>
+</editmodel:ClassDiagramEditModel>

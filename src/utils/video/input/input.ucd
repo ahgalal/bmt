@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<editmodel:ClassDiagramEditModel xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:editmodel="editmodel.xmi" xmlns:options="options.xmi" name="input" size="835,1357" id="utils.video.input" metadata="uml2-1.0" initialized="true" tag="1000" key="32303037303533312D3130303020526174204D6F6E69746F722F4372656174697665">
+  <children xsi:type="editmodel:ClassEditModel" name="JMFCamFrame" location="50,630" size="158,481" id="utils.video.input/JMFCamFrame">
+    <children xsi:type="editmodel:CompartmentEditModel" size="86,54">
+      <children xsi:type="editmodel:AttributeEditModel" name="buffer" id="utils.video.input/JMFCamFrame#buffer"/>
+      <children xsi:type="editmodel:AttributeEditModel" name="height" id="utils.video.input/JMFCamFrame#height"/>
+      <children xsi:type="editmodel:AttributeEditModel" name="width" id="utils.video.input/JMFCamFrame#width"/>
+    </children>
+    <children xsi:type="editmodel:CompartmentEditModel" size="135,378">
+      <children xsi:type="editmodel:MethodEditModel" name="JMFCamFrame" id="utils.video.input/JMFCamFrame#JMFCamFrame([BII)"/>
+      <children xsi:type="editmodel:MethodEditModel" name="clearFrameData" id="utils.video.input/JMFCamFrame#clearFrameData()"/>
+      <children xsi:type="editmodel:MethodEditModel" name="convertYUV2RGB" id="utils.video.input/JMFCamFrame#convertYUV2RGB([B)"/>
+      <children xsi:type="editmodel:MethodEditModel" name="get2DIntArray" id="utils.video.input/JMFCamFrame#get2DIntArray()"/>
+      <children xsi:type="editmodel:MethodEditModel" name="getBufImg" id="utils.video.input/JMFCamFrame#getBufImg(I)"/>
+      <children xsi:type="editmodel:MethodEditModel" name="getBuffer" id="utils.video.input/JMFCamFrame#getBuffer()"/>
+      <children xsi:type="editmodel:MethodEditModel" name="getD_img_1_dim_byte" id="utils.video.input/JMFCamFrame#getD_img_1_dim_byte()"/>
+      <children xsi:type="editmodel:MethodEditModel" name="getGraphicsObject" id="utils.video.input/JMFCamFrame#getGraphicsObject()"/>
+      <children xsi:type="editmodel:MethodEditModel" name="getGrayByteArray" id="utils.video.input/JMFCamFrame#getGrayByteArray()"/>
+      <children xsi:type="editmodel:MethodEditModel" name="getHeight" id="utils.video.input/JMFCamFrame#getHeight()"/>
+      <children xsi:type="editmodel:MethodEditModel" name="getImg_1_dim_gray" id="utils.video.input/JMFCamFrame#getImg_1_dim_gray()"/>
+      <children xsi:type="editmodel:MethodEditModel" name="getImg_1_dim_int" id="utils.video.input/JMFCamFrame#getImg_1_dim_int()"/>
+      <children xsi:type="editmodel:MethodEditModel" name="getImg_2_dim_gray" id="utils.video.input/JMFCamFrame#getImg_2_dim_gray()"/>
+      <children xsi:type="editmodel:MethodEditModel" name="getRGBByteArray" id="utils.video.input/JMFCamFrame#getRGBByteArray()"/>
+      <children xsi:type="editmodel:MethodEditModel" name="getRGBIntArray" id="utils.video.input/JMFCamFrame#getRGBIntArray()"/>
+      <children xsi:type="editmodel:MethodEditModel" name="getRgb_img_buf" id="utils.video.input/JMFCamFrame#getRgb_img_buf()"/>
+      <children xsi:type="editmodel:MethodEditModel" name="getWidth" id="utils.video.input/JMFCamFrame#getWidth()"/>
+      <children xsi:type="editmodel:MethodEditModel" name="intRGB2ByteRGB" id="utils.video.input/JMFCamFrame#intRGB2ByteRGB([I)"/>
+      <children xsi:type="editmodel:MethodEditModel" name="setImage" id="utils.video.input/JMFCamFrame#setImage([III)"/>
+      <children xsi:type="editmodel:MethodEditModel" name="setRgb_img_buf" id="utils.video.input/JMFCamFrame#setRgb_img_buf(Ljava.awt.image.BufferedImage;)"/>
+      <children xsi:type="editmodel:MethodEditModel" name="updateBufferData" id="utils.video.input/JMFCamFrame#updateBufferData([B)"/>
+    </children>
+    <children xsi:type="editmodel:CompartmentEditModel"/>
+    <classifierPreferences xsi:type="editmodel:UMLClassDiagramClassifierPreference" showStereotype="true" attributeSorter="Natural" methodSorter="Natural" innerClassSorter="Natural" showPublicAttributes="true" showPackageAttributes="true" showStaticAttributes="true" showPublicMethods="true" showPackageMethods="true" showStaticMethods="true" showPublicInnerClasses="true" showPackageInnerClasses="true" showStaticInnerClasses="true" packageIndication="3" showAttributeProperty="true"/>
+  </children>
+  <children xsi:type="editmodel:ClassEditModel" name="OpenCVCamFrame" location="237,630" size="164,139" id="utils.video.input/OpenCVCamFrame">
+    <children xsi:type="editmodel:CompartmentEditModel" size="65,36">
+      <children xsi:type="editmodel:AttributeEditModel" name="height" id="utils.video.input/OpenCVCamFrame#height"/>
+      <children xsi:type="editmodel:AttributeEditModel" name="width" id="utils.video.input/OpenCVCamFrame#width"/>
+    </children>
+    <children xsi:type="editmodel:CompartmentEditModel" size="113,54">
+      <children xsi:type="editmodel:MethodEditModel" name="getHeight" id="utils.video.input/OpenCVCamFrame#getHeight()"/>
+      <children xsi:type="editmodel:MethodEditModel" name="getWidth" id="utils.video.input/OpenCVCamFrame#getWidth()"/>
+      <children xsi:type="editmodel:MethodEditModel" name="intRGB2ByteRGB" id="utils.video.input/OpenCVCamFrame#intRGB2ByteRGB([I)"/>
+    </children>
+    <children xsi:type="editmodel:CompartmentEditModel"/>
+    <classifierPreferences xsi:type="editmodel:UMLClassDiagramClassifierPreference" showStereotype="true" attributeSorter="Natural" methodSorter="Natural" innerClassSorter="Natural" showPublicAttributes="true" showPackageAttributes="true" showStaticAttributes="true" showPublicMethods="true" showPackageMethods="true" showStaticMethods="true" showPublicInnerClasses="true" showPackageInnerClasses="true" showStaticInnerClasses="true" packageIndication="3" showAttributeProperty="true"/>
+  </children>
+  <children xsi:type="editmodel:ClassEditModel" name="JMFModule" location="50,307" size="172,247" id="utils.video.input/JMFModule">
+    <children xsi:type="editmodel:CompartmentEditModel" size="149,36">
+      <children xsi:type="editmodel:AttributeEditModel" name="format" id="utils.video.input/JMFModule#format"/>
+      <children xsi:type="editmodel:AttributeEditModel" name="video_format" id="utils.video.input/JMFModule#video_format"/>
+    </children>
+    <children xsi:type="editmodel:CompartmentEditModel" size="127,162">
+      <children xsi:type="editmodel:MethodEditModel" name="JMFModule" id="utils.video.input/JMFModule#JMFModule(Ljava.lang.String;II)"/>
+      <children xsi:type="editmodel:MethodEditModel" name="StartStream" id="utils.video.input/JMFModule#StartStream()"/>
+      <children xsi:type="editmodel:MethodEditModel" name="StopModule" id="utils.video.input/JMFModule#StopModule()"/>
+      <children xsi:type="editmodel:MethodEditModel" name="displayMoreSettings" id="utils.video.input/JMFModule#displayMoreSettings()"/>
+      <children xsi:type="editmodel:MethodEditModel" name="getName" id="utils.video.input/JMFModule#getName()"/>
+      <children xsi:type="editmodel:MethodEditModel" name="getNumCams" id="utils.video.input/JMFModule#getNumCams()"/>
+      <children xsi:type="editmodel:MethodEditModel" name="getStatus" id="utils.video.input/JMFModule#getStatus()"/>
+      <children xsi:type="editmodel:MethodEditModel" name="initialize" id="utils.video.input/JMFModule#initialize(Lutils.video.FrameIntArray;III)"/>
+      <children xsi:type="editmodel:MethodEditModel" name="setFormat" id="utils.video.input/JMFModule#setFormat(Ljava.lang.String;)"/>
+    </children>
+    <children xsi:type="editmodel:CompartmentEditModel"/>
+    <sourceConnections xsi:type="editmodel:GeneralizationEditModel" autoLocated="true" id="utils.video.input/VidInputter&lt;-utils.video.input/JMFModule" source="//@children.2" target="//@children.3/@sourceConnections.1" targetEnd="//@children.2/@sourceConnections.0/@children.1" sourceEnd="//@children.2/@sourceConnections.0/@children.0" connectionRouterKind="GeneralizationManhattan">
+      <children xsi:type="editmodel:AssociationEndEditModel" location="86,0" anchorKind="FixedAtEdge" attachSource="true"/>
+      <children xsi:type="editmodel:AssociationEndEditModel"/>
+    </sourceConnections>
+    <sourceConnections xsi:type="editmodel:DependencyEditModel" autoLocated="true" id="utils.video.input/JMFModule-Soyatec::Implement->utils.video.input/VidInputter" source="//@children.2" target="//@children.5" targetEnd="//@children.2/@sourceConnections.1/@children.2" label="//@children.2/@sourceConnections.1/@children.0" sourceEnd="//@children.2/@sourceConnections.1/@children.1" connectionRouterKind="Manual">
+      <children xsi:type="editmodel:WireLabelEditModel" name="«Implement»" size="59,14" anchorKind="MiddlePart"/>
+      <children xsi:type="editmodel:AssociationEndEditModel" location="170,0" attachSource="true"/>
+      <children xsi:type="editmodel:AssociationEndEditModel" location="4,207"/>
+    </sourceConnections>
+    <classifierPreferences xsi:type="editmodel:UMLClassDiagramClassifierPreference" showStereotype="true" attributeSorter="Natural" methodSorter="Natural" innerClassSorter="Natural" showPublicAttributes="true" showPackageAttributes="true" showStaticAttributes="true" showPublicMethods="true" showPackageMethods="true" showStaticMethods="true" showPublicInnerClasses="true" showPackageInnerClasses="true" showStaticInnerClasses="true" packageIndication="3" showAttributeProperty="true"/>
+  </children>
+  <children xsi:type="editmodel:ClassEditModel" name="JMyronModule" location="252,307" size="150,211" id="utils.video.input/JMyronModule" runTimeClassModel="getName(),status,getNumCams(),getStatus(),initialize(Lutils.video.FrameIntArray;III),displayMoreSettings(),setFormat(Ljava.lang.String;),StartStream(),StopModule()">
+    <children xsi:type="editmodel:CompartmentEditModel" size="66,18">
+      <children xsi:type="editmodel:AttributeEditModel" name="status" id="utils.video.input/JMyronModule#status"/>
+    </children>
+    <children xsi:type="editmodel:CompartmentEditModel" size="127,144">
+      <children xsi:type="editmodel:MethodEditModel" name="StartStream" id="utils.video.input/JMyronModule#StartStream()"/>
+      <children xsi:type="editmodel:MethodEditModel" name="StopModule" id="utils.video.input/JMyronModule#StopModule()"/>
+      <children xsi:type="editmodel:MethodEditModel" name="displayMoreSettings" id="utils.video.input/JMyronModule#displayMoreSettings()"/>
+      <children xsi:type="editmodel:MethodEditModel" name="getName" id="utils.video.input/JMyronModule#getName()"/>
+      <children xsi:type="editmodel:MethodEditModel" name="getNumCams" id="utils.video.input/JMyronModule#getNumCams()"/>
+      <children xsi:type="editmodel:MethodEditModel" name="getStatus" id="utils.video.input/JMyronModule#getStatus()"/>
+      <children xsi:type="editmodel:MethodEditModel" name="initialize" id="utils.video.input/JMyronModule#initialize(Lutils.video.FrameIntArray;III)"/>
+      <children xsi:type="editmodel:MethodEditModel" name="setFormat" id="utils.video.input/JMyronModule#setFormat(Ljava.lang.String;)"/>
+    </children>
+    <children xsi:type="editmodel:CompartmentEditModel" size="0,0"/>
+    <sourceConnections xsi:type="editmodel:DependencyEditModel" autoLocated="true" id="utils.video.input/JMyronModule-Soyatec::Implement->utils.video.input/VidInputter" source="//@children.3" target="//@children.5" targetEnd="//@children.3/@sourceConnections.0/@children.2" label="//@children.3/@sourceConnections.0/@children.0" sourceEnd="//@children.3/@sourceConnections.0/@children.1" connectionRouterKind="Manual">
+      <children xsi:type="editmodel:WireLabelEditModel" name="«Implement»" size="59,14" anchorKind="MiddlePart"/>
+      <children xsi:type="editmodel:AssociationEndEditModel" location="74,0" attachSource="true"/>
+      <children xsi:type="editmodel:AssociationEndEditModel" location="75,207"/>
+    </sourceConnections>
+    <sourceConnections xsi:type="editmodel:GeneralizationEditModel" targetConnections="//@children.4/@sourceConnections.1 //@children.2/@sourceConnections.0" autoLocated="true" id="utils.video.input/VidInputter&lt;-utils.video.input/JMyronModule" source="//@children.3" target="//@children.5" targetEnd="//@children.3/@sourceConnections.1/@children.1" sourceEnd="//@children.3/@sourceConnections.1/@children.0" connectionRouterKind="GeneralizationManhattan">
+      <children xsi:type="editmodel:AssociationEndEditModel" location="64,0" anchorKind="FixedAtEdge" attachSource="true"/>
+      <children xsi:type="editmodel:AssociationEndEditModel" location="65,207" anchorKind="FixedAtEdge"/>
+    </sourceConnections>
+    <classifierPreferences xsi:type="editmodel:UMLClassDiagramClassifierPreference" showStereotype="true" attributeSorter="Natural" methodSorter="Natural" innerClassSorter="Natural" showPublicAttributes="true" showPackageAttributes="true" showStaticAttributes="true" showPublicMethods="true" showPackageMethods="true" showStaticMethods="true" showPublicInnerClasses="true" showPackageInnerClasses="true" showStaticInnerClasses="true" packageIndication="3" showAttributeProperty="true"/>
+  </children>
+  <children xsi:type="editmodel:ClassEditModel" name="OpenCVModule" location="432,307" size="167,499" id="utils.video.input/OpenCVModule" runTimeClassModel="data,vp,getName(),height,squares,fRAME_RATE,run(),StartStream(),setWidth(I),OpenCVModule(),g,getNumberOfCams(),status,width,displayMoreSettings(),setFormat(Ljava.lang.String;),cv,b_img,StopModule(),setHeight(I),t,frame,getNumCams(),getStatus(),initialize(Lutils.video.FrameIntArray;III)">
+    <children xsi:type="editmodel:CompartmentEditModel" size="144,216">
+      <children xsi:type="editmodel:AttributeEditModel" name="b_img" id="utils.video.input/OpenCVModule#b_img"/>
+      <children xsi:type="editmodel:AttributeEditModel" name="cv" id="utils.video.input/OpenCVModule#cv"/>
+      <children xsi:type="editmodel:AttributeEditModel" name="data" id="utils.video.input/OpenCVModule#data"/>
+      <children xsi:type="editmodel:AttributeEditModel" name="fRAME_RATE" id="utils.video.input/OpenCVModule#fRAME_RATE"/>
+      <children xsi:type="editmodel:AttributeEditModel" name="frame" id="utils.video.input/OpenCVModule#frame"/>
+      <children xsi:type="editmodel:AttributeEditModel" name="g" id="utils.video.input/OpenCVModule#g"/>
+      <children xsi:type="editmodel:AttributeEditModel" name="height" id="utils.video.input/OpenCVModule#height"/>
+      <children xsi:type="editmodel:AttributeEditModel" name="squares" id="utils.video.input/OpenCVModule#squares"/>
+      <children xsi:type="editmodel:AttributeEditModel" name="status" id="utils.video.input/OpenCVModule#status"/>
+      <children xsi:type="editmodel:AttributeEditModel" name="t" id="utils.video.input/OpenCVModule#t"/>
+      <children xsi:type="editmodel:AttributeEditModel" name="vp" id="utils.video.input/OpenCVModule#vp"/>
+      <children xsi:type="editmodel:AttributeEditModel" name="width" id="utils.video.input/OpenCVModule#width"/>
+    </children>
+    <children xsi:type="editmodel:CompartmentEditModel" size="127,234">
+      <children xsi:type="editmodel:MethodEditModel" name="OpenCVModule" id="utils.video.input/OpenCVModule#OpenCVModule()"/>
+      <children xsi:type="editmodel:MethodEditModel" name="StartStream" id="utils.video.input/OpenCVModule#StartStream()"/>
+      <children xsi:type="editmodel:MethodEditModel" name="StopModule" id="utils.video.input/OpenCVModule#StopModule()"/>
+      <children xsi:type="editmodel:MethodEditModel" name="displayMoreSettings" id="utils.video.input/OpenCVModule#displayMoreSettings()"/>
+      <children xsi:type="editmodel:MethodEditModel" name="getName" id="utils.video.input/OpenCVModule#getName()"/>
+      <children xsi:type="editmodel:MethodEditModel" name="getNumCams" id="utils.video.input/OpenCVModule#getNumCams()"/>
+      <children xsi:type="editmodel:MethodEditModel" name="getNumberOfCams" id="utils.video.input/OpenCVModule#getNumberOfCams()"/>
+      <children xsi:type="editmodel:MethodEditModel" name="getStatus" id="utils.video.input/OpenCVModule#getStatus()"/>
+      <children xsi:type="editmodel:MethodEditModel" name="initialize" id="utils.video.input/OpenCVModule#initialize(Lutils.video.FrameIntArray;III)"/>
+      <children xsi:type="editmodel:MethodEditModel" name="run" id="utils.video.input/OpenCVModule#run()"/>
+      <children xsi:type="editmodel:MethodEditModel" name="setFormat" id="utils.video.input/OpenCVModule#setFormat(Ljava.lang.String;)"/>
+      <children xsi:type="editmodel:MethodEditModel" name="setHeight" id="utils.video.input/OpenCVModule#setHeight(I)"/>
+      <children xsi:type="editmodel:MethodEditModel" name="setWidth" id="utils.video.input/OpenCVModule#setWidth(I)"/>
+    </children>
+    <children xsi:type="editmodel:CompartmentEditModel" size="0,0"/>
+    <sourceConnections xsi:type="editmodel:DependencyEditModel" autoLocated="true" id="utils.video.input/OpenCVModule-Soyatec::Implement->utils.video.input/VidInputter" source="//@children.4" target="//@children.5" targetEnd="//@children.4/@sourceConnections.0/@children.2" label="//@children.4/@sourceConnections.0/@children.0" sourceEnd="//@children.4/@sourceConnections.0/@children.1" connectionRouterKind="Manual">
+      <children xsi:type="editmodel:WireLabelEditModel" name="«Implement»" size="59,14" anchorKind="MiddlePart"/>
+      <children xsi:type="editmodel:AssociationEndEditModel" location="0,72" attachSource="true"/>
+      <children xsi:type="editmodel:AssociationEndEditModel" location="124,207"/>
+    </sourceConnections>
+    <sourceConnections xsi:type="editmodel:GeneralizationEditModel" autoLocated="true" id="utils.video.input/VidInputter&lt;-utils.video.input/OpenCVModule" source="//@children.4" target="//@children.3/@sourceConnections.1" targetEnd="//@children.4/@sourceConnections.1/@children.1" sourceEnd="//@children.4/@sourceConnections.1/@children.0" connectionRouterKind="GeneralizationManhattan">
+      <children xsi:type="editmodel:AssociationEndEditModel" location="83,0" anchorKind="FixedAtEdge" attachSource="true"/>
+      <children xsi:type="editmodel:AssociationEndEditModel"/>
+    </sourceConnections>
+    <classifierPreferences xsi:type="editmodel:UMLClassDiagramClassifierPreference" showStereotype="true" attributeSorter="Natural" methodSorter="Natural" innerClassSorter="Natural" showPublicAttributes="true" showPackageAttributes="true" showStaticAttributes="true" showPublicMethods="true" showPackageMethods="true" showStaticMethods="true" showPublicInnerClasses="true" showPackageInnerClasses="true" showStaticInnerClasses="true" packageIndication="3" showAttributeProperty="true"/>
+  </children>
+  <children xsi:type="editmodel:InterfaceEditModel" targetConnections="//@children.3/@sourceConnections.0 //@children.3/@sourceConnections.1 //@children.4/@sourceConnections.0 //@children.2/@sourceConnections.1" name="VidInputter" location="251,50" size="150,207" id="utils.video.input/VidInputter" runTimeClassModel="getName(),getNumCams(),initialize(Lutils.video.FrameIntArray;III),getStatus(),displayMoreSettings(),StartStream(),setFormat(Ljava.lang.String;),StopModule()">
+    <children xsi:type="editmodel:CompartmentEditModel" size="0,0"/>
+    <children xsi:type="editmodel:CompartmentEditModel" size="127,144">
+      <children xsi:type="editmodel:MethodEditModel" name="StartStream" id="utils.video.input/VidInputter#StartStream()"/>
+      <children xsi:type="editmodel:MethodEditModel" name="StopModule" id="utils.video.input/VidInputter#StopModule()"/>
+      <children xsi:type="editmodel:MethodEditModel" name="displayMoreSettings" id="utils.video.input/VidInputter#displayMoreSettings()"/>
+      <children xsi:type="editmodel:MethodEditModel" name="getName" id="utils.video.input/VidInputter#getName()"/>
+      <children xsi:type="editmodel:MethodEditModel" name="getNumCams" id="utils.video.input/VidInputter#getNumCams()"/>
+      <children xsi:type="editmodel:MethodEditModel" name="getStatus" id="utils.video.input/VidInputter#getStatus()"/>
+      <children xsi:type="editmodel:MethodEditModel" name="initialize" id="utils.video.input/VidInputter#initialize(Lutils.video.FrameIntArray;III)"/>
+      <children xsi:type="editmodel:MethodEditModel" name="setFormat" id="utils.video.input/VidInputter#setFormat(Ljava.lang.String;)"/>
+    </children>
+    <children xsi:type="editmodel:CompartmentEditModel" size="0,0"/>
+    <classifierPreferences xsi:type="editmodel:UMLClassDiagramClassifierPreference" showStereotype="true" attributeSorter="Natural" methodSorter="Natural" innerClassSorter="Natural" showPublicAttributes="true" showPackageAttributes="true" showStaticAttributes="true" showPublicMethods="true" showPackageMethods="true" showStaticMethods="true" showPublicInnerClasses="true" showPackageInnerClasses="true" showStaticInnerClasses="true" packageIndication="3" showAttributeProperty="true"/>
+  </children>
+  <diagramOptions xsi:type="options:ClassDiagramOptions" level="-1" showScope="InPackage" properties="wireOptions=7;Product=eUML2"/>
+  <boardSetting snapToGeometry="true" gridEnabled="true" gridSpacing="15,15" gridOrigin="0,0" rulerUnit="pixel" gridVisibility="false">
+    <leftRuler/>
+    <topRuler/>
+  </boardSetting>
+  <classDiagramPreferences xsi:type="editmodel:UMLClassDiagramPreference" showPopupBars="true" showConnectionHandles="true" attributeSorter="Natural" methodSorter="Natural" showClassStereotype="true" showPackageStereotype="true" showDependencyStereotype="true" showInterfaceStereotype="true" innerClassSorter="Natural" showPublicAttributes="true" showPackageAttributes="true" showStaticAttributes="true" showPublicMethods="true" showPackageMethods="true" showStaticMethods="true" showPublicInnerClasses="true" showPackageInnerClasses="true" showStaticInnerClasses="true" packageIndication="3" showAttributeProperty="true"/>
+</editmodel:ClassDiagramEditModel>
