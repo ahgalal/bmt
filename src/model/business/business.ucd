@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<editmodel:ClassDiagramEditModel xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:editmodel="editmodel.xmi" xmlns:options="options.xmi" name="business" size="759,808" id="model.business" metadata="uml2-1.0" initialized="true" tag="1000" key="32303037303533312D3130303020526174204D6F6E69746F722F4372656174697665">
+  <children xsi:type="editmodel:ClassEditModel" targetConnections="//@children.2/@sourceConnections.2" name="Rat" location="488,303" size="145,409" id="model.business/Rat">
+    <children xsi:type="editmodel:CompartmentEditModel" size="112,72">
+      <children xsi:type="editmodel:AttributeEditModel" name="all_entrance" id="model.business/Rat#all_entrance"/>
+      <children xsi:type="editmodel:AttributeEditModel" name="number" id="model.business/Rat#number"/>
+      <children xsi:type="editmodel:AttributeEditModel" name="rearing_ctr" id="model.business/Rat#rearing_ctr"/>
+      <children xsi:type="editmodel:AttributeEditModel" name="total_distance" id="model.business/Rat#total_distance"/>
+    </children>
+    <children xsi:type="editmodel:CompartmentEditModel" size="122,288">
+      <children xsi:type="editmodel:MethodEditModel" name="Rat" id="model.business/Rat#Rat()"/>
+      <children xsi:type="editmodel:MethodEditModel" name="Rat" id="model.business/Rat#Rat(I)"/>
+      <children xsi:type="editmodel:MethodEditModel" name="getAll_entrance" id="model.business/Rat#getAll_entrance()"/>
+      <children xsi:type="editmodel:MethodEditModel" name="getCentralEntrance" id="model.business/Rat#getCentralEntrance()"/>
+      <children xsi:type="editmodel:MethodEditModel" name="getCentralTime" id="model.business/Rat#getCentralTime()"/>
+      <children xsi:type="editmodel:MethodEditModel" name="getNumber" id="model.business/Rat#getNumber()"/>
+      <children xsi:type="editmodel:MethodEditModel" name="getRearing_ctr" id="model.business/Rat#getRearing_ctr()"/>
+      <children xsi:type="editmodel:MethodEditModel" name="getSessionTime" id="model.business/Rat#getSessionTime()"/>
+      <children xsi:type="editmodel:MethodEditModel" name="getTotal_distance" id="model.business/Rat#getTotal_distance()"/>
+      <children xsi:type="editmodel:MethodEditModel" name="setAll_entrance" id="model.business/Rat#setAll_entrance(I)"/>
+      <children xsi:type="editmodel:MethodEditModel" name="setCentralEntrance" id="model.business/Rat#setCentralEntrance(J)"/>
+      <children xsi:type="editmodel:MethodEditModel" name="setCentralTime" id="model.business/Rat#setCentralTime(F)"/>
+      <children xsi:type="editmodel:MethodEditModel" name="setNumber" id="model.business/Rat#setNumber(I)"/>
+      <children xsi:type="editmodel:MethodEditModel" name="setRearing_ctr" id="model.business/Rat#setRearing_ctr(I)"/>
+      <children xsi:type="editmodel:MethodEditModel" name="setSessionTime" id="model.business/Rat#setSessionTime(J)"/>
+      <children xsi:type="editmodel:MethodEditModel" name="setTotal_distance" id="model.business/Rat#setTotal_distance(J)"/>
+    </children>
+    <children xsi:type="editmodel:CompartmentEditModel"/>
+    <classifierPreferences xsi:type="editmodel:UMLClassDiagramClassifierPreference" showStereotype="true" attributeSorter="Natural" methodSorter="Natural" innerClassSorter="Natural" showPublicAttributes="true" showPackageAttributes="true" showStaticAttributes="true" showPublicMethods="true" showPackageMethods="true" showStaticMethods="true" showPublicInnerClasses="true" showPackageInnerClasses="true" showStaticInnerClasses="true" packageIndication="3" showAttributeProperty="true"/>
+  </children>
+  <children xsi:type="editmodel:InterfaceEditModel" targetConnections="//@children.2/@sourceConnections.0 //@children.2/@sourceConnections.1" name="If_Grp2GUI" location="271,176" size="146,153" id="model.business/If_Grp2GUI" runTimeClassModel="getName(),getNotes(),getId(),getNo_rats(),getRats_numbering()">
+    <children xsi:type="editmodel:CompartmentEditModel" size="0,0"/>
+    <children xsi:type="editmodel:CompartmentEditModel" size="123,90">
+      <children xsi:type="editmodel:MethodEditModel" name="getId" id="model.business/If_Grp2GUI#getId()"/>
+      <children xsi:type="editmodel:MethodEditModel" name="getName" id="model.business/If_Grp2GUI#getName()"/>
+      <children xsi:type="editmodel:MethodEditModel" name="getNo_rats" id="model.business/If_Grp2GUI#getNo_rats()"/>
+      <children xsi:type="editmodel:MethodEditModel" name="getNotes" id="model.business/If_Grp2GUI#getNotes()"/>
+      <children xsi:type="editmodel:MethodEditModel" name="getRats_numbering" id="model.business/If_Grp2GUI#getRats_numbering()"/>
+    </children>
+    <children xsi:type="editmodel:CompartmentEditModel" size="0,0"/>
+    <classifierPreferences xsi:type="editmodel:UMLClassDiagramClassifierPreference" showStereotype="true" attributeSorter="Natural" methodSorter="Natural" innerClassSorter="Natural" showPublicAttributes="true" showPackageAttributes="true" showStaticAttributes="true" showPublicMethods="true" showPackageMethods="true" showStaticMethods="true" showPublicInnerClasses="true" showPackageInnerClasses="true" showStaticInnerClasses="true" packageIndication="3" showAttributeProperty="true"/>
+  </children>
+  <children xsi:type="editmodel:ClassEditModel" targetConnections="//@children.3/@sourceConnections.2" name="Group" location="269,379" size="151,409" id="model.business/Group">
+    <children xsi:type="editmodel:CompartmentEditModel" size="128,90">
+      <children xsi:type="editmodel:AttributeEditModel" name="id" id="model.business/Group#id"/>
+      <children xsi:type="editmodel:AttributeEditModel" name="name" id="model.business/Group#name"/>
+      <children xsi:type="editmodel:AttributeEditModel" name="no_rats" id="model.business/Group#no_rats"/>
+      <children xsi:type="editmodel:AttributeEditModel" name="notes" id="model.business/Group#notes"/>
+      <children xsi:type="editmodel:AttributeEditModel" name="rats_numbering" id="model.business/Group#rats_numbering"/>
+    </children>
+    <children xsi:type="editmodel:CompartmentEditModel" size="123,270">
+      <children xsi:type="editmodel:MethodEditModel" name="Group" id="model.business/Group#Group(ILjava.lang.String;ILjava.lang.String;Ljava.lang.String;)"/>
+      <children xsi:type="editmodel:MethodEditModel" name="Group" id="model.business/Group#Group()"/>
+      <children xsi:type="editmodel:MethodEditModel" name="addRat" id="model.business/Group#addRat(Lmodel.business.Rat;)"/>
+      <children xsi:type="editmodel:MethodEditModel" name="getAllRats" id="model.business/Group#getAllRats()"/>
+      <children xsi:type="editmodel:MethodEditModel" name="getId" id="model.business/Group#getId()"/>
+      <children xsi:type="editmodel:MethodEditModel" name="getName" id="model.business/Group#getName()"/>
+      <children xsi:type="editmodel:MethodEditModel" name="getNo_rats" id="model.business/Group#getNo_rats()"/>
+      <children xsi:type="editmodel:MethodEditModel" name="getNotes" id="model.business/Group#getNotes()"/>
+      <children xsi:type="editmodel:MethodEditModel" name="getRatByNumber" id="model.business/Group#getRatByNumber(I)"/>
+      <children xsi:type="editmodel:MethodEditModel" name="getRats_numbering" id="model.business/Group#getRats_numbering()"/>
+      <children xsi:type="editmodel:MethodEditModel" name="setId" id="model.business/Group#setId(I)"/>
+      <children xsi:type="editmodel:MethodEditModel" name="setName" id="model.business/Group#setName(Ljava.lang.String;)"/>
+      <children xsi:type="editmodel:MethodEditModel" name="setNo_rats" id="model.business/Group#setNo_rats(I)"/>
+      <children xsi:type="editmodel:MethodEditModel" name="setNotes" id="model.business/Group#setNotes(Ljava.lang.String;)"/>
+      <children xsi:type="editmodel:MethodEditModel" name="setRats_numbering" id="model.business/Group#setRats_numbering(Ljava.lang.String;)"/>
+    </children>
+    <children xsi:type="editmodel:CompartmentEditModel"/>
+    <sourceConnections xsi:type="editmodel:GeneralizationEditModel" autoLocated="true" id="model.business/If_Grp2GUI&lt;-model.business/Group" source="//@children.2" target="//@children.1" targetEnd="//@children.2/@sourceConnections.0/@children.1" sourceEnd="//@children.2/@sourceConnections.0/@children.0" connectionRouterKind="Manual">
+      <children xsi:type="editmodel:AssociationEndEditModel" location="75,0" attachSource="true"/>
+      <children xsi:type="editmodel:AssociationEndEditModel" location="73,153"/>
+    </sourceConnections>
+    <sourceConnections xsi:type="editmodel:DependencyEditModel" autoLocated="true" id="model.business/Group-Soyatec::Implement->model.business/If_Grp2GUI" source="//@children.2" target="//@children.1" targetEnd="//@children.2/@sourceConnections.1/@children.2" label="//@children.2/@sourceConnections.1/@children.0" sourceEnd="//@children.2/@sourceConnections.1/@children.1" connectionRouterKind="Manual">
+      <children xsi:type="editmodel:WireLabelEditModel" name="«Implement»" size="59,14" anchorKind="MiddlePart"/>
+      <children xsi:type="editmodel:AssociationEndEditModel" location="95,0" attachSource="true"/>
+      <children xsi:type="editmodel:AssociationEndEditModel" location="93,153"/>
+    </sourceConnections>
+    <sourceConnections xsi:type="editmodel:DependencyEditModel" autoLocated="true" id="model.business/Group-Standard::Call->model.business/Rat*model.business/Group-Soyatec::Import->model.business/Rat" source="//@children.2" target="//@children.0" targetEnd="//@children.2/@sourceConnections.2/@children.2" label="//@children.2/@sourceConnections.2/@children.0" sourceEnd="//@children.2/@sourceConnections.2/@children.1" connectionRouterKind="Manual">
+      <children xsi:type="editmodel:WireLabelEditModel" name="«Call, Import»" size="64,14" anchorKind="MiddlePart"/>
+      <children xsi:type="editmodel:AssociationEndEditModel" location="151,166" attachSource="true"/>
+      <children xsi:type="editmodel:AssociationEndEditModel" location="0,242"/>
+    </sourceConnections>
+    <classifierPreferences xsi:type="editmodel:UMLClassDiagramClassifierPreference" showStereotype="true" attributeSorter="Natural" methodSorter="Natural" innerClassSorter="Natural" showPublicAttributes="true" showPackageAttributes="true" showStaticAttributes="true" showPublicMethods="true" showPackageMethods="true" showStaticMethods="true" showPublicInnerClasses="true" showPackageInnerClasses="true" showStaticInnerClasses="true" packageIndication="3" showAttributeProperty="true"/>
+  </children>
+  <children xsi:type="editmodel:ClassEditModel" name="Experiment" location="50,235" size="168,445" id="model.business/Experiment">
+    <children xsi:type="editmodel:CompartmentEditModel" size="145,90">
+      <children xsi:type="editmodel:AttributeEditModel" name="date" id="model.business/Experiment#date"/>
+      <children xsi:type="editmodel:AttributeEditModel" name="groups" id="model.business/Experiment#groups"/>
+      <children xsi:type="editmodel:AttributeEditModel" name="name" id="model.business/Experiment#name"/>
+      <children xsi:type="editmodel:AttributeEditModel" name="notes" id="model.business/Experiment#notes"/>
+      <children xsi:type="editmodel:AttributeEditModel" name="user" id="model.business/Experiment#user"/>
+    </children>
+    <children xsi:type="editmodel:CompartmentEditModel" size="129,306">
+      <children xsi:type="editmodel:MethodEditModel" name="Experiment" id="model.business/Experiment#Experiment()"/>
+      <children xsi:type="editmodel:MethodEditModel" name="addGroup" id="model.business/Experiment#addGroup(Lmodel.business.Group;)"/>
+      <children xsi:type="editmodel:MethodEditModel" name="clearExperimentData" id="model.business/Experiment#clearExperimentData()"/>
+      <children xsi:type="editmodel:MethodEditModel" name="getDate" id="model.business/Experiment#getDate()"/>
+      <children xsi:type="editmodel:MethodEditModel" name="getGroupByID" id="model.business/Experiment#getGroupByID(I)"/>
+      <children xsi:type="editmodel:MethodEditModel" name="getGroupByName" id="model.business/Experiment#getGroupByName(Ljava.lang.String;)"/>
+      <children xsi:type="editmodel:MethodEditModel" name="getGroups" id="model.business/Experiment#getGroups()"/>
+      <children xsi:type="editmodel:MethodEditModel" name="getName" id="model.business/Experiment#getName()"/>
+      <children xsi:type="editmodel:MethodEditModel" name="getNo_groups" id="model.business/Experiment#getNo_groups()"/>
+      <children xsi:type="editmodel:MethodEditModel" name="getNotes" id="model.business/Experiment#getNotes()"/>
+      <children xsi:type="editmodel:MethodEditModel" name="getUser" id="model.business/Experiment#getUser()"/>
+      <children xsi:type="editmodel:MethodEditModel" name="setDate" id="model.business/Experiment#setDate(Ljava.lang.String;)"/>
+      <children xsi:type="editmodel:MethodEditModel" name="setExperimentInfo" id="model.business/Experiment#setExperimentInfo(Ljava.lang.String;Ljava.lang.String;Ljava.lang.String;Ljava.lang.String;)"/>
+      <children xsi:type="editmodel:MethodEditModel" name="setGroups" id="model.business/Experiment#setGroups(Ljava.util.ArrayList;)"/>
+      <children xsi:type="editmodel:MethodEditModel" name="setName" id="model.business/Experiment#setName(Ljava.lang.String;)"/>
+      <children xsi:type="editmodel:MethodEditModel" name="setNotes" id="model.business/Experiment#setNotes(Ljava.lang.String;)"/>
+      <children xsi:type="editmodel:MethodEditModel" name="setUser" id="model.business/Experiment#setUser(Ljava.lang.String;)"/>
+    </children>
+    <children xsi:type="editmodel:CompartmentEditModel"/>
+    <sourceConnections xsi:type="editmodel:GeneralizationEditModel" autoLocated="true" id="model.business/If_Exp2GUI&lt;-model.business/Experiment" source="//@children.3" target="//@children.4" targetEnd="//@children.3/@sourceConnections.0/@children.1" sourceEnd="//@children.3/@sourceConnections.0/@children.0" connectionRouterKind="Manual">
+      <children xsi:type="editmodel:AssociationEndEditModel" location="83,0" attachSource="true"/>
+      <children xsi:type="editmodel:AssociationEndEditModel" location="55,135"/>
+    </sourceConnections>
+    <sourceConnections xsi:type="editmodel:DependencyEditModel" autoLocated="true" id="model.business/Experiment-Soyatec::Implement->model.business/If_Exp2GUI" source="//@children.3" target="//@children.4" targetEnd="//@children.3/@sourceConnections.1/@children.2" label="//@children.3/@sourceConnections.1/@children.0" sourceEnd="//@children.3/@sourceConnections.1/@children.1" connectionRouterKind="Manual">
+      <children xsi:type="editmodel:WireLabelEditModel" name="«Implement»" size="59,14" anchorKind="MiddlePart"/>
+      <children xsi:type="editmodel:AssociationEndEditModel" location="168,15" attachSource="true"/>
+      <children xsi:type="editmodel:AssociationEndEditModel" location="75,135"/>
+    </sourceConnections>
+    <sourceConnections xsi:type="editmodel:DependencyEditModel" autoLocated="true" id="model.business/Experiment-Standard::Call->model.business/Group*model.business/Experiment-Soyatec::Import->model.business/Group" source="//@children.3" target="//@children.2" targetEnd="//@children.3/@sourceConnections.2/@children.2" label="//@children.3/@sourceConnections.2/@children.0" sourceEnd="//@children.3/@sourceConnections.2/@children.1" connectionRouterKind="Manual">
+      <children xsi:type="editmodel:WireLabelEditModel" name="«Call, Import»" size="64,14" anchorKind="MiddlePart"/>
+      <children xsi:type="editmodel:AssociationEndEditModel" location="168,294" attachSource="true"/>
+      <children xsi:type="editmodel:AssociationEndEditModel" location="0,150"/>
+    </sourceConnections>
+    <classifierPreferences xsi:type="editmodel:UMLClassDiagramClassifierPreference" showStereotype="true" attributeSorter="Natural" methodSorter="Natural" innerClassSorter="Natural" showPublicAttributes="true" showPackageAttributes="true" showStaticAttributes="true" showPublicMethods="true" showPackageMethods="true" showStaticMethods="true" showPublicInnerClasses="true" showPackageInnerClasses="true" showStaticInnerClasses="true" packageIndication="3" showAttributeProperty="true"/>
+  </children>
+  <children xsi:type="editmodel:InterfaceEditModel" targetConnections="//@children.3/@sourceConnections.0 //@children.3/@sourceConnections.1" name="If_Exp2GUI" location="78,50" size="111,135" id="model.business/If_Exp2GUI" runTimeClassModel="getName(),getNotes(),getDate(),getUser()">
+    <children xsi:type="editmodel:CompartmentEditModel" size="0,0"/>
+    <children xsi:type="editmodel:CompartmentEditModel" size="73,72">
+      <children xsi:type="editmodel:MethodEditModel" name="getDate" id="model.business/If_Exp2GUI#getDate()"/>
+      <children xsi:type="editmodel:MethodEditModel" name="getName" id="model.business/If_Exp2GUI#getName()"/>
+      <children xsi:type="editmodel:MethodEditModel" name="getNotes" id="model.business/If_Exp2GUI#getNotes()"/>
+      <children xsi:type="editmodel:MethodEditModel" name="getUser" id="model.business/If_Exp2GUI#getUser()"/>
+    </children>
+    <children xsi:type="editmodel:CompartmentEditModel" size="0,0"/>
+    <classifierPreferences xsi:type="editmodel:UMLClassDiagramClassifierPreference" showStereotype="true" attributeSorter="Natural" methodSorter="Natural" innerClassSorter="Natural" showPublicAttributes="true" showPackageAttributes="true" showStaticAttributes="true" showPublicMethods="true" showPackageMethods="true" showStaticMethods="true" showPublicInnerClasses="true" showPackageInnerClasses="true" showStaticInnerClasses="true" packageIndication="3" showAttributeProperty="true"/>
+  </children>
+  <diagramOptions xsi:type="options:ClassDiagramOptions" level="-1" showScope="InPackage" properties="wireOptions=7;Product=eUML2"/>
+  <boardSetting snapToGeometry="true" gridEnabled="true" gridSpacing="15,15" gridOrigin="0,0" rulerUnit="pixel" gridVisibility="false">
+    <leftRuler/>
+    <topRuler/>
+  </boardSetting>
+  <classDiagramPreferences xsi:type="editmodel:UMLClassDiagramPreference" showPopupBars="true" showConnectionHandles="true" attributeSorter="Natural" methodSorter="Natural" showClassStereotype="true" showPackageStereotype="true" showDependencyStereotype="true" showInterfaceStereotype="true" innerClassSorter="Natural" showPublicAttributes="true" showPackageAttributes="true" showStaticAttributes="true" showPublicMethods="true" showPackageMethods="true" showStaticMethods="true" showPublicInnerClasses="true" showPackageInnerClasses="true" showStaticInnerClasses="true" packageIndication="3" showAttributeProperty="true"/>
+</editmodel:ClassDiagramEditModel>
