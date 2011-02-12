@@ -95,12 +95,13 @@ public class Ctrl_CamOptions extends ControllerUI{
 		ui.show(visibility);
 	}
 	@Override
-	public void setVars(String[] strs) {
+	public boolean setVars(String[] strs) {
 		width=Integer.parseInt(strs[0]);
 		height=Integer.parseInt(strs[1]);
 		this.frame_rate=Integer.parseInt(strs[2]);
 		this.library= strs[3];
 		this.format= strs[4];
 		this.cam_num=Integer.parseInt(strs[5]);
+		return true;
 	}
 }

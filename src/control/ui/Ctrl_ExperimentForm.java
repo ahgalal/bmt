@@ -23,11 +23,12 @@ public class Ctrl_ExperimentForm extends ControllerUI {
 	 * @see control.ui.ControllerUI#setVars(java.lang.String[])
 	 */
 	@Override
-	public void setVars(String[] strs) {
+	public boolean setVars(String[] strs) {
 		name=strs[0];
 		user=strs[1];
 		date=strs[2];
 		notes=strs[3];
+		return true;
 	}
 
 	/**

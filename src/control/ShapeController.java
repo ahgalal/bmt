@@ -20,10 +20,15 @@ import utils.PManager;
  */
 public class ShapeController implements GfxPanel_Notifiee {
 	static ShapeController default_controller;
+	public void setSetting_scale(boolean settingScale) {
+		setting_scale = settingScale;
+	}
+
 	private GfxPanel gfx_panel;
 	private ArrayList<Shape> shp_arr;
 	private ZonesController zone_conteroller;
 	private PManager pm;
+	private boolean setting_scale;
 
 	public void clearAllShapes()
 	{
@@ -66,7 +71,7 @@ public class ShapeController implements GfxPanel_Notifiee {
 			default_controller=new ShapeController();
 		return default_controller;
 	}
-	
+
 	public void drawAllShapes()
 	{
 		gfx_panel.redrawAllShapes();
@@ -139,7 +144,7 @@ public class ShapeController implements GfxPanel_Notifiee {
 		shp_arr = gfx_panel.getShapeArray();
 		gfx_panel.registerForNotifications(this);
 	}
-	
+
 	/**
 	 * just get the instance of the ZoneController (Singleton)
 	 */
@@ -147,7 +152,7 @@ public class ShapeController implements GfxPanel_Notifiee {
 	{
 		zone_conteroller=ZonesController.getDefault();
 	}
-	
+
 	public void drawaAllShapes(Graphics gfx)
 	{
 		int i =0 ;
@@ -163,7 +168,8 @@ public class ShapeController implements GfxPanel_Notifiee {
 	 */
 	@Override
 	public void mouseClicked(Point pos) {
-		pm.drw_zns.addMeasurePoint(pos);
+		if(setting_scale)
+			pm.drw_zns.addMeasurePoint(pos);
 	}
 
 	/* (non-Javadoc)

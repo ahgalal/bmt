@@ -151,7 +151,7 @@ public class StatsController {
 				central_entrance++;
 	}
 
-	 
+
 	/**
 	 * Saves the path of the rat in the path array in form of points (x,y)
 	 * @param pos Current rat position
@@ -161,7 +161,7 @@ public class StatsController {
 		//path.add(new Point(pos.x,pos.y));
 	}
 
-	
+
 	/**
 	 * To Calculate the total distance covered by the rat
 	 * through the experiment
@@ -300,5 +300,13 @@ public class StatsController {
 
 	public int getRearingCtr() {
 		return rearing_ctr;
+	}
+
+	public void incrementRearingCounter() {
+		rearing_ctr++;
+	}
+
+	public void decrementRearingCounter() {
+		rearing_ctr--;		
 	}
 }

@@ -2,7 +2,7 @@ package utils.video.processors;
 
 import java.awt.Point;
 
-public class RearingDetector {
+public class RearingDetector extends VideoFilter{
 
 
 	private int height;
@@ -18,6 +18,7 @@ public class RearingDetector {
 	}
 
 	private Integer normal_rat_area;
+	private boolean is_rearing;
 
 
 
@@ -34,23 +35,7 @@ public class RearingDetector {
 
 	public boolean isRearing(int[] binary_img_data)
 	{	
-		if(binary_img_data!=null)
-		{
-			int white_area=0;
-			for(int x=center_point.x-(margin_x/2);x<center_point.x+(margin_x/2);x++)
-				for(int y=center_point.y-(margin_y/2);y<center_point.y+(margin_y/2);y++)
-					if(x<width & x>=0 & y<height & y>=0)
-						if(binary_img_data[x+y*width]==0x00FFFFFF)
-							white_area++;
-
-			current_rat_area=white_area;
-			if(current_rat_area<rearing_thresh)
-				return true;
-			else
-				return false;
-		}
-		//PManager.getDefault().log.print("Rearing image is NULL!", this,StatusSeverity.ERROR);
-		return false;
+		return is_rearing;
 	}
 
 
@@ -94,5 +79,28 @@ public class RearingDetector {
 			normal_rat_area=tmp_rat_area_sum/num_samples;
 			System.out.print("normal rat area: " + normal_rat_area + "\n" );
 		}
+	}
+
+	@Override
+	public int[] process(int[] imageData) {
+		if(enabled)
+		{
+			if(imageData!=null)
+			{
+				int white_area=0;
+				for(int x=center_point.x-(margin_x/2);x<center_point.x+(margin_x/2);x++)
+					for(int y=center_point.y-(margin_y/2);y<center_point.y+(margin_y/2);y++)
+						if(x<width & x>=0 & y<height & y>=0)
+							if(imageData[x+y*width]==0x00FFFFFF)
+								white_area++;
+
+				current_rat_area=white_area;
+				if(current_rat_area<rearing_thresh)
+					is_rearing=true;
+				else
+					is_rearing=false;
+			}
+		}
+		return imageData;
 	}
 }

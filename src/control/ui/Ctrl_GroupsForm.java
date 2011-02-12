@@ -29,9 +29,8 @@ public class Ctrl_GroupsForm extends ControllerUI {
 	}
 
 	@Override
-	public void setVars(String[] strs) {
-		// TODO Auto-generated method stub
-
+	public boolean setVars(String[] strs) {
+		return true;
 	}
 
 	/**

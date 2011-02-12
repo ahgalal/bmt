@@ -63,6 +63,13 @@ public class VideoProcessor {
 		vid_filters= new ArrayList<VideoFilter>();
 	}
 
+	public VideoFilter[] getVideoFilters()
+	{
+		VideoFilter[] tmp_arr = new VideoFilter[vid_filters.size()];
+		vid_filters.toArray(tmp_arr);
+		return tmp_arr;
+	}
+	
 	public int[] process()
 	{
 		/*
@@ -187,7 +194,7 @@ public class VideoProcessor {
 				flipBG();
 
 		//////////////////////////////////////
-		//initialization if Filters/Utilities:
+		//initialization of Filters/Utilities:
 		//////////////////////////////////////
 		rat_finder = new RatFinder(height, width, max_thresh,center_point);
 		rearing_det = new RearingDetector(width, height,center_point,200,200);
@@ -196,9 +203,10 @@ public class VideoProcessor {
 				frame_rate, fia, width, height,v_in);
 		subtraction_result= new FrameIntArray();
 		subtractor_filter = new SubtractorFilter(bg_image_gray,subtraction_result,thresh);
-
+		
 		vid_filters.add(vid_rec);
 		vid_filters.add(subtractor_filter);
+		vid_filters.add(rearing_det);
 		vid_filters.add(screen_drawer);
 		vid_filters.add(rat_finder);
 
@@ -245,6 +253,7 @@ public class VideoProcessor {
 	{
 		subtractor_filter.enable(true);
 		rat_finder.enable(true);
+		rearing_det.enable(true);
 		PManager.getDefault().state=ProgramState.TRACKING;
 	}
 
@@ -263,6 +272,7 @@ public class VideoProcessor {
 	public void stopProcessing()
 	{
 		subtractor_filter.enable(false);
+		rearing_det.enable(false);
 		rat_finder.enable(false);
 		PManager.getDefault().state=ProgramState.STREAMING;
 	}
@@ -302,6 +312,14 @@ public class VideoProcessor {
 
 	public void saveVideoFile(String fileName) {
 		vid_rec.saveVideoFile(fileName);		
+	}
+
+	public void enableFilter(Class<?> cls,	boolean enable) {
+		for(VideoFilter v: vid_filters)
+		{
+			if(v.getClass()==cls)
+				v.enable(enable);
+		}
 	}
 
 }

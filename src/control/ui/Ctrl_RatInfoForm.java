@@ -31,9 +31,14 @@ public class Ctrl_RatInfoForm extends ControllerUI {
 	}
 
 	@Override
-	public void setVars(String[] strs) {
-		rat_num = Integer.parseInt(strs[0]);//Integer.parseInt(txt_ratnumber.getText());
-		grp_name = strs[1];//cmbo_grp_names.getText();
+	public boolean setVars(String[] strs) {
+		if(!strs[0].isEmpty())
+		{
+			rat_num = Integer.parseInt(strs[0]);
+			grp_name = strs[1];
+			return true;
+		}
+		return false;
 	}
 
 	/* (non-Javadoc)
@@ -73,6 +78,7 @@ public class Ctrl_RatInfoForm extends ControllerUI {
 	public void checkAndSubmitData()
 	{
 		try {
+
 			int tmp_confirmation=info_controller.setCurrentRatAndGroup(rat_num, grp_name,false); 
 			if(tmp_confirmation==0){
 				startTracking();

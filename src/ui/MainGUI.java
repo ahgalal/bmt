@@ -62,6 +62,8 @@ public class MainGUI extends BaseUI{
 	private Label lbl_rearing_ctr = null;
 	private Button btn_rearing_now = null;
 	private Button btn_not_rearing = null;
+	private Button btn_sub_rearing = null;
+	private Button btn_add_rearing = null;
 
 
 	/**
@@ -192,7 +194,7 @@ public class MainGUI extends BaseUI{
 	private void createGrp_stats() {
 		grp_stats = new Group(sShell, SWT.NONE);
 		grp_stats.setLayout(null);
-		grp_stats.setText("Statistics:");
+		grp_stats.setText("Variables:");
 		createCmpst_secondary();
 		grp_stats.setBounds(new Rectangle(678, 6, 301, 518));
 		lbl_zone_number = new Label(grp_stats, SWT.NONE);
@@ -214,7 +216,7 @@ public class MainGUI extends BaseUI{
 		lbl_total_distance.setBounds(new Rectangle(18, 419, 267, 16));
 		lbl_total_distance.setText("Total Distance:");
 		lbl_rearing_ctr = new Label(grp_stats, SWT.NONE);
-		lbl_rearing_ctr.setBounds(new Rectangle(18, 358, 267, 17));
+		lbl_rearing_ctr.setBounds(new Rectangle(18, 358, 203, 17));
 		lbl_rearing_ctr.setText("Rearing counter:");
 		btn_rearing_now = new Button(grp_stats, SWT.NONE);
 		btn_rearing_now.setText("Rearing NOW");
@@ -223,6 +225,25 @@ public class MainGUI extends BaseUI{
 		btn_not_rearing = new Button(grp_stats, SWT.NONE);
 		btn_not_rearing.setBounds(new Rectangle(85, 479, 101, 25));
 		btn_not_rearing.setText("Not Rearing");
+		btn_sub_rearing = new Button(grp_stats, SWT.NONE);
+		btn_sub_rearing.setBounds(new Rectangle(256, 355, 28, 21));
+		btn_sub_rearing.setText("-");
+		btn_sub_rearing
+				.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
+					public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
+						controller.btn_sub_rearing_Action();
+					}
+				});
+		btn_add_rearing = new Button(grp_stats, SWT.NONE);
+		btn_add_rearing.setText("+");
+		btn_add_rearing.setSize(new Point(28, 21));
+		btn_add_rearing.setLocation(new Point(226, 355));
+		btn_add_rearing
+				.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
+					public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
+						controller.btn_add_rearing_Action();
+					}
+				});
 		btn_not_rearing
 		.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
 			public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {

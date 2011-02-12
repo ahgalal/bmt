@@ -1,20 +1,21 @@
 package control.ui;
 
-import control.StatsController;
 import ui.OptionsWindow;
 import utils.PManager;
+import utils.video.processors.RearingDetector;
+import control.StatsController;
 
 
 /**
  * Controller of the OptionsWindow GUI window
  * @author Creative
- *
  */
 public class Ctrl_OptionsWindow extends ControllerUI {
 	private OptionsWindow ui;
 	private int thresh;
 	private int hyst;
 	private int rearing_thresh;
+	private boolean enable_auto_rearing;
 
 	/**
 	 * Initializes class attributes (OptionsWindow and PManager)
@@ -29,10 +30,13 @@ public class Ctrl_OptionsWindow extends ControllerUI {
 	}
 
 	@Override
-	public void setVars(String[] strs) {
+	public boolean setVars(String[] strs) {
 		hyst = Integer.parseInt(strs[0]);
 		thresh = Integer.parseInt(strs[1]);
 		rearing_thresh=Integer.parseInt(strs[2]);
+		strs[3].substring(0, 0).toUpperCase();
+		enable_auto_rearing=Boolean.valueOf(strs[3]);
+		return true;
 	}
 
 	/**
@@ -50,6 +54,7 @@ public class Ctrl_OptionsWindow extends ControllerUI {
 		try {
 			StatsController.getDefault().setHysteresis(hyst);
 			pm.setThreshold(thresh,rearing_thresh);
+			pm.getVideoProcessor().enableFilter(RearingDetector.class,enable_auto_rearing);
 			show(show_window);
 		} catch (NumberFormatException e1) {
 			System.out.print("Error in user input ... aborting !\n");

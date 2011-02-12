@@ -71,7 +71,7 @@ public class InfoController {
 		}
 	}
 
-	public void saveRatInfo(/*int number, String group_name*/){
+	public void saveRatInfo(){
 		Rat rat_tmp = new Rat(curr_rat_number);
 		rat_tmp.setAll_entrance(stats_controller.getAll_entrance());
 		rat_tmp.setCentralEntrance(stats_controller.getCentral_entrance());

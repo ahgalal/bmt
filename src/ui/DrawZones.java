@@ -18,6 +18,7 @@ import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
 
 import ui.box.InputBox;
+import utils.PManager;
 
 import control.ui.ControllerUI;
 import control.ui.Ctrl_DrawZones;
@@ -94,6 +95,7 @@ public class DrawZones extends BaseUI {
 				msgbox.setMessage("Please click on 2 points on the screen , then enter the real distance between them");
 				msgbox.setText("Scaling");
 				msgbox.open();
+				controller.settingScale(true);
 				gfx_panel.enableDraw(false);
 				Thread th_2points = new Thread(new Runnable() {
 					@Override
@@ -115,6 +117,7 @@ public class DrawZones extends BaseUI {
 							controller.sendScaletoStatsCtrlr(measure_pnt1, measure_pnt2, str_real_distance);
 							measure_pnt1=null;
 							measure_pnt2=null;
+							controller.settingScale(false);
 					}
 				});
 				th_2points.start();
@@ -133,13 +136,13 @@ public class DrawZones extends BaseUI {
 		.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
 			public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
 				gfx_panel.selectShape(-1);
-				controller.btn_load_zonesAction();
+				controller.btn_load_zonesAction(sShell);
 			}
 		});
 		btn_save_zones
 		.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
 			public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
-				controller.btn_save_zones_Action();
+				controller.btn_save_zones_Action(sShell);
 			}
 		});
 		btn_hide.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
@@ -321,6 +324,7 @@ public class DrawZones extends BaseUI {
 			measure_pnt1 = new Point(pos.x, pos.y);
 		else
 			measure_pnt2 = new Point(pos.x, pos.y);
+		PManager.getDefault().log.print("New Measure point Added: " + pos.x + " " + pos.y, this);
 	}
 
 

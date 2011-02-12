@@ -21,7 +21,7 @@ public abstract class ControllerUI {
 	 * this array and display strings in their proper positions
 	 * @param strs
 	 */
-	public abstract void setVars(String[] strs);
+	public abstract boolean setVars(String[] strs);
 
 	
 }

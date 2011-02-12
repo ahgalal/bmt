@@ -9,6 +9,8 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
+import ui.box.MsgBox;
+
 import control.ui.ControllerUI;
 import control.ui.Ctrl_RatInfoForm;
 
@@ -26,7 +28,7 @@ public class RatInfoForm extends BaseUI{
 	private Button btn_ok = null;
 	private Button btn_cancel = null;
 	private Combo cmbo_grp_names = null;
-	
+
 	/**
 	 * Creates GUI components, and links this Shell with the parent Shell.
 	 */
@@ -34,7 +36,7 @@ public class RatInfoForm extends BaseUI{
 		createSShell();
 		super.sShell=this.sShell;
 	}
-	
+
 	/**
 	 * This method initializes sShell
 	 */
@@ -56,8 +58,10 @@ public class RatInfoForm extends BaseUI{
 		btn_ok.setText("OK");
 		btn_ok.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
 			public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
-				controller.setVars(new String[] {txt_ratnumber.getText(),cmbo_grp_names.getText()});
-				controller.btn_ok_Action();
+				if(controller.setVars(new String[] {txt_ratnumber.getText(),cmbo_grp_names.getText()}))
+					controller.btn_ok_Action();
+				else
+					MsgBox.show(sShell, "Please enter valid rat number", "Error", SWT.ERROR);
 			}
 		});
 		btn_cancel = new Button(sShell, SWT.NONE);
@@ -70,12 +74,12 @@ public class RatInfoForm extends BaseUI{
 			}
 		});
 	}
-	
+
 	public Shell getShell()
 	{
 		return sShell;
 	}
-	
+
 	/**
 	 * This method initializes cmbo_grp_names	
 	 *
@@ -110,7 +114,7 @@ public class RatInfoForm extends BaseUI{
 		super.setController(controller);
 		this.controller=(Ctrl_RatInfoForm) super.controller;
 	}
-	
+
 	/**
 	 * Shows/Hides the GUI controlled by a child of this class
 	 */

@@ -60,8 +60,8 @@ public class Ctrl_MainGUI extends ControllerUI {
 	}
 
 	@Override
-	public void setVars(String[] strs) {
-		// TODO Auto-generated method stub
+	public boolean setVars(String[] strs) {
+		return true;
 	}
 
 	/* (non-Javadoc)
@@ -270,6 +270,7 @@ public class Ctrl_MainGUI extends ControllerUI {
 			info_controller.unloadExperiment();
 			info_controller.loadInfoFromTXTFile(file_name);
 			info_controller.setExpFileName(file_name);
+			pm.status_mgr.setStatus("Experiment Loaded Successfully!", StatusSeverity.WARNING);
 		}
 	}
 
@@ -306,10 +307,14 @@ public class Ctrl_MainGUI extends ControllerUI {
 	 * Stops Tracking:
 	 * Ends the session of StatsController and saves the rat information to
 	 * file(through the InfoController).
+	 * if Recording,it stops and saves the video file.
 	 */
 	public void btn_stop_tracking_Action() {
-		if(pm.state==ProgramState.TRACKING)
+		if(pm.state==ProgramState.TRACKING | pm.state==ProgramState.RECORDING)
 		{
+			if(pm.state==ProgramState.RECORDING)
+				stoprecordAction();
+			
 			pm.getVideoProcessor().stopProcessing();
 			stop_tracking=true;
 			stats_controller.endSession();
@@ -344,15 +349,15 @@ public class Ctrl_MainGUI extends ControllerUI {
 		if(file_name!=null)
 			info_controller.writeToExcelFile(file_name);
 	}
-	
+
 	public void btn_not_rearing_Action() {
 		rearingNow(false);
 	}
-	
+
 	public void btn_rearing_now_Action() {
 		rearingNow(true);
 	}
-	
+
 	/**
 	 * Notifies the VideoProcessor that the rat is (rearing/not rearing) in
 	 * reality, so that the VideoProcessor can start learning the rat's
@@ -364,6 +369,28 @@ public class Ctrl_MainGUI extends ControllerUI {
 			pm.getVideoProcessor().rearingNow(rearing);
 		else
 			pm.status_mgr.setStatus("Tracking is not running!", StatusSeverity.ERROR);
+	}
+
+	/**
+	 * Handles all key events of the GUI.
+	 * @param key the pressed key on the keyboard
+	 */
+	public void keyPressed_Action(char key) {
+		if(pm.state==ProgramState.TRACKING | pm.state==ProgramState.RECORDING)
+			if(key==java.awt.event.KeyEvent.VK_R)
+				stats_controller.incrementRearingCounter();
+			else if(key==java.awt.event.KeyEvent.VK_C)
+				stats_controller.decrementRearingCounter();
+	}
+
+	public void btn_add_rearing_Action() {
+		if(pm.state==ProgramState.TRACKING | pm.state==ProgramState.RECORDING)	
+			stats_controller.incrementRearingCounter();
+	}
+
+	public void btn_sub_rearing_Action() {
+		if(pm.state==ProgramState.TRACKING | pm.state==ProgramState.RECORDING)	
+			stats_controller.decrementRearingCounter();
 	}
 
 }

@@ -27,6 +27,7 @@ public class OptionsWindow extends BaseUI{
 	private Label lbl_rearing_thresh = null;
 	private Text txt_rearing_thresh = null;
 	private Scale scl_sub_thresh = null;
+	private Button chk_auto_rearing = null;
 	
 	/**
 	 * Creates GUI components, and links this Shell with the parent Shell.
@@ -43,7 +44,7 @@ public class OptionsWindow extends BaseUI{
 		sShell = new Shell(SWT.APPLICATION_MODAL | SWT.ON_TOP | SWT.TITLE );
 		sShell.setText("OptionsWindow");
 		sShell.setLayout(null);
-		sShell.setSize(new Point(263, 174));
+		sShell.setSize(new Point(263, 208));
 		lbl_hysteresis = new Label(sShell, SWT.NONE);
 		lbl_hysteresis.setText("Zone Hysteresis");
 		lbl_hysteresis.setBounds(new Rectangle(10, 18, 86, 15));
@@ -54,16 +55,16 @@ public class OptionsWindow extends BaseUI{
 		txt_hysteresis.setBounds(new Rectangle(173, 13, 76, 21));
 		txt_hysteresis.setText("20");
 		btn_ok = new Button(sShell, SWT.NONE);
-		btn_ok.setBounds(new Rectangle(50, 113, 95, 24));
+		btn_ok.setBounds(new Rectangle(50, 143, 95, 24));
 		btn_ok.setText("OK");
 		btn_ok.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
 			public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
-				controller.setVars(new String[] {txt_hysteresis.getText(),String.valueOf(scl_sub_thresh.getSelection()),String.valueOf(scl_sub_thresh.getSelection()),txt_rearing_thresh.getText()});
+				controller.setVars(new String[] {txt_hysteresis.getText(),txt_rearing_thresh.getText(),String.valueOf(scl_sub_thresh.getSelection()),String.valueOf(chk_auto_rearing.getSelection())});
 				controller.btn_ok_Action();
 			}
 		});
 		btn_cancel = new Button(sShell, SWT.NONE);
-		btn_cancel.setBounds(new Rectangle(156, 113, 95, 24));
+		btn_cancel.setBounds(new Rectangle(156, 143, 95, 24));
 		btn_cancel.setText("Cancel");
 		lbl_rearing_thresh = new Label(sShell, SWT.NONE);
 		lbl_rearing_thresh.setBounds(new Rectangle(10, 44, 123, 19));
@@ -75,10 +76,14 @@ public class OptionsWindow extends BaseUI{
 		scl_sub_thresh = new Scale(sShell, SWT.NONE);
 		scl_sub_thresh.setBounds(new Rectangle(139, 67, 116, 35));
 		scl_sub_thresh.setMaximum(255);
+		chk_auto_rearing = new Button(sShell, SWT.CHECK);
+		chk_auto_rearing.setSelection(true);
+		chk_auto_rearing.setBounds(new Rectangle(12, 107, 216, 20));
+		chk_auto_rearing.setText("enable auto Rearing Detector");
 		scl_sub_thresh
 		.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
 			public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
-				controller.setVars(new String[] {"-1",String.valueOf(scl_sub_thresh.getSelection()),"-1"});
+				controller.setVars(new String[] {"-1","-1",String.valueOf(scl_sub_thresh.getSelection()),String.valueOf(chk_auto_rearing.getSelection())});
 				controller.updateOptions(true);
 			}
 		});

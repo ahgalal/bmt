@@ -2,6 +2,11 @@ package control.ui;
 
 import java.awt.Point;
 
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.widgets.FileDialog;
+import org.eclipse.swt.widgets.Shell;
+
+import control.ShapeController;
 import control.StatsController;
 import control.ZonesController;
 import ui.DrawZones;
@@ -29,9 +34,8 @@ public class Ctrl_DrawZones extends ControllerUI {
 		pm.linkGFXPanelWithShapeCtrlr(ui.getGFXPanel());
 	}
 	@Override
-	public void setVars(String[] objs) {
-		// TODO Auto-generated method stub
-
+	public boolean setVars(String[] objs) {
+		return true;
 	}
 
 	@Override
@@ -50,16 +54,22 @@ public class Ctrl_DrawZones extends ControllerUI {
 	{
 		StatsController.getDefault().setScale(measure_pnt1, measure_pnt2, Integer.parseInt(str_real_distance));
 	}
-	
-	public void btn_load_zonesAction() {
-		zone_controller.loadZonesFromFile("C:\\zones.txt");
+
+	public void btn_load_zonesAction(Shell shell) {
+		FileDialog fileDialog = new FileDialog(shell, SWT.OPEN);
+		String file_name=fileDialog.open();
+		if(file_name!=null)
+			zone_controller.loadZonesFromFile(file_name);
 	}
 	public void btn_hide_Action() {
 		zone_controller.updateZoneMap();
 		show(false);		
 	}
-	public void btn_save_zones_Action() {
-		zone_controller.saveZonesToFile("C:\\zones.txt");		
+	public void btn_save_zones_Action(Shell shell) {
+		FileDialog fileDialog = new FileDialog(shell, SWT.SAVE);
+		String file_name=fileDialog.open();
+		if(file_name!=null)
+			zone_controller.saveZonesToFile(file_name);
 	}
 	/**
 	 * Gives the measure point to the GUI.
@@ -102,6 +112,9 @@ public class Ctrl_DrawZones extends ControllerUI {
 	 */
 	public void selectZoneInTable(int zone_number) {
 		ui.selectZoneInTable(zone_number);		
+	}
+	public void settingScale(boolean enable) {
+		ShapeController.getDefault().setSetting_scale(enable);
 	}
 
 

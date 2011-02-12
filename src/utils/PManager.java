@@ -121,7 +121,7 @@ public class PManager {
 	public void initializeVideoProcessor(String vid_lib,int w,int h,int frame_rate,int cam_index)
 	{
 		vp.setFormat(tmp_format);
-
+		zone_controller.setWidthandHeight(w, h);
 		if(vp.initialize(vid_lib,frame_rate,cam_index, w, h, 40))
 			vp.startStreaming();
 	}
