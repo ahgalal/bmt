@@ -32,6 +32,9 @@ public class Group implements If_Grp2GUI {
 	/**
 	 * @param num the number of the rat to return its instance 
 	 * @return instance of the rat having the given number 
+	 * This function loops on all the rats in the group and checks the num 
+	 * of each rat if it is the required rat we return a reference to that group
+	 * else return null
 	 */
 	public Rat getRatByNumber(int num)
 	{

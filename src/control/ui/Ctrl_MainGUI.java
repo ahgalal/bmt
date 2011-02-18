@@ -1,6 +1,10 @@
 package control.ui;
 
 import java.awt.Frame;
+import com.sun.org.apache.xml.internal.security.utils.HelperNodeList;
+
+import ui.About;
+import ui.BaseUI;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Display;
@@ -392,5 +396,12 @@ public class Ctrl_MainGUI extends ControllerUI {
 		if(pm.state==ProgramState.TRACKING | pm.state==ProgramState.RECORDING)	
 			stats_controller.decrementRearingCounter();
 	}
+	public void mnutm_help_about_Action() {
+		//((About) pm.about).show(true);
+		ui.show(true);
+		
+	}
+
+
 
 }

@@ -19,6 +19,9 @@ public class Experiment implements If_Exp2GUI {
 
 	/**
 	 * Clears the experiment info(data)
+ 	 * This functions loops on all the groups in the experiment and for each 
+	 * group it calls getAllRats() method and clear their data then clears the 
+	 * group's data by calling clear() method
 	 */
 	public void clearExperimentData()
 	{
@@ -30,6 +33,9 @@ public class Experiment implements If_Exp2GUI {
 	/**
 	 * @param id the id of the group to return its instance
 	 * @return instance of the group having the given id
+	 * This function loops on all the groups in the experiment and checks the ID 
+	 * of each group if it is the required group we return a reference to that group
+	 * else return null
 	 */
 	public Group getGroupByID(int id)
 	{
@@ -79,7 +85,7 @@ public class Experiment implements If_Exp2GUI {
 	}*/
 
 	/**
-	 * Adds a new group to the experiment groups
+	 * Adds a new group to the experiment groups by calling the add() method 
 	 * @param g the reference to a group to add to the experiment
 	 */
 	public void addGroup(Group g){
