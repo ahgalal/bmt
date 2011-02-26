@@ -25,16 +25,9 @@ public class About extends BaseUI {
 	private Label lbl_proj_desc = null;
 	private Button btn_OK = null;
 	private Group grp_format = null;
-	private Label lbl_creator = null;
-	private Label lbl_assistants = null;
 	private Text textArea = null;
 	private Text txt_owner_name = null;
 	private Text txt_owner_email = null;
-	private Label lbl_name = null;
-	private Label lbl_email = null;
-	private Text txt_assistants_name = null;
-	private Text txt_assistants_email = null;
-
 	/**
 	 * This method initializes sShell1	
 	 *
@@ -44,9 +37,9 @@ public class About extends BaseUI {
 		sShell.setLayout(null);
 		sShell.setText("About");
 		sShell.setMaximized(false);
-		sShell.setSize(new Point(500, 352));
+		sShell.setSize(new Point(467, 326));
 		btn_OK = new Button(sShell, SWT.NONE);
-		btn_OK.setBounds(new Rectangle(207, 289, 73, 25));
+		btn_OK.setBounds(new Rectangle(378, 271, 73, 25));
 		btn_OK.setText("OK");
 		btn_OK.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
 			public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
@@ -56,11 +49,11 @@ public class About extends BaseUI {
 		});
 		lbl_proj_desc = new Label(sShell, SWT.NONE);
 		lbl_proj_desc.setBounds(new Rectangle(11, 5, 112, 17));
-		lbl_proj_desc.setText("Project description");
+		lbl_proj_desc.setText("Project description:");
 		
 		createGrp_format();
 		textArea = new Text(sShell, SWT.MULTI | SWT.WRAP | SWT.V_SCROLL);
-		textArea.setBounds(new Rectangle(11, 40, 468, 113));
+		textArea.setBounds(new Rectangle(11, 29, 443, 124));
 		textArea.setText("");
 	}
 
@@ -71,32 +64,17 @@ public class About extends BaseUI {
 	private void createGrp_format() {
 		grp_format = new Group(sShell, SWT.NONE);
 		grp_format.setLayout(null);
-		grp_format.setText("Credits");
-		grp_format.setBounds(new Rectangle(11, 165, 467, 121));
-		lbl_creator = new Label(grp_format, SWT.NONE);
-		lbl_creator.setBounds(new Rectangle(11, 30, 35, 15));
-		lbl_creator.setText("Owner");
-		lbl_assistants = new Label(grp_format, SWT.NONE);
-		lbl_assistants.setBounds(new Rectangle(6, 67, 52, 15));
-		lbl_assistants.setText("Assistants");
-		txt_owner_name = new Text(grp_format, SWT.MULTI | SWT.WRAP | SWT.V_SCROLL);
-		txt_owner_name.setBounds(new Rectangle(86, 34, 174, 19));
-		txt_owner_name.setText("Ahmed Galal");
-		txt_owner_email = new Text(grp_format, SWT.MULTI | SWT.WRAP | SWT.V_SCROLL);
-		txt_owner_email.setBounds(new Rectangle(273, 34, 194, 23));
-		txt_owner_email.setText("ceng.ahmedgalal@gmail.com");
-		lbl_name = new Label(grp_format, SWT.NONE);
-		lbl_name.setBounds(new Rectangle(89, 14, 61, 15));
-		lbl_name.setText("Name");
-		lbl_email = new Label(grp_format, SWT.NONE);
-		lbl_email.setBounds(new Rectangle(274, 11, 51, 15));
-		lbl_email.setText("E-Mail");
-		txt_assistants_name = new Text(grp_format, SWT.MULTI | SWT.WRAP | SWT.V_SCROLL);
-		txt_assistants_name.setBounds(new Rectangle(87, 67, 172, 34));
-		txt_assistants_name.setText("Ahmed Mohammed Ali         Mohammed Ramadan ");
-		txt_assistants_email = new Text(grp_format, SWT.MULTI | SWT.WRAP | SWT.V_SCROLL);
-		txt_assistants_email.setBounds(new Rectangle(273, 67, 193, 34));
-		txt_assistants_email.setText("a.mohamed.aly0@gmail.com mido_emak@hotmail.com");
+		grp_format.setText("Credits:");
+		grp_format.setBounds(new Rectangle(11, 165, 444, 105));
+		txt_owner_name = new Text(grp_format, SWT.MULTI | SWT.WRAP);
+		txt_owner_name.setBounds(new Rectangle(10, 20, 236, 82));
+		txt_owner_name.setEditable(false);
+		txt_owner_name.setEnabled(true);
+		txt_owner_name.setText("- Ahmed Galal El-Din (Software)\n- Ahmed Mohammed Ali (Software)\n- Mohammed Ahmed Ramadan (Software)\n- Mohammed Mostafa (Neuro-Science)\n- Sarah Mohammed Hamed (Software)");
+		txt_owner_email = new Text(grp_format, SWT.MULTI | SWT.WRAP);
+		txt_owner_email.setBounds(new Rectangle(266, 20, 169, 61));
+		txt_owner_email.setEditable(false);
+		txt_owner_email.setText("ceng.ahmedgalal@gmail.com\na.mohamed.aly0@gmail.com\nmido_emak@hotmail.com\neltabbal@gmail.com");
 	}
 
 	/*

@@ -37,10 +37,12 @@ public class MainGUI extends BaseUI{
 	private MenuItem mnu_edit_item=null;
 	private MenuItem mnu_experiment_item=null;
 	private MenuItem mnu_camera_item=null;
+	private MenuItem mnu_help_item=null;
 	private Menu mnu_file=null;
 	private Menu mnu_edit=null;
 	private Menu mnu_experiment=null;
 	private Menu mnu_camera=null;
+	private Menu mnu_help=null;
 	private MenuItem mnutm_file_exit = null;
 	private MenuItem mnutm_experiment_loadexp = null;
 	private MenuItem mnutm_experiment_exporttoexcel = null;
@@ -441,6 +443,22 @@ public class MainGUI extends BaseUI{
 			}
 		});
 
+		mnu_help_item = new MenuItem(menuBar, SWT.CASCADE); // help
+		mnu_help_item.setText("Help");
+		mnu_help = new Menu(mnu_help_item);
+		mnu_help_item.setMenu(mnu_help);
+		MenuItem mnutm_help_about = new MenuItem(mnu_help, SWT.PUSH);
+		mnutm_help_about.setText("About");
+		mnutm_help_about.setEnabled(true);
+		mnutm_help_about
+		.addSelectionListener(new org.eclipse.swt.events.SelectionListener() {
+			public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
+				controller.mnutm_help_about_Action();
+			}
+			public void widgetDefaultSelected(
+					org.eclipse.swt.events.SelectionEvent e) {
+			}
+		});
 		sShell.addShellListener(new org.eclipse.swt.events.ShellAdapter() {
 			public void shellClosed(org.eclipse.swt.events.ShellEvent e) {
 				controller.closeProgram();

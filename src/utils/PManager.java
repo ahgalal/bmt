@@ -16,6 +16,7 @@ import control.ui.Ctrl_GroupsForm;
 import control.ui.Ctrl_MainGUI;
 import control.ui.Ctrl_OptionsWindow;
 import control.ui.Ctrl_RatInfoForm;
+import control.ui.Ctrl_About;
 
 /**
  * Program Manager, contains the main function, creates GUI and Controllers.
@@ -65,6 +66,7 @@ public class PManager {
 	String tmp_format="YUV";
 	private VideoProcessor vp ;
 	private ZonesController zone_controller;
+public Ctrl_About about;
 
 	/**
 	 * Initializes GUI controllers, Model Controllers and Video Controller.
