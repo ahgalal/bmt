@@ -9,20 +9,40 @@ package utils.video.processors;
  */
 public abstract class VideoFilter {
 	
-	protected boolean enabled;
+	//protected boolean enabled;
 	protected String name;
+	protected FilterSpecialData special_data;
+	protected FilterConfigs configs;
+
+	
+	public FilterConfigs getConfigs() {
+		return configs;
+	}
+	public void setConfigs(FilterConfigs configs)
+	{
+		this.configs.mergeConfigs(configs);
+	}
 	
 	public abstract int[] process(int[] image_data);
 	public boolean enable(boolean enable)
 	{
-		enabled=enable;
-		return enabled;
+		configs.enabled=enable;
+		return configs.enabled;
 	}
 	public String getName() {
 		return name;
 	}
-	public void setName(String name) {
-		this.name = name;
+	
+	public Object getSpecialData()
+	{
+		return special_data;
 	}
+	public void setName(String name)
+	{
+		this.name=name;
+	}
+	public abstract boolean initialize();
+	
+
 	
 }

@@ -6,9 +6,11 @@ import org.eclipse.swt.widgets.Display;
 
 import utils.saveengines.ExcelEngine;
 import utils.video.VideoProcessor;
+import utils.video.processors.CommonConfigs;
 import control.ShapeController;
 import control.StatsController;
 import control.ZonesController;
+import control.ui.Ctrl_About;
 import control.ui.Ctrl_CamOptions;
 import control.ui.Ctrl_DrawZones;
 import control.ui.Ctrl_ExperimentForm;
@@ -16,7 +18,6 @@ import control.ui.Ctrl_GroupsForm;
 import control.ui.Ctrl_MainGUI;
 import control.ui.Ctrl_OptionsWindow;
 import control.ui.Ctrl_RatInfoForm;
-import control.ui.Ctrl_About;
 
 /**
  * Program Manager, contains the main function, creates GUI and Controllers.
@@ -94,14 +95,7 @@ public Ctrl_About about;
 		shape_controller.init();
 		vp = new VideoProcessor(main_gui.getMainAWTFrame(),main_gui.getSecAWTFrame());
 	}
-	/**
-	 * Displays advanced cam. options, can be accessible through JMyron lib. only,
-	 * but it affects JMF & OpenCV also.
-	 */
-	public void displayMoreVideoLibSettings()
-	{
-		vp.displayMoreSettings();
-	}
+
 	public GfxPanel getGfxPanel()
 	{
 		return gfx_panel;
@@ -120,16 +114,15 @@ public Ctrl_About about;
 	 * @param frame_rate frame rate
 	 * @param cam_index camera index
 	 */
-	public void initializeVideoProcessor(String vid_lib,int w,int h,int frame_rate,int cam_index)
+	public void initializeVideoProcessor(CommonConfigs common_configs)
 	{
-		vp.setFormat(tmp_format);
-		zone_controller.setWidthandHeight(w, h);
-		if(vp.initialize(vid_lib,frame_rate,cam_index, w, h, 40))
+		zone_controller.setWidthandHeight(common_configs.width, common_configs.height);
+		if(vp.initialize(common_configs))
 			vp.startStreaming();
 	}
 
 	/**
-	 * Linkes Gfx_panel with ShapeController, gives the gfx_panel instance to
+	 * Links Gfx_panel with ShapeController, gives the gfx_panel instance to
 	 * the shape_controller instance.
 	 * @param gfx_panel GfxPanel object to send to the shape controller
 	 */
@@ -137,35 +130,6 @@ public Ctrl_About about;
 	{
 		this.gfx_panel=gfx_panel;
 		shape_controller.linkWithGFXPanel(gfx_panel);
-	}
-
-	/**
-	 * Sets the video format, useful in case of JMF only.
-	 * @param format video format (RGB/YUV)
-	 */
-	public void setFormat(String format)
-	{
-		tmp_format=format;
-	}
-
-	/**
-	 * Sets the subtraction threshold of the video processor's subtraction filter,
-	 * and the rearing threshold of the rearing detector.
-	 * @param thresh subtraction threshold 
-	 * @param rearingThresh rearing threshold
-	 */
-	public void setThreshold(int thresh, int rearingThresh)
-	{
-		vp.setThreshold(thresh,rearingThresh);
-	}
-
-
-	/**
-	 * Starts the tracking process.
-	 */
-	public void startTracking()
-	{
-		main_gui.startTracking();
 	}
 
 	/**
@@ -177,13 +141,6 @@ public Ctrl_About about;
 			vp.unloadLibrary();
 	}
 	
-	/**
-	 * Updates the video processor's background image.
-	 */
-	public void updateVideoProcBG()
-	{
-		vp.setBg_image();
-	}
 }
 
 

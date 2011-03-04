@@ -2,7 +2,10 @@ package control.ui;
 
 import ui.OptionsWindow;
 import utils.PManager;
-import utils.video.processors.RearingDetector;
+import utils.video.processors.FilterConfigs;
+import utils.video.processors.rearingdetection.RearingConfigs;
+import utils.video.processors.rearingdetection.RearingDetector;
+import utils.video.processors.subtractionfilter.SubtractionConfigs;
 import control.StatsController;
 
 
@@ -12,7 +15,7 @@ import control.StatsController;
  */
 public class Ctrl_OptionsWindow extends ControllerUI {
 	private OptionsWindow ui;
-	private int thresh;
+	private int subtraction_thresh;
 	private int hyst;
 	private int rearing_thresh;
 	private boolean enable_auto_rearing;
@@ -32,7 +35,7 @@ public class Ctrl_OptionsWindow extends ControllerUI {
 	@Override
 	public boolean setVars(String[] strs) {
 		hyst = Integer.parseInt(strs[0]);
-		thresh = Integer.parseInt(strs[1]);
+		subtraction_thresh = Integer.parseInt(strs[1]);
 		rearing_thresh=Integer.parseInt(strs[2]);
 		strs[3].substring(0, 0).toUpperCase();
 		enable_auto_rearing=Boolean.valueOf(strs[3]);
@@ -52,9 +55,17 @@ public class Ctrl_OptionsWindow extends ControllerUI {
 	public void updateOptions(boolean show_window)
 	{
 		try {
+			SubtractionConfigs subtraction_configs=new SubtractionConfigs(subtraction_thresh,null,null);
+			RearingConfigs rearing_configs = new RearingConfigs(rearing_thresh, 200, 200,null,null);
+			
+			FilterConfigs[] filters_configs = new FilterConfigs[2];
+			filters_configs[0]=subtraction_configs;
+			filters_configs[1]=rearing_configs;
+			
+			pm.getVideoProcessor().updateFiltersConfigs(filters_configs);
+			
 			StatsController.getDefault().setHysteresis(hyst);
-			pm.setThreshold(thresh,rearing_thresh);
-			pm.getVideoProcessor().enableFilter(RearingDetector.class,enable_auto_rearing);
+			pm.getVideoProcessor().getFilter_mgr().enableFilter(RearingDetector.class,enable_auto_rearing);
 			show(show_window);
 		} catch (NumberFormatException e1) {
 			System.out.print("Error in user input ... aborting !\n");

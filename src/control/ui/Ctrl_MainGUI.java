@@ -11,6 +11,9 @@ import ui.MainGUI;
 import utils.PManager;
 import utils.PManager.ProgramState;
 import utils.StatusManager.StatusSeverity;
+import utils.video.processors.CommonConfigs;
+import utils.video.processors.FilterConfigs;
+import utils.video.processors.screendrawer.ScreenDrawerConfigs;
 import control.InfoController;
 import control.StatsController;
 
@@ -197,7 +200,7 @@ public class Ctrl_MainGUI extends ControllerUI {
 		if(pm.state==ProgramState.STREAMING)
 		{
 			pm.getGfxPanel().setBackground(pm.getVideoProcessor().getRGBBackground());
-			pm.updateVideoProcBG();
+			pm.getVideoProcessor().setBg_image();
 		}
 		else if(pm.state==ProgramState.TRACKING)
 			pm.status_mgr.setStatus("Background can't be taken while tracking.", StatusSeverity.ERROR);
@@ -212,9 +215,11 @@ public class Ctrl_MainGUI extends ControllerUI {
 	{
 		if(pm.state==ProgramState.IDLE)
 		{
-			pm.initializeVideoProcessor("JMyron",640,480,30,0); //default is JMF
+			CommonConfigs commonConfigs = new CommonConfigs(640, 480, 30, 0, "JMyron", null);
+			ScreenDrawerConfigs scrn_drwr_cfgs = new ScreenDrawerConfigs(null, null, null, null, null, true);
+			pm.initializeVideoProcessor(commonConfigs);
+			pm.getVideoProcessor().updateFiltersConfigs(new FilterConfigs[] {scrn_drwr_cfgs});
 			pm.status_mgr.setStatus("Camera is Starting..", StatusSeverity.WARNING);
-			pm.getVideoProcessor().enableSecondaryScreen(true);
 		}
 		else
 			pm.status_mgr.setStatus("Camera is already started.", StatusSeverity.ERROR);

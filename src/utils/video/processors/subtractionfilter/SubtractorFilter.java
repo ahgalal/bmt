@@ -1,26 +1,17 @@
-package utils.video.processors;
+package utils.video.processors.subtractionfilter;
 
-import utils.video.FrameIntArray;
 import utils.video.ImageManipulator;
+import utils.video.processors.VideoFilter;
 
 public class SubtractorFilter extends VideoFilter {
-	private FrameIntArray bg,res;
-	private int threshold;
-	public SubtractorFilter(FrameIntArray bg_image,FrameIntArray substraction_res,int subtraction_thresh)
-	{
-		res=substraction_res;
-		setBackGroundImage(bg_image);
-		threshold=subtraction_thresh;
-	}
 
-	public void setBackGroundImage(FrameIntArray bg)
+	
+	private SubtractionConfigs subtraction_configs;
+	public SubtractorFilter(String name)
 	{
-		this.bg=bg;
-	}
-
-	public void setSubtractionThreshold(int threshold)
-	{
-		this.threshold=threshold;
+		this.subtraction_configs = new SubtractionConfigs(-1,null,null);
+		configs=subtraction_configs;
+		this.name=name;
 	}
 
 	public byte[] subtractGrayImages(byte[] img1,byte[] img2)
@@ -40,7 +31,7 @@ public class SubtractorFilter extends VideoFilter {
 				tmp3= (short) ( tmp1-tmp2);
 				if(tmp3<0)
 					tmp3*=-1;
-				if(tmp3<threshold)
+				if(tmp3<subtraction_configs.threshold)
 					res[i]=0;
 				else
 					res[i]=(byte) 0xFF;
@@ -55,31 +46,36 @@ public class SubtractorFilter extends VideoFilter {
 	 */
 	@Override
 	public int[] process(int[] imageData) {
-		if(enabled)
+		if(configs.enabled)
 		{
-			if(imageData.length==bg.frame_data.length)
+			if(imageData.length==subtraction_configs.bg_image_gray.frame_data.length)
 			{
 				imageData=ImageManipulator.rgbIntArray2GrayIntArray(imageData);
 				int[] res = new int[imageData.length];
 				int tmp = 0;
 				for(int i=0;i<imageData.length;i++)
 				{
-					tmp= imageData[i]-bg.frame_data[i];
+					tmp= imageData[i]-subtraction_configs.bg_image_gray.frame_data[i];
 
 					if(tmp<0)
 						tmp*=-1;
 
-					if(tmp<threshold)
+					if(tmp<subtraction_configs.threshold)
 						res[i]=0;
 					else
 						res[i]= 0x00FFFFFF;
 				}
-				this.res.frame_data=res;
 				return res;
 			}
 			return null;
 		}
 		return imageData;
 	}
+
+	@Override
+	public boolean initialize() {
+		return true;
+	}
+
 
 }

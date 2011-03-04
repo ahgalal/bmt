@@ -1,4 +1,4 @@
-package utils.video.processors;
+package utils.video.processors.recorder;
 
 import java.io.File;
 
@@ -7,18 +7,18 @@ import lib_avi.AVIOutputStream.VideoFormat;
 import utils.PManager;
 import utils.PManager.ProgramState;
 import utils.StatusManager.StatusSeverity;
+import utils.video.processors.VideoFilter;
 
 public class VideoRecorder extends VideoFilter{
 
 	private PManager pm;
 	private StreamToAVI avi_saver;
-	private int width;
-	private int height;
-
-	public VideoRecorder(int width, int height) {
-		this.width = width;
-		this.height = height;
+	private RecorderConfigs recorder_configs;
+	public VideoRecorder(String name) {
+		recorder_configs=new RecorderConfigs(null);
+		configs=recorder_configs;
 		pm=PManager.getDefault();
+		this.name=name;
 	}
 
 	public void renameVideoFile(String file_name)
@@ -40,7 +40,7 @@ public class VideoRecorder extends VideoFilter{
 	 */
 	@Override
 	public int[] process(int[] imageData) {
-		if(enabled)
+		if(configs.enabled)
 			avi_saver.writeFrame(imageData);
 		return imageData;
 	}
@@ -52,9 +52,9 @@ public class VideoRecorder extends VideoFilter{
 			if(pm.state==ProgramState.TRACKING)
 			{
 				avi_saver = new StreamToAVI();
-				avi_saver.initialize("video.avi", VideoFormat.JPG, 10, width, height);
+				avi_saver.initialize("video.avi", VideoFormat.JPG, 10, recorder_configs.common_configs.width, recorder_configs.common_configs.height);
 				pm.state=ProgramState.RECORDING;
-				enabled=true;
+				configs.enabled=true;
 				return true;
 			}
 			else
@@ -66,7 +66,7 @@ public class VideoRecorder extends VideoFilter{
 			Thread th_stop_recording = new Thread(new Runnable() {
 				@Override
 				public void run() {
-					enabled=false;
+					configs.enabled=false;
 					try {
 						Thread.sleep(100);
 					} catch (InterruptedException e) {
@@ -83,5 +83,10 @@ public class VideoRecorder extends VideoFilter{
 			th_stop_recording.start();
 			return true;
 		}
+	}
+
+	@Override
+	public boolean initialize() {
+		return true;
 	}
 }

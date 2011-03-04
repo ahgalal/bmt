@@ -3,6 +3,9 @@ package control.ui;
 import control.ZonesController;
 import ui.CamOptions;
 import utils.PManager;
+import utils.video.processors.CommonConfigs;
+import utils.video.processors.FilterConfigs;
+import utils.video.processors.screendrawer.ScreenDrawerConfigs;
 
 /**
  * Controller of the CamOptions GUI window
@@ -28,16 +31,6 @@ public class Ctrl_CamOptions extends ControllerUI{
 		ui = new CamOptions();
 		ui.setController(this);
 	}
-	/**
-	 * Sets the video format of the VideoProcessor
-	 * @param format Video format (either RGB or YUV)
-	 */
-	public void setFormat(String format)
-	{
-		if(library.equals("JMF"))
-			pm.setFormat(format);
-	}
-
 
 
 	/**
@@ -68,11 +61,13 @@ public class Ctrl_CamOptions extends ControllerUI{
 		if(lib_is_already_created==false | !library.equals(prev_library))
 		{
 			pm.unloadVideoProcessor();
-			setFormat(format);
-			pm.initializeVideoProcessor(library,width,height,frame_rate,cam_num);
+			//////////////setFormat(format);
+			CommonConfigs common_configs = new CommonConfigs(width,height,frame_rate,cam_num,library,format);
+			ScreenDrawerConfigs scrn_drwr_cfgs = new ScreenDrawerConfigs(null, null, null, null, null, true);
+			pm.initializeVideoProcessor(common_configs);
+			pm.getVideoProcessor().updateFiltersConfigs(new FilterConfigs[] {scrn_drwr_cfgs});
 			ZonesController.getDefault().setWidthandHeight(width, height);
 			lib_is_already_created=true;
-			pm.getVideoProcessor().enableSecondaryScreen(true);
 			prev_library = library.substring(0);
 		}
 	}
@@ -86,7 +81,7 @@ public class Ctrl_CamOptions extends ControllerUI{
 	public void btn_jmyron_settings_Action()
 	{
 		unloadAndLoadLibProcedures();
-		pm.displayMoreVideoLibSettings();
+		pm.getVideoProcessor().displayMoreSettings();
 	}
 
 

@@ -32,7 +32,7 @@ public class ImageManipulator {
 		}
 		return res;
 	}
-	
+
 	public static int[] rgbIntArray2GrayIntArray(int[] in)
 	{
 		int r,g,b;
@@ -42,11 +42,11 @@ public class ImageManipulator {
 			r=in[i] & (0x000000FF);
 			g=(in[i] & (0x0000FF00))>>8;
 		b=(in[i] & (0x00FF0000))>>16;
-			res[i] = (int) (0.2989*r + 0.5870*g+ 0.1140*b);
+		res[i] = (int) (0.2989*r + 0.5870*g+ 0.1140*b);
 		}
 		return res;
 	}
-	
+
 	public static BufferedImage loadImage(String ref) {
 		BufferedImage bimg = null;
 		try {
@@ -56,5 +56,5 @@ public class ImageManipulator {
 		}
 		return bimg;
 	}
-	
+
 }

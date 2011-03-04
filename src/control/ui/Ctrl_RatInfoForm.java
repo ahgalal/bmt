@@ -107,7 +107,7 @@ public class Ctrl_RatInfoForm extends ControllerUI {
 	 */
 	private void startTracking()
 	{
-		pm.startTracking();
+		PManager.main_gui.startTracking();
 		show(false);
 	}
 

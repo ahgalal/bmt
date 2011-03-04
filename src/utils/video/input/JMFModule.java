@@ -163,6 +163,7 @@ public class JMFModule implements VidInputter {
 			{
 				System.err.print("The CAM does not support "+  format_to_use.toString() +"video!");
 				//MsgBox.show(MainGUI.getDefault().getsShell(), "The CAM does not support RGB640*480 video!", "Error", SWT.ERROR);
+				ds.disconnect();
 				return false;
 			}
 
