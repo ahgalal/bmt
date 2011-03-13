@@ -13,6 +13,7 @@ public abstract class VideoFilter {
 	protected String name;
 	protected FilterSpecialData special_data;
 	protected FilterConfigs configs;
+	protected GUICargo cargo;
 
 	
 	public FilterConfigs getConfigs() {
@@ -43,6 +44,6 @@ public abstract class VideoFilter {
 	}
 	public abstract boolean initialize();
 	
-
+	public abstract void setCargo();
 	
 }

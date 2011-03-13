@@ -58,10 +58,9 @@ public class Ctrl_CamOptions extends ControllerUI{
 	 */
 	public void unloadAndLoadLibProcedures()
 	{
-		if(lib_is_already_created==false | !library.equals(prev_library))
+		//if(lib_is_already_created==false | !library.equals(prev_library))
 		{
 			pm.unloadVideoProcessor();
-			//////////////setFormat(format);
 			CommonConfigs common_configs = new CommonConfigs(width,height,frame_rate,cam_num,library,format);
 			ScreenDrawerConfigs scrn_drwr_cfgs = new ScreenDrawerConfigs(null, null, null, null, null, true);
 			pm.initializeVideoProcessor(common_configs);

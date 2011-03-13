@@ -215,7 +215,8 @@ public class Ctrl_MainGUI extends ControllerUI {
 	{
 		if(pm.state==ProgramState.IDLE)
 		{
-			CommonConfigs commonConfigs = new CommonConfigs(640, 480, 30, 0, "JMyron", null);
+			//CommonConfigs commonConfigs = new CommonConfigs(640, 480, 30, 0, "JMyron", null);
+			CommonConfigs commonConfigs = new CommonConfigs(640, 480, 30, 0, "AGCamLib", null);
 			ScreenDrawerConfigs scrn_drwr_cfgs = new ScreenDrawerConfigs(null, null, null, null, null, true);
 			pm.initializeVideoProcessor(commonConfigs);
 			pm.getVideoProcessor().updateFiltersConfigs(new FilterConfigs[] {scrn_drwr_cfgs});

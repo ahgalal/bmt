@@ -6,6 +6,7 @@ import java.awt.Point;
 
 import utils.PManager;
 import utils.PManager.ProgramState;
+import utils.video.input.AGCamLibModule;
 import utils.video.input.JMFModule;
 import utils.video.input.JMyronModule;
 import utils.video.input.OpenCVModule;
@@ -192,6 +193,9 @@ public class VideoProcessor {
 			v_in = new JMyronModule();
 		else if (common_configs.vid_library.equals("OpenCV"))
 			v_in = new OpenCVModule();
+		else if (common_configs.vid_library.equals("AGCamLib"))
+			v_in = new AGCamLibModule();
+
 
 		ref_bg_image_gray = new FrameIntArray();
 		if(bg_is_set)

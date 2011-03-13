@@ -67,7 +67,7 @@ public class OpenCVModule implements Runnable,VidInputter{
 			//System.arraycopy(cv.pixels(), 0, data, 0, cv.pixels().length);
 			//awt_frame.getGraphics().drawImage(img, 0, 0, 640, 480, 0, 0, 640, 480, null);
 			//g.drawImage(img, 0, 0, null);
-			long t1 = System.currentTimeMillis();
+			//long t1 = System.currentTimeMillis();
 			//MemoryImageSource mis = new MemoryImageSource( cv.width, cv.height, cv.pixels(), 0, cv.width );
 			int f[]=cv.pixels();
 			/*			for(int i=0;i<f.length;i++)
@@ -84,7 +84,7 @@ public class OpenCVModule implements Runnable,VidInputter{
 			/*			if(start)
 				f=vp.camImage2ProcessedImage(f);
 			System.arraycopy(f, 0, data, 0, f.length);*/
-			long t2 = System.currentTimeMillis();
+			//long t2 = System.currentTimeMillis();
 
 
 
@@ -97,7 +97,7 @@ public class OpenCVModule implements Runnable,VidInputter{
 			if(fia.frame_data!=null)
 			{
 				status=1;
-				System.out.print(Long.toString(t2-t1) + "\t" +fia.frame_data[50] + "\n");//+
+				//System.out.print(Long.toString(t2-t1) + "\t" +fia.frame_data[50] + "\n");//+
 			}
 			/*Long.toString(t3-t2) + "\n"+
 					Long.toString(t4-t3) +*/// "\n\n");
