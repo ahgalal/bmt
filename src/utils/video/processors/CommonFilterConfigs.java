@@ -1,8 +1,8 @@
 package utils.video.processors;
 
-public class CommonConfigs {
+public class CommonFilterConfigs {
 
-	public CommonConfigs(int width, int height, int frameRate, int camIndex,
+	public CommonFilterConfigs(int width, int height, int frameRate, int camIndex,
 			String vidLibrary, String format) {
 		super();
 		this.width = width;

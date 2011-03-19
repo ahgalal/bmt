@@ -43,22 +43,10 @@ public class ExcelEngine {
 
 				excel_wrapper.fillRow(-1, new Object[] {""});
 
-				excel_wrapper.fillRow(-1,
-						new Object[] {"Number","Group","Central Zone Entrance",
-						"Central Time","Session Time","Rearing counter",
-						"All Zones Entrance","Distance"});
+				excel_wrapper.fillRow(-1,exp.getMeasurementsList());
 				for(Rat rat_tmp:grp_tmp.getAllRats())
 				{
-					excel_wrapper.fillRow(-1,
-							new Object[] {
-							(Integer)(rat_tmp.getNumber()),
-							grp_tmp.getName(),
-							(Integer)(int)((rat_tmp.getCentralEntrance())),
-							(Integer)(int)(rat_tmp.getCentralTime()),
-							(Integer)(int)(rat_tmp.getSessionTime()),
-							(Integer)(int)(rat_tmp.getRearing_ctr()),
-							(Integer)(rat_tmp.getAll_entrance()),
-							(Integer)(int)(rat_tmp.getTotal_distance())});
+					excel_wrapper.fillRow(-1,rat_tmp.getValues());
 				}
 			}
 			excel_wrapper.saveToFile(filename);

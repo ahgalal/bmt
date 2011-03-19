@@ -40,7 +40,7 @@ public class Group implements If_Grp2GUI {
 	{
 		for(Rat r_tmp:arr_rats)
 		{
-			if(r_tmp.getNumber()==num)
+			if(Integer.parseInt(r_tmp.getValueByMeasurementName("Number"))==num)
 				return r_tmp;
 		}
 		return null;

@@ -11,15 +11,21 @@ public abstract class VideoFilter {
 	
 	//protected boolean enabled;
 	protected String name;
-	protected FilterSpecialData special_data;
+	protected FilterData filter_data;
 	protected FilterConfigs configs;
-	protected GUICargo cargo;
+	//protected Module data_analyzer;
+	
 
+	public VideoFilter(String name,FilterConfigs configs)
+	{
+		this.name=name;
+		this.configs=configs;
+	}
 	
 	public FilterConfigs getConfigs() {
 		return configs;
 	}
-	public void setConfigs(FilterConfigs configs)
+	public void updateConfigs(FilterConfigs configs)
 	{
 		this.configs.mergeConfigs(configs);
 	}
@@ -34,9 +40,9 @@ public abstract class VideoFilter {
 		return name;
 	}
 	
-	public Object getSpecialData()
+	public Data getFilterData()
 	{
-		return special_data;
+		return filter_data;
 	}
 	public void setName(String name)
 	{
@@ -44,6 +50,5 @@ public abstract class VideoFilter {
 	}
 	public abstract boolean initialize();
 	
-	public abstract void setCargo();
 	
 }

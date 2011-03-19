@@ -3,8 +3,8 @@ package control.ui;
 import java.util.ArrayList;
 
 import model.business.If_Grp2GUI;
-
-import control.InfoController;
+import modules.ExperimentModule;
+import modules.ModulesManager;
 import ui.GroupsForm;
 import ui.GroupsForm.TabContents;
 
@@ -16,14 +16,12 @@ import ui.GroupsForm.TabContents;
  */
 public class Ctrl_GroupsForm extends ControllerUI {
 	private GroupsForm ui;
-	private InfoController info_controller;  //  @jve:decl-index=0:
 
 	/**
 	 * Initializes class attributes (GroupsForm and InfoController)
 	 */
 	public Ctrl_GroupsForm()
 	{
-		info_controller=InfoController.getDefault();
 		ui=new GroupsForm();
 		ui.setController(this);
 	}
@@ -49,7 +47,7 @@ public class Ctrl_GroupsForm extends ControllerUI {
 				rats_numbering=tc.txt_rats_numbers.getText();
 				notes=tc.txt_notes.getText();
 				no_rats=Integer.parseInt(tc.txt_no_rats.getText());
-				info_controller.saveGrpInfo(tc.grp_id,name, no_rats,rats_numbering , notes);
+				((ExperimentModule)ModulesManager.getDefault().getModuleByName("Experiment Module")).saveGrpInfo(tc.grp_id,name, no_rats,rats_numbering , notes);
 			}
 
 			show(false);

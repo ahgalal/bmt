@@ -2,15 +2,17 @@ package control.ui;
 
 import java.awt.Point;
 
+import modules.ModulesManager;
+import modules.ZonesModule;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Shell;
 
-import control.ShapeController;
-import control.StatsController;
-import control.ZonesController;
 import ui.DrawZones;
 import utils.PManager;
+import control.ShapeController;
+import control.ZonesController;
 
 /**
  * Controller of the DrawZones GUI window
@@ -52,7 +54,7 @@ public class Ctrl_DrawZones extends ControllerUI {
 	 */
 	public void sendScaletoStatsCtrlr(Point measure_pnt1, Point measure_pnt2, String str_real_distance)
 	{
-		StatsController.getDefault().setScale(measure_pnt1, measure_pnt2, Integer.parseInt(str_real_distance));
+		((ZonesModule)ModulesManager.getDefault().getModuleByName("Zones Module")).setScale(measure_pnt1, measure_pnt2, Integer.parseInt(str_real_distance));
 	}
 
 	public void btn_load_zonesAction(Shell shell) {

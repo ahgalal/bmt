@@ -7,6 +7,7 @@ import lib_avi.AVIOutputStream.VideoFormat;
 import utils.PManager;
 import utils.PManager.ProgramState;
 import utils.StatusManager.StatusSeverity;
+import utils.video.processors.FilterConfigs;
 import utils.video.processors.VideoFilter;
 
 public class VideoRecorder extends VideoFilter{
@@ -14,11 +15,10 @@ public class VideoRecorder extends VideoFilter{
 	private PManager pm;
 	private StreamToAVI avi_saver;
 	private RecorderConfigs recorder_configs;
-	public VideoRecorder(String name) {
-		recorder_configs=new RecorderConfigs(null);
-		configs=recorder_configs;
+	public VideoRecorder(String name,FilterConfigs configs) {
+		super(name,configs);
+		recorder_configs=(RecorderConfigs) configs;
 		pm=PManager.getDefault();
-		this.name=name;
 	}
 
 	public void renameVideoFile(String file_name)

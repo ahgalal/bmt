@@ -1,81 +1,54 @@
 package model.business;
 
+import modules.Cargo;
+import utils.PManager;
+import utils.StatusManager.StatusSeverity;
+
 /**
  * @author ShaQ
- * Handles all rats and their info
+ * Handles rat's info
  */
 public class Rat {
 
-	private int number;
-	private int all_entrance;//,central;
-	private long session_time;
-	private long central_entrance;
-	private float central_zone_time;
-	private long total_distance;
-	private int rearing_ctr;
-	
-	public long getTotal_distance() {
-		return total_distance;
+	private Cargo info;
+
+	public Rat(String[] measurements_list,String[] values){
+		this(measurements_list);
+		info.setData(values);
 	}
 
-	public void setTotal_distance(long totalDistance) {
-		total_distance = totalDistance;
+	public Rat(String[] measurements_list){
+		info=new Cargo(measurements_list);
 	}
 
-	public Rat(){
-		
-	}
-	
-	public Rat(int number){
-		this.number = number;
+	public String[] getValues()
+	{
+		return info.getData();
 	}
 
-	public int getNumber() {
-		return number;
+	public String getValueByMeasurementName(String measurement_name)
+	{
+		return info.getDataByTag(measurement_name);
 	}
 
-	public void setNumber(int number) {
-		this.number = number;
-	}
+/*	private int getIndexByMeasurementName(String measurement_name)
+	{
+		for(int i=0;i<measurements_list.length;i++)
+		{
+			if(measurements_list[i].equals(measurement_name))
+				return i;
+		}
+		return -1;
+	}*/
 
-	public int getAll_entrance() {
-		return all_entrance;
+	public boolean setValueByMeasurementName(String measurement_name,String value)
+	{
+		try{
+			info.setDataByTag(measurement_name, value);
+		}catch(Exception e){
+			PManager.log.print("Error in measurement name!", this, StatusSeverity.ERROR);
+			return false;
+		};
+		return true;
 	}
-
-	public void setAll_entrance(int allEntrance) {
-		all_entrance = allEntrance;
-	}
-
-	public long getSessionTime() {
-		return session_time;
-	}
-
-	public void setSessionTime(long sessionEndTime) {
-		session_time = sessionEndTime;
-	}
-
-	public long getCentralEntrance() {
-		return central_entrance;
-	}
-
-	public void setCentralEntrance(long centralStartTmp) {
-		central_entrance = centralStartTmp;
-	}
-
-	public float getCentralTime() {
-		return central_zone_time;
-	}
-
-	public void setCentralTime(float centralZoneTimeTmp) {
-		central_zone_time = centralZoneTimeTmp;
-	}
-
-	public void setRearing_ctr(int rearing_ctr) {
-		this.rearing_ctr = rearing_ctr;
-	}
-
-	public int getRearing_ctr() {
-		return rearing_ctr;
-	}
-
 }

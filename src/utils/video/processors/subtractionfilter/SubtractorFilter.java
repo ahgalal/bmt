@@ -1,19 +1,25 @@
 package utils.video.processors.subtractionfilter;
 
+import utils.video.FrameIntArray;
 import utils.video.ImageManipulator;
+import utils.video.processors.FilterConfigs;
 import utils.video.processors.VideoFilter;
 
 public class SubtractorFilter extends VideoFilter {
 
-	
+	private FrameIntArray bg_image_gray;
 	private SubtractionConfigs subtraction_configs;
-	public SubtractorFilter(String name)
+	public SubtractorFilter(String name,FilterConfigs configs)
 	{
-		this.subtraction_configs = new SubtractionConfigs(-1,null,null);
-		configs=subtraction_configs;
-		this.name=name;
+		super(name,configs);
+		bg_image_gray = new FrameIntArray();
+		this.subtraction_configs = (SubtractionConfigs) configs;
 	}
 
+	public void setBg_image(int[] bgImage) {
+		bg_image_gray.frame_data = ImageManipulator.rgbIntArray2GrayIntArray(bgImage);
+	}
+	
 	public byte[] subtractGrayImages(byte[] img1,byte[] img2)
 	{
 		if(img1.length==img2.length)
@@ -48,14 +54,14 @@ public class SubtractorFilter extends VideoFilter {
 	public int[] process(int[] imageData) {
 		if(configs.enabled)
 		{
-			if(imageData.length==subtraction_configs.bg_image_gray.frame_data.length)
+			if(imageData.length==bg_image_gray.frame_data.length)
 			{
 				imageData=ImageManipulator.rgbIntArray2GrayIntArray(imageData);
 				int[] res = new int[imageData.length];
 				int tmp = 0;
 				for(int i=0;i<imageData.length;i++)
 				{
-					tmp= imageData[i]-subtraction_configs.bg_image_gray.frame_data[i];
+					tmp= imageData[i]-bg_image_gray.frame_data[i];
 
 					if(tmp<0)
 						tmp*=-1;

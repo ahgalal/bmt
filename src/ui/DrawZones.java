@@ -324,7 +324,7 @@ public class DrawZones extends BaseUI {
 			measure_pnt1 = new Point(pos.x, pos.y);
 		else
 			measure_pnt2 = new Point(pos.x, pos.y);
-		PManager.getDefault().log.print("New Measure point Added: " + pos.x + " " + pos.y, this);
+		PManager.log.print("New Measure point Added: " + pos.x + " " + pos.y, this);
 	}
 
 

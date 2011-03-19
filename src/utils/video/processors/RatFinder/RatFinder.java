@@ -2,21 +2,50 @@ package utils.video.processors.RatFinder;
 
 import java.awt.Point;
 
+import utils.video.processors.FilterConfigs;
 import utils.video.processors.VideoFilter;
 
 public class RatFinder extends VideoFilter {
 
 	private int tmp_max;
-	private RatFinderConfigs ratfinder_configs;
+	private RatFinderFilterConfigs ratfinder_configs;
+	private RatFinderData rat_finder_data;
+	//private RatFinderAnalyzer rat_finder_analyzer;
+
+	private Point center_point;
+
+
 	private void drawMarkerOnImg(int[] binary_image)
 	{
 		int[] buf_data=binary_image;
 
 		try {
-			final int mark_length=10;
-			int j=(ratfinder_configs.ref_center_point.x + (ratfinder_configs.ref_center_point.y-mark_length)*ratfinder_configs.common_configs.width);
-			int i=(ratfinder_configs.ref_center_point.x-mark_length + ratfinder_configs.ref_center_point.y*ratfinder_configs.common_configs.width);
+			final int mark_length=30;
 			int len=binary_image.length;
+
+			int tmp_x=center_point.x -mark_length +
+			center_point.y*ratfinder_configs.common_configs.width;
+			int tmp_y= (center_point.y-mark_length)*
+			ratfinder_configs.common_configs.width + center_point.x;
+
+			for(int c=0;c<mark_length*2;c++)
+			{
+				if(tmp_x<0) tmp_x=0;
+				if(tmp_y<0) tmp_y=0;
+				if(tmp_x<len & tmp_y<len)
+				{
+					buf_data[tmp_x]= 0x00FF0000;	//red
+					if(tmp_x+ratfinder_configs.common_configs.width<len)
+						buf_data[tmp_x+ratfinder_configs.common_configs.width]= 0x00FF0000;	//red
+					buf_data[tmp_y]= 0x00FF0000;	//red
+					if(tmp_y+1<len)
+						buf_data[tmp_y+1]= 0x00FF0000;	//red
+				}
+				tmp_x++;
+				tmp_y+=ratfinder_configs.common_configs.width;
+			}
+			/*			int i=(ratfinder_configs.ref_center_point.x-mark_length + ratfinder_configs.ref_center_point.y*ratfinder_configs.common_configs.width);
+			int j=(ratfinder_configs.ref_center_point.x + (ratfinder_configs.ref_center_point.y-mark_length)*ratfinder_configs.common_configs.width);
 			for(int c=0;c<mark_length*2;c++)//i<(pos_x+mark_length + pos_y*width)*3
 			{
 				if(i<0)
@@ -29,24 +58,26 @@ public class RatFinder extends VideoFilter {
 				}
 				j+=ratfinder_configs.common_configs.width;
 				i+=1;
-
-			}
+			}*/
 		} catch (Exception e) {
 			System.err.print("Error ya 3am el 7ag, fel index!");
 			e.printStackTrace();
 		}
 	}
 
-	public RatFinder(String name) {
-		super();
-		ratfinder_configs=new RatFinderConfigs(0, null,null);
-		this.name=name;
-		configs=ratfinder_configs;
+	public RatFinder(String name,FilterConfigs configs) {
+		super(name,configs);
+		ratfinder_configs=(RatFinderFilterConfigs) configs;
+		rat_finder_data = new RatFinderData("Rat Finder Data");
+		center_point=(Point) rat_finder_data.getData();
+		//rat_finder_analyzer = new RatFinderAnalyzer(rat_finder_data);
+
+		//super's stuff:
+		filter_data=rat_finder_data;
 	}
 
 
-
-	public Point getCentroid(int[] binary_image)
+	private void updateCentroid(int[] binary_image)
 	{
 		tmp_max=ratfinder_configs.max_thresh;
 		int[] hori_sum=new int[ratfinder_configs.common_configs.height];
@@ -57,7 +88,7 @@ public class RatFinder extends VideoFilter {
 				hori_sum[y]+=binary_image[y*ratfinder_configs.common_configs.width + x]&0xff;
 			if(hori_sum[y]>tmp_max)
 			{
-				ratfinder_configs.ref_center_point.y=y;
+				center_point.y=y;
 				tmp_max=hori_sum[y];
 			}
 		}
@@ -69,15 +100,12 @@ public class RatFinder extends VideoFilter {
 				vert_sum[x]+=binary_image[y*ratfinder_configs.common_configs.width + x]&0xff;
 			if(vert_sum[x]>tmp_max)
 			{
-				ratfinder_configs.ref_center_point.x=x;
+				center_point.x=x;
 				tmp_max = vert_sum[x];
 			}
 		}
-
 		//System.out.print(Integer.toString(center_point.x) + " " + Integer.toString(center_point.y) + "\n");
 		//System.out.print("V: " + Integer.toString(vert_sum[start_point.x])+"         H :" + Integer.toString(vert_sum[start_point.y])+"\n");
-
-		return ratfinder_configs.ref_center_point;
 	}
 
 	/* (non-Javadoc)
@@ -87,7 +115,7 @@ public class RatFinder extends VideoFilter {
 	public int[] process(int[] imageData) {
 		if(configs.enabled)
 		{
-			getCentroid(imageData);
+			updateCentroid(imageData);
 			drawMarkerOnImg(imageData);
 		}
 		return imageData;
@@ -95,7 +123,7 @@ public class RatFinder extends VideoFilter {
 
 	@Override
 	public boolean initialize() {
-		return true;
+		return false;
 	}
 
 }

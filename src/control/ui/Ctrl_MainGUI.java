@@ -2,6 +2,10 @@ package control.ui;
 
 import java.awt.Frame;
 
+import modules.ExperimentModule;
+import modules.ModulesManager;
+import modules.RearingModule;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.FileDialog;
@@ -11,11 +15,12 @@ import ui.MainGUI;
 import utils.PManager;
 import utils.PManager.ProgramState;
 import utils.StatusManager.StatusSeverity;
-import utils.video.processors.CommonConfigs;
+import utils.video.processors.CommonFilterConfigs;
 import utils.video.processors.FilterConfigs;
+import utils.video.processors.rearingdetection.RearingDetector;
+import utils.video.processors.recorder.VideoRecorder;
 import utils.video.processors.screendrawer.ScreenDrawerConfigs;
-import control.InfoController;
-import control.StatsController;
+import utils.video.processors.subtractionfilter.SubtractorFilter;
 
 /**
  * Controller of the MainGUI window
@@ -24,8 +29,6 @@ import control.StatsController;
  */
 public class Ctrl_MainGUI extends ControllerUI {
 	private MainGUI ui;
-	private StatsController stats_controller;  //  @jve:decl-index=0:
-	private InfoController info_controller;  //  @jve:decl-index=0:
 	private PManager pm;  //  @jve:decl-index=0:
 	public boolean stop_tracking=false;
 	private Thread th_update_gui;  //  @jve:decl-index=0:
@@ -45,18 +48,16 @@ public class Ctrl_MainGUI extends ControllerUI {
 		ui.setController(this);
 		th_update_gui = new Thread(new runnableUpdateGUI());
 
-		stats_controller=StatsController.getDefault();
-		info_controller= InfoController.getDefault();
 		pm.status_mgr.initialize(ui.getStatusLabel());
 		ctrl_about_box=new Ctrl_About();
 	}
 
 	public Frame getMainAWTFrame(){
-		return ui.awt_video_main;
+		return ui.getAwt_video_main();
 	}
 
 	public Frame getSecAWTFrame(){
-		return ui.awt_video_sec;
+		return ui.getAwt_video_sec();
 	}
 
 	public boolean isShellDisposed()
@@ -91,12 +92,14 @@ public class Ctrl_MainGUI extends ControllerUI {
 	{
 		if(pm.state==ProgramState.STREAMING)
 		{
-			stats_controller.startSession();
+			clearForm();
 			stop_tracking=false;
 			if(th_update_gui==null)
 				th_update_gui = new Thread(new runnableUpdateGUI());
 			th_update_gui.start();
+
 			pm.getVideoProcessor().startProcessing();
+			ModulesManager.getDefault().runAnalyzers(true);
 		}
 		else
 			pm.status_mgr.setStatus("Please start the camera first.", StatusSeverity.ERROR);
@@ -162,6 +165,7 @@ public class Ctrl_MainGUI extends ControllerUI {
 	private class runnableUpdateGUI implements Runnable {
 		public void run() {
 
+			setTableNamesColumn();
 			while(!stop_tracking)
 			{
 				try {
@@ -169,26 +173,26 @@ public class Ctrl_MainGUI extends ControllerUI {
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
-				if(stats_controller.require_update_gui)
-				{
-					Display.getDefault().asyncExec(new Runnable() {
+				Display.getDefault().asyncExec(new Runnable() {
 
-						@Override
-						public void run() {
-							ui.updateStats(stats_controller.getTotalDistance(),
-									stats_controller.getCurrentZoneNumber(),
-									stats_controller.getSessionTimeTillNow(),
-									stats_controller.getCentral_entrance(),
-									stats_controller.getAll_entrance(), 
-									stats_controller.getCentralTime(),
-									stats_controller.getRearingCtr());
-
-							stats_controller.require_update_gui=false;
-						}
-					});
-				}
+					@Override
+					public void run() {
+						ui.fillDataTable(null, ModulesManager.getDefault().getGUIData());
+					}
+				});
 			}
 		}
+	}
+
+	private void setTableNamesColumn()
+	{
+		Display.getDefault().asyncExec(new Runnable() {
+
+			@Override
+			public void run() {
+				ui.fillDataTable(ModulesManager.getDefault().getGUINames(),null);
+			}
+		});
 	}
 
 	/**
@@ -200,7 +204,7 @@ public class Ctrl_MainGUI extends ControllerUI {
 		if(pm.state==ProgramState.STREAMING)
 		{
 			pm.getGfxPanel().setBackground(pm.getVideoProcessor().getRGBBackground());
-			pm.getVideoProcessor().setBg_image();
+			((SubtractorFilter)pm.getVideoProcessor().getFilter_mgr().getFilterByName("SubtractionFilter")).setBg_image(pm.getVideoProcessor().getRGBBackground());
 		}
 		else if(pm.state==ProgramState.TRACKING)
 			pm.status_mgr.setStatus("Background can't be taken while tracking.", StatusSeverity.ERROR);
@@ -216,8 +220,8 @@ public class Ctrl_MainGUI extends ControllerUI {
 		if(pm.state==ProgramState.IDLE)
 		{
 			//CommonConfigs commonConfigs = new CommonConfigs(640, 480, 30, 0, "JMyron", null);
-			CommonConfigs commonConfigs = new CommonConfigs(640, 480, 30, 0, "AGCamLib", null);
-			ScreenDrawerConfigs scrn_drwr_cfgs = new ScreenDrawerConfigs(null, null, null, null, null, true);
+			CommonFilterConfigs commonConfigs = new CommonFilterConfigs(640, 480, 30, 0, "AGCamLib", null);
+			ScreenDrawerConfigs scrn_drwr_cfgs = new ScreenDrawerConfigs(null, null, null, null, null, null, true);
 			pm.initializeVideoProcessor(commonConfigs);
 			pm.getVideoProcessor().updateFiltersConfigs(new FilterConfigs[] {scrn_drwr_cfgs});
 			pm.status_mgr.setStatus("Camera is Starting..", StatusSeverity.WARNING);
@@ -260,8 +264,11 @@ public class Ctrl_MainGUI extends ControllerUI {
 	 * Shows the new ExperimentForm and unloads the previous experiment.
 	 */
 	public void mnutm_experiment_newexp_Action() {
+		pm.frm_exp.clearForm();
+		pm.frm_grps.clearForm();
+		PManager.main_gui.clearForm();
 		pm.frm_exp.show(true);
-		info_controller.unloadExperiment();		
+		((ExperimentModule)ModulesManager.getDefault().getModuleByName("Experiment Module")).unloadExperiment();		
 	}
 
 	/**
@@ -275,9 +282,12 @@ public class Ctrl_MainGUI extends ControllerUI {
 		String file_name=fileDialog.open();
 		if(file_name!=null)
 		{
-			info_controller.unloadExperiment();
-			info_controller.loadInfoFromTXTFile(file_name);
-			info_controller.setExpFileName(file_name);
+			pm.frm_exp.clearForm();
+			pm.frm_grps.clearForm();
+			clearForm();
+			((ExperimentModule)ModulesManager.getDefault().getModuleByName("Experiment Module")).unloadExperiment();
+			((ExperimentModule)ModulesManager.getDefault().getModuleByName("Experiment Module")).loadInfoFromTXTFile(file_name);
+			((ExperimentModule)ModulesManager.getDefault().getModuleByName("Experiment Module")).setExpFileName(file_name);
 			pm.status_mgr.setStatus("Experiment Loaded Successfully!", StatusSeverity.WARNING);
 		}
 	}
@@ -291,6 +301,9 @@ public class Ctrl_MainGUI extends ControllerUI {
 		if(pm.state!=ProgramState.RECORDING)
 			pm.unloadVideoProcessor();
 		ui_is_opened=false;
+		try {
+			Thread.sleep(500);
+		} catch (InterruptedException e) {e.printStackTrace();}
 		ui.closeWindow();
 	}
 
@@ -298,17 +311,17 @@ public class Ctrl_MainGUI extends ControllerUI {
 	 * Starts video recording.
 	 */
 	public void btn_start_record_Action() {
-		pm.getVideoProcessor().startRecordingVideo();		
+		pm.getVideoProcessor().getFilter_mgr().enableFilter("Recorder", true);		
 	}
 
 	/**
 	 * Stops video recording, and asks for a location to save the video file.
 	 */
 	public void stoprecordAction() {
-		pm.getVideoProcessor().stopRecordingVideo();
+		pm.getVideoProcessor().getFilter_mgr().enableFilter("Recorder", false);
 		FileDialog fileDialog = new FileDialog(ui.getShell(), SWT.SAVE);
 		String file_name=fileDialog.open();
-		pm.getVideoProcessor().saveVideoFile(file_name);
+		((VideoRecorder)pm.getVideoProcessor().getFilter_mgr().getFilterByName("Recorder")).saveVideoFile(file_name);
 	}
 
 	/**
@@ -320,14 +333,15 @@ public class Ctrl_MainGUI extends ControllerUI {
 	public void btn_stop_tracking_Action() {
 		if(pm.state==ProgramState.TRACKING | pm.state==ProgramState.RECORDING)
 		{
+
+			ModulesManager.getDefault().runAnalyzers(false);
 			if(pm.state==ProgramState.RECORDING)
 				stoprecordAction();
-			
+
 			pm.getVideoProcessor().stopProcessing();
 			stop_tracking=true;
-			stats_controller.endSession();
+			//stats_controller.endSession();
 			th_update_gui=null;
-			InfoController.getDefault().saveRatInfo();
 		}
 		else
 			pm.status_mgr.setStatus("Tracking is not running.", StatusSeverity.ERROR);
@@ -337,10 +351,13 @@ public class Ctrl_MainGUI extends ControllerUI {
 	 * Shows the rat information window to enter the next rat number & group.
 	 */
 	public void btn_start_tracking_Action() {
-		if(pm.state==ProgramState.STREAMING & pm.getVideoProcessor().isBg_set())
+		if(pm.state==ProgramState.STREAMING & 
+				pm.getVideoProcessor().isBg_set() &
+				((ExperimentModule)ModulesManager.getDefault().getModuleByName("Experiment Module")).isExperimentPresent()
+		)
 			pm.frm_rat.show(true);
 		else
-			pm.status_mgr.setStatus("Please make sure the camera is running and you have set the background.", StatusSeverity.ERROR);
+			pm.status_mgr.setStatus("Please make sure the camera is running, you have set the background and you have selected an experiment to work on.", StatusSeverity.ERROR);
 	}
 
 	public void clearForm() {
@@ -355,7 +372,7 @@ public class Ctrl_MainGUI extends ControllerUI {
 		fileDialog.setFilterExtensions(new String[] {"*.xlsx"});
 		String file_name=fileDialog.open();
 		if(file_name!=null)
-			info_controller.writeToExcelFile(file_name);
+			((ExperimentModule)ModulesManager.getDefault().getModuleByName("Experiment Module")).writeToExcelFile(file_name);
 	}
 
 	public void btn_not_rearing_Action() {
@@ -374,7 +391,7 @@ public class Ctrl_MainGUI extends ControllerUI {
 	 */
 	public void rearingNow(boolean rearing) {
 		if(pm.state==ProgramState.TRACKING)
-			pm.getVideoProcessor().rearingNow(rearing);
+			((RearingDetector)pm.getVideoProcessor().getFilter_mgr().getFilterByName("RearingDetector")).rearingNow(rearing);
 		else
 			pm.status_mgr.setStatus("Tracking is not running!", StatusSeverity.ERROR);
 	}
@@ -384,21 +401,21 @@ public class Ctrl_MainGUI extends ControllerUI {
 	 * @param key the pressed key on the keyboard
 	 */
 	public void keyPressed_Action(char key) {
-		if(pm.state==ProgramState.TRACKING | pm.state==ProgramState.RECORDING)
+		/*		if(pm.state==ProgramState.TRACKING | pm.state==ProgramState.RECORDING)
 			if(key==java.awt.event.KeyEvent.VK_R)
 				stats_controller.incrementRearingCounter();
 			else if(key==java.awt.event.KeyEvent.VK_C)
-				stats_controller.decrementRearingCounter();
+				stats_controller.decrementRearingCounter();*/
 	}
 
 	public void btn_add_rearing_Action() {
 		if(pm.state==ProgramState.TRACKING | pm.state==ProgramState.RECORDING)	
-			stats_controller.incrementRearingCounter();
+			((RearingModule)ModulesManager.getDefault().getModuleByName("Rearing Module")).incrementRearingCounter();
 	}
 
 	public void btn_sub_rearing_Action() {
 		if(pm.state==ProgramState.TRACKING | pm.state==ProgramState.RECORDING)	
-			stats_controller.decrementRearingCounter();
+			((RearingModule)ModulesManager.getDefault().getModuleByName("Rearing Module")).decrementRearingCounter();
 	}
 	public void mnutm_help_about_Action() {
 		ctrl_about_box.show(true);

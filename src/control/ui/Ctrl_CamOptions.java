@@ -3,7 +3,7 @@ package control.ui;
 import control.ZonesController;
 import ui.CamOptions;
 import utils.PManager;
-import utils.video.processors.CommonConfigs;
+import utils.video.processors.CommonFilterConfigs;
 import utils.video.processors.FilterConfigs;
 import utils.video.processors.screendrawer.ScreenDrawerConfigs;
 
@@ -14,13 +14,13 @@ import utils.video.processors.screendrawer.ScreenDrawerConfigs;
  */
 public class Ctrl_CamOptions extends ControllerUI{
 	private String library = "JMF";  //  @jve:decl-index=0:
-	private String prev_library="";
+	//private String prev_library="";
 	private String format = "YUV";  //  @jve:decl-index=0:
 	private int width = 640, height = 480;
 	private int frame_rate = 30;
 	private int cam_num=0;
 	private CamOptions ui;
-	private boolean lib_is_already_created;
+	//private boolean lib_is_already_created;
 
 	/**
 	 * Initializes class attributes (CamOptions and PManager)
@@ -61,13 +61,13 @@ public class Ctrl_CamOptions extends ControllerUI{
 		//if(lib_is_already_created==false | !library.equals(prev_library))
 		{
 			pm.unloadVideoProcessor();
-			CommonConfigs common_configs = new CommonConfigs(width,height,frame_rate,cam_num,library,format);
-			ScreenDrawerConfigs scrn_drwr_cfgs = new ScreenDrawerConfigs(null, null, null, null, null, true);
+			CommonFilterConfigs common_configs = new CommonFilterConfigs(width,height,frame_rate,cam_num,library,format);
+			ScreenDrawerConfigs scrn_drwr_cfgs = new ScreenDrawerConfigs(null, null, null, null, null, null, true);
 			pm.initializeVideoProcessor(common_configs);
 			pm.getVideoProcessor().updateFiltersConfigs(new FilterConfigs[] {scrn_drwr_cfgs});
 			ZonesController.getDefault().setWidthandHeight(width, height);
-			lib_is_already_created=true;
-			prev_library = library.substring(0);
+			//lib_is_already_created=true;
+			//prev_library = library.substring(0);
 		}
 	}
 

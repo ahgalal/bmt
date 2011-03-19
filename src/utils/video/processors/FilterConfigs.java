@@ -2,17 +2,18 @@ package utils.video.processors;
 
 public abstract class FilterConfigs
 {
-	public CommonConfigs common_configs;
+	public CommonFilterConfigs common_configs;
 	public boolean enabled;
-	private String filter_name;
+	private String name;
 	
-	
-	public void setFilter_name(String filter_name) {
-		this.filter_name = filter_name;
+	public FilterConfigs(String name,CommonFilterConfigs common_configs)
+	{
+		this.common_configs=common_configs;
+		this.name=name;
 	}
-
-	public String getFilter_name() {
-		return filter_name;
+	
+	public String getConfigurable_name() {
+		return name;
 	}
 	
 	public abstract void mergeConfigs(FilterConfigs configs);

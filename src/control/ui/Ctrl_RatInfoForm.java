@@ -1,12 +1,14 @@
 package control.ui;
 
+import modules.ExperimentModule;
+import modules.ModulesManager;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.MessageBox;
 
 import ui.RatInfoForm;
 import utils.PManager;
 import utils.StatusManager.StatusSeverity;
-import control.InfoController;
 
 /**
  * Controller of the RatInfoForm GUI window
@@ -14,7 +16,6 @@ import control.InfoController;
  *
  */
 public class Ctrl_RatInfoForm extends ControllerUI {
-	private InfoController info_controller;  //  @jve:decl-index=0:
 	private int rat_num;
 	private String grp_name;
 	private RatInfoForm ui;
@@ -27,7 +28,6 @@ public class Ctrl_RatInfoForm extends ControllerUI {
 		pm=PManager.getDefault();
 		ui= new RatInfoForm();
 		ui.setController(this);
-		info_controller=InfoController.getDefault();
 	}
 
 	@Override
@@ -50,7 +50,7 @@ public class Ctrl_RatInfoForm extends ControllerUI {
 	 */
 	@Override
 	public void show(boolean visibility) {
-		String[] grps=info_controller.getGroupsNames();
+		String[] grps=((ExperimentModule)ModulesManager.getDefault().getModuleByName("Experiment Module")).getGroupsNames();
 		String[] params=new String[grps.length+1];
 
 		params[0]="";
@@ -71,7 +71,7 @@ public class Ctrl_RatInfoForm extends ControllerUI {
 
 	/**
 	 * Checks the validity of entered Rat Number & Group name.
-	 * if the Rat Number already exists, it asks fdo confirmation;
+	 * if the Rat Number already exists, it asks for confirmation;
 	 * if the Group name is not valid, error message is displayed;
 	 * if all data are correct, we start tracking activity. 
 	 */
@@ -79,8 +79,10 @@ public class Ctrl_RatInfoForm extends ControllerUI {
 	{
 		try {
 
-			int tmp_confirmation=info_controller.setCurrentRatAndGroup(rat_num, grp_name,false); 
+			int tmp_confirmation=((ExperimentModule)ModulesManager.getDefault().getModuleByName("Experiment Module")).validateRatAndGroup(rat_num, grp_name); 
 			if(tmp_confirmation==0){
+				ModulesManager.getDefault().initialize();
+				((ExperimentModule)ModulesManager.getDefault().getModuleByName("Experiment Module")).setCurrentRatAndGroup(rat_num, grp_name);
 				startTracking();
 			}
 			else if(tmp_confirmation==1){	//Rat already exists
@@ -90,7 +92,8 @@ public class Ctrl_RatInfoForm extends ControllerUI {
 				int res=msg.open();
 				if(res==SWT.YES)
 				{
-					info_controller.setCurrentRatAndGroup(rat_num, grp_name,true);
+					ModulesManager.getDefault().initialize();
+					((ExperimentModule)ModulesManager.getDefault().getModuleByName("Experiment Module")).setCurrentRatAndGroup(rat_num, grp_name);
 					startTracking();
 				}
 			}

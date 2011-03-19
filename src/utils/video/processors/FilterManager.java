@@ -2,6 +2,9 @@ package utils.video.processors;
 
 import java.util.ArrayList;
 
+import modules.ModulesManager;
+
+
 public class FilterManager {
 	private ArrayList<VideoFilter> arr_filters;
 
@@ -10,7 +13,7 @@ public class FilterManager {
 		arr_filters=new ArrayList<VideoFilter>();
 	}
 
-	private VideoFilter getFilterByName(String name)
+	public VideoFilter getFilterByName(String name)
 	{
 		for(VideoFilter vf: arr_filters)
 			if(vf.getName().equals(name))
@@ -18,13 +21,14 @@ public class FilterManager {
 		return null;
 	}
 
+
 	public void enableFilter(String filter_name,boolean enable)
 	{
 		VideoFilter tmp = getFilterByName(filter_name);
 		if(tmp!=null)
 			tmp.enable(enable);
 	}
-	
+
 	private VideoFilter getFilterByType(Class<?> type)
 	{
 		for(VideoFilter vf: arr_filters)
@@ -63,12 +67,12 @@ public class FilterManager {
 		if(tmp!=null)
 			arr_filters.remove(tmp);
 	}
-	
+
 	public void applyConfigsToFilter(FilterConfigs f_cfgs)
 	{
-		VideoFilter tmp_filter = getFilterByName(f_cfgs.getFilter_name());
+		VideoFilter tmp_filter = getFilterByName(f_cfgs.getConfigurable_name());
 		if(tmp_filter!=null)
-			tmp_filter.setConfigs(f_cfgs);
+			tmp_filter.updateConfigs(f_cfgs);
 	}
 
 	public void disableAll() {
@@ -76,5 +80,11 @@ public class FilterManager {
 			vf.enable(false);
 	}
 
+	public void submitDataObjects()
+	{
+		for(VideoFilter v: arr_filters)
+			if(v.getFilterData()!=null)
+				ModulesManager.getDefault().addDataObject(v.getFilterData());
+	}
 
 }

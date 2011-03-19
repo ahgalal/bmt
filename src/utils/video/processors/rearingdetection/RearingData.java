@@ -1,8 +1,12 @@
 package utils.video.processors.rearingdetection;
 
-import utils.video.processors.FilterSpecialData;
+import utils.video.processors.FilterData;
 
-public class RearingFilterData extends FilterSpecialData{
+public class RearingData extends FilterData{
+	public RearingData(String name) {
+		super(name);
+	}
+
 	private boolean rearing;
 
 	@Override

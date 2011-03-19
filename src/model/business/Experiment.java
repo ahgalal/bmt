@@ -2,6 +2,8 @@ package model.business;
 
 import java.util.ArrayList;
 
+import utils.saveengines.Cls_Constants;
+
 
 /**
  * @author ShaQ
@@ -14,9 +16,9 @@ public class Experiment implements If_Exp2GUI {
 	private String user;
 	private String date;
 	private String notes;
-	//I deleted no_groups .... data duplication with groups.size()
-
-
+	
+	private String[] measurements_list;
+	
 	/**
 	 * Clears the experiment info(data)
  	 * This functions loops on all the groups in the experiment and for each 
@@ -166,6 +168,56 @@ public class Experiment implements If_Exp2GUI {
 		return groups.size();
 	}
 
+	public void setMeasurementsList(String[] lineData) {
+		measurements_list=lineData;
+	}
+
+	public String[] getMeasurementsList() {
+		return measurements_list;
+	}
+
+	
+	public String expInfo2String()
+	{
+		String exp_info = "";
+		
+		try { //TODO: replace System.getProperty("line.separator") by an endl String
+			exp_info+=Cls_Constants.h_exp + System.getProperty("line.separator");
+			exp_info+=Cls_Constants.h_exp_name + getName()+ System.getProperty("line.separator"); 
+			exp_info+=Cls_Constants.h_exp_user + getUser() + System.getProperty("line.separator");
+			exp_info+=Cls_Constants.h_exp_date+ getDate() +" "+ System.getProperty("line.separator");
+			exp_info+=Cls_Constants.h_exp_notes + getNotes()+ System.getProperty("line.separator");
+
+			for (Group grp_tmp:getGroups()){
+				exp_info+=Cls_Constants.h_grp+ System.getProperty("line.separator");
+				exp_info+=Cls_Constants.h_grp_id + grp_tmp.getId()+ System.getProperty("line.separator");
+				exp_info+=Cls_Constants.h_grp_name + grp_tmp.getName()+ System.getProperty("line.separator");
+				exp_info+=Cls_Constants.h_grp_no_rats + grp_tmp.getNo_rats()+ System.getProperty("line.separator");
+				exp_info+=Cls_Constants.h_grp_rats_numbers + grp_tmp.getRats_numbering() + System.getProperty("line.separator");
+				exp_info+=Cls_Constants.h_grp_notes + grp_tmp.getNotes() + System.getProperty("line.separator");
+				exp_info+="" + System.getProperty("line.separator");
+				exp_info+=Cls_Constants.h_rat + System.getProperty("line.separator");
+				String tags="";
+				for(String s:getMeasurementsList())
+					tags+=s+'\t'; //TODO:tab after the last item ??!!
+				exp_info+=tags + System.getProperty("line.separator");
+
+				for(Rat rat_tmp:grp_tmp.getAllRats()){
+					String values=" ";
+					for(String s:rat_tmp.getValues())
+						values+=s+'\t'; //TODO:tab after the last item ??!!
+					exp_info+=values + System.getProperty("line.separator");
+				}
+			}
+		} 
+		catch (Exception e) 
+		{
+			e.printStackTrace();
+		} 
+		
+		
+		return exp_info;
+	}
 
 }
 

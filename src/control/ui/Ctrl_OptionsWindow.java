@@ -1,12 +1,14 @@
 package control.ui;
 
+import modules.ModuleConfigs;
+import modules.ModulesManager;
+import modules.ZonesModuleConfigs;
 import ui.OptionsWindow;
 import utils.PManager;
 import utils.video.processors.FilterConfigs;
-import utils.video.processors.rearingdetection.RearingConfigs;
 import utils.video.processors.rearingdetection.RearingDetector;
+import utils.video.processors.rearingdetection.RearingFilterConfigs;
 import utils.video.processors.subtractionfilter.SubtractionConfigs;
-import control.StatsController;
 
 
 /**
@@ -55,16 +57,18 @@ public class Ctrl_OptionsWindow extends ControllerUI {
 	public void updateOptions(boolean show_window)
 	{
 		try {
-			SubtractionConfigs subtraction_configs=new SubtractionConfigs(subtraction_thresh,null,null);
-			RearingConfigs rearing_configs = new RearingConfigs(rearing_thresh, 200, 200,null,null);
+			SubtractionConfigs subtraction_configs=new SubtractionConfigs("SubtractionFilter", subtraction_thresh,null);
+			RearingFilterConfigs rearing_configs = new RearingFilterConfigs("RearingDetector", rearing_thresh, 200, 200,null,null);
 			
 			FilterConfigs[] filters_configs = new FilterConfigs[2];
 			filters_configs[0]=subtraction_configs;
 			filters_configs[1]=rearing_configs;
 			
 			pm.getVideoProcessor().updateFiltersConfigs(filters_configs);
+			ZonesModuleConfigs zones_configs = new ZonesModuleConfigs("Zones Module", hyst);
 			
-			StatsController.getDefault().setHysteresis(hyst);
+			ModulesManager.getDefault().updateModuleConfigs(new ModuleConfigs[] {zones_configs});
+			
 			pm.getVideoProcessor().getFilter_mgr().enableFilter(RearingDetector.class,enable_auto_rearing);
 			show(show_window);
 		} catch (NumberFormatException e1) {

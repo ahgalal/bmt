@@ -43,7 +43,6 @@ public class About extends BaseUI {
 		btn_OK.setText("OK");
 		btn_OK.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
 			public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
-				System.out.println("widgetSelected()"); // TODO Auto-generated Event stub widgetSelected()
 				sShell.setVisible(false);
 			}
 		});
@@ -53,8 +52,9 @@ public class About extends BaseUI {
 		
 		createGrp_format();
 		textArea = new Text(sShell, SWT.MULTI | SWT.WRAP | SWT.V_SCROLL);
+		textArea.setEditable(false);
 		textArea.setBounds(new Rectangle(11, 29, 443, 124));
-		textArea.setText("");
+		textArea.setText("Behavioural Monitoring Tool ( Ein BMT ) : this software is used to record and analyse some behavioural expermients (open field , water maze , forced swimming)  in neuroscience. the program was developed in collaboration with neuropharmacology lab at Faculty of Medicine,,  Ain Shams University . The sofware has 3 modules , each module is concerned with one of the three experminets.\nEin BMT (Open Field Module):\na test arena is divided into a number of zones. a rat or mouse is put inside the arena. rat movements are recorded and a number of parameters (number of zones, time spent in central zones, rearing behaviour, distance travelled) are analysed.");
 	}
 
 	/**

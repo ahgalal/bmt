@@ -7,6 +7,7 @@ import java.awt.image.DataBufferInt;
 import utils.PManager;
 import utils.StatusManager.StatusSeverity;
 import utils.video.input.JMFModule;
+import utils.video.processors.FilterConfigs;
 import utils.video.processors.VideoFilter;
 import control.ShapeController;
 
@@ -18,17 +19,22 @@ public class ScreenDrawer extends VideoFilter{
 	private ShapeController shape_controller;
 	@SuppressWarnings("unchecked")
 	private Class cls_lib_usd;
-	private PManager pm;
 	private ScreenDrawerConfigs scrn_drwr_cnfgs;
 
-	public ScreenDrawer(String name)
+	public ScreenDrawer(String name,FilterConfigs configs)
 	{
-		scrn_drwr_cnfgs= new ScreenDrawerConfigs(null,null,null,null,null,true);
-		this.name=name;
-		pm=PManager.getDefault();
-		configs=scrn_drwr_cnfgs;
+		super(name,configs);
+		scrn_drwr_cnfgs= (ScreenDrawerConfigs) configs;
 
 		shape_controller=ShapeController.getDefault();
+		
+		buf_img_main = new BufferedImage(scrn_drwr_cnfgs.common_configs.width, scrn_drwr_cnfgs.common_configs.height, BufferedImage.TYPE_INT_RGB);
+		data_main_screen=((DataBufferInt)buf_img_main.getRaster().getDataBuffer()).getData();
+
+		buf_img_sec = new BufferedImage(scrn_drwr_cnfgs.common_configs.width, scrn_drwr_cnfgs.common_configs.height, BufferedImage.TYPE_INT_RGB);
+		data_sec_screen=((DataBufferInt)buf_img_sec.getRaster().getDataBuffer()).getData();
+
+		cls_lib_usd=scrn_drwr_cnfgs.v_in.getClass();
 	}
 
 	public void updateImageData(int[] processed_img)
@@ -60,7 +66,7 @@ public class ScreenDrawer extends VideoFilter{
 				while(scrn_drwr_cnfgs.v_in.getStatus()!=1)
 				{
 					Thread.sleep(1000);
-					pm.log.print("Device not ready yet .. osbor showayya! =)",this);
+					PManager.log.print("Device not ready yet .. osbor showayya! =)",this);
 				}
 				while(scrn_drwr_cnfgs.enabled)
 				{
@@ -87,10 +93,10 @@ public class ScreenDrawer extends VideoFilter{
 						}
 					}
 					else
-						pm.log.print("got non-ready state from cam module! .. skipping frame",this);
+						PManager.log.print("got non-ready state from cam module! .. skipping frame",this);
 				}
 			} catch (Exception e) {
-				pm.log.print("Error in th_drawer!!!!",this,StatusSeverity.ERROR);
+				PManager.log.print("Error in th_drawer!!!!",this,StatusSeverity.ERROR);
 				e.printStackTrace();
 			}
 		}
@@ -106,15 +112,9 @@ public class ScreenDrawer extends VideoFilter{
 		return imageData;
 	}
 
-	@Override
+	
 	public boolean initialize() {
-		buf_img_main = new BufferedImage(scrn_drwr_cnfgs.common_configs.width, scrn_drwr_cnfgs.common_configs.height, BufferedImage.TYPE_INT_RGB);
-		data_main_screen=((DataBufferInt)buf_img_main.getRaster().getDataBuffer()).getData();
 
-		buf_img_sec = new BufferedImage(scrn_drwr_cnfgs.common_configs.width, scrn_drwr_cnfgs.common_configs.height, BufferedImage.TYPE_INT_RGB);
-		data_sec_screen=((DataBufferInt)buf_img_sec.getRaster().getDataBuffer()).getData();
-
-		cls_lib_usd=scrn_drwr_cnfgs.v_in.getClass();
 		return true;
 	}
 }

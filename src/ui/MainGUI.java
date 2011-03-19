@@ -15,6 +15,9 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.swt.widgets.Table;
+import org.eclipse.swt.widgets.TableColumn;
+import org.eclipse.swt.widgets.TableItem;
 
 import control.ui.ControllerUI;
 import control.ui.Ctrl_MainGUI;
@@ -31,7 +34,7 @@ public class MainGUI extends BaseUI{
 	private Group grp_options = null;
 	private Group grp_stats = null;
 	private Composite cmpst_main = null;
-	public Frame awt_video_main;					//awt frame to display main screen data
+	private Frame awt_video_main;					//awt frame to display main screen data
 	private Menu menuBar = null;
 	private MenuItem mnu_file_item=null;
 	private MenuItem mnu_edit_item=null;
@@ -49,25 +52,17 @@ public class MainGUI extends BaseUI{
 	private MenuItem mnutm_camera_start = null;
 	private Button btn_start_tracking = null;
 	private Composite cmpst_secondary = null;
-	public Frame awt_video_sec;						//awt frame to display the processed image data
-	private Label lbl_zone_number = null;
-	private Label lbl_central_time = null;
-	private Label lbl_session_time = null;
-	private Label lbl_central_counter = null;
-	private Label lbl_zones_entrance = null;
-	private Label lbl_total_distance = null;
+	private Frame awt_video_sec;						//awt frame to display the processed image data
 	private Button btn_setbg = null;
 	private Button btn_stop_tracking = null;
 	private Label lbl_status = null;
 	private Button btn_start_record = null;
 	private Button btn_stop_record = null;
-	private Label lbl_rearing_ctr = null;
 	private Button btn_rearing_now = null;
 	private Button btn_not_rearing = null;
 	private Button btn_sub_rearing = null;
 	private Button btn_add_rearing = null;
-
-
+	private Table tbl_data = null;
 	/**
 	 * Creates GUI components, and links this Shell with the parent Shell.
 	 */
@@ -76,26 +71,20 @@ public class MainGUI extends BaseUI{
 		createSShell();
 		super.sShell=this.sShell;
 	}
-	
+
 	public void clearForm()
 	{
-		lbl_session_time.setText(   "Session Time:           " + "0");
-		lbl_central_counter.setText("Central Zones Entrance: " + "0");
-		lbl_zone_number.setText(    "Current Zone:           " + "0");
-		lbl_central_time.setText(   "Central Time:           " + "0.0");
-		lbl_zones_entrance.setText( "All Zones Entrance:     " + "0");
-		lbl_total_distance.setText( "Total Distance:         " + "0" + " cm");
-		lbl_rearing_ctr.setText(	"Rearing counter:        " + "0");
+		tbl_data.removeAll();
 	}
-	
+
 	/**
 	 * Closes the window.
 	 */
 	public void closeWindow() {
-		if(awt_video_main!=null)
-			awt_video_main.dispose();
-		if(awt_video_sec!=null)
-			awt_video_sec.dispose();
+		if(getAwt_video_main()!=null)
+			getAwt_video_main().dispose();
+		if(getAwt_video_sec()!=null)
+			getAwt_video_sec().dispose();
 		sShell.dispose();		
 	}
 	/**
@@ -171,7 +160,7 @@ public class MainGUI extends BaseUI{
 			}
 		});
 	}
-	
+
 	public void btn_start_record_enable(boolean enable)
 	{
 		btn_start_record.setEnabled(enable);
@@ -188,7 +177,7 @@ public class MainGUI extends BaseUI{
 	{
 		btn_not_rearing.setEnabled(enable);
 	}
-	
+
 	/**
 	 * This method initializes grp_stats	
 	 *
@@ -198,54 +187,43 @@ public class MainGUI extends BaseUI{
 		grp_stats.setLayout(null);
 		grp_stats.setText("Variables:");
 		createCmpst_secondary();
-		grp_stats.setBounds(new Rectangle(678, 6, 301, 518));
-		lbl_zone_number = new Label(grp_stats, SWT.NONE);
-		lbl_zone_number.setBounds(new Rectangle(18, 240, 267, 15));
-		lbl_zone_number.setText("Current Zone: ");
-		lbl_central_time = new Label(grp_stats, SWT.NONE);
-		lbl_central_time.setBounds(new Rectangle(18, 300, 267, 17));
-		lbl_central_time.setText("Central Time:");
-		lbl_session_time = new Label(grp_stats, SWT.NONE);
-		lbl_session_time.setBounds(new Rectangle(18, 330, 267, 18));
-		lbl_session_time.setText("Session Time:");
-		lbl_central_counter = new Label(grp_stats, SWT.NONE);
-		lbl_central_counter.setBounds(new Rectangle(18, 270, 267, 15));
-		lbl_central_counter.setText("Central Zones Entrance:");
-		lbl_zones_entrance = new Label(grp_stats, SWT.NONE);
-		lbl_zones_entrance.setBounds(new Rectangle(18, 389, 267, 16));
-		lbl_zones_entrance.setText("All Zones Entrance:");
-		lbl_total_distance = new Label(grp_stats, SWT.NONE);
-		lbl_total_distance.setBounds(new Rectangle(18, 419, 267, 16));
-		lbl_total_distance.setText("Total Distance:");
-		lbl_rearing_ctr = new Label(grp_stats, SWT.NONE);
-		lbl_rearing_ctr.setBounds(new Rectangle(18, 358, 203, 17));
-		lbl_rearing_ctr.setText("Rearing counter:");
+		grp_stats.setBounds(new Rectangle(678, 6, 301, 563));
 		btn_rearing_now = new Button(grp_stats, SWT.NONE);
 		btn_rearing_now.setText("Rearing NOW");
 		btn_rearing_now.setSize(new Point(100, 25));
-		btn_rearing_now.setLocation(new Point(188, 479));
+		btn_rearing_now.setLocation(new Point(188, 530));
 		btn_not_rearing = new Button(grp_stats, SWT.NONE);
-		btn_not_rearing.setBounds(new Rectangle(85, 479, 101, 25));
+		btn_not_rearing.setBounds(new Rectangle(85, 530, 101, 25));
 		btn_not_rearing.setText("Not Rearing");
 		btn_sub_rearing = new Button(grp_stats, SWT.NONE);
-		btn_sub_rearing.setBounds(new Rectangle(256, 355, 28, 21));
+		btn_sub_rearing.setBounds(new Rectangle(44, 528, 28, 21));
 		btn_sub_rearing.setText("-");
 		btn_sub_rearing
-				.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
-					public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
-						controller.btn_sub_rearing_Action();
-					}
-				});
+		.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
+			public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
+				controller.btn_sub_rearing_Action();
+			}
+		});
 		btn_add_rearing = new Button(grp_stats, SWT.NONE);
 		btn_add_rearing.setText("+");
 		btn_add_rearing.setSize(new Point(28, 21));
-		btn_add_rearing.setLocation(new Point(226, 355));
+		btn_add_rearing.setLocation(new Point(14, 528));
+		tbl_data = new Table(grp_stats, SWT.BORDER);
+		tbl_data.setHeaderVisible(true);
+		tbl_data.setLinesVisible(true);
+		tbl_data.setBounds(new Rectangle(9, 243, 284, 272));
+		TableColumn tableColumn = new TableColumn(tbl_data, SWT.NONE);
+		tableColumn.setWidth(140);
+		tableColumn.setText("Name");
+		TableColumn tableColumn1 = new TableColumn(tbl_data, SWT.NONE);
+		tableColumn1.setWidth(140);
+		tableColumn1.setText("Value");
 		btn_add_rearing
-				.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
-					public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
-						controller.btn_add_rearing_Action();
-					}
-				});
+		.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
+			public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
+				controller.btn_add_rearing_Action();
+			}
+		});
 		btn_not_rearing
 		.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
 			public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
@@ -275,15 +253,15 @@ public class MainGUI extends BaseUI{
 	private void createMainAWTFrame()
 	{
 		awt_video_main=SWT_AWT.new_Frame(cmpst_main);	
-		awt_video_main.setVisible(true);
-		awt_video_main.setSize(cmpst_main.getSize().x, cmpst_main.getSize().y);
+		getAwt_video_main().setVisible(true);
+		getAwt_video_main().setSize(cmpst_main.getSize().x, cmpst_main.getSize().y);
 	}
 
 	private void createSecAWTFrame()
 	{
-		awt_video_sec = SWT_AWT.new_Frame(cmpst_secondary);
-		awt_video_sec.setVisible(true);
-		awt_video_sec.setSize(cmpst_secondary.getSize().x, cmpst_secondary.getSize().y);
+		awt_video_sec=SWT_AWT.new_Frame(cmpst_secondary);
+		getAwt_video_sec().setVisible(true);
+		getAwt_video_sec().setSize(cmpst_secondary.getSize().x, cmpst_secondary.getSize().y);
 	}
 
 	/**   
@@ -291,7 +269,7 @@ public class MainGUI extends BaseUI{
 	 */
 	private void createSShell() {
 		sShell = new Shell(SWT.APPLICATION_MODAL | SWT.DIALOG_TRIM);
-		sShell.setText("Tracking Object");
+		sShell.setText("Behavioral Monitoring Tool");
 		createGrp_video();
 		createGrp_options();
 		createGrp_stats();
@@ -495,32 +473,32 @@ public class MainGUI extends BaseUI{
 		super.setController(controller);
 		this.controller=(Ctrl_MainGUI) super.controller;
 	}
-	
-	/**
-	 * Updates counters and statistics.
-	 * @param tot_distance total distance by the rat
-	 * @param current_zone current zone
-	 * @param session_time total session time till now
-	 * @param central_counter central zone counter
-	 * @param normal_counter all zones entrance counter
-	 * @param central_time central zone time
-	 * @param rearing_ctr rearing counter
-	 */
-	public void updateStats(long tot_distance,int current_zone,float session_time,int central_counter,int normal_counter,float central_time, int rearing_ctr)
-	{
-		if(session_time!=-1)
-			lbl_session_time.setText("Session Time:           " + Float.toString(session_time));
-		if(central_counter!=-1)
-			lbl_central_counter.setText("Central Zones Entrance: " + Integer.toString(central_counter));
-		if(current_zone!=-1)
-			lbl_zone_number.setText("Current Zone:           " + Integer.toString(current_zone));
-		if(central_time!=-1)
-			lbl_central_time.setText("Central Time:           " + Float.toString(central_time));
-		if(normal_counter!=-1)
-			lbl_zones_entrance.setText("All Zones Entrance:     " + Integer.toString(normal_counter));
-		if(tot_distance!=-1)
-			lbl_total_distance.setText("Total Distance:         " + Double.toString(tot_distance) + " cm");
-		if(rearing_ctr!=-1)
-			lbl_rearing_ctr.setText(	"Rearing counter:        " + Integer.toString(rearing_ctr));
+
+	public Frame getAwt_video_main() {
+		return awt_video_main;
 	}
+
+	public Frame getAwt_video_sec() {
+		return awt_video_sec;
+	}
+
+
+
+	public void fillDataTable(String[] names,String[] values)
+	{
+		if(names!=null)
+		{
+			for(int i=0;i<names.length;i++)
+			{
+				TableItem ti = new TableItem(tbl_data, 0);
+				ti.setText(names[i]);
+			}
+		}
+
+		if(values!=null)
+			for(int i=0;i<values.length;i++)
+				if(values[i]!=null)
+					tbl_data.getItem(i).setText(1, values[i]);
+	}
+
 }

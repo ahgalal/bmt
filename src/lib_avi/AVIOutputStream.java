@@ -15,13 +15,20 @@ package lib_avi;
 import java.awt.Dimension;
 import java.awt.image.BufferedImage;
 import java.awt.image.WritableRaster;
-import java.io.*;
-import java.util.Date;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.LinkedList;
-import javax.imageio.*;
-import javax.imageio.stream.*;
 
-import lib_avi.FilterImageOutputStream;
+import javax.imageio.IIOImage;
+import javax.imageio.ImageIO;
+import javax.imageio.ImageWriteParam;
+import javax.imageio.ImageWriter;
+import javax.imageio.stream.FileImageOutputStream;
+import javax.imageio.stream.ImageOutputStream;
+import javax.imageio.stream.MemoryCacheImageOutputStream;
 
 /**
  * This class supports writing of images into an AVI video file.
@@ -85,7 +92,7 @@ public class AVIOutputStream {
     /**
      * Creation time of the movie output stream.
      */
-    private Date creationTime;
+    //private Date creationTime;
     /**
      * Width of the video frames. All frames must have the same width.
      * The value -1 is used to mark unspecified width.
@@ -318,9 +325,9 @@ public class AVIOutputStream {
          * Returns the offset of this chunk to the beginning of the random access file
          * @return
          */
-        public long getOffset() {
+/*        public long getOffset() {
             return offset;
-        }
+        }*/
 
         @Override
         public void finish() throws IOException {
@@ -401,9 +408,9 @@ public class AVIOutputStream {
          * Returns the offset of this chunk to the beginning of the random access file
          * @return
          */
-        public long getOffset() {
+/*        public long getOffset() {
             return offset;
-        }
+        }*/
 
         public void seekToStartOfData() throws IOException {
             seekRelative(offset + 8);
@@ -590,7 +597,7 @@ public class AVIOutputStream {
      */
     private void ensureStarted() throws IOException {
         if (state != States.STARTED) {
-            creationTime = new Date();
+            //creationTime = new Date();
             writeProlog();
             state = States.STARTED;
         }

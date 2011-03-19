@@ -1,13 +1,13 @@
 package utils.video.processors.recorder;
 
-import utils.video.processors.CommonConfigs;
+import utils.video.processors.CommonFilterConfigs;
 import utils.video.processors.FilterConfigs;
 
 public class RecorderConfigs extends FilterConfigs {
 
-	public RecorderConfigs(CommonConfigs common_configs)
+	public RecorderConfigs(String filt_name,CommonFilterConfigs common_configs)
 	{
-		this.common_configs=common_configs;
+		super(filt_name,common_configs);
 	}
 	@Override
 	public void mergeConfigs(FilterConfigs configs) {

@@ -1,6 +1,8 @@
 package control.ui;
 
 import model.business.If_Exp2GUI;
+import modules.ExperimentModule;
+import modules.ModulesManager;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.FileDialog;
@@ -8,7 +10,6 @@ import org.eclipse.swt.widgets.Shell;
 
 import ui.ExperimentForm;
 import utils.PManager;
-import control.InfoController;
 
 /**
  * Controller of the ExperimentForm GUI window
@@ -16,7 +17,6 @@ import control.InfoController;
  *
  */
 public class Ctrl_ExperimentForm extends ControllerUI {
-	private InfoController info_controller=null;  //  @jve:decl-index=0:
 	private String name,user,date,notes;
 	private ExperimentForm ui;
 	/* (non-Javadoc)
@@ -37,7 +37,6 @@ public class Ctrl_ExperimentForm extends ControllerUI {
 	public Ctrl_ExperimentForm()
 	{
 		pm=PManager.getDefault();
-		info_controller=InfoController.getDefault();
 		ui=new ExperimentForm();
 		ui.setController(this);
 	}
@@ -64,7 +63,7 @@ public class Ctrl_ExperimentForm extends ControllerUI {
 	public void btn_save_Action(Shell sShell)
 	{
 		try {
-			if(!info_controller.isThereAnyGroups())
+			if(!((ExperimentModule)ModulesManager.getDefault().getModuleByName("Experiment Module")).isThereAnyGroups())
 				System.out.print("please specify at least one group.\n");
 			else
 			{
@@ -72,9 +71,9 @@ public class Ctrl_ExperimentForm extends ControllerUI {
 				String file_name=fileDialog.open();
 				if(file_name!=null)
 				{
-					info_controller.saveExpInfo(name,user,date,notes);
-					info_controller.writeToTXTFile(file_name);
-					info_controller.setExpFileName(file_name);
+					((ExperimentModule)ModulesManager.getDefault().getModuleByName("Experiment Module")).saveExpInfo(name,user,date,notes);
+					((ExperimentModule)ModulesManager.getDefault().getModuleByName("Experiment Module")).writeToTXTFile(file_name);
+					((ExperimentModule)ModulesManager.getDefault().getModuleByName("Experiment Module")).setExpFileName(file_name);
 					sShell.setVisible(false);
 				}
 			}

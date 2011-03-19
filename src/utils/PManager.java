@@ -1,14 +1,14 @@
 package utils;
 
 import gfx_panel.GfxPanel;
+import modules.ModulesManager;
 
 import org.eclipse.swt.widgets.Display;
 
 import utils.saveengines.ExcelEngine;
 import utils.video.VideoProcessor;
-import utils.video.processors.CommonConfigs;
+import utils.video.processors.CommonFilterConfigs;
 import control.ShapeController;
-import control.StatsController;
 import control.ZonesController;
 import control.ui.Ctrl_About;
 import control.ui.Ctrl_CamOptions;
@@ -28,15 +28,15 @@ public class PManager {
 	public enum ProgramState {
 		IDLE , RECORDING , STREAMING ,TRACKING;
 	}
-	
+
 	private static PManager default_me;
 	public static Ctrl_MainGUI main_gui;
-	
+
 	public static PManager getDefault()
 	{
 		return default_me;
 	}
-	
+
 	/**
 	 * @param args
 	 */
@@ -50,7 +50,7 @@ public class PManager {
 		}
 		display.dispose();
 	}
-	
+
 	public Ctrl_CamOptions cam_options;
 	public Ctrl_DrawZones drw_zns;
 	public ExcelEngine excel_engine;
@@ -58,16 +58,15 @@ public class PManager {
 	public Ctrl_GroupsForm frm_grps;
 	public Ctrl_RatInfoForm frm_rat;
 	private GfxPanel gfx_panel;
-	public Logger log;
+	public static Logger log;
 	public Ctrl_OptionsWindow options_window;
 	private ShapeController shape_controller;
 	public ProgramState state;
-	private StatsController stats_controller;
 	public StatusManager status_mgr;
 	String tmp_format="YUV";
 	private VideoProcessor vp ;
 	private ZonesController zone_controller;
-public Ctrl_About about;
+	public Ctrl_About about;
 
 	/**
 	 * Initializes GUI controllers, Model Controllers and Video Controller.
@@ -77,7 +76,6 @@ public Ctrl_About about;
 		excel_engine=new ExcelEngine();
 		default_me=this;
 		status_mgr = new StatusManager();
-		stats_controller=StatsController.getDefault();
 		zone_controller =ZonesController.getDefault();
 		shape_controller =ShapeController.getDefault();
 		drw_zns= new Ctrl_DrawZones();
@@ -89,8 +87,8 @@ public Ctrl_About about;
 		log= new Logger();
 		main_gui = new Ctrl_MainGUI();
 		main_gui.show(true);
+		new ModulesManager();
 
-		stats_controller.init();
 		zone_controller.init();
 		shape_controller.init();
 		vp = new VideoProcessor(main_gui.getMainAWTFrame(),main_gui.getSecAWTFrame());
@@ -114,7 +112,7 @@ public Ctrl_About about;
 	 * @param frame_rate frame rate
 	 * @param cam_index camera index
 	 */
-	public void initializeVideoProcessor(CommonConfigs common_configs)
+	public void initializeVideoProcessor(CommonFilterConfigs common_configs)
 	{
 		zone_controller.setWidthandHeight(common_configs.width, common_configs.height);
 		if(vp.initialize(common_configs))
@@ -140,7 +138,7 @@ public Ctrl_About about;
 		if(vp!=null & state!=ProgramState.IDLE)
 			vp.unloadLibrary();
 	}
-	
+
 }
 
 

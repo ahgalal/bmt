@@ -4,19 +4,18 @@ import java.awt.Graphics;
 
 import utils.video.FrameIntArray;
 import utils.video.input.VidInputter;
-import utils.video.processors.CommonConfigs;
+import utils.video.processors.CommonFilterConfigs;
 import utils.video.processors.FilterConfigs;
 
 public class ScreenDrawerConfigs extends FilterConfigs {
 
-	public ScreenDrawerConfigs(Graphics refGfxMainScreen,
-			Graphics refGfxSecScreen, VidInputter vIn, FrameIntArray refFia,CommonConfigs common_configs,boolean enable_sec_screen) {
-		super();
+	public ScreenDrawerConfigs(String filt_name,Graphics refGfxMainScreen,
+			Graphics refGfxSecScreen, VidInputter vIn, FrameIntArray refFia,CommonFilterConfigs common_configs,boolean enable_sec_screen) {
+		super(filt_name,common_configs);
 		ref_gfx_main_screen = refGfxMainScreen;
 		ref_gfx_sec_screen = refGfxSecScreen;
 		v_in = vIn;
 		ref_fia = refFia;
-		this.common_configs=common_configs;
 		this.enable_sec_screen=enable_sec_screen;
 	}
 

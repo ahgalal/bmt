@@ -1,32 +1,31 @@
 package utils.video.processors.rearingdetection;
 
+import utils.video.processors.FilterConfigs;
 import utils.video.processors.VideoFilter;
 
 public class RearingDetector extends VideoFilter{
-	private RearingConfigs rearing_configs;
-
-
-
-	public RearingFilterData rearing_data;
+	private RearingFilterConfigs rearing_configs;
+	private RearingData rearing_data;
+	
 	public boolean rearing_now;
 	public Integer normal_rat_area;
 	public boolean is_rearing;
 	public int current_rat_area;
 
 
-	public RearingDetector(String name) 
+	public RearingDetector(String name,FilterConfigs configs) 
 	{
-		rearing_configs = new RearingConfigs(0, 0, 0, null,null);
-		rearing_data=new RearingFilterData();
-		special_data = rearing_data;
-		configs=rearing_configs;
-		((RearingFilterData)special_data).setRearing(false);
-
-		this.configs= rearing_configs;
-		this.name = name;
+		super(name,configs);
+		rearing_configs = (RearingFilterConfigs) configs;
+		rearing_data=new RearingData("Rearing Data");
+		
+		//super's stuff:
+		filter_data = rearing_data;
+		
+		rearing_data.setRearing(false);
 	}
 
-	public void rearinNow(boolean rearing) {
+	public void rearingNow(boolean rearing) {
 
 		if(rearing)
 		{
@@ -93,8 +92,7 @@ public class RearingDetector extends VideoFilter{
 
 	@Override
 	public boolean initialize() {
-		return true;
+		return false;
 	}
-
 
 }
