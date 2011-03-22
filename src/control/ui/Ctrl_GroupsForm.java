@@ -39,15 +39,13 @@ public class Ctrl_GroupsForm extends ControllerUI {
 	{
 		try {
 			String name,rats_numbering,notes;
-			int no_rats;
 
 			for(TabContents tc: arr_tabs)
 			{
 				name=tc.txt_name.getText();
 				rats_numbering=tc.txt_rats_numbers.getText();
 				notes=tc.txt_notes.getText();
-				no_rats=Integer.parseInt(tc.txt_no_rats.getText());
-				((ExperimentModule)ModulesManager.getDefault().getModuleByName("Experiment Module")).saveGrpInfo(tc.grp_id,name, no_rats,rats_numbering , notes);
+				((ExperimentModule)ModulesManager.getDefault().getModuleByName("Experiment Module")).saveGrpInfo(tc.grp_id,name, rats_numbering , notes);
 			}
 
 			show(false);

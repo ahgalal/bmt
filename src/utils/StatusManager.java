@@ -59,8 +59,7 @@ public class StatusManager {
 			try {
 				Thread.sleep(4000);
 			} catch (InterruptedException e) {e.printStackTrace();}
-
-			Display.getDefault().syncExec(new Runnable() {
+			Display.getDefault().asyncExec(new Runnable() {
 
 				@Override
 				public void run() {

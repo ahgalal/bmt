@@ -31,16 +31,6 @@ public class Rat {
 		return info.getDataByTag(measurement_name);
 	}
 
-/*	private int getIndexByMeasurementName(String measurement_name)
-	{
-		for(int i=0;i<measurements_list.length;i++)
-		{
-			if(measurements_list[i].equals(measurement_name))
-				return i;
-		}
-		return -1;
-	}*/
-
 	public boolean setValueByMeasurementName(String measurement_name,String value)
 	{
 		try{
@@ -50,5 +40,14 @@ public class Rat {
 			return false;
 		};
 		return true;
+	}
+	
+	public String rat2String()
+	{
+		String values=" ";
+		for(String s:getValues())
+			values+=s+'\t'; //TODO:tab after the last item ??!!
+		values += System.getProperty("line.separator");
+		return values;
 	}
 }

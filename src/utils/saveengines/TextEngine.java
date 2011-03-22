@@ -65,10 +65,11 @@ public class TextEngine {
 				else if (tmp_line.equals(Cls_Constants.h_grp)){ //load grp. info
 					int tmp_id= Integer.parseInt(buf_rdr.readLine().substring(Cls_Constants.h_grp_id.length()));
 					String tmp_name= buf_rdr.readLine().substring(Cls_Constants.h_grp_name.length());
-					int tmp_no_rats = Integer.parseInt(buf_rdr.readLine().substring(Cls_Constants.h_grp_no_rats.length()));
+					//int tmp_no_rats = 
+					Integer.parseInt(buf_rdr.readLine().substring(Cls_Constants.h_grp_no_rats.length()));
 					String tmp_rats_numbers= buf_rdr.readLine().substring(Cls_Constants.h_grp_rats_numbers.length());
 					String tmp_notes =buf_rdr.readLine().substring(Cls_Constants.h_grp_notes.length());
-					grp_tmp= new Group(tmp_id,tmp_name,tmp_no_rats,tmp_rats_numbers,tmp_notes);
+					grp_tmp= new Group(tmp_id,tmp_name,tmp_rats_numbers,tmp_notes);
 					exp.addGroup(grp_tmp);
 				}
 				else if (tmp_line.equals(Cls_Constants.h_rat)){

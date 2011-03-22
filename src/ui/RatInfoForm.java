@@ -41,7 +41,7 @@ public class RatInfoForm extends BaseUI{
 	 * This method initializes sShell
 	 */
 	private void createSShell() {
-		sShell = new Shell(SWT.APPLICATION_MODAL | SWT.ON_TOP | SWT.TITLE| SWT.TITLE | SWT.CLOSE);
+		sShell = new Shell(SWT.APPLICATION_MODAL | SWT.ON_TOP | SWT.TITLE);
 		sShell.setText("RatInfo");
 		sShell.setLayout(null);
 		sShell.setSize(new Point(201, 138));

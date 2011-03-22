@@ -82,17 +82,16 @@ public class ExperimentModule extends Module {
 		exp.setExperimentInfo(name, user, date, notes);
 	}
 
-	public void saveGrpInfo(int grp_id,String name, int no_rats, String rats_numbering, String notes){
+	public void saveGrpInfo(int grp_id,String name, String rats_numbering, String notes){
 		Group tmp_grp=exp.getGroupByID(grp_id);
 		if(tmp_grp==null)
 		{
-			Group gp = new Group(grp_id,name, no_rats, rats_numbering, notes);
+			Group gp = new Group(grp_id,name, rats_numbering, notes);
 			exp.addGroup(gp);
 		}
 		else //group is already existing ... edit it..
 		{
 			tmp_grp.setName(name);
-			tmp_grp.setNo_rats(no_rats);
 			tmp_grp.setNotes(notes);
 			tmp_grp.setRats_numbering(rats_numbering);
 		}

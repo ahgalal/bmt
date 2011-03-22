@@ -117,36 +117,38 @@ public class Ctrl_MainGUI extends ControllerUI {
 		public void run() {
 			while(ui_is_opened)
 			{
+
 				Display.getDefault().asyncExec(new Runnable() {
 					@Override
 					public void run() {
-						switch (pm.state)
-						{
-						case IDLE:
-							ui.btn_not_rearing_enable(false);
-							ui.btn_rearing_now_enable(false);
-							ui.btn_start_record_enable(false);
-							ui.btn_stop_record_enable(false);
-							break;
-						case RECORDING:
-							ui.btn_not_rearing_enable(true);
-							ui.btn_rearing_now_enable(true);
-							ui.btn_start_record_enable(false);
-							ui.btn_stop_record_enable(true);
-							break;
-						case STREAMING:
-							ui.btn_not_rearing_enable(false);
-							ui.btn_rearing_now_enable(false);
-							ui.btn_start_record_enable(false);
-							ui.btn_stop_record_enable(false);
-							break;
-						case TRACKING:
-							ui.btn_not_rearing_enable(true);
-							ui.btn_rearing_now_enable(true);
-							ui.btn_start_record_enable(true);
-							ui.btn_stop_record_enable(false);
-							break;
-						}
+						if(!ui.getShell().isDisposed())
+							switch (pm.state)
+							{
+							case IDLE:
+								ui.btn_not_rearing_enable(false);
+								ui.btn_rearing_now_enable(false);
+								ui.btn_start_record_enable(false);
+								ui.btn_stop_record_enable(false);
+								break;
+							case RECORDING:
+								ui.btn_not_rearing_enable(true);
+								ui.btn_rearing_now_enable(true);
+								ui.btn_start_record_enable(false);
+								ui.btn_stop_record_enable(true);
+								break;
+							case STREAMING:
+								ui.btn_not_rearing_enable(false);
+								ui.btn_rearing_now_enable(false);
+								ui.btn_start_record_enable(false);
+								ui.btn_stop_record_enable(false);
+								break;
+							case TRACKING:
+								ui.btn_not_rearing_enable(true);
+								ui.btn_rearing_now_enable(true);
+								ui.btn_start_record_enable(true);
+								ui.btn_stop_record_enable(false);
+								break;
+							}
 					}
 				});
 				try {
@@ -302,7 +304,7 @@ public class Ctrl_MainGUI extends ControllerUI {
 			pm.unloadVideoProcessor();
 		ui_is_opened=false;
 		try {
-			Thread.sleep(500);
+			Thread.sleep(510);
 		} catch (InterruptedException e) {e.printStackTrace();}
 		ui.closeWindow();
 	}

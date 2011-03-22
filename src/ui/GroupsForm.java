@@ -212,7 +212,7 @@ public class GroupsForm extends BaseUI {
 	 */
 	private void addNewTab()
 	{
-		addNewTab(-1,"","","","");
+		addNewTab(-1,"","0","","");
 	}
 
 	
@@ -253,9 +253,9 @@ public class GroupsForm extends BaseUI {
 					tmp_tab.tab.setText(tmp_tab.txt_name.getText());
 				}
 			});
-			tmp_tab.txt_no_rats = new Text(tmp_tab.cmpst, SWT.BORDER);
-			tmp_tab.txt_no_rats.setBounds(new Rectangle(140, 56, 183, 21));
-			tmp_tab.txt_no_rats.setText(no_rats);
+			tmp_tab.lbl_no_rats_data = new Label(tmp_tab.cmpst, SWT.NONE);
+			tmp_tab.lbl_no_rats_data.setBounds(new Rectangle(140, 56, 183, 21));
+			tmp_tab.lbl_no_rats_data.setText(no_rats);
 			tmp_tab.txt_rats_numbers = new Text(tmp_tab.cmpst, SWT.BORDER);
 			tmp_tab.txt_rats_numbers.setBounds(new Rectangle(140, 98, 183, 21));
 			tmp_tab.txt_rats_numbers.setText(rat_numbers);
@@ -291,8 +291,8 @@ public class GroupsForm extends BaseUI {
 	 */
 	public class TabContents
 	{
-		public Text txt_name,txt_no_rats,txt_rats_numbers,txt_notes;
-		public Label lbl_name,lbl_no_rats,lbl_rats_numbering,lbl_notes;
+		public Text txt_name,txt_rats_numbers,txt_notes;
+		public Label lbl_name,lbl_no_rats_data,lbl_no_rats,lbl_rats_numbering,lbl_notes;
 		public Composite cmpst;
 		public TabItem tab;
 		public int grp_id;

@@ -16,12 +16,12 @@ public class Experiment implements If_Exp2GUI {
 	private String user;
 	private String date;
 	private String notes;
-	
+
 	private String[] measurements_list;
-	
+
 	/**
 	 * Clears the experiment info(data)
- 	 * This functions loops on all the groups in the experiment and for each 
+	 * This functions loops on all the groups in the experiment and for each 
 	 * group it calls getAllRats() method and clear their data then clears the 
 	 * group's data by calling clear() method
 	 */
@@ -48,11 +48,11 @@ public class Experiment implements If_Exp2GUI {
 		}
 		return null;
 	}
-	
+
 	public Experiment(){
 		groups=new ArrayList<Group>();
 	}
-	
+
 	/**
 	 * Sets the info of an experiment
 	 * @param name the name of the experiment
@@ -94,7 +94,7 @@ public class Experiment implements If_Exp2GUI {
 		groups.add(g);
 	}
 
-/*	public void addNewGroup(String name, int no_rats, String rats_numbering, String notes){
+	/*	public void addNewGroup(String name, int no_rats, String rats_numbering, String notes){
 		model.Group g = new model.Group(name,no_rats,rats_numbering,notes);
 		groups.add(g);
 	}*/
@@ -176,11 +176,11 @@ public class Experiment implements If_Exp2GUI {
 		return measurements_list;
 	}
 
-	
+
 	public String expInfo2String()
 	{
 		String exp_info = "";
-		
+
 		try { //TODO: replace System.getProperty("line.separator") by an endl String
 			exp_info+=Cls_Constants.h_exp + System.getProperty("line.separator");
 			exp_info+=Cls_Constants.h_exp_name + getName()+ System.getProperty("line.separator"); 
@@ -188,7 +188,7 @@ public class Experiment implements If_Exp2GUI {
 			exp_info+=Cls_Constants.h_exp_date+ getDate() +" "+ System.getProperty("line.separator");
 			exp_info+=Cls_Constants.h_exp_notes + getNotes()+ System.getProperty("line.separator");
 
-			for (Group grp_tmp:getGroups()){
+			for (Group grp_tmp:getGroups()){/*
 				exp_info+=Cls_Constants.h_grp+ System.getProperty("line.separator");
 				exp_info+=Cls_Constants.h_grp_id + grp_tmp.getId()+ System.getProperty("line.separator");
 				exp_info+=Cls_Constants.h_grp_name + grp_tmp.getName()+ System.getProperty("line.separator");
@@ -208,14 +208,17 @@ public class Experiment implements If_Exp2GUI {
 						values+=s+'\t'; //TODO:tab after the last item ??!!
 					exp_info+=values + System.getProperty("line.separator");
 				}
+			 */
+				exp_info+=grp_tmp.grp2String(getMeasurementsList());
+
 			}
 		} 
 		catch (Exception e) 
 		{
 			e.printStackTrace();
 		} 
-		
-		
+
+
 		return exp_info;
 	}
 
