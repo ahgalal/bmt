@@ -22,5 +22,11 @@
 			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="RatMonitor/libs/JMyron"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry kind="con" path="SWT_CONTAINER"/>
+	<classpathentry kind="lib" path="libs/JAGCamLib/JAGCamLib.jar">
+		<attributes>
+			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="BMT/libs/JAGCamLib"/>
+		</attributes>
+	</classpathentry>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
