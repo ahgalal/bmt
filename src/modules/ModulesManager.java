@@ -76,6 +76,8 @@ public class ModulesManager {
 	public void initialize()
 	{
 		data_objects.clear();
+		for(Module mo:modules)
+			mo.initialize();
 
 		constructCargoArray();
 

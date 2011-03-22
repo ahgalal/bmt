@@ -1,11 +1,14 @@
 package utils.video.input;
 
-import cam_lib.AGCamLib;
+import utils.PManager;
+import utils.StatusManager.StatusSeverity;
 import utils.video.FrameIntArray;
+import cam_lib.JAGCamLib;
+import cam_lib.ReturnValue;
 
 public class AGCamLibModule  implements VidInputter {
 
-	private AGCamLib ag_cam;
+	private JAGCamLib ag_cam;
 	@SuppressWarnings("unused")
 	private int width,height,cam_index,status;
 	private FrameIntArray fia;
@@ -14,12 +17,18 @@ public class AGCamLibModule  implements VidInputter {
 
 	@Override
 	public boolean StartStream() {
-		ag_cam.start();
-
+		if(ag_cam.start()==ReturnValue.SUCCESS)
+		{
 		th_update_image=new Thread(new RunnableAGCamLib());
 		th_update_image.start();
 
 		return true;
+		}
+		else
+		{
+			PManager.log.print("Error Starting the Webcam!", this, StatusSeverity.ERROR);
+			return false;
+		}
 	}
 
 	@Override
@@ -50,14 +59,19 @@ public class AGCamLibModule  implements VidInputter {
 	@Override
 	public boolean initialize(FrameIntArray frameData, int width, int height,int camIndex) {
 		if(ag_cam==null)
-			ag_cam=new AGCamLib();
+			ag_cam=new JAGCamLib();
 		this.width=width;
 		this.height=height;
 		fia=frameData;
 		this.cam_index=camIndex;
-		ag_cam.initializeCam(width, height,camIndex);
-
+		
+		if(ag_cam.initialize(width, height,camIndex)==ReturnValue.SUCCESS)
 		return true;
+		else
+		{
+			PManager.log.print("Error initializing the Webcam!", this,StatusSeverity.ERROR);
+			return false;
+		}
 	}
 
 	@Override

@@ -159,6 +159,8 @@ public class ZonesModule extends Module {
 		all_entrance=0;
 		central_entrance=0;
 		central_zone_time_tmp=0;
+		total_distance=0;
+		
 		arr_path.clear();
 		
 		gui_cargo=new Cargo(
