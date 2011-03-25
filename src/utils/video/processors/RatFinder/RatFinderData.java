@@ -4,19 +4,21 @@ import java.awt.Point;
 
 import utils.video.processors.FilterData;
 
-public class RatFinderData extends FilterData {
+public class RatFinderData extends FilterData
+{
 
-	private Point center;
+	private final Point center;
+
 	@Override
-	public Object getData() {
+	public Object getData()
+	{
 		return center;
 	}
-	
-	public RatFinderData(String name)
+
+	public RatFinderData(final String name)
 	{
 		super(name);
-		this.center=new Point();
+		this.center = new Point();
 	}
-	
 
 }

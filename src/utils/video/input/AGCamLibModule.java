@@ -6,25 +6,26 @@ import utils.video.FrameIntArray;
 import cam_lib.JAGCamLib;
 import cam_lib.ReturnValue;
 
-public class AGCamLibModule  implements VidInputter {
+public class AGCamLibModule implements VidInputter
+{
 
 	private JAGCamLib ag_cam;
 	@SuppressWarnings("unused")
-	private int width,height,cam_index,status;
+	private int width, height, cam_index, status;
 	private FrameIntArray fia;
 	private Thread th_update_image;
 	private boolean stop_stream;
 
 	@Override
-	public boolean StartStream() {
-		if(ag_cam.start()==ReturnValue.SUCCESS)
+	public boolean startStream()
+	{
+		if (ag_cam.start() == ReturnValue.SUCCESS)
 		{
-		th_update_image=new Thread(new RunnableAGCamLib());
-		th_update_image.start();
+			th_update_image = new Thread(new RunnableAGCamLib());
+			th_update_image.start();
 
-		return true;
-		}
-		else
+			return true;
+		} else
 		{
 			PManager.log.print("Error Starting the Webcam!", this, StatusSeverity.ERROR);
 			return false;
@@ -32,81 +33,104 @@ public class AGCamLibModule  implements VidInputter {
 	}
 
 	@Override
-	public void StopModule() {
-		stop_stream=true;
-		try {
+	public void stopModule()
+	{
+		stop_stream = true;
+		try
+		{
 			Thread.sleep(15);
-		} catch (InterruptedException e) {e.printStackTrace();}
+		} catch (final InterruptedException e)
+		{
+			e.printStackTrace();
+		}
 
 		ag_cam.stop();
 		ag_cam.deInitialize();
 		ag_cam = null;
-		th_update_image=null;
+		th_update_image = null;
 
 	}
 
 	@Override
-	public int getNumCams() {
+	public int getNumCams()
+	{
 		// TODO Auto-generated method stub
 		return 0;
 	}
 
 	@Override
-	public int getStatus() {
+	public int getStatus()
+	{
 		return status;
 	}
 
 	@Override
-	public boolean initialize(FrameIntArray frameData, int width, int height,int camIndex) {
-		if(ag_cam==null)
-			ag_cam=new JAGCamLib();
-		this.width=width;
-		this.height=height;
-		fia=frameData;
-		this.cam_index=camIndex;
-		
-		if(ag_cam.initialize(width, height,camIndex)==ReturnValue.SUCCESS)
-		return true;
+	public boolean initialize(
+			final FrameIntArray frameData,
+			final int width,
+			final int height,
+			final int camIndex)
+	{
+		if (ag_cam == null)
+			ag_cam = new JAGCamLib();
+		this.width = width;
+		this.height = height;
+		fia = frameData;
+		this.cam_index = camIndex;
+
+		if (ag_cam.initialize(width, height, camIndex) == ReturnValue.SUCCESS)
+			return true;
 		else
 		{
-			PManager.log.print("Error initializing the Webcam!", this,StatusSeverity.ERROR);
+			PManager.log.print(
+					"Error initializing the Webcam!",
+					this,
+					StatusSeverity.ERROR);
 			return false;
 		}
 	}
 
 	@Override
-	public void setFormat(String s) {
+	public void setFormat(final String s)
+	{
 		/**
-		 *Empty ... AGCamLib encapsulates the video format .. and returns an RGB
-		 *integer array to the VideoProcessor .. just like OpenCV!
+		 *Empty ... AGCamLib encapsulates the video format .. and returns an
+		 * RGB integer array to the VideoProcessor .. just like OpenCV!
 		 */
 	}
 
 	private class RunnableAGCamLib implements Runnable
 	{
 		@Override
-		public void run() {
-			while(!stop_stream & th_update_image!=null)
+		public void run()
+		{
+			while (!stop_stream && th_update_image != null)
 			{
-				try {
+				try
+				{
 					Thread.sleep(30);
-				} catch (InterruptedException e) {e.printStackTrace();}
+				} catch (final InterruptedException e)
+				{
+					e.printStackTrace();
+				}
 
-				fia.frame_data=ag_cam.grabIntRGBFrame();
+				fia.frame_data = ag_cam.grabIntRGBFrame();
 
-				status=1;
+				status = 1;
 			}
 		}
 
 	}
 
 	@Override
-	public int displayMoreSettings() {
+	public int displayMoreSettings()
+	{
 		return 0;
 	}
 
 	@Override
-	public String getName() {
+	public String getName()
+	{
 		return "AGCamLib";
 	}
 

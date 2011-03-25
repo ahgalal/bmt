@@ -4,43 +4,42 @@ import java.util.ArrayList;
 
 import modules.ModulesManager;
 
-
-public class FilterManager {
-	private ArrayList<VideoFilter> arr_filters;
+public class FilterManager
+{
+	private final ArrayList<VideoFilter> arr_filters;
 
 	public FilterManager()
 	{
-		arr_filters=new ArrayList<VideoFilter>();
+		arr_filters = new ArrayList<VideoFilter>();
 	}
 
-	public VideoFilter getFilterByName(String name)
+	public VideoFilter getFilterByName(final String name)
 	{
-		for(VideoFilter vf: arr_filters)
-			if(vf.getName().equals(name))
+		for (final VideoFilter vf : arr_filters)
+			if (vf.getName().equals(name))
 				return vf;
 		return null;
 	}
 
-
-	public void enableFilter(String filter_name,boolean enable)
+	public void enableFilter(final String filter_name, final boolean enable)
 	{
-		VideoFilter tmp = getFilterByName(filter_name);
-		if(tmp!=null)
+		final VideoFilter tmp = getFilterByName(filter_name);
+		if (tmp != null)
 			tmp.enable(enable);
 	}
 
-	private VideoFilter getFilterByType(Class<?> type)
+	private VideoFilter getFilterByType(final Class<?> type)
 	{
-		for(VideoFilter vf: arr_filters)
-			if(vf.getClass() == type)
+		for (final VideoFilter vf : arr_filters)
+			if (vf.getClass() == type)
 				return vf;
 		return null;
 	}
 
-	public void enableFilter(Class<?> type,boolean enable)
+	public void enableFilter(final Class<?> type, final boolean enable)
 	{
-		VideoFilter tmp = getFilterByType(type);
-		if(tmp!=null)
+		final VideoFilter tmp = getFilterByType(type);
+		if (tmp != null)
 			tmp.enable(enable);
 	}
 
@@ -49,41 +48,42 @@ public class FilterManager {
 		return arr_filters;
 	}
 
-	public void addFilter(VideoFilter filter)
+	public void addFilter(final VideoFilter filter)
 	{
 		arr_filters.add(filter);
 	}
 
-	public void removeFilter(String filter_name)
+	public void removeFilter(final String filter_name)
 	{
-		VideoFilter tmp = getFilterByName(filter_name);
-		if(tmp!=null)
+		final VideoFilter tmp = getFilterByName(filter_name);
+		if (tmp != null)
 			arr_filters.remove(tmp);
 	}
 
-	public void removeFilter(Class<?> type)
+	public void removeFilter(final Class<?> type)
 	{
-		VideoFilter tmp = getFilterByType(type);
-		if(tmp!=null)
+		final VideoFilter tmp = getFilterByType(type);
+		if (tmp != null)
 			arr_filters.remove(tmp);
 	}
 
-	public void applyConfigsToFilter(FilterConfigs f_cfgs)
+	public void applyConfigsToFilter(final FilterConfigs f_cfgs)
 	{
-		VideoFilter tmp_filter = getFilterByName(f_cfgs.getConfigurable_name());
-		if(tmp_filter!=null)
+		final VideoFilter tmp_filter = getFilterByName(f_cfgs.getConfigurablename());
+		if (tmp_filter != null)
 			tmp_filter.updateConfigs(f_cfgs);
 	}
 
-	public void disableAll() {
-		for(VideoFilter vf: arr_filters)
+	public void disableAll()
+	{
+		for (final VideoFilter vf : arr_filters)
 			vf.enable(false);
 	}
 
 	public void submitDataObjects()
 	{
-		for(VideoFilter v: arr_filters)
-			if(v.getFilterData()!=null)
+		for (final VideoFilter v : arr_filters)
+			if (v.getFilterData() != null)
 				ModulesManager.getDefault().addDataObject(v.getFilterData());
 	}
 

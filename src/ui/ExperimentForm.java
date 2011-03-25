@@ -12,16 +12,18 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
 import control.ui.ControllerUI;
-import control.ui.Ctrl_ExperimentForm;
+import control.ui.CtrlExperimentForm;
 
 /**
  * Displays Experiment information and enable the user to edit them.
+ * 
  * @author Creative
  */
-public class ExperimentForm extends BaseUI{
+public class ExperimentForm extends BaseUI
+{
 
-	//private boolean is_filled;
-	private Shell sShell = null;  //  @jve:decl-index=0:visual-constraint="10,10"
+	// private boolean is_filled;
+	private Shell sShell = null; // @jve:decl-index=0:visual-constraint="10,10"
 	private Group grp_info = null;
 	private Button btn_save = null;
 	private Button btn_cancel = null;
@@ -35,7 +37,7 @@ public class ExperimentForm extends BaseUI{
 	private Text txt_notes = null;
 	private Label lbl_current_date = null;
 	private Button btn_mng_grps = null;
-	private Ctrl_ExperimentForm controller;
+	private CtrlExperimentForm controller;
 
 	/**
 	 * Creates GUI components, and links this Shell with the parent Shell.
@@ -43,32 +45,38 @@ public class ExperimentForm extends BaseUI{
 	public ExperimentForm()
 	{
 		createSShell();
-		super.sShell=this.sShell;
+		super.sShell = this.sShell;
 	}
 
 	/**
-	 * This method initializes sShell
+	 * This method initializes sShell.
 	 */
-	private void createSShell() {
-		sShell = new Shell(SWT.APPLICATION_MODAL |  SWT.ON_TOP| SWT.TITLE);
+	private void createSShell()
+	{
+		sShell = new Shell(SWT.APPLICATION_MODAL | SWT.ON_TOP | SWT.TITLE);
 		sShell.setText("Experiment Information");
-		createGrp_info();
+		createGrpInfo();
 		sShell.setSize(new Point(366, 352));
 		sShell.setLayout(null);
 		btn_save = new Button(sShell, SWT.NONE);
 		btn_save.setBounds(new Rectangle(158, 289, 96, 25));
 		btn_save.setText("Save");
 		btn_save.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
-			public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
-				controller.setVars(new String[] {txt_name.getText(), txt_user.getText(),  lbl_current_date.getText(), txt_notes.getText()});
-				controller.btn_save_Action(sShell);
+			@Override
+			public void widgetSelected(final org.eclipse.swt.events.SelectionEvent e)
+			{
+				controller.setVars(new String[] { txt_name.getText(), txt_user.getText(),
+						lbl_current_date.getText(), txt_notes.getText() });
+				controller.btnSaveAction(sShell);
 			}
 		});
 		btn_cancel = new Button(sShell, SWT.NONE);
 		btn_cancel.setBounds(new Rectangle(258, 289, 96, 25));
 		btn_cancel.setText("Cancel");
 		btn_cancel.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
-			public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
+			@Override
+			public void widgetSelected(final org.eclipse.swt.events.SelectionEvent e)
+			{
 				sShell.setVisible(false);
 			}
 		});
@@ -76,13 +84,11 @@ public class ExperimentForm extends BaseUI{
 		setLabelToDate();
 	}
 
-
-
 	/**
-	 * This method initializes grp_info	
-	 *
+	 * This method initializes grp_info.
 	 */
-	private void createGrp_info() {
+	private void createGrpInfo()
+	{
 		grp_info = new Group(sShell, SWT.NONE);
 		grp_info.setLayout(null);
 		grp_info.setText("Information:");
@@ -115,10 +121,11 @@ public class ExperimentForm extends BaseUI{
 		btn_mng_grps.setText("Manage Groups..");
 		btn_mng_grps.setSize(new Point(119, 25));
 		btn_mng_grps.setLocation(new Point(154, 93));
-		btn_mng_grps
-		.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
-			public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
-				controller.btn_mng_grps_Action();
+		btn_mng_grps.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
+			@Override
+			public void widgetSelected(final org.eclipse.swt.events.SelectionEvent e)
+			{
+				controller.btnMngGrpsAction();
 			}
 		});
 	}
@@ -131,6 +138,7 @@ public class ExperimentForm extends BaseUI{
 		lbl_current_date.setText(Calendar.getInstance().getTime().toString());
 	}
 
+	@Override
 	public void clearForm()
 	{
 		txt_name.setText("");
@@ -140,17 +148,19 @@ public class ExperimentForm extends BaseUI{
 	}
 
 	@Override
-	public void loadData(String[] strArray) {
-		txt_name.setText(strArray[0]);//exp.getName()
-		txt_user.setText(strArray[1]);//exp.getUser()
-		txt_notes.setText(strArray[2]);//exp.getNotes()
-		lbl_current_date.setText(strArray[3]);//exp.getDate()
+	public void loadData(final String[] strArray)
+	{
+		txt_name.setText(strArray[0]);// exp.getName()
+		txt_user.setText(strArray[1]);// exp.getUser()
+		txt_notes.setText(strArray[2]);// exp.getNotes()
+		lbl_current_date.setText(strArray[3]);// exp.getDate()
 	}
 
 	@Override
-	public void setController(ControllerUI controller) {
+	public void setController(final ControllerUI controller)
+	{
 		super.setController(controller);
-		this.controller=(Ctrl_ExperimentForm) super.controller;
+		this.controller = (CtrlExperimentForm) super.controller;
 	}
 
 }

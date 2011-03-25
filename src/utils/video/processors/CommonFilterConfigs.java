@@ -1,9 +1,16 @@
 package utils.video.processors;
 
-public class CommonFilterConfigs {
+public class CommonFilterConfigs
+{
 
-	public CommonFilterConfigs(int width, int height, int frameRate, int camIndex,
-			String vidLibrary, String format) {
+	public CommonFilterConfigs(
+			final int width,
+			final int height,
+			final int frameRate,
+			final int camIndex,
+			final String vidLibrary,
+			final String format)
+	{
 		super();
 		this.width = width;
 		this.height = height;
@@ -13,9 +20,7 @@ public class CommonFilterConfigs {
 		this.format = format;
 	}
 
-	public int width,height,frame_rate,cam_index;
-	public String vid_library,format;
-	
-	
-	
+	public int width, height, frame_rate, cam_index;
+	public String vid_library, format;
+
 }

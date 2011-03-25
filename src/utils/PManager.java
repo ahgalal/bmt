@@ -10,27 +10,30 @@ import utils.video.VideoProcessor;
 import utils.video.processors.CommonFilterConfigs;
 import control.ShapeController;
 import control.ZonesController;
-import control.ui.Ctrl_About;
-import control.ui.Ctrl_CamOptions;
+import control.ui.CtrlAbout;
+import control.ui.CtrlCamOptions;
+import control.ui.CtrlExperimentForm;
+import control.ui.CtrlGroupsForm;
+import control.ui.CtrlMainGUI;
+import control.ui.CtrlOptionsWindow;
+import control.ui.CtrlRatInfoForm;
 import control.ui.Ctrl_DrawZones;
-import control.ui.Ctrl_ExperimentForm;
-import control.ui.Ctrl_GroupsForm;
-import control.ui.Ctrl_MainGUI;
-import control.ui.Ctrl_OptionsWindow;
-import control.ui.Ctrl_RatInfoForm;
 
 /**
  * Program Manager, contains the main function, creates GUI and Controllers.
+ * 
  * @author Creative
  */
-public class PManager {
+public class PManager
+{
 
-	public enum ProgramState {
-		IDLE , RECORDING , STREAMING ,TRACKING;
+	public enum ProgramState
+	{
+		IDLE, RECORDING, STREAMING, TRACKING;
 	}
 
 	private static PManager default_me;
-	public static Ctrl_MainGUI main_gui;
+	public static CtrlMainGUI main_gui;
 
 	public static PManager getDefault()
 	{
@@ -40,58 +43,60 @@ public class PManager {
 	/**
 	 * @param args
 	 */
-	public static void main(String[] args) {
+	public static void main(final String[] args)
+	{
 		new PManager();
-		Display display = Display.getDefault();
+		final Display display = Display.getDefault();
 
-		while (!main_gui.isShellDisposed()) {
+		while (!main_gui.isShellDisposed())
+		{
 			if (!display.readAndDispatch())
 				display.sleep();
 		}
 		display.dispose();
 	}
 
-	public Ctrl_CamOptions cam_options;
+	public CtrlCamOptions cam_options;
 	public Ctrl_DrawZones drw_zns;
 	public ExcelEngine excel_engine;
-	public Ctrl_ExperimentForm frm_exp;
-	public Ctrl_GroupsForm frm_grps;
-	public Ctrl_RatInfoForm frm_rat;
+	public CtrlExperimentForm frm_exp;
+	public CtrlGroupsForm frm_grps;
+	public CtrlRatInfoForm frm_rat;
 	private GfxPanel gfx_panel;
 	public static Logger log;
-	public Ctrl_OptionsWindow options_window;
-	private ShapeController shape_controller;
+	public CtrlOptionsWindow options_window;
+	private final ShapeController shape_controller;
 	public ProgramState state;
 	public StatusManager status_mgr;
-	String tmp_format="YUV";
-	private VideoProcessor vp ;
-	private ZonesController zone_controller;
-	public Ctrl_About about;
+	private final VideoProcessor vp;
+	private final ZonesController zone_controller;
+	public CtrlAbout about;
 
 	/**
 	 * Initializes GUI controllers, Model Controllers and Video Controller.
 	 */
-	public PManager() {
+	public PManager()
+	{
 		state = ProgramState.IDLE;
-		excel_engine=new ExcelEngine();
-		default_me=this;
+		excel_engine = new ExcelEngine();
+		default_me = this;
 		status_mgr = new StatusManager();
-		zone_controller =ZonesController.getDefault();
-		shape_controller =ShapeController.getDefault();
-		drw_zns= new Ctrl_DrawZones();
-		frm_exp = new Ctrl_ExperimentForm();
-		frm_grps = new Ctrl_GroupsForm();
-		frm_rat = new Ctrl_RatInfoForm();
-		cam_options = new Ctrl_CamOptions();
-		options_window = new Ctrl_OptionsWindow();
-		log= new Logger();
-		main_gui = new Ctrl_MainGUI();
+		zone_controller = ZonesController.getDefault();
+		shape_controller = ShapeController.getDefault();
+		drw_zns = new Ctrl_DrawZones();
+		frm_exp = new CtrlExperimentForm();
+		frm_grps = new CtrlGroupsForm();
+		frm_rat = new CtrlRatInfoForm();
+		cam_options = new CtrlCamOptions();
+		options_window = new CtrlOptionsWindow();
+		log = new Logger();
+		main_gui = new CtrlMainGUI();
 		main_gui.show(true);
 		new ModulesManager();
 
 		zone_controller.init();
 		shape_controller.init();
-		vp = new VideoProcessor(main_gui.getMainAWTFrame(),main_gui.getSecAWTFrame());
+		vp = new VideoProcessor(main_gui.getMainAWTFrame(), main_gui.getSecAWTFrame());
 	}
 
 	public GfxPanel getGfxPanel()
@@ -106,27 +111,27 @@ public class PManager {
 
 	/**
 	 * Initializes the Video Processor.
-	 * @param vid_lib video library to use
-	 * @param w width
-	 * @param h height
-	 * @param frame_rate frame rate
-	 * @param cam_index camera index
+	 * 
+	 * @param common_configs
+	 *            CommonFilterConfigs object needed by most filters
 	 */
-	public void initializeVideoProcessor(CommonFilterConfigs common_configs)
+	public void initializeVideoProcessor(final CommonFilterConfigs common_configs)
 	{
 		zone_controller.setWidthandHeight(common_configs.width, common_configs.height);
-		if(vp.initialize(common_configs))
+		if (vp.initialize(common_configs))
 			vp.startStreaming();
 	}
 
 	/**
-	 * Links Gfx_panel with ShapeController, gives the gfx_panel instance to
-	 * the shape_controller instance.
-	 * @param gfx_panel GfxPanel object to send to the shape controller
+	 * Links Gfx_panel with ShapeController, gives the gfx_panel instance to the
+	 * shape_controller instance.
+	 * 
+	 * @param gfx_panel
+	 *            GfxPanel object to send to the shape controller
 	 */
-	public void linkGFXPanelWithShapeCtrlr(GfxPanel gfx_panel)
+	public void linkGFXPanelWithShapeCtrlr(final GfxPanel gfx_panel)
 	{
-		this.gfx_panel=gfx_panel;
+		this.gfx_panel = gfx_panel;
 		shape_controller.linkWithGFXPanel(gfx_panel);
 	}
 
@@ -135,10 +140,8 @@ public class PManager {
 	 */
 	public void unloadVideoProcessor()
 	{
-		if(vp!=null & state!=ProgramState.IDLE)
+		if (vp != null & state != ProgramState.IDLE)
 			vp.unloadLibrary();
 	}
 
 }
-
-

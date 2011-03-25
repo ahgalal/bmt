@@ -1,13 +1,12 @@
 package control;
 
 import gfx_panel.GfxPanel;
-import gfx_panel.GfxPanel_Notifiee;
+import gfx_panel.GfxPanelNotifiee;
 import gfx_panel.Shape;
 
 import java.awt.Graphics;
 import java.awt.Point;
 import java.util.ArrayList;
-
 
 import org.eclipse.swt.widgets.Display;
 
@@ -15,19 +14,21 @@ import ui.FormZoneType;
 import utils.PManager;
 
 /**
- * @author Creative
- *Handles all shapes to be displayed on the GfxPanel
+ * @author Creative Handles all shapes to be displayed on the GfxPanel
  */
-public class ShapeController implements GfxPanel_Notifiee {
+public class ShapeController implements GfxPanelNotifiee
+{
 	static ShapeController default_controller;
-	public void setSetting_scale(boolean settingScale) {
+
+	public void setSettingScale(final boolean settingScale)
+	{
 		setting_scale = settingScale;
 	}
 
 	private GfxPanel gfx_panel;
 	private ArrayList<Shape> shp_arr;
 	private ZonesController zone_conteroller;
-	private PManager pm;
+	private final PManager pm;
 	private boolean setting_scale;
 
 	public void clearAllShapes()
@@ -41,34 +42,37 @@ public class ShapeController implements GfxPanel_Notifiee {
 	}
 
 	/**
-	 * just initialize the PManager instance
+	 * just initialize the PManager instance.
 	 */
-	public ShapeController() {
-		pm=PManager.getDefault();
+	public ShapeController()
+	{
+		pm = PManager.getDefault();
 	}
 
 	/**
-	 * @param shapenumber the number of the shape to return its instance
+	 * @param shapenumber
+	 *            the number of the shape to return its instance
 	 * @return instance of the shape having the given shapenumber
 	 */
-	public Shape getShapeByNumber(int shapenumber)
+	public Shape getShapeByNumber(final int shapenumber)
 	{
 		return gfx_panel.getShapeByNumber(shapenumber);
 	}
 
 	/**
-	 * @param index the index of the shape  in the arraylist
+	 * @param index
+	 *            the index of the shape in the arraylist
 	 * @return the shape instance corresponding to the given index
 	 */
-	public Shape getShapeByIndex(int index)
+	public Shape getShapeByIndex(final int index)
 	{
 		return shp_arr.get(index);
 	}
 
 	public static ShapeController getDefault()
 	{
-		if(default_controller==null)
-			default_controller=new ShapeController();
+		if (default_controller == null)
+			default_controller = new ShapeController();
 		return default_controller;
 	}
 
@@ -78,67 +82,77 @@ public class ShapeController implements GfxPanel_Notifiee {
 	}
 
 	/**
-	 * adds the given shape to the arraylist of gfx_panel.
-	 * notice that the arraylist used is the same instance used by gfx_panel,
-	 * and that's how gfx_panel allows shapes to be added by code.
-	 * @param tmpRect the shape to be added
+	 * adds the given shape to the arraylist of gfx_panel. notice that the
+	 * arraylist used is the same instance used by gfx_panel, and that's how
+	 * gfx_panel allows shapes to be added by code.
+	 * 
+	 * @param tmpRect
+	 *            the shape to be added
 	 */
-	public void addShape(Shape tmpRect) {
+	public void addShape(final Shape tmpRect)
+	{
 		shp_arr.add(tmpRect);
 		gfx_panel.refreshDrawingArea();
 	}
 
-	/* (non-Javadoc)
-	 * @see ui.GfxPanel_Notifiee#shapeAdded(int)
-	 * displays a "select zone type" dialog box
+	/*
+	 * (non-Javadoc)
+	 * @see ui.GfxPanel_Notifiee#shapeAdded(int) displays a "select zone type"
+	 * dialog box
 	 */
 	@Override
-	public void shapeAdded(final int shapeNumber) {
+	public void shapeAdded(final int shapeNumber)
+	{
 		Display.getDefault().syncExec(new Runnable() {
 
 			@Override
-			public void run() {
-				FormZoneType frm_zn_type = new FormZoneType();
+			public void run()
+			{
+				final FormZoneType frm_zn_type = new FormZoneType();
 				frm_zn_type.open(shapeNumber);
 			}
 		});
 	}
 
-	/* (non-Javadoc)
-	 * @see ui.GfxPanel_Notifiee#shapeModified(int)
-	 * calls zone_controller to update the modified shape's data in GUI
-	 * data updated: color & zone type
+	/*
+	 * (non-Javadoc)
+	 * @see ui.GfxPanel_Notifiee#shapeModified(int) calls zone_controller to
+	 * update the modified shape's data in GUI data updated: color & zone type
 	 */
 	@Override
-	public void shapeModified(int shapeNumber) {
+	public void shapeModified(final int shapeNumber)
+	{
 		zone_conteroller.updateZoneDataInGUI(shapeNumber);
 	}
 
 	@Override
-	public void shapeDeleted(int shapeNumber) {
+	public void shapeDeleted(final int shapeNumber)
+	{
 		zone_conteroller.deleteZone(shapeNumber);
 
 	}
 
-	/* (non-Javadoc)
-	 * @see ui.GfxPanel_Notifiee#shapeSelected(int)
-	 * calls zone_controller to select the zone corresponding to the selected
-	 * shape, in the GUI table
+	/*
+	 * (non-Javadoc)
+	 * @see ui.GfxPanel_Notifiee#shapeSelected(int) calls zone_controller to
+	 * select the zone corresponding to the selected shape, in the GUI table
 	 */
 	@Override
-	public void shapeSelected(int shapeNumber) {
+	public void shapeSelected(final int shapeNumber)
+	{
 		zone_conteroller.selectZoneInGUI(shapeNumber);
 	}
 
 	/**
 	 * in the ShapeController , we need to have a reference to the GfxPanel
-	 * instance (from PManager)
-	 * PManager calls this method to give the ShapeController the instance of
-	 * GfxPanel 
-	 * @param gfx_panel instance of GfxPanel class , instantiated in the
-	 * Ctrl_DrawZones class
+	 * instance (from PManager) PManager calls this method to give the
+	 * ShapeController the instance of GfxPanel.
+	 * 
+	 * @param gfx_panel
+	 *            instance of GfxPanel class , instantiated in the
+	 *            Ctrl_DrawZones class
 	 */
-	public void linkWithGFXPanel(GfxPanel gfx_panel)
+	public void linkWithGFXPanel(final GfxPanel gfx_panel)
 	{
 		this.gfx_panel = PManager.getDefault().getGfxPanel();
 		shp_arr = gfx_panel.getShapeArray();
@@ -146,40 +160,43 @@ public class ShapeController implements GfxPanel_Notifiee {
 	}
 
 	/**
-	 * just get the instance of the ZoneController (Singleton)
+	 * just get the instance of the ZoneController (Singleton).
 	 */
 	public void init()
 	{
-		zone_conteroller=ZonesController.getDefault();
+		zone_conteroller = ZonesController.getDefault();
 	}
 
-	public void drawaAllShapes(Graphics gfx)
+	public void drawaAllShapes(final Graphics gfx)
 	{
-		int i =0 ;
-		for (i=0;i<this.getNumberOfShapes();i++)
+		int i = 0;
+		for (i = 0; i < this.getNumberOfShapes(); i++)
 		{
-			this.shp_arr.get(i).Draw(gfx);
+			this.shp_arr.get(i).draw(gfx);
 		}
 	}
 
-	/* (non-Javadoc)
-	 * @see ui.GfxPanel_Notifiee#mouseClicked(java.awt.Point)
-	 * used to record measure points when setting the scale in DrawZones GUI
+	/*
+	 * (non-Javadoc)
+	 * @see ui.GfxPanel_Notifiee#mouseClicked(java.awt.Point) used to record
+	 * measure points when setting the scale in DrawZones GUI
 	 */
 	@Override
-	public void mouseClicked(Point pos) {
-		if(setting_scale)
+	public void mouseClicked(final Point pos)
+	{
+		if (setting_scale)
 			pm.drw_zns.addMeasurePoint(pos);
 	}
 
-	/* (non-Javadoc)
-	 * @see ui.GfxPanel_Notifiee#dragOccured(int, int)
-	 * not implemented
+	/*
+	 * (non-Javadoc)
+	 * @see ui.GfxPanel_Notifiee#dragOccured(int, int) not implemented
 	 */
 	@Override
-	public void dragOccured(int draggedShape, int draggedOnShape) {
-		//pm.log.print("Shape: " +draggedShape+ " is Dragged on the Shape: " +draggedOnShape ,this);
+	public void dragOccured(final int draggedShape, final int draggedOnShape)
+	{
+		// pm.log.print("Shape: " +draggedShape+ " is Dragged on the Shape: "
+		// +draggedOnShape ,this);
 	}
-
 
 }

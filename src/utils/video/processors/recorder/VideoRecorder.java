@@ -10,74 +10,91 @@ import utils.StatusManager.StatusSeverity;
 import utils.video.processors.FilterConfigs;
 import utils.video.processors.VideoFilter;
 
-public class VideoRecorder extends VideoFilter{
+public class VideoRecorder extends VideoFilter
+{
 
-	private PManager pm;
+	private final PManager pm;
 	private StreamToAVI avi_saver;
-	private RecorderConfigs recorder_configs;
-	public VideoRecorder(String name,FilterConfigs configs) {
-		super(name,configs);
-		recorder_configs=(RecorderConfigs) configs;
-		pm=PManager.getDefault();
-	}
+	private final RecorderConfigs recorder_configs;
 
-	public void renameVideoFile(String file_name)
+	public VideoRecorder(final String name, final FilterConfigs configs)
 	{
-		File tmp_file = new File("video.avi");
-		tmp_file.renameTo(new File(file_name));
+		super(name, configs);
+		recorder_configs = (RecorderConfigs) configs;
+		pm = PManager.getDefault();
 	}
 
-	public void close() {
-		avi_saver.close();		
+	public void renameVideoFile(final String file_name)
+	{
+		final File tmp_file = new File("video.avi");
+		if(!tmp_file.renameTo(new File(file_name)))
+			PManager.log.print("Couldn't rename video file", this,StatusSeverity.ERROR);
 	}
 
-	public void saveVideoFile(String fileName) {
-		renameVideoFile(fileName);		
+	public void close()
+	{
+		avi_saver.close();
 	}
 
-	/* (non-Javadoc)
+	public void saveVideoFile(final String fileName)
+	{
+		renameVideoFile(fileName);
+	}
+
+	/*
+	 * (non-Javadoc)
 	 * @see utils.video.processors.VideoFilter#process(int[])
 	 */
 	@Override
-	public int[] process(int[] imageData) {
-		if(configs.enabled)
+	public int[] process(final int[] imageData)
+	{
+		if (configs.enabled)
 			avi_saver.writeFrame(imageData);
 		return imageData;
 	}
 
 	@Override
-	public boolean enable(boolean enable) {
-		if(enable)
+	public boolean enable(final boolean enable)
+	{
+		if (enable)
 		{
-			if(pm.state==ProgramState.TRACKING)
+			if (pm.state == ProgramState.TRACKING)
 			{
 				avi_saver = new StreamToAVI();
-				avi_saver.initialize("video.avi", VideoFormat.JPG, 10, recorder_configs.common_configs.width, recorder_configs.common_configs.height);
-				pm.state=ProgramState.RECORDING;
-				configs.enabled=true;
+				avi_saver.initialize(
+						"video.avi",
+						VideoFormat.JPG,
+						10,
+						recorder_configs.common_configs.width,
+						recorder_configs.common_configs.height);
+				pm.state = ProgramState.RECORDING;
+				configs.enabled = true;
 				return true;
-			}
-			else
-				pm.status_mgr.setStatus("Please start tracking first", StatusSeverity.ERROR);
+			} else
+				pm.status_mgr.setStatus(
+						"Please start tracking first",
+						StatusSeverity.ERROR);
 			return false;
-		}
-		else
+		} else
 		{
-			Thread th_stop_recording = new Thread(new Runnable() {
+			final Thread th_stop_recording = new Thread(new Runnable() {
 				@Override
-				public void run() {
-					configs.enabled=false;
-					try {
+				public void run()
+				{
+					configs.enabled = false;
+					try
+					{
 						Thread.sleep(100);
-					} catch (InterruptedException e) {
+					} catch (final InterruptedException e)
+					{
 						e.printStackTrace();
 					}
-					if(pm.state==ProgramState.RECORDING)
+					if (pm.state == ProgramState.RECORDING)
 					{
 						avi_saver.close();
-						avi_saver=null;
-						pm.state=ProgramState.TRACKING;
-					}		
+						avi_saver = null;
+						pm.state = ProgramState.TRACKING;
+					}
 				}
 			});
 			th_stop_recording.start();
@@ -86,7 +103,8 @@ public class VideoRecorder extends VideoFilter{
 	}
 
 	@Override
-	public boolean initialize() {
+	public boolean initialize()
+	{
 		return true;
 	}
 }

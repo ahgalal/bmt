@@ -11,23 +11,24 @@ import java.io.PrintStream;
 
 import model.business.Experiment;
 import model.business.Group;
-import model.business.If_Grp2GUI;
+import model.business.Grp2GUI;
 import model.business.Rat;
 import utils.PManager;
 
 /**
  * Responsible for saving/loading Experiment's data to/from Text files.
+ * 
  * @author Creative
  */
-public class TextEngine {
+public class TextEngine
+{
 
-	private PManager pm;
+	private final PManager pm;
 
 	public TextEngine()
 	{
-		pm=PManager.getDefault();
+		pm = PManager.getDefault();
 	}
-
 
 	private FileOutputStream out;
 	private PrintStream p;
@@ -37,102 +38,126 @@ public class TextEngine {
 
 	/**
 	 * Loads Experiment's data from a Text file to an Experiment object.
-	 * @param file_name file path to the text file containing the experiment's information
-	 * @param exp Experiment object to load the information to
+	 * 
+	 * @param file_name
+	 *            file path to the text file containing the experiment's
+	 *            information
+	 * @param exp
+	 *            Experiment object to load the information to
 	 */
-	public void readExpInfoFromTXTFile(String file_name,Experiment exp)
+	public void readExpInfoFromTXTFile(final String file_name, final Experiment exp)
 	{
-		try {
-			String tmp_line =null;
+		try
+		{
+			String tmp_line = null;
 			String[] line_data;
 			fis = new FileInputStream(file_name);
 			bis = new BufferedInputStream(fis);
 
-			BufferedReader buf_rdr = new BufferedReader(new InputStreamReader(bis));
-			boolean group_rats_are_loaded=false;
+			final BufferedReader buf_rdr = new BufferedReader(new InputStreamReader(bis));
+			boolean group_rats_are_loaded = false;
 			Group grp_tmp = null;
-			while (buf_rdr.ready()) {
-				if(!group_rats_are_loaded)
+			while (buf_rdr.ready())
+			{
+				if (!group_rats_are_loaded)
 					tmp_line = buf_rdr.readLine();
-				group_rats_are_loaded=false;
-				if (tmp_line.equals(Cls_Constants.h_exp)){ //load exp. info
-					String tmp_name= buf_rdr.readLine().substring(Cls_Constants.h_exp_name.length());
-					String tmp_user= buf_rdr.readLine().substring(Cls_Constants.h_exp_user.length());
-					String tmp_date= buf_rdr.readLine().substring(Cls_Constants.h_exp_date.length());
-					String tmp_notes =buf_rdr.readLine().substring(Cls_Constants.h_exp_notes.length());
+				group_rats_are_loaded = false;
+				if (tmp_line.equals(Constants.h_exp))
+				{ // load exp. info
+					final String tmp_name = buf_rdr.readLine().substring(
+							Constants.h_exp_name.length());
+					final String tmp_user = buf_rdr.readLine().substring(
+							Constants.h_exp_user.length());
+					final String tmp_date = buf_rdr.readLine().substring(
+							Constants.h_exp_date.length());
+					final String tmp_notes = buf_rdr.readLine().substring(
+							Constants.h_exp_notes.length());
 					exp.setExperimentInfo(tmp_name, tmp_user, tmp_date, tmp_notes);
-				}	
-				else if (tmp_line.equals(Cls_Constants.h_grp)){ //load grp. info
-					int tmp_id= Integer.parseInt(buf_rdr.readLine().substring(Cls_Constants.h_grp_id.length()));
-					String tmp_name= buf_rdr.readLine().substring(Cls_Constants.h_grp_name.length());
-					//int tmp_no_rats = 
-					Integer.parseInt(buf_rdr.readLine().substring(Cls_Constants.h_grp_no_rats.length()));
-					String tmp_rats_numbers= buf_rdr.readLine().substring(Cls_Constants.h_grp_rats_numbers.length());
-					String tmp_notes =buf_rdr.readLine().substring(Cls_Constants.h_grp_notes.length());
-					grp_tmp= new Group(tmp_id,tmp_name,tmp_rats_numbers,tmp_notes);
+				} else if (tmp_line.equals(Constants.h_grp))
+				{ // load grp. info
+					final int tmp_id = Integer.parseInt(buf_rdr.readLine().substring(
+							Constants.h_grp_id.length()));
+					final String tmp_name = buf_rdr.readLine().substring(
+							Constants.h_grp_name.length());
+					// int tmp_no_rats =
+					Integer.parseInt(buf_rdr.readLine().substring(
+							Constants.h_grp_no_rats.length()));
+					final String tmp_rats_numbers = buf_rdr.readLine().substring(
+							Constants.h_grp_rats_numbers.length());
+					final String tmp_notes = buf_rdr.readLine().substring(
+							Constants.h_grp_notes.length());
+					grp_tmp = new Group(tmp_id, tmp_name, tmp_rats_numbers, tmp_notes);
 					exp.addGroup(grp_tmp);
-				}
-				else if (tmp_line.equals(Cls_Constants.h_rat)){
-					tmp_line=buf_rdr.readLine();
-					line_data=readLineData(tmp_line);
+				} else if (tmp_line.equals(Constants.h_rat))
+				{
+					tmp_line = buf_rdr.readLine();
+					line_data = readLineData(tmp_line);
 					exp.setMeasurementsList(line_data);
-					while(buf_rdr.ready())
+					while (buf_rdr.ready())
 					{
-						if(!(tmp_line=buf_rdr.readLine()).substring(0, 1).equals("["))
+						if (!(tmp_line = buf_rdr.readLine()).substring(0, 1).equals("["))
 						{
-							line_data=readLineData(tmp_line);
-							for(int i=0;i<line_data.length;i++)
-								line_data[i]=line_data[i].trim();
-							Rat tmp_rat=new Rat(exp.getMeasurementsList(),line_data);
+							line_data = readLineData(tmp_line);
+							for (int i = 0; i < line_data.length; i++)
+								line_data[i] = line_data[i].trim();
+							final Rat tmp_rat = new Rat(
+									exp.getMeasurementsList(),
+									line_data);
 							grp_tmp.addRat(tmp_rat);
-						}
-						else
+						} else
 							break;
 					}
-					group_rats_are_loaded=true;
+					group_rats_are_loaded = true;
 				}
 			}
 			fis.close();
 			bis.close();
 
 			pm.frm_exp.fillForm(exp);
-			If_Grp2GUI[] arr_grps = new If_Grp2GUI[exp.getNo_groups()];
+			final Grp2GUI[] arr_grps = new Grp2GUI[exp.getNoGroups()];
 			exp.getGroups().toArray(arr_grps);
 			pm.frm_grps.loadDataToForm(arr_grps);
 
-		} catch (FileNotFoundException e) {
+		} catch (final FileNotFoundException e)
+		{
 			e.printStackTrace();
-		} catch (IOException e) {
+		} catch (final IOException e)
+		{
 			e.printStackTrace();
 		}
 	}
 
-	private String[] readLineData(String line)
+	private String[] readLineData(final String line)
 	{
-		String[] res= line.split("\t");
+		final String[] res = line.split("\t");
 		return res;
 	}
 
 	/**
 	 * Saves the Experiment's information to a Text file.
-	 * @param filename file path to save the experiment information to
-	 * @param exp the Experiment to save its information
+	 * 
+	 * @param filename
+	 *            file path to save the experiment information to
+	 * @param exp
+	 *            the Experiment to save its information
 	 */
-	public void writeExpInfoToTXTFile(String filename,Experiment exp)
+	public void writeExpInfoToTXTFile(final String filename, final Experiment exp)
 	{
-		try {
+		try
+		{
 			out = new FileOutputStream(filename);
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} 
-		p = new PrintStream(out);
-		try {
-			p.print(exp.expInfo2String());	
-		} 
-		catch (Exception e) 
+		} catch (final FileNotFoundException e)
 		{
 			e.printStackTrace();
-		} 
+		}
+		p = new PrintStream(out);
+		try
+		{
+			p.print(exp.expInfo2String());
+		} catch (final Exception e)
+		{
+			e.printStackTrace();
+		}
 		p.close();
 
 	}

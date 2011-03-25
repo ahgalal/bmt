@@ -7,56 +7,63 @@ import java.io.IOException;
 
 import lib_avi.AVIOutputStream.VideoFormat;
 
-
-public class StreamToAVI {
+public class StreamToAVI
+{
 
 	private AVIOutputStream avi_op;
 	private BufferedImage image;
 	private int[] data;
 	private State state;
 
-	public void initialize(String filename,VideoFormat format,int framerate,int width,int height)
+	public void initialize(
+			final String filename,
+			final VideoFormat format,
+			final int framerate,
+			final int width,
+			final int height)
 	{
-		try {
-			avi_op = new AVIOutputStream(new File(filename),format);
+		try
+		{
+			avi_op = new AVIOutputStream(new File(filename), format);
 			avi_op.setFrameRate(framerate);
 			avi_op.setVideoDimension(width, height);
 			image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
-			data=((DataBufferInt)(image.getRaster().getDataBuffer())).getData();
+			data = ((DataBufferInt) (image.getRaster().getDataBuffer())).getData();
 			state = State.INITIALIZED;
-		} catch (IOException e) {
+		} catch (final IOException e)
+		{
 			e.printStackTrace();
 		}
 	}
 
-	public void writeFrame(int[] frame_data)
+	public void writeFrame(final int[] frame_data)
 	{
-		if(state==State.INITIALIZED)
+		if (state == State.INITIALIZED)
 		{
-			System.arraycopy(frame_data, 0, data, 0,frame_data.length);
-			try {
+			System.arraycopy(frame_data, 0, data, 0, frame_data.length);
+			try
+			{
 				avi_op.writeFrame(image);
-			} catch (IOException e) {
+			} catch (final IOException e)
+			{
 				e.printStackTrace();
 			}
 		}
-		else
-			//Error ... not initialized!
-			;
 	}
-	
+
 	public void close()
 	{
-		try {
+		try
+		{
 			avi_op.close();
-		} catch (IOException e) {
+		} catch (final IOException e)
+		{
 			e.printStackTrace();
 		}
 	}
 
-
-
-	private enum State{
+	private enum State
+	{
 		INITIALIZED
 	}
 

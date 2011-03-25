@@ -4,17 +4,18 @@ public abstract class FilterConfigs
 {
 	public CommonFilterConfigs common_configs;
 	public boolean enabled;
-	private String name;
-	
-	public FilterConfigs(String name,CommonFilterConfigs common_configs)
+	private final String name;
+
+	public FilterConfigs(final String name, final CommonFilterConfigs common_configs)
 	{
-		this.common_configs=common_configs;
-		this.name=name;
+		this.common_configs = common_configs;
+		this.name = name;
 	}
-	
-	public String getConfigurable_name() {
+
+	public String getConfigurablename()
+	{
 		return name;
 	}
-	
+
 	public abstract void mergeConfigs(FilterConfigs configs);
 }

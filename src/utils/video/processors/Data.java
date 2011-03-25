@@ -1,18 +1,19 @@
 package utils.video.processors;
 
-public abstract class Data {
+public abstract class Data
+{
 	public Object data;
-	private String name;
-	
-	public Data(String name)
+	private final String name;
+
+	public Data(final String name)
 	{
-		this.name=name;
+		this.name = name;
 	}
-	
+
 	public String getName()
 	{
 		return name;
 	}
-	
+
 	public abstract Object getData();
 }

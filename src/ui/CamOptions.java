@@ -13,22 +13,23 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
 import control.ui.ControllerUI;
-import control.ui.Ctrl_CamOptions;
+import control.ui.CtrlCamOptions;
 
 /**
- * @author ShaQ
- * Displays the Camera options and enable user to change them 
+ * @author ShaQ Displays the Camera options and enable user to change them
  */
-public class CamOptions extends BaseUI{
-	//txt_width.getText()
-	Ctrl_CamOptions controller;  //  @jve:decl-index=0:
+public class CamOptions extends BaseUI
+{
+	// txt_width.getText()
+	CtrlCamOptions controller; // @jve:decl-index=0:
 
-	public  CamOptions(){
+	public CamOptions()
+	{
 		createShell();
-		super.sShell=sShell;
+		super.sShell = sShell;
 	}
 
-	private Shell sShell = null;  //  @jve:decl-index=0:visual-constraint="12,18"
+	private Shell sShell = null; // @jve:decl-index=0:visual-constraint="12,18"
 	private Button btn_OK = null;
 	private Text txt_width = null;
 	private Text txt_height = null;
@@ -48,13 +49,13 @@ public class CamOptions extends BaseUI{
 
 	private Button btn_cancel = null;
 
-
 	/**
-	 * This method initializes sShell
+	 * This method initializes sShell.
 	 */
-	private void createShell() {
-		//pm=PManager.getDefault();
-		sShell = new Shell(SWT.APPLICATION_MODAL | SWT.ON_TOP | SWT.TITLE );
+	private void createShell()
+	{
+		// pm=PManager.getDefault();
+		sShell = new Shell(SWT.APPLICATION_MODAL | SWT.ON_TOP | SWT.TITLE);
 		sShell.setText("Camera Options");
 		sShell.setLayout(null);
 		sShell.setSize(new Point(318, 239));
@@ -63,20 +64,19 @@ public class CamOptions extends BaseUI{
 		btn_OK.setBounds(new Rectangle(231, 180, 73, 25));
 		btn_OK.setText("OK");
 		btn_OK.addMouseListener(new org.eclipse.swt.events.MouseAdapter() {
-			public void mouseDown(org.eclipse.swt.events.MouseEvent e) {
+			@Override
+			public void mouseDown(final org.eclipse.swt.events.MouseEvent e)
+			{
 				/**
-				 * this piece of code will be executed in case of 1 or 2:
-				 * 1. we haven't chosen JMyron
-				 * 2. we have chosen JMyron, but haven't set it's
-				 *    advanced settings
+				 * this piece of code will be executed in case of 1 or 2: 1. we
+				 * haven't chosen JMyron 2. we have chosen JMyron, but haven't
+				 * set it's advanced settings
 				 */
-				controller.setVars(new String[] {txt_width.getText(),
-						txt_height.getText(),
-						radbtn_15fps.getSelection()? "15":"30",
-								cmbo_cam_lib.getText(),
-								radbtn_rgb.getSelection()?"RGB":"YUV",
-										cmbo_cam_num.getText()});
-				controller.btn_OK_Action();
+				controller.setVars(new String[] { txt_width.getText(),
+						txt_height.getText(), radbtn_15fps.getSelection() ? "15" : "30",
+						cmbo_cam_lib.getText(),
+						radbtn_rgb.getSelection() ? "RGB" : "YUV", cmbo_cam_num.getText() });
+				controller.btnOkAction();
 			}
 		});
 		txt_width = new Text(sShell, SWT.BORDER);
@@ -93,13 +93,13 @@ public class CamOptions extends BaseUI{
 		lbl_height = new Label(sShell, SWT.NONE);
 		lbl_height.setBounds(new Rectangle(163, 80, 39, 15));
 		lbl_height.setText("Height:");
-		createGrp_frame_rate();
-		createGrp_format();
+		createGrpFrameRate();
+		createGrpFormat();
 		lbl_cam_num = new Label(sShell, SWT.NONE);
 		lbl_cam_num.setBounds(new Rectangle(15, 44, 83, 21));
 		lbl_cam_num.setText("Cam. Number:");
-		createCmbo_cam_num();
-		createCmbo_cam_lib();
+		createCmboCamNum();
+		createCmboCamLib();
 		lbl_cam_lib = new Label(sShell, SWT.NONE);
 		lbl_cam_lib.setBounds(new Rectangle(15, 17, 112, 17));
 		lbl_cam_lib.setText("Cam. Video Library:");
@@ -113,35 +113,38 @@ public class CamOptions extends BaseUI{
 		btn_cancel.setSize(new Point(73, 25));
 		btn_cancel.setLocation(new Point(10, 181));
 		btn_cancel.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
-			public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
-				sShell.setVisible(false);			}
+			@Override
+			public void widgetSelected(final org.eclipse.swt.events.SelectionEvent e)
+			{
+				sShell.setVisible(false);
+			}
 		});
-		btn_jmyron_settings
-		.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
-			public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
+		btn_jmyron_settings.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
+			@Override
+			public void widgetSelected(final org.eclipse.swt.events.SelectionEvent e)
+			{
 				/**
-				 * in case of JMyron ONLY (button only appears in case of JMyron)
-				 * we initialize the video processor using the settings in the
-				 * GUI .... then display the advanced settings of JMyron.
-				 * notice the varible "lib_is_already_created", it prevents
-				 * the OK button of the GUI from unloading the VP and loosing
-				 * all it's data(including the advanced settings!)
+				 * in case of JMyron ONLY (button only appears in case of
+				 * JMyron) we initialize the video processor using the settings
+				 * in the GUI .... then display the advanced settings of JMyron.
+				 * notice the varible "lib_is_already_created", it prevents the
+				 * OK button of the GUI from unloading the VP and loosing all
+				 * it's data(including the advanced settings!)
 				 */
-				controller.setVars(new String[] {txt_width.getText(),
-						txt_height.getText(),
-						radbtn_15fps.getSelection()? "15":"30",
-								cmbo_cam_lib.getText(),
-								radbtn_rgb.getSelection()?"RGB":"YUV",
-										cmbo_cam_num.getText()});
-				controller.btn_jmyron_settings_Action();
+				controller.setVars(new String[] { txt_width.getText(),
+						txt_height.getText(), radbtn_15fps.getSelection() ? "15" : "30",
+						cmbo_cam_lib.getText(),
+						radbtn_rgb.getSelection() ? "RGB" : "YUV", cmbo_cam_num.getText() });
+				controller.btnJmyronSettingsAction();
 			}
 		});
 	}
+
 	/**
-	 * This method initializes grp_frame_rate	
-	 *
+	 * This method initializes grp_frame_rate.
 	 */
-	private void createGrp_frame_rate() {
+	private void createGrpFrameRate()
+	{
 		grp_frame_rate = new Group(sShell, SWT.NONE);
 		grp_frame_rate.setLayout(null);
 		grp_frame_rate.setBounds(new Rectangle(15, 120, 135, 48));
@@ -156,11 +159,12 @@ public class CamOptions extends BaseUI{
 		radbtn_30fps.setSelection(true);
 
 	}
+
 	/**
-	 * This method initializes grp_format	
-	 *
+	 * This method initializes grp_format.
 	 */
-	private void createGrp_format() {
+	private void createGrpFormat()
+	{
 		grp_format = new Group(sShell, SWT.NONE);
 		grp_format.setLayout(null);
 		grp_format.setText("Format");
@@ -175,10 +179,10 @@ public class CamOptions extends BaseUI{
 	}
 
 	/**
-	 * This method initializes cmbo_cam_num	
-	 *
+	 * This method initializes cmbo_cam_num.
 	 */
-	private void createCmbo_cam_num() {
+	private void createCmboCamNum()
+	{
 		cmbo_cam_num = new Combo(sShell, SWT.READ_ONLY);
 		cmbo_cam_num.setBounds(new Rectangle(184, 46, 116, 23));
 		cmbo_cam_num.add("0");
@@ -186,11 +190,12 @@ public class CamOptions extends BaseUI{
 		cmbo_cam_num.add("2");
 		cmbo_cam_num.setText("0");
 	}
+
 	/**
-	 * This method initializes cmbo_cam_lib	
-	 *
+	 * This method initializes cmbo_cam_lib.
 	 */
-	private void createCmbo_cam_lib() {
+	private void createCmboCamLib()
+	{
 		cmbo_cam_lib = new Combo(sShell, SWT.READ_ONLY);
 		cmbo_cam_lib.setText("JMF");
 		cmbo_cam_lib.setBounds(new Rectangle(184, 14, 116, 23));
@@ -203,27 +208,25 @@ public class CamOptions extends BaseUI{
 		cmbo_cam_lib.addSelectionListener(new SelectionListener() {
 
 			@Override
-			public void widgetSelected(SelectionEvent e) {
-				String library = cmbo_cam_lib.getText();
-				if(library.equals("OpenCV"))
+			public void widgetSelected(final SelectionEvent e)
+			{
+				final String library = cmbo_cam_lib.getText();
+				if (library.equals("OpenCV"))
 				{
 					radbtn_rgb.setEnabled(false);
 					radbtn_yuv.setEnabled(false);
 					btn_jmyron_settings.setVisible(false);
-				}
-				else if(library.equals("JMF"))
+				} else if (library.equals("JMF"))
 				{
 					radbtn_rgb.setEnabled(true);
 					radbtn_yuv.setEnabled(true);
 					btn_jmyron_settings.setVisible(false);
-				}
-				else if(library.equals("JMyron"))
+				} else if (library.equals("JMyron"))
 				{
 					radbtn_rgb.setEnabled(false);
 					radbtn_yuv.setEnabled(false);
 					btn_jmyron_settings.setVisible(true);
-				}
-				else if(library.equals("AGCamLib"))
+				} else if (library.equals("AGCamLib"))
 				{
 					radbtn_rgb.setEnabled(false);
 					radbtn_yuv.setEnabled(false);
@@ -232,55 +235,64 @@ public class CamOptions extends BaseUI{
 			}
 
 			@Override
-			public void widgetDefaultSelected(SelectionEvent e) {
+			public void widgetDefaultSelected(final SelectionEvent e)
+			{
 			}
 		});
 	}
-	@Override
-	public void loadData(String[] str_array) {
-		if(str_array.length==6){
-			String library = str_array[0];
-			int cam_num = Integer.parseInt(str_array[1]);
-			int width = Integer.parseInt(str_array[2]);
-			int height = Integer.parseInt(str_array[3]);
-			int frame_rate = Integer.parseInt(str_array[4]);
-			String format = str_array[5];
 
-			try{
+	@Override
+	public void loadData(final String[] str_array)
+	{
+		if (str_array.length == 6)
+		{
+			final String library = str_array[0];
+			final int cam_num = Integer.parseInt(str_array[1]);
+			final int width = Integer.parseInt(str_array[2]);
+			final int height = Integer.parseInt(str_array[3]);
+			final int frame_rate = Integer.parseInt(str_array[4]);
+			final String format = str_array[5];
+
+			try
+			{
 
 				cmbo_cam_lib.setText(library);
 				cmbo_cam_num.setText(String.valueOf(cam_num));
 				txt_width.setText(String.valueOf(width));
 				txt_height.setText(String.valueOf(height));
-				switch (frame_rate){
+				switch (frame_rate)
+				{
 				case 15:
 					radbtn_15fps.setSelection(true);
+					break;
 				case 30:
 					radbtn_30fps.setSelection(true);
+					break;
 				}
-				if(format.equals("RGB"))
+				if (format.equals("RGB"))
 					radbtn_rgb.setSelection(true);
-				else if(format.equals("YUV"))
+				else if (format.equals("YUV"))
 					radbtn_yuv.setSelection(true);
-			}
-			catch(Exception e)
+			} catch (final Exception e)
 			{
 				e.printStackTrace();
 			}
-		}
-		else{
+		} else
+		{
 			System.out.print("Error in number of argument of GUI!\n");
 		}
 	}
 
+	@Override
+	public void setController(final ControllerUI controller)
+	{
+		super.setController(controller);
+		this.controller = (CtrlCamOptions) controller;
+	}
 
 	@Override
-	public void setController(ControllerUI controller) {
-		super.setController(controller);
-		this.controller=(Ctrl_CamOptions) controller;	
-	}
-	@Override
-	public void clearForm() {
+	public void clearForm()
+	{
 		txt_height.setText("");
 		txt_width.setText("");
 	}

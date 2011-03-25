@@ -1,66 +1,66 @@
 package modules;
 
-public class Cargo {
+public class Cargo
+{
 	private String arr_data[];
 	private String arr_tags[];
-	
-	public void setTags(String[] tags)
+
+	public void setTags(final String[] tags)
 	{
-		arr_tags=tags;
+		arr_tags = tags;
 	}
-	
-	public void setData(String[] data)
+
+	public void setData(final String[] data)
 	{
-		arr_data=data;
+		arr_data = data;
 	}
-	
-	public Cargo(String[] tags)
+
+	public Cargo(final String[] tags)
 	{
-		arr_data=new String[tags.length];
-		arr_tags=tags;
+		arr_data = new String[tags.length];
+		arr_tags = tags;
 	}
-	
-	public String getDataByIndex(int index)
+
+	public String getDataByIndex(final int index)
 	{
 		return arr_data[index];
 	}
-	
-	public String getDataByTag(String tag)
+
+	public String getDataByTag(final String tag)
 	{
-		int index=getIndexByTag(tag);
+		final int index = getIndexByTag(tag);
 		return arr_data[index];
 	}
-	
+
 	public String[] getData()
 	{
 		return arr_data;
 	}
-	
+
 	public String[] getTags()
 	{
 		return arr_tags;
 	}
-	
-	public void setDataByIndex(int index,String data)
+
+	public void setDataByIndex(final int index, final String data)
 	{
-		arr_data[index]= data;
+		arr_data[index] = data;
 	}
-	
-	public void setDataByTag(String tag,String data)
+
+	public void setDataByTag(final String tag, final String data)
 	{
-		
-		arr_data[getIndexByTag(tag)]= data;
+
+		arr_data[getIndexByTag(tag)] = data;
 	}
-	
-	private int getIndexByTag(String tag)
+
+	private int getIndexByTag(final String tag)
 	{
-		for(int i=0;i<arr_tags.length;i++)
+		for (int i = 0; i < arr_tags.length; i++)
 		{
-			if(arr_tags[i].equals(tag))
+			if (arr_tags[i].equals(tag))
 				return i;
 		}
 		return -1;
 	}
-	
-	
+
 }

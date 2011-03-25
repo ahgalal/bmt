@@ -5,20 +5,22 @@ import utils.PManager;
 import utils.StatusManager.StatusSeverity;
 
 /**
- * @author ShaQ
- * Handles rat's info
+ * @author ShaQ Handles rat's info
  */
-public class Rat {
+public class Rat
+{
 
-	private Cargo info;
+	private final Cargo info;
 
-	public Rat(String[] measurements_list,String[] values){
+	public Rat(final String[] measurements_list, final String[] values)
+	{
 		this(measurements_list);
 		info.setData(values);
 	}
 
-	public Rat(String[] measurements_list){
-		info=new Cargo(measurements_list);
+	public Rat(final String[] measurements_list)
+	{
+		info = new Cargo(measurements_list);
 	}
 
 	public String[] getValues()
@@ -26,28 +28,33 @@ public class Rat {
 		return info.getData();
 	}
 
-	public String getValueByMeasurementName(String measurement_name)
+	public String getValueByMeasurementName(final String measurement_name)
 	{
 		return info.getDataByTag(measurement_name);
 	}
 
-	public boolean setValueByMeasurementName(String measurement_name,String value)
+	public boolean setValueByMeasurementName(
+			final String measurement_name,
+			final String value)
 	{
-		try{
+		try
+		{
 			info.setDataByTag(measurement_name, value);
-		}catch(Exception e){
+		} catch (final Exception e)
+		{
 			PManager.log.print("Error in measurement name!", this, StatusSeverity.ERROR);
 			return false;
-		};
+		}
 		return true;
 	}
-	
+
 	public String rat2String()
 	{
-		String values=" ";
-		for(String s:getValues())
-			values+=s+'\t'; //TODO:tab after the last item ??!!
-		values += System.getProperty("line.separator");
-		return values;
+		//String values = " ";
+		StringBuffer values_buf=new StringBuffer();
+		for (final String s : getValues())
+			values_buf.append(s + '\t'); // TODO:tab after the last item ??!!
+		values_buf.append(System.getProperty("line.separator"));
+		return values_buf.toString();
 	}
 }

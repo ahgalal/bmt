@@ -14,20 +14,27 @@ import control.ZonesController;
 
 /**
  * Enables the user to input the new zone's type.
+ * 
  * @author Creative
  */
-public class FormZoneType {
+public class FormZoneType
+{
 
-	private Shell sShell = null;  //  @jve:decl-index=0:visual-constraint="10,10"
+	private Shell sShell = null; // @jve:decl-index=0:visual-constraint="10,10"
 	private Label lbl_msg = null;
 	private Button btn_ok = null;
 	private Combo cmbo_type = null;
 	private int shape_number;
+
 	/**
-	 * This method initializes sShell
+	 * This method initializes sShell.
 	 */
-	private void createSShell() {
-		sShell = new Shell(SWT.BORDER | SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL | SWT.ON_TOP);
+	private void createSShell()
+	{
+		sShell = new Shell(SWT.BORDER
+				| SWT.DIALOG_TRIM
+				| SWT.APPLICATION_MODAL
+				| SWT.ON_TOP);
 		sShell.setText("Zone Type:");
 		sShell.setSize(new Point(299, 124));
 		sShell.setLayout(null);
@@ -38,18 +45,24 @@ public class FormZoneType {
 		btn_ok.setBounds(new Rectangle(104, 62, 84, 28));
 		btn_ok.setText("OK");
 		btn_ok.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
-			public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
-				ZonesController.getDefault().addZone(shape_number, ZoneType.string2ZoneType(cmbo_type.getItem(cmbo_type.getSelectionIndex())));
+			@Override
+			public void widgetSelected(final org.eclipse.swt.events.SelectionEvent e)
+			{
+				ZonesController.getDefault()
+						.addZone(
+								shape_number,
+								ZoneType.string2ZoneType(cmbo_type.getItem(cmbo_type.getSelectionIndex())));
 				sShell.close();
 			}
 		});
-		createCmbo_type();
+		createCmboType();
 	}
+
 	/**
-	 * This method initializes cmbo_type	
-	 *
+	 * This method initializes cmbo_type.
 	 */
-	private void createCmbo_type() {
+	private void createCmboType()
+	{
 		cmbo_type = new Combo(sShell, SWT.DROP_DOWN | SWT.READ_ONLY);
 		cmbo_type.setText("Normal");
 		cmbo_type.setBounds(new Rectangle(83, 30, 121, 26));
@@ -57,10 +70,10 @@ public class FormZoneType {
 		cmbo_type.add("Central");
 		cmbo_type.select(0);
 	}
-	
-	public void open(int shape_number)
+
+	public void open(final int shape_number)
 	{
-		this.shape_number=shape_number;
+		this.shape_number = shape_number;
 		createSShell();
 		sShell.open();
 	}

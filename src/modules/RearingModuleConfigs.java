@@ -1,13 +1,16 @@
 package modules;
 
-public class RearingModuleConfigs extends ModuleConfigs {
+public class RearingModuleConfigs extends ModuleConfigs
+{
 
-	public RearingModuleConfigs(String moduleName) {
+	public RearingModuleConfigs(final String moduleName)
+	{
 		super(moduleName);
 	}
 
 	@Override
-	protected void mergeConfigs(ModuleConfigs config) {
+	protected void mergeConfigs(final ModuleConfigs config)
+	{
 
 	}
 

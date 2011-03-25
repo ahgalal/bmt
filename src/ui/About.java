@@ -9,30 +9,34 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
-import control.ui.Ctrl_About;
+import control.ui.ControllerUI;
+import control.ui.CtrlAbout;
 
-public class About extends BaseUI {
-	Ctrl_About controller;  //  @jve:decl-index=0:
-	
-	public  About(){
+public class About extends BaseUI
+{
+	CtrlAbout controller; // @jve:decl-index=0:
+
+	public About()
+	{
 		createSShell();
-		super.sShell=sShell;
+		super.sShell = sShell;
 	}
-	
-	//private Ctrl_About controller;  
-	
-	private Shell sShell = null;  //  @jve:decl-index=0:visual-constraint="4,7"
+
+	// private Ctrl_About controller;
+
+	private Shell sShell = null; // @jve:decl-index=0:visual-constraint="4,7"
 	private Label lbl_proj_desc = null;
 	private Button btn_OK = null;
 	private Group grp_format = null;
 	private Text textArea = null;
 	private Text txt_owner_name = null;
 	private Text txt_owner_email = null;
+
 	/**
-	 * This method initializes sShell1	
-	 *
+	 * This method initializes sShell1.
 	 */
-	private void createSShell() {
+	private void createSShell()
+	{
 		sShell = new Shell(SWT.APPLICATION_MODAL | SWT.ON_TOP | SWT.TITLE);
 		sShell.setLayout(null);
 		sShell.setText("About");
@@ -42,15 +46,17 @@ public class About extends BaseUI {
 		btn_OK.setBounds(new Rectangle(378, 271, 73, 25));
 		btn_OK.setText("OK");
 		btn_OK.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
-			public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
+			@Override
+			public void widgetSelected(final org.eclipse.swt.events.SelectionEvent e)
+			{
 				sShell.setVisible(false);
 			}
 		});
 		lbl_proj_desc = new Label(sShell, SWT.NONE);
 		lbl_proj_desc.setBounds(new Rectangle(11, 5, 112, 17));
 		lbl_proj_desc.setText("Project description:");
-		
-		createGrp_format();
+
+		createGrpFormat();
 		textArea = new Text(sShell, SWT.MULTI | SWT.WRAP | SWT.V_SCROLL);
 		textArea.setEditable(false);
 		textArea.setBounds(new Rectangle(11, 29, 443, 124));
@@ -58,10 +64,10 @@ public class About extends BaseUI {
 	}
 
 	/**
-	 * This method initializes grp_format	
-	 *
+	 * This method initializes grp_format.
 	 */
-	private void createGrp_format() {
+	private void createGrpFormat()
+	{
 		grp_format = new Group(sShell, SWT.NONE);
 		grp_format.setLayout(null);
 		grp_format.setText("Credits:");
@@ -78,34 +84,46 @@ public class About extends BaseUI {
 	}
 
 	/*
-	 * Temporary main generation 
+	 * Temporary main generation
 	 */
-//	public static void main(String[] args) {
-//		// before you run this, make sure to set up the following in
-//		// the launch configuration (Arguments->VM Arguments) for the correct SWT lib. path
-//		// the following is a windows example,
-//		// -Djava.library.path="installation_directory\plugins\org.eclipse.swt.win32_3.0.1\os\win32\x86"
-//		org.eclipse.swt.widgets.Display display = org.eclipse.swt.widgets.Display
-//				.getDefault();
-//		About test = new About();
-//		//test.createSShell();
-//		test.sShell.open();
-//	
-//		while (!test.sShell.isDisposed()) {
-//			if (!display.readAndDispatch())
-//				display.sleep();
-//		}
-//		display.dispose();
-//	}  //  @jve:decl-index=0:visual-constraint="245,5"
+	// public static void main(String[] args) {
+	// // before you run this, make sure to set up the following in
+	// // the launch configuration (Arguments->VM Arguments) for the correct SWT
+	// lib. path
+	// // the following is a windows example,
+	// //
+	// -Djava.library.path="installation_directory\plugins\org.eclipse.swt.win32_3.0.1\os\win32\x86"
+	// org.eclipse.swt.widgets.Display display = org.eclipse.swt.widgets.Display
+	// .getDefault();
+	// About test = new About();
+	// //test.createSShell();
+	// test.sShell.open();
+	//	
+	// while (!test.sShell.isDisposed()) {
+	// if (!display.readAndDispatch())
+	// display.sleep();
+	// }
+	// display.dispose();
+	// } // @jve:decl-index=0:visual-constraint="245,5"
 
 	@Override
-	public void clearForm() {
-		// TODO Auto-generated method stub	
-	}
-
-	@Override
-	public void loadData(String[] strArray) {
+	public void clearForm()
+	{
 		// TODO Auto-generated method stub
-		
 	}
+
+	@Override
+	public void loadData(final String[] strArray)
+	{
+		// TODO Auto-generated method stub
+	}
+
+	@Override
+	public void setController(ControllerUI controller)
+	{
+		super.setController(controller);
+		this.controller = (CtrlAbout) controller;
+	}
+	
+	
 }

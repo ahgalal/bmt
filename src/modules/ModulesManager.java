@@ -4,42 +4,45 @@ import java.util.ArrayList;
 
 import utils.video.processors.Data;
 
-public class ModulesManager {
+public class ModulesManager
+{
 
 	private static ModulesManager me;
-	private ArrayList<Data> data_objects;
-	private ArrayList<Module> modules;
+	private final ArrayList<Data> data_objects;
+	private final ArrayList<Module> modules;
 	private Cargo[] gui_cargos;
 	private Cargo[] file_cargos;
 
 	private boolean run_modules;
-	private RunnableModulesThread runnable_modules ;
+	private RunnableModulesThread runnable_modules;
 	private Thread th_modules;
 
 	private String[] gui_data_array;
 	private String[] gui_names_array;
-	
+
 	private String[] file_data_array;
 	private String[] file_names_array;
 
-
-	public void runAnalyzers(boolean run)
+	public void runAnalyzers(final boolean run)
 	{
-		if(run & !run_modules)
+		if (run & !run_modules)
 		{
-			run_modules=true;
-			th_modules=new Thread(runnable_modules);
+			run_modules = true;
+			th_modules = new Thread(runnable_modules);
 			th_modules.start();
-		}
-		else if(!run & run_modules)
+		} else if (!run & run_modules)
 		{
-			run_modules=false;
-			try {
+			run_modules = false;
+			try
+			{
 				Thread.sleep(33);
-			} catch (InterruptedException e) {e.printStackTrace();}
-			th_modules=null;
+			} catch (final InterruptedException e)
+			{
+				e.printStackTrace();
+			}
+			th_modules = null;
 
-			for(Module mo:modules)
+			for (final Module mo : modules)
 			{
 				mo.deInitialize();
 			}
@@ -53,19 +56,32 @@ public class ModulesManager {
 
 	public ModulesManager()
 	{
-		me=this;
-		data_objects=new ArrayList<Data>();
-		modules=new ArrayList<Module>();
-		
-		RearingModuleConfigs rearing_configs = new RearingModuleConfigs("Rearing Module");
-		ZonesModuleConfigs zones_configs = new ZonesModuleConfigs("Zones Module",50);//TODO: change 50
-		SessionModuleConfigs session_configs = new SessionModuleConfigs("Session Module");
-		ExperimentModuleConfigs experiment_configs = new ExperimentModuleConfigs("Experiment Module");
+		me = this;
+		data_objects = new ArrayList<Data>();
+		modules = new ArrayList<Module>();
 
-		RearingModule rearing_module = new RearingModule("Rearing Module",rearing_configs);
-		ZonesModule zones_module = new ZonesModule("Zones Module",zones_configs);
-		SessionModule session_module = new SessionModule("Session Module", session_configs);
-		ExperimentModule experiment_module = new ExperimentModule("Experiment Module", experiment_configs);
+		final RearingModuleConfigs rearing_configs = new RearingModuleConfigs(
+				"Rearing Module");
+		final ZonesModuleConfigs zones_configs = new ZonesModuleConfigs(
+				"Zones Module",
+				50);// TODO:
+		// change
+		// 50
+		final SessionModuleConfigs session_configs = new SessionModuleConfigs(
+				"Session Module");
+		final ExperimentModuleConfigs experiment_configs = new ExperimentModuleConfigs(
+				"Experiment Module");
+
+		final RearingModule rearing_module = new RearingModule(
+				"Rearing Module",
+				rearing_configs);
+		final ZonesModule zones_module = new ZonesModule("Zones Module", zones_configs);
+		final SessionModule session_module = new SessionModule(
+				"Session Module",
+				session_configs);
+		final ExperimentModule experiment_module = new ExperimentModule(
+				"Experiment Module",
+				experiment_configs);
 
 		modules.add(experiment_module);
 		modules.add(rearing_module);
@@ -76,7 +92,7 @@ public class ModulesManager {
 	public void initialize()
 	{
 		data_objects.clear();
-		for(Module mo:modules)
+		for (final Module mo : modules)
 			mo.initialize();
 
 		constructCargoArray();
@@ -84,49 +100,49 @@ public class ModulesManager {
 		runnable_modules = new RunnableModulesThread();
 	}
 
-	public void addDataObject(Data data)
+	public void addDataObject(final Data data)
 	{
 		data_objects.add(data);
-		for(Module module:modules)
+		for (final Module module : modules)
 			module.updateDataObject(data);
 	}
 
-	public void removeDataObject(Data data)
+	public void removeDataObject(final Data data)
 	{
 		data_objects.remove(data);
-		//constructCargoArray();
+		// constructCargoArray();
 	}
 
 	public String[] getGUIData()
 	{
-		for(Module mo:modules)
+		for (final Module mo : modules)
 			mo.updateGUICargoData();
 
-		int i=0;
-		for(Cargo cargo: gui_cargos)
+		int i = 0;
+		for (final Cargo cargo : gui_cargos)
 		{
-			String[] tmp_cargo_data=cargo.getData();
-			for(int j=0;j<tmp_cargo_data.length;j++)
+			final String[] tmp_cargo_data = cargo.getData();
+			for (int j = 0; j < tmp_cargo_data.length; j++)
 			{
-				gui_data_array[i]=tmp_cargo_data[j];
+				gui_data_array[i] = tmp_cargo_data[j];
 				i++;
 			}
 		}
 		return gui_data_array;
 	}
-	
+
 	public String[] getFileData()
 	{
-		for(Module mo:modules)
+		for (final Module mo : modules)
 			mo.updateFileCargoData();
 
-		int i=0;
-		for(Cargo cargo: file_cargos)
+		int i = 0;
+		for (final Cargo cargo : file_cargos)
 		{
-			String[] tmp_cargo_data=cargo.getData();
-			for(int j=0;j<tmp_cargo_data.length;j++)
+			final String[] tmp_cargo_data = cargo.getData();
+			for (int j = 0; j < tmp_cargo_data.length; j++)
 			{
-				file_data_array[i]=tmp_cargo_data[j];
+				file_data_array[i] = tmp_cargo_data[j];
 				i++;
 			}
 		}
@@ -146,58 +162,57 @@ public class ModulesManager {
 
 	private void constructCargoArray()
 	{
-		gui_cargos=null;
+		gui_cargos = null;
 		int num_gui_cargos = 0;
 		int num_file_cargos = 0;
-		for(Module m:modules)
-			if(m.getGUICargo()!=null)
+		for (final Module m : modules)
+			if (m.getGUICargo() != null)
 				num_gui_cargos++;
 
-		for(Module m:modules)
-			if(m.getFileCargo()!=null)
+		for (final Module m : modules)
+			if (m.getFileCargo() != null)
 				num_file_cargos++;
 
-		int num_strs=0;
+		int num_strs = 0;
 		gui_cargos = new Cargo[num_gui_cargos];
 		file_cargos = new Cargo[num_file_cargos];
 
-		for(int i=0;i<num_gui_cargos;i++)
+		for (int i = 0; i < num_gui_cargos; i++)
 		{
-			gui_cargos[i]=modules.get(i).getGUICargo();
-			num_strs+= gui_cargos[i].getData().length;
+			gui_cargos[i] = modules.get(i).getGUICargo();
+			num_strs += gui_cargos[i].getData().length;
 		}
-		gui_data_array 		= new String[num_strs];
-		gui_names_array		= new String[num_strs];
-		
-		num_strs=0;
-		for(int i=0;i<num_file_cargos;i++)
+		gui_data_array = new String[num_strs];
+		gui_names_array = new String[num_strs];
+
+		num_strs = 0;
+		for (int i = 0; i < num_file_cargos; i++)
 		{
-			file_cargos[i]=modules.get(i).getFileCargo();
-			num_strs+= file_cargos[i].getData().length;
+			file_cargos[i] = modules.get(i).getFileCargo();
+			num_strs += file_cargos[i].getData().length;
 		}
-		
-		file_data_array 	= new String[num_strs];
-		file_names_array	= new String[num_strs];
 
+		file_data_array = new String[num_strs];
+		file_names_array = new String[num_strs];
 
-		int i=0;
-		for(Cargo cargo: gui_cargos)
+		int i = 0;
+		for (final Cargo cargo : gui_cargos)
 		{
-			String[] tmp_cargo_names=cargo.getTags();
-			for(int j=0;j<tmp_cargo_names.length;j++)
+			final String[] tmp_cargo_names = cargo.getTags();
+			for (int j = 0; j < tmp_cargo_names.length; j++)
 			{
-				gui_names_array[i]=tmp_cargo_names[j];
+				gui_names_array[i] = tmp_cargo_names[j];
 				i++;
 			}
 		}
-		
-		i=0;
-		for(Cargo cargo: file_cargos)
+
+		i = 0;
+		for (final Cargo cargo : file_cargos)
 		{
-			String[] tmp_cargo_names=cargo.getTags();
-			for(int j=0;j<tmp_cargo_names.length;j++)
+			final String[] tmp_cargo_names = cargo.getTags();
+			for (int j = 0; j < tmp_cargo_names.length; j++)
 			{
-				file_names_array[i]=tmp_cargo_names[j];
+				file_names_array[i] = tmp_cargo_names[j];
 				i++;
 			}
 		}
@@ -206,34 +221,39 @@ public class ModulesManager {
 	private class RunnableModulesThread implements Runnable
 	{
 		@Override
-		public void run() {
-			while(run_modules)
+		public void run()
+		{
+			while (run_modules)
 			{
-				try {
+				try
+				{
 					Thread.sleep(33);
-				} catch (InterruptedException e) {e.printStackTrace();}
+				} catch (final InterruptedException e)
+				{
+					e.printStackTrace();
+				}
 
-				for(Module mo: modules)
-					//if(mo!=null)
+				for (final Module mo : modules)
+					// if(mo!=null)
 					mo.process();
 			}
 		}
 	}
 
-	public Module getModuleByName(String name)
+	public Module getModuleByName(final String name)
 	{
-		for(Module mo:modules)
-			if(mo.getName().equals(name))
+		for (final Module mo : modules)
+			if (mo.getName().equals(name))
 				return mo;
 		return null;
 	}
 
-	public void updateModuleConfigs(ModuleConfigs[] configs)
+	public void updateModuleConfigs(final ModuleConfigs[] configs)
 	{
-		for(int i=0;i<configs.length;i++)
+		for (int i = 0; i < configs.length; i++)
 		{
-			Module tmp=getModuleByName(configs[i].getModuleName());
-			if(tmp!=null)
+			final Module tmp = getModuleByName(configs[i].getModuleName());
+			if (tmp != null)
 				tmp.updateConfigs(configs[i]);
 		}
 	}

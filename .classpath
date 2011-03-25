@@ -14,12 +14,12 @@
 	<classpathentry kind="lib" path="libs/SWT/org.eclipse.swt.win32.win32.x86_3.5.2.v3557f.jar" sourcepath="libs/SWT/org.eclipse.swt.win32.win32.x86.source_3.5.2.v3557f.jar"/>
 	<classpathentry kind="lib" path="libs/OpenCV/OpenCV.jar">
 		<attributes>
-			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="RatMonitor/libs/OpenCV"/>
+			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="BMT/libs/OpenCV"/>
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="lib" path="libs/JMyron/JMyron.jar">
 		<attributes>
-			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="RatMonitor/libs/JMyron"/>
+			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="BMT/libs/JMyron"/>
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="con" path="SWT_CONTAINER"/>

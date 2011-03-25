@@ -10,15 +10,16 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
 import control.ui.ControllerUI;
-import control.ui.Ctrl_OptionsWindow;
+import control.ui.CtrlOptionsWindow;
 
 /**
- * @author Creative
- *Gives you an option to edit the default values of Hysteresis & Threshold then choose the subtraction threshold
+ * @author Creative Gives you an option to edit the default values of Hysteresis
+ *         & Threshold then choose the subtraction threshold
  */
-public class OptionsWindow extends BaseUI{
-	private Ctrl_OptionsWindow controller;  //  @jve:decl-index=0:
-	private Shell sShell = null;  //  @jve:decl-index=0:visual-constraint="13,18"
+public class OptionsWindow extends BaseUI
+{
+	private CtrlOptionsWindow controller; // @jve:decl-index=0:
+	private Shell sShell = null; // @jve:decl-index=0:visual-constraint="13,18"
 	private Label lbl_hysteresis = null;
 	private Label lbl_threshold = null;
 	private Text txt_hysteresis = null;
@@ -28,20 +29,22 @@ public class OptionsWindow extends BaseUI{
 	private Text txt_rearing_thresh = null;
 	private Scale scl_sub_thresh = null;
 	private Button chk_auto_rearing = null;
-	
+
 	/**
 	 * Creates GUI components, and links this Shell with the parent Shell.
 	 */
-	public OptionsWindow() {
+	public OptionsWindow()
+	{
 		createSShell();
-		super.sShell=sShell;
+		super.sShell = sShell;
 	}
-	
+
 	/**
-	 * This method initializes sShell
+	 * This method initializes sShell.
 	 */
-	private void createSShell() {
-		sShell = new Shell(SWT.APPLICATION_MODAL | SWT.ON_TOP | SWT.TITLE );
+	private void createSShell()
+	{
+		sShell = new Shell(SWT.APPLICATION_MODAL | SWT.ON_TOP | SWT.TITLE);
 		sShell.setText("OptionsWindow");
 		sShell.setLayout(null);
 		sShell.setSize(new Point(263, 208));
@@ -58,9 +61,14 @@ public class OptionsWindow extends BaseUI{
 		btn_ok.setBounds(new Rectangle(50, 143, 95, 24));
 		btn_ok.setText("OK");
 		btn_ok.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
-			public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
-				controller.setVars(new String[] {txt_hysteresis.getText(),txt_rearing_thresh.getText(),String.valueOf(scl_sub_thresh.getSelection()),String.valueOf(chk_auto_rearing.getSelection())});
-				controller.btn_ok_Action();
+			@Override
+			public void widgetSelected(final org.eclipse.swt.events.SelectionEvent e)
+			{
+				controller.setVars(new String[] { txt_hysteresis.getText(),
+						txt_rearing_thresh.getText(),
+						String.valueOf(scl_sub_thresh.getSelection()),
+						String.valueOf(chk_auto_rearing.getSelection()) });
+				controller.btnOkAction();
 			}
 		});
 		btn_cancel = new Button(sShell, SWT.NONE);
@@ -80,31 +88,42 @@ public class OptionsWindow extends BaseUI{
 		chk_auto_rearing.setSelection(true);
 		chk_auto_rearing.setBounds(new Rectangle(12, 107, 216, 20));
 		chk_auto_rearing.setText("enable auto Rearing Detector");
-		scl_sub_thresh
-		.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
-			public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
-				controller.setVars(new String[] {"-1","-1",String.valueOf(scl_sub_thresh.getSelection()),String.valueOf(chk_auto_rearing.getSelection())});
+		scl_sub_thresh.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
+			@Override
+			public void widgetSelected(final org.eclipse.swt.events.SelectionEvent e)
+			{
+				controller.setVars(new String[] { "-1", "-1",
+						String.valueOf(scl_sub_thresh.getSelection()),
+						String.valueOf(chk_auto_rearing.getSelection()) });
 				controller.updateOptions(true);
 			}
 		});
 		btn_cancel.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
-			public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
+			@Override
+			public void widgetSelected(final org.eclipse.swt.events.SelectionEvent e)
+			{
 				sShell.setVisible(false);
 			}
 		});
 	}
+
 	@Override
-	public void loadData(String[] strArray) {
+	public void loadData(final String[] strArray)
+	{
 		txt_hysteresis.setText(strArray[0]);
 		scl_sub_thresh.setSelection(Integer.parseInt(strArray[1]));
 	}
+
 	@Override
-	public void setController(ControllerUI controller) {
+	public void setController(final ControllerUI controller)
+	{
 		super.setController(controller);
-		this.controller=(Ctrl_OptionsWindow) controller;
+		this.controller = (CtrlOptionsWindow) controller;
 	}
+
 	@Override
-	public void clearForm() {
+	public void clearForm()
+	{
 		txt_hysteresis.setText("0");
 		txt_rearing_thresh.setText("0");
 		scl_sub_thresh.setSelection(0);
