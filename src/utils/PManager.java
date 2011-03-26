@@ -17,7 +17,7 @@ import control.ui.CtrlGroupsForm;
 import control.ui.CtrlMainGUI;
 import control.ui.CtrlOptionsWindow;
 import control.ui.CtrlRatInfoForm;
-import control.ui.Ctrl_DrawZones;
+import control.ui.CtrlDrawZones;
 
 /**
  * Program Manager, contains the main function, creates GUI and Controllers.
@@ -57,7 +57,7 @@ public class PManager
 	}
 
 	public CtrlCamOptions cam_options;
-	public Ctrl_DrawZones drw_zns;
+	public CtrlDrawZones drw_zns;
 	public ExcelEngine excel_engine;
 	public CtrlExperimentForm frm_exp;
 	public CtrlGroupsForm frm_grps;
@@ -83,7 +83,7 @@ public class PManager
 		status_mgr = new StatusManager();
 		zone_controller = ZonesController.getDefault();
 		shape_controller = ShapeController.getDefault();
-		drw_zns = new Ctrl_DrawZones();
+		drw_zns = new CtrlDrawZones();
 		frm_exp = new CtrlExperimentForm();
 		frm_grps = new CtrlGroupsForm();
 		frm_rat = new CtrlRatInfoForm();

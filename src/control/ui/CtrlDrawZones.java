@@ -19,7 +19,7 @@ import control.ZonesController;
  * 
  * @author Creative
  */
-public class Ctrl_DrawZones extends ControllerUI
+public class CtrlDrawZones extends ControllerUI
 {
 
 	private final DrawZones ui;
@@ -29,7 +29,7 @@ public class Ctrl_DrawZones extends ControllerUI
 	 * Initializes class attributes (DrawZones , PManager and ZoneController)
 	 * then gives the instance of GfxPanel to PManager to share it.
 	 */
-	public Ctrl_DrawZones()
+	public CtrlDrawZones()
 	{
 		zone_controller = ZonesController.getDefault();
 		pm = PManager.getDefault();

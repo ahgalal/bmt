@@ -20,7 +20,7 @@ import org.eclipse.swt.widgets.TableItem;
 import ui.box.InputBox;
 import utils.PManager;
 import control.ui.ControllerUI;
-import control.ui.Ctrl_DrawZones;
+import control.ui.CtrlDrawZones;
 
 /**
  * Displays and Manipulates zones and their associated shapes.
@@ -29,7 +29,7 @@ import control.ui.Ctrl_DrawZones;
  */
 public class DrawZones extends BaseUI
 {
-	private Ctrl_DrawZones controller; // @jve:decl-index=0:
+	private CtrlDrawZones controller; // @jve:decl-index=0:
 	private Point measure_pnt1, measure_pnt2; // @jve:decl-index=0:
 	private Shell sShell = null; // @jve:decl-index=0:visual-constraint="7,-197"
 	private Composite composite = null;
@@ -398,7 +398,7 @@ public class DrawZones extends BaseUI
 	public void setController(final ControllerUI controller)
 	{
 		super.setController(controller);
-		this.controller = (Ctrl_DrawZones) controller;
+		this.controller = (CtrlDrawZones) controller;
 	}
 
 	@Override
