@@ -15,12 +15,12 @@ import ui.MainGUI;
 import utils.PManager;
 import utils.PManager.ProgramState;
 import utils.StatusManager.StatusSeverity;
-import utils.video.processors.CommonFilterConfigs;
-import utils.video.processors.FilterConfigs;
-import utils.video.processors.rearingdetection.RearingDetector;
-import utils.video.processors.recorder.VideoRecorder;
-import utils.video.processors.screendrawer.ScreenDrawerConfigs;
-import utils.video.processors.subtractionfilter.SubtractorFilter;
+import utils.video.filters.CommonFilterConfigs;
+import utils.video.filters.FilterConfigs;
+import utils.video.filters.rearingdetection.RearingDetector;
+import utils.video.filters.recorder.VideoRecorder;
+import utils.video.filters.screendrawer.ScreenDrawerConfigs;
+import utils.video.filters.subtractionfilter.SubtractorFilter;
 
 /**
  * Controller of the MainGUI window.

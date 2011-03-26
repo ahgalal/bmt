@@ -7,7 +7,7 @@ import org.eclipse.swt.widgets.Display;
 
 import utils.saveengines.ExcelEngine;
 import utils.video.VideoProcessor;
-import utils.video.processors.CommonFilterConfigs;
+import utils.video.filters.CommonFilterConfigs;
 import control.ShapeController;
 import control.ZonesController;
 import control.ui.CtrlAbout;

@@ -2,9 +2,9 @@ package control.ui;
 
 import ui.CamOptions;
 import utils.PManager;
-import utils.video.processors.CommonFilterConfigs;
-import utils.video.processors.FilterConfigs;
-import utils.video.processors.screendrawer.ScreenDrawerConfigs;
+import utils.video.filters.CommonFilterConfigs;
+import utils.video.filters.FilterConfigs;
+import utils.video.filters.screendrawer.ScreenDrawerConfigs;
 import control.ZonesController;
 
 /**

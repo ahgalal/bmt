@@ -5,10 +5,10 @@ import modules.ModulesManager;
 import modules.ZonesModuleConfigs;
 import ui.OptionsWindow;
 import utils.PManager;
-import utils.video.processors.FilterConfigs;
-import utils.video.processors.rearingdetection.RearingDetector;
-import utils.video.processors.rearingdetection.RearingFilterConfigs;
-import utils.video.processors.subtractionfilter.SubtractionConfigs;
+import utils.video.filters.FilterConfigs;
+import utils.video.filters.rearingdetection.RearingDetector;
+import utils.video.filters.rearingdetection.RearingFilterConfigs;
+import utils.video.filters.subtractionfilter.SubtractionConfigs;
 
 /**
  * Controller of the OptionsWindow GUI window.

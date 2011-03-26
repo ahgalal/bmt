@@ -6,8 +6,8 @@ import java.util.ArrayList;
 import model.Zone.ZoneType;
 import utils.PManager;
 import utils.StatusManager.StatusSeverity;
-import utils.video.processors.Data;
-import utils.video.processors.RatFinder.RatFinderData;
+import utils.video.filters.Data;
+import utils.video.filters.RatFinder.RatFinderData;
 import control.ZonesController;
 
 public class ZonesModule extends Module

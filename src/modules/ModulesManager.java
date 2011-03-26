@@ -2,7 +2,7 @@ package modules;
 
 import java.util.ArrayList;
 
-import utils.video.processors.Data;
+import utils.video.filters.Data;
 
 public class ModulesManager
 {

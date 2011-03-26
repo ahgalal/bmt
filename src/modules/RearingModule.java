@@ -1,7 +1,7 @@
 package modules;
 
-import utils.video.processors.Data;
-import utils.video.processors.rearingdetection.RearingData;
+import utils.video.filters.Data;
+import utils.video.filters.rearingdetection.RearingData;
 
 public class RearingModule extends Module
 {

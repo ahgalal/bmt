@@ -6,26 +6,26 @@ import java.awt.Point;
 
 import utils.PManager;
 import utils.PManager.ProgramState;
+import utils.video.filters.CommonFilterConfigs;
+import utils.video.filters.FilterConfigs;
+import utils.video.filters.FilterManager;
+import utils.video.filters.VideoFilter;
+import utils.video.filters.RatFinder.RatFinder;
+import utils.video.filters.RatFinder.RatFinderData;
+import utils.video.filters.RatFinder.RatFinderFilterConfigs;
+import utils.video.filters.rearingdetection.RearingDetector;
+import utils.video.filters.rearingdetection.RearingFilterConfigs;
+import utils.video.filters.recorder.RecorderConfigs;
+import utils.video.filters.recorder.VideoRecorder;
+import utils.video.filters.screendrawer.ScreenDrawer;
+import utils.video.filters.screendrawer.ScreenDrawerConfigs;
+import utils.video.filters.subtractionfilter.SubtractionConfigs;
+import utils.video.filters.subtractionfilter.SubtractorFilter;
 import utils.video.input.AGCamLibModule;
 import utils.video.input.JMFModule;
 import utils.video.input.JMyronModule;
 import utils.video.input.OpenCVModule;
 import utils.video.input.VidInputter;
-import utils.video.processors.CommonFilterConfigs;
-import utils.video.processors.FilterConfigs;
-import utils.video.processors.FilterManager;
-import utils.video.processors.VideoFilter;
-import utils.video.processors.RatFinder.RatFinder;
-import utils.video.processors.RatFinder.RatFinderData;
-import utils.video.processors.RatFinder.RatFinderFilterConfigs;
-import utils.video.processors.rearingdetection.RearingDetector;
-import utils.video.processors.rearingdetection.RearingFilterConfigs;
-import utils.video.processors.recorder.RecorderConfigs;
-import utils.video.processors.recorder.VideoRecorder;
-import utils.video.processors.screendrawer.ScreenDrawer;
-import utils.video.processors.screendrawer.ScreenDrawerConfigs;
-import utils.video.processors.subtractionfilter.SubtractionConfigs;
-import utils.video.processors.subtractionfilter.SubtractorFilter;
 
 public class VideoProcessor
 {
