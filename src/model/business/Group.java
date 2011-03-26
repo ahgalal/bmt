@@ -146,10 +146,12 @@ public class Group implements Grp2GUI
 
 	public String grp2String(final String[] measurements_list)
 	{
-		//String str_ret = "";
-		StringBuffer str_ret_buf=new StringBuffer();
+		// String str_ret = "";
+		final StringBuffer str_ret_buf = new StringBuffer();
 		str_ret_buf.append(Constants.h_grp + System.getProperty("line.separator"));
-		str_ret_buf.append(Constants.h_grp_id + getId() + System.getProperty("line.separator"));
+		str_ret_buf.append(Constants.h_grp_id
+				+ getId()
+				+ System.getProperty("line.separator"));
 		str_ret_buf.append(Constants.h_grp_name
 				+ getName()
 				+ System.getProperty("line.separator"));
@@ -164,10 +166,10 @@ public class Group implements Grp2GUI
 				+ System.getProperty("line.separator"));
 		str_ret_buf.append("" + System.getProperty("line.separator"));
 		str_ret_buf.append(Constants.h_rat + System.getProperty("line.separator"));
-		//String tags = "";
-		StringBuffer tags_buf=new StringBuffer();
+		// String tags = "";
+		final StringBuffer tags_buf = new StringBuffer();
 		for (final String s : measurements_list)
-			//tags += s + '\t'; // TODO:tab after the last item ??!!
+			// tags += s + '\t'; // TODO:tab after the last item ??!!
 			tags_buf.append(s + '\t');
 		str_ret_buf.append(tags_buf.toString() + System.getProperty("line.separator"));
 

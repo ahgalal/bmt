@@ -9,7 +9,7 @@ public class RearingModule extends Module
 	private int rearing_ctr;
 	private boolean is_rearing;
 	private RearingData rearing_data;
-	private RearingModuleConfigs rearing_configs;
+	private final RearingModuleConfigs rearing_configs;
 
 	// private RearingConfigs
 
@@ -18,7 +18,7 @@ public class RearingModule extends Module
 		super(name, configs);
 
 		data = new Data[1];
-		rearing_configs=configs;
+		rearing_configs = configs;
 		initialize();
 	}
 

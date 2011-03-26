@@ -50,8 +50,8 @@ public class Rat
 
 	public String rat2String()
 	{
-		//String values = " ";
-		StringBuffer values_buf=new StringBuffer();
+		// String values = " ";
+		final StringBuffer values_buf = new StringBuffer();
 		for (final String s : getValues())
 			values_buf.append(s + '\t'); // TODO:tab after the last item ??!!
 		values_buf.append(System.getProperty("line.separator"));

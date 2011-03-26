@@ -1,8 +1,5 @@
 package utils.video;
 
-import java.awt.Point;
-import java.awt.image.BufferedImage;
-
 import javax.media.Buffer;
 import javax.media.Effect;
 import javax.media.Format;
@@ -77,7 +74,7 @@ public class AnalysisEffect implements Effect
 	@Override
 	public int process(final Buffer inbuf, final Buffer outbuf)
 	{ // 85ms
-		//final long tstart = System.currentTimeMillis();
+		// final long tstart = System.currentTimeMillis();
 		try
 		{
 			final int outputDataLength = ((VideoFormat) outformatt).getMaxDataLength();

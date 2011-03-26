@@ -202,43 +202,41 @@ public class Experiment implements Exp2GUI
 
 	public String expInfo2String()
 	{
-		//String exp_info = "";
-		StringBuffer exp_info_buf=new StringBuffer();
+		// String exp_info = "";
+		final StringBuffer exp_info_buf = new StringBuffer();
 
 		try
 		{ // TODO: replace System.getProperty("line.separator") by an endl
 			// String
-/*			exp_info += Constants.h_exp + System.getProperty("line.separator");
-			exp_info += Constants.h_exp_name
-					+ getName()
-					+ System.getProperty("line.separator");
-			exp_info += Constants.h_exp_user
-					+ getUser()
-					+ System.getProperty("line.separator");
-			exp_info += Constants.h_exp_date
-					+ getDate()
-					+ " "
-					+ System.getProperty("line.separator");
-			exp_info += Constants.h_exp_notes
-					+ getNotes()
-					+ System.getProperty("line.separator");*/
+			/*
+			 * exp_info += Constants.h_exp +
+			 * System.getProperty("line.separator"); exp_info +=
+			 * Constants.h_exp_name + getName() +
+			 * System.getProperty("line.separator"); exp_info +=
+			 * Constants.h_exp_user + getUser() +
+			 * System.getProperty("line.separator"); exp_info +=
+			 * Constants.h_exp_date + getDate() + " " +
+			 * System.getProperty("line.separator"); exp_info +=
+			 * Constants.h_exp_notes + getNotes() +
+			 * System.getProperty("line.separator");
+			 */
 
-			exp_info_buf.append(Constants.h_exp + System.getProperty("line.separator")+
-					Constants.h_exp_name
+			exp_info_buf.append(Constants.h_exp
+					+ System.getProperty("line.separator")
+					+ Constants.h_exp_name
 					+ getName()
-					+ System.getProperty("line.separator")+
-					Constants.h_exp_user
+					+ System.getProperty("line.separator")
+					+ Constants.h_exp_user
 					+ getUser()
-					+ System.getProperty("line.separator")+
-					Constants.h_exp_date
+					+ System.getProperty("line.separator")
+					+ Constants.h_exp_date
 					+ getDate()
 					+ " "
-					+ System.getProperty("line.separator")+
-					Constants.h_exp_notes
+					+ System.getProperty("line.separator")
+					+ Constants.h_exp_notes
 					+ getNotes()
 					+ System.getProperty("line.separator"));
-			
-			
+
 			for (final Group grp_tmp : getGroups())
 			{/*
 			 * exp_info+=Cls_Constants.h_grp+
@@ -264,7 +262,7 @@ public class Experiment implements Exp2GUI
 			 * after the last item ??!! exp_info+=values +
 			 * System.getProperty("line.separator"); }
 			 */
-				//exp_info += grp_tmp.grp2String(getMeasurementsList());
+				// exp_info += grp_tmp.grp2String(getMeasurementsList());
 				exp_info_buf.append(grp_tmp.grp2String(getMeasurementsList()));
 
 			}

@@ -190,8 +190,8 @@ public class ZonesController
 	@SuppressWarnings("deprecation")
 	private String readFromFile(final String path)
 	{
-		//String res = "";
-		StringBuffer res_buf= new StringBuffer();
+		// String res = "";
+		final StringBuffer res_buf = new StringBuffer();
 		final File file = new File(path);
 		FileInputStream fis = null;
 		BufferedInputStream bis = null;
@@ -205,7 +205,7 @@ public class ZonesController
 
 			while (dis.available() != 0)
 			{
-				//res += dis.readLine() + "\n";
+				// res += dis.readLine() + "\n";
 				res_buf.append(dis.readLine() + "\n");
 			}
 			fis.close();
@@ -230,8 +230,8 @@ public class ZonesController
 	 */
 	private String prepareShapesZonesDescription()
 	{
-		//String res = "";
-		StringBuffer res_buf=new StringBuffer();
+		// String res = "";
+		final StringBuffer res_buf = new StringBuffer();
 		RectangleShape tmp_rect = null;
 		OvalShape tmp_oval = null;
 		Shape tmp_shp = null;
@@ -242,14 +242,14 @@ public class ZonesController
 			if (tmp_shp instanceof RectangleShape)
 			{
 				tmp_rect = (RectangleShape) tmp_shp;
-				//res += "Rectangle" + System.getProperty("line.separator");
-				res_buf.append("Rectangle"+ System.getProperty("line.separator"));
+				// res += "Rectangle" + System.getProperty("line.separator");
+				res_buf.append("Rectangle" + System.getProperty("line.separator"));
 				width_diameterx = String.valueOf(tmp_rect.getWidth());
 				height_diametery = String.valueOf(tmp_rect.getHeight());
 			} else if (tmp_shp instanceof OvalShape)
 			{
 				tmp_oval = (OvalShape) tmp_shp;
-				//res += "Oval" + System.getProperty("line.separator");
+				// res += "Oval" + System.getProperty("line.separator");
 				res_buf.append("Oval" + System.getProperty("line.separator"));
 				width_diameterx = String.valueOf(tmp_oval.getWidth());
 				height_diametery = String.valueOf(tmp_oval.getHeight());
@@ -268,20 +268,19 @@ public class ZonesController
 					+ System.getProperty("line.separator")
 					+ ZoneType.zoneType2String(getZoneByNumber(tmp_shp.getShapeNumber()).getZoneType())
 					+ System.getProperty("line.separator"));
-/*			res += tmp_shp.getShapeNumber()
-					+ System.getProperty("line.separator")
-					+ tmp_shp.getX()
-					+ System.getProperty("line.separator")
-					+ tmp_shp.getY()
-					+ System.getProperty("line.separator")
-					+ width_diameterx
-					+ System.getProperty("line.separator")
-					+ height_diametery
-					+ System.getProperty("line.separator")
-					+ Shape.color2String(tmp_shp.getColor())
-					+ System.getProperty("line.separator")
-					+ ZoneType.zoneType2String(getZoneByNumber(tmp_shp.getShapeNumber()).getZoneType())
-					+ System.getProperty("line.separator");*/
+			/*
+			 * res += tmp_shp.getShapeNumber() +
+			 * System.getProperty("line.separator") + tmp_shp.getX() +
+			 * System.getProperty("line.separator") + tmp_shp.getY() +
+			 * System.getProperty("line.separator") + width_diameterx +
+			 * System.getProperty("line.separator") + height_diametery +
+			 * System.getProperty("line.separator") +
+			 * Shape.color2String(tmp_shp.getColor()) +
+			 * System.getProperty("line.separator") +
+			 * ZoneType.zoneType2String(getZoneByNumber
+			 * (tmp_shp.getShapeNumber()).getZoneType()) +
+			 * System.getProperty("line.separator");
+			 */
 		}
 		return res_buf.toString();
 	}

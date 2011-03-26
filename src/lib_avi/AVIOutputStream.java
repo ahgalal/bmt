@@ -266,7 +266,7 @@ public class AVIOutputStream
 		 *            The type of the chunk.
 		 */
 		public CompositeChunk(final String compositeType, final String chunkType)
-		throws IOException
+				throws IOException
 		{
 			super(chunkType);
 			this.compositeType = compositeType;
@@ -440,7 +440,7 @@ public class AVIOutputStream
 		 *            The chunkType of the chunk.
 		 */
 		public FixedSizeDataChunk(final String chunkType, final long fixedSize)
-		throws IOException
+				throws IOException
 		{
 			super(chunkType);
 			this.fixedSize = fixedSize;
@@ -529,8 +529,11 @@ public class AVIOutputStream
 
 		if (file.exists())
 		{
-			if(!file.delete())
-				PManager.log.print("Couldn't delete tmp video file", this, StatusSeverity.ERROR);
+			if (!file.delete())
+				PManager.log.print(
+						"Couldn't delete tmp video file",
+						this,
+						StatusSeverity.ERROR);
 		}
 		this.out = new FileImageOutputStream(file);
 		this.streamOffset = 0;
@@ -550,7 +553,7 @@ public class AVIOutputStream
 	 *                if videoFormat is null or if framerate is <= 0
 	 */
 	public AVIOutputStream(final ImageOutputStream out, final VideoFormat format)
-	throws IOException
+			throws IOException
 	{
 		if (format == null)
 		{
@@ -609,7 +612,7 @@ public class AVIOutputStream
 		if (state == States.STARTED)
 		{
 			throw new IllegalStateException(
-			"frameDuration must be set before the first frame is written");
+					"frameDuration must be set before the first frame is written");
 		}
 		this.frameRate = newValue;
 	}
@@ -931,7 +934,7 @@ public class AVIOutputStream
 			if (imgWidth == -1 || imgHeight == -1)
 			{
 				throw new IllegalStateException(
-				"image width and height must be specified");
+						"image width and height must be specified");
 			}
 
 			moviChunk.finish();

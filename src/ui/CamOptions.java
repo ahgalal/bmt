@@ -216,21 +216,25 @@ public class CamOptions extends BaseUI
 					radbtn_rgb.setEnabled(false);
 					radbtn_yuv.setEnabled(false);
 					btn_jmyron_settings.setVisible(false);
+					cmbo_cam_num.setEnabled(true);
 				} else if (library.equals("JMF"))
 				{
 					radbtn_rgb.setEnabled(true);
 					radbtn_yuv.setEnabled(true);
 					btn_jmyron_settings.setVisible(false);
+					cmbo_cam_num.setEnabled(true);
 				} else if (library.equals("JMyron"))
 				{
 					radbtn_rgb.setEnabled(false);
 					radbtn_yuv.setEnabled(false);
 					btn_jmyron_settings.setVisible(true);
+					cmbo_cam_num.setEnabled(false);
 				} else if (library.equals("AGCamLib"))
 				{
 					radbtn_rgb.setEnabled(false);
 					radbtn_yuv.setEnabled(false);
 					btn_jmyron_settings.setVisible(false);
+					cmbo_cam_num.setEnabled(true);
 				}
 			}
 

@@ -119,11 +119,10 @@ public class About extends BaseUI
 	}
 
 	@Override
-	public void setController(ControllerUI controller)
+	public void setController(final ControllerUI controller)
 	{
 		super.setController(controller);
 		this.controller = (CtrlAbout) controller;
 	}
-	
-	
+
 }

@@ -1,14 +1,7 @@
 package utils.video.input;
 
 import hypermedia.video.OpenCV;
-
-import java.awt.Graphics;
-import java.awt.Image;
-import java.awt.Rectangle;
-import java.awt.image.BufferedImage;
-
 import utils.video.FrameIntArray;
-import utils.video.VideoProcessor;
 
 public class OpenCVModule implements VidInputter
 {
@@ -53,7 +46,7 @@ public class OpenCVModule implements VidInputter
 		}
 
 	}
-	
+
 	@Override
 	public boolean startStream()
 	{
@@ -66,7 +59,7 @@ public class OpenCVModule implements VidInputter
 	@Override
 	public void stopModule()
 	{
-		stop_stream=true;
+		stop_stream = true;
 		try
 		{
 			Thread.sleep(30);
@@ -77,7 +70,7 @@ public class OpenCVModule implements VidInputter
 		th_update_image = null;
 		cv.stop();
 		cv.dispose();
-		cv=null;
+		cv = null;
 	}
 
 	public int getNumberOfCams()

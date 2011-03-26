@@ -34,7 +34,8 @@ public class DrawZones extends BaseUI
 	private Shell sShell = null; // @jve:decl-index=0:visual-constraint="7,-197"
 	private Composite composite = null;
 	private GfxPanel gfx_panel;
-	//boolean is_drawing_now = false;
+
+	// boolean is_drawing_now = false;
 
 	/**
 	 * Creates GUI components, and links this Shell with the parent Shell.
