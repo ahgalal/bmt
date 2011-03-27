@@ -9,6 +9,8 @@ import javax.media.Buffer;
 import javax.media.format.VideoFormat;
 import javax.media.util.BufferToImage;
 
+import utils.video.ImageManipulator;
+
 public class JMFCamFrame
 {
 	private Buffer buffer = null;
@@ -151,7 +153,7 @@ public class JMFCamFrame
 
 	public int[] getRGBIntArray()
 	{
-		return byteRGB2IntRGB((byte[]) buffer.getData());
+		return ImageManipulator.byteRGB2IntRGB((byte[]) buffer.getData());
 	}
 
 	public int[][] get2DIntArray()
@@ -167,20 +169,6 @@ public class JMFCamFrame
 			res[i % width][i / width] = (byte) arr[i];
 		}
 		return res;
-	}
-
-	private int[] byteRGB2IntRGB(final byte[] barr)
-	{
-		final int[] iarr = new int[barr.length / 3];
-		int r, g, b;
-		for (int i = 0; i < barr.length; i += 3)
-		{
-			r = barr[i + 2] & 255;
-			g = barr[i + 1] & 255;
-			b = barr[i] & 255;
-			iarr[i / 3] = b | (g << 8) | (r << 16);
-		}
-		return iarr;
 	}
 
 	public byte[] getRGBByteArray()

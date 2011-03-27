@@ -20,7 +20,6 @@ import utils.video.filters.FilterConfigs;
 import utils.video.filters.rearingdetection.RearingDetector;
 import utils.video.filters.recorder.VideoRecorder;
 import utils.video.filters.screendrawer.ScreenDrawerConfigs;
-import utils.video.filters.subtractionfilter.SubtractorFilter;
 
 /**
  * Controller of the MainGUI window.
@@ -223,10 +222,6 @@ public class CtrlMainGUI extends ControllerUI
 		if (pm.state == ProgramState.STREAMING)
 		{
 			pm.getGfxPanel().setBackground(pm.getVideoProcessor().getRGBBackground());
-			((SubtractorFilter) pm.getVideoProcessor()
-					.getFilterManager()
-					.getFilterByName("SubtractionFilter")).setBgImage(pm.getVideoProcessor()
-					.getRGBBackground());
 		} else if (pm.state == ProgramState.TRACKING)
 			pm.status_mgr.setStatus(
 					"Background can't be taken while tracking.",
@@ -259,8 +254,8 @@ public class CtrlMainGUI extends ControllerUI
 					null,
 					null,
 					null,
-					null,
-					true);
+					true,
+					null);
 			pm.initializeVideoProcessor(commonConfigs);
 			pm.getVideoProcessor().updateFiltersConfigs(
 					new FilterConfigs[] { scrn_drwr_cfgs });

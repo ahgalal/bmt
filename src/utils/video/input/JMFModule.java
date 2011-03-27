@@ -27,7 +27,7 @@ import javax.media.format.YUVFormat;
 import javax.media.protocol.CaptureDevice;
 import javax.media.protocol.DataSource;
 
-import utils.video.AnalysisEffect;
+import utils.video.JMFGrabber;
 import utils.video.FrameIntArray;
 
 public class JMFModule implements VidInputter
@@ -36,7 +36,7 @@ public class JMFModule implements VidInputter
 	VideoFormat video_format = null;
 	private Processor proc_1;
 	private Player pl;
-	private AnalysisEffect ana_eff = null;
+	private JMFGrabber ana_eff = null;
 	private final int width, height;
 	private int cam_index = 0;
 
@@ -217,7 +217,7 @@ public class JMFModule implements VidInputter
 			// proc_1.setContentDescriptor(null);
 			System.err.print("2");
 
-			ana_eff = new AnalysisEffect(
+			ana_eff = new JMFGrabber(
 					video_format.getSize().width,
 					video_format.getSize().height,
 					fia);

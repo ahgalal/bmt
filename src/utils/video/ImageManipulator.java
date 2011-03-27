@@ -19,6 +19,34 @@ public class ImageManipulator
 		}
 		return rgbarr;
 	}
+	
+	public static int[] flipImage(final int[] img, final int width, final int height)
+	{
+		final int[] tmp_img = new int[width * height];
+		for (int y = 0; y < height; y++)
+		{
+			for (int x = 0; x < width; x++)
+			{
+				tmp_img[y * width + x] = img[(height - y - 1) * width + x];
+			}
+		}
+		return tmp_img;
+	}
+	
+	public static int[] byteRGB2IntRGB(final byte[] barr)
+	{
+		final int[] iarr = new int[barr.length / 3];
+		int r, g, b;
+		for (int i = 0; i < barr.length; i += 3)
+		{
+			r = barr[i + 2] & 255;
+			g = barr[i + 1] & 255;
+			b = barr[i] & 255;
+			iarr[i / 3] = b | (g << 8) | (r << 16);
+		}
+		return iarr;
+	}
+	
 
 	public static byte[] rgbIntArray2GrayByteArray(final int[] in)
 	{

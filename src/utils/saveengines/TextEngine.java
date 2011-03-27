@@ -9,11 +9,12 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintStream;
 
+import utils.PManager;
+import utils.StatusManager.StatusSeverity;
+
 import model.business.Experiment;
 import model.business.Group;
-import model.business.Grp2GUI;
 import model.business.Rat;
-import utils.PManager;
 
 /**
  * Responsible for saving/loading Experiment's data to/from Text files.
@@ -22,14 +23,6 @@ import utils.PManager;
  */
 public class TextEngine
 {
-
-	private final PManager pm;
-
-	public TextEngine()
-	{
-		pm = PManager.getDefault();
-	}
-
 	private FileOutputStream out;
 	private PrintStream p;
 
@@ -45,7 +38,7 @@ public class TextEngine
 	 * @param exp
 	 *            Experiment object to load the information to
 	 */
-	public void readExpInfoFromTXTFile(final String file_name, final Experiment exp)
+	public boolean readExpInfoFromTXTFile(final String file_name, final Experiment exp)
 	{
 		try
 		{
@@ -112,18 +105,23 @@ public class TextEngine
 			}
 			fis.close();
 			bis.close();
-
-			pm.frm_exp.fillForm(exp);
-			final Grp2GUI[] arr_grps = new Grp2GUI[exp.getNoGroups()];
-			exp.getGroups().toArray(arr_grps);
-			pm.frm_grps.loadDataToForm(arr_grps);
-
+			return true;
 		} catch (final FileNotFoundException e)
 		{
 			e.printStackTrace();
+			PManager.log.print(
+					"Error Loading Experiment from file! (File is not found)",
+					this,
+					StatusSeverity.ERROR);
+			return false;
 		} catch (final IOException e)
 		{
 			e.printStackTrace();
+			PManager.log.print(
+					"Error Loading Experiment from file! (File read error)",
+					this,
+					StatusSeverity.ERROR);
+			return false;
 		}
 	}
 

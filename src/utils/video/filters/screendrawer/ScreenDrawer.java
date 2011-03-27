@@ -7,26 +7,26 @@ import java.awt.image.DataBufferInt;
 import utils.PManager;
 import utils.StatusManager.StatusSeverity;
 import utils.video.filters.FilterConfigs;
+import utils.video.filters.Link;
 import utils.video.filters.VideoFilter;
-import utils.video.input.JMFModule;
-import control.ShapeController;
 
 public class ScreenDrawer extends VideoFilter
 {
 
 	private final BufferedImage buf_img_main, buf_img_sec;
 	private final int[] data_main_screen, data_sec_screen;
-	private final ShapeController shape_controller;
-	@SuppressWarnings("unchecked")
-	private final Class cls_lib_usd;
 	private final ScreenDrawerConfigs scrn_drwr_cnfgs;
+	private final Link link_in2;
 
-	public ScreenDrawer(final String name, final FilterConfigs configs)
+	public ScreenDrawer(
+			final String name,
+			final FilterConfigs configs,
+			final Link link_in,
+			final Link link_in2,
+			final Link link_out)
 	{
-		super(name, configs);
+		super(name, configs, link_in, link_out);
 		scrn_drwr_cnfgs = (ScreenDrawerConfigs) configs;
-
-		shape_controller = ShapeController.getDefault();
 
 		buf_img_main = new BufferedImage(
 				scrn_drwr_cnfgs.common_configs.width,
@@ -39,8 +39,7 @@ public class ScreenDrawer extends VideoFilter
 				scrn_drwr_cnfgs.common_configs.height,
 				BufferedImage.TYPE_INT_RGB);
 		data_sec_screen = ((DataBufferInt) buf_img_sec.getRaster().getDataBuffer()).getData();
-
-		cls_lib_usd = scrn_drwr_cnfgs.v_in.getClass();
+		this.link_in2 = link_in2;
 	}
 
 	@Override
@@ -68,14 +67,10 @@ public class ScreenDrawer extends VideoFilter
 				{
 					e1.printStackTrace();
 				}
-				while (scrn_drwr_cnfgs.v_in.getStatus() != 1)
+
+				while (configs.enabled)
 				{
-					Thread.sleep(1000);
-					PManager.log.print("Device not ready yet .. osbor showayya! =)", this);
-				}
-				while (scrn_drwr_cnfgs.enabled)
-				{
-					shape_controller.drawaAllShapes(scrn_drwr_cnfgs.ref_gfx_main_screen);
+					scrn_drwr_cnfgs.shape_controller.drawaAllShapes(scrn_drwr_cnfgs.ref_gfx_main_screen);
 					try
 					{
 						Thread.sleep(1000 / scrn_drwr_cnfgs.common_configs.frame_rate);
@@ -84,47 +79,32 @@ public class ScreenDrawer extends VideoFilter
 						e.printStackTrace();
 					}
 
-					if (scrn_drwr_cnfgs.ref_fia.frame_data != null)
+					if (link_in.getData() != null)
 					{
 						System.arraycopy(
-								scrn_drwr_cnfgs.ref_fia.frame_data,
+								link_in.getData(),
 								0,
 								data_main_screen,
 								0,
-								scrn_drwr_cnfgs.ref_fia.frame_data.length);
+								link_in.getData().length);
 
-						if (cls_lib_usd == JMFModule.class)
-						{
-							scrn_drwr_cnfgs.ref_gfx_main_screen.drawImage(
-									buf_img_main,
-									0,
-									0,
-									scrn_drwr_cnfgs.common_configs.width,
-									scrn_drwr_cnfgs.common_configs.height,
-									0,
-									scrn_drwr_cnfgs.common_configs.height,
-									scrn_drwr_cnfgs.common_configs.width,
-									0,
-									null);
-							if (scrn_drwr_cnfgs.enable_sec_screen)
-								scrn_drwr_cnfgs.ref_gfx_sec_screen.drawImage(
-										buf_img_sec.getScaledInstance(
-												289,
-												214,
-												Image.SCALE_DEFAULT),
-										0,
-										0,
-										289,
-										214,
-										0,
-										214,
-										289,
-										0,
-										null);
-						} else
-						{
-							scrn_drwr_cnfgs.ref_gfx_main_screen.drawImage(
-									buf_img_main,
+						scrn_drwr_cnfgs.ref_gfx_main_screen.drawImage(
+								buf_img_main,
+								0,
+								0,
+								scrn_drwr_cnfgs.common_configs.width,
+								scrn_drwr_cnfgs.common_configs.height,
+								0,
+								0,
+								scrn_drwr_cnfgs.common_configs.width,
+								scrn_drwr_cnfgs.common_configs.height,
+								null);
+						if (scrn_drwr_cnfgs.enable_sec_screen)
+							scrn_drwr_cnfgs.ref_gfx_sec_screen.drawImage(
+									buf_img_sec.getScaledInstance(
+											289,
+											214,
+											Image.SCALE_DEFAULT),
 									0,
 									0,
 									scrn_drwr_cnfgs.common_configs.width,
@@ -134,22 +114,6 @@ public class ScreenDrawer extends VideoFilter
 									scrn_drwr_cnfgs.common_configs.width,
 									scrn_drwr_cnfgs.common_configs.height,
 									null);
-							if (scrn_drwr_cnfgs.enable_sec_screen)
-								scrn_drwr_cnfgs.ref_gfx_sec_screen.drawImage(
-										buf_img_sec.getScaledInstance(
-												289,
-												214,
-												Image.SCALE_DEFAULT),
-										0,
-										0,
-										scrn_drwr_cnfgs.common_configs.width,
-										scrn_drwr_cnfgs.common_configs.height,
-										0,
-										0,
-										scrn_drwr_cnfgs.common_configs.width,
-										scrn_drwr_cnfgs.common_configs.height,
-										null);
-						}
 					} else
 						PManager.log.print(
 								"got non-ready state from cam module! .. skipping frame",
@@ -168,11 +132,15 @@ public class ScreenDrawer extends VideoFilter
 	 * @see utils.video.processors.VideoFilter#process(int[])
 	 */
 	@Override
-	public int[] process(final int[] imageData)
+	public void process()
 	{
 		if (configs.enabled)
-			System.arraycopy(imageData, 0, data_sec_screen, 0, imageData.length);
-		return imageData;
+			System.arraycopy(
+					link_in2.getData(),
+					0,
+					data_sec_screen,
+					0,
+					link_in2.getData().length);
 	}
 
 	@Override

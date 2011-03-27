@@ -1,29 +1,33 @@
 package utils.video.filters.subtractionfilter;
 
+import utils.PManager;
+import utils.StatusManager.StatusSeverity;
 import utils.video.FrameIntArray;
 import utils.video.ImageManipulator;
 import utils.video.filters.FilterConfigs;
+import utils.video.filters.Link;
 import utils.video.filters.VideoFilter;
 
 public class SubtractorFilter extends VideoFilter
 {
-
 	private final FrameIntArray bg_image_gray;
 	private final SubtractionConfigs subtraction_configs;
+	private int[] local_data;
 
-	public SubtractorFilter(final String name, final FilterConfigs configs)
+	public SubtractorFilter(
+			final String name,
+			final FilterConfigs configs,
+			final Link link_in,
+			final Link link_out)
 	{
-		super(name, configs);
-		bg_image_gray = new FrameIntArray();
+		super(name, configs, link_in, link_out);
 		this.subtraction_configs = (SubtractionConfigs) configs;
+		local_data = new int[configs.common_configs.width * configs.common_configs.height];
+		bg_image_gray = new FrameIntArray();
 	}
 
-	public void setBgImage(final int[] bgImage)
-	{
-		bg_image_gray.frame_data = ImageManipulator.rgbIntArray2GrayIntArray(bgImage);
-	}
-
-	public byte[] subtractGrayImages(final byte[] img1, final byte[] img2)
+	@SuppressWarnings("unused")
+	private byte[] subtractGrayImages(final byte[] img1, final byte[] img2)
 	{
 		if (img1.length == img2.length)
 		{
@@ -50,37 +54,45 @@ public class SubtractorFilter extends VideoFilter
 		return null;
 	}
 
+	public void updateBG()
+	{
+		if (link_in.getData() != null)
+			bg_image_gray.frame_data = ImageManipulator.rgbIntArray2GrayIntArray(link_in.getData());
+		else
+			PManager.log.print(
+					"Error updating BG, data is null",
+					this,
+					StatusSeverity.ERROR);
+	}
+
 	/*
 	 * (non-Javadoc)
 	 * @see utils.video.processors.VideoFilter#process(int[])
 	 */
 	@Override
-	public int[] process(int[] imageData)
+	public void process()
 	{
 		if (configs.enabled)
 		{
-			if (imageData.length == bg_image_gray.frame_data.length)
+			if (link_in.getData().length == bg_image_gray.frame_data.length)
 			{
-				imageData = ImageManipulator.rgbIntArray2GrayIntArray(imageData);
-				final int[] res = new int[imageData.length];
+				local_data = ImageManipulator.rgbIntArray2GrayIntArray(link_in.getData());
 				int tmp = 0;
-				for (int i = 0; i < imageData.length; i++)
+				for (int i = 0; i < local_data.length; i++)
 				{
-					tmp = imageData[i] - bg_image_gray.frame_data[i];
+					tmp = local_data[i] - bg_image_gray.frame_data[i];
 
 					if (tmp < 0)
 						tmp *= -1;
 
 					if (tmp < subtraction_configs.threshold)
-						res[i] = 0;
+						local_data[i] = 0;
 					else
-						res[i] = 0x00FFFFFF;
+						local_data[i] = 0x00FFFFFF;
 				}
-				return res;
+				link_out.setData(local_data);
 			}
-			return null;
 		}
-		return imageData;
 	}
 
 	@Override

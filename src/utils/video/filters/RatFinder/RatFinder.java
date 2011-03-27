@@ -3,6 +3,7 @@ package utils.video.filters.RatFinder;
 import java.awt.Point;
 
 import utils.video.filters.FilterConfigs;
+import utils.video.filters.Link;
 import utils.video.filters.VideoFilter;
 
 public class RatFinder extends VideoFilter
@@ -11,13 +12,13 @@ public class RatFinder extends VideoFilter
 	private int tmp_max;
 	private final RatFinderFilterConfigs ratfinder_configs;
 	private final RatFinderData rat_finder_data;
-	// private RatFinderAnalyzer rat_finder_analyzer;
 
 	private final Point center_point;
+	private final int[] local_data;
 
 	private void drawMarkerOnImg(final int[] binary_image)
 	{
-		final int[] buf_data = binary_image;
+		System.arraycopy(binary_image, 0, local_data, 0, binary_image.length);
 
 		try
 		{
@@ -40,30 +41,16 @@ public class RatFinder extends VideoFilter
 					tmp_y = 0;
 				if (tmp_x < len & tmp_y < len)
 				{
-					buf_data[tmp_x] = 0x00FF0000; // red
+					local_data[tmp_x] = 0x00FF0000; // red
 					if (tmp_x + ratfinder_configs.common_configs.width < len)
-						buf_data[tmp_x + ratfinder_configs.common_configs.width] = 0x00FF0000; // red
-					buf_data[tmp_y] = 0x00FF0000; // red
+						local_data[tmp_x + ratfinder_configs.common_configs.width] = 0x00FF0000; // red
+					local_data[tmp_y] = 0x00FF0000; // red
 					if (tmp_y + 1 < len)
-						buf_data[tmp_y + 1] = 0x00FF0000; // red
+						local_data[tmp_y + 1] = 0x00FF0000; // red
 				}
 				tmp_x++;
 				tmp_y += ratfinder_configs.common_configs.width;
 			}
-			/*
-			 * int i=(ratfinder_configs.ref_center_point.x-mark_length +
-			 * ratfinder_configs
-			 * .ref_center_point.y*ratfinder_configs.common_configs.width); int
-			 * j=(ratfinder_configs.ref_center_point.x +
-			 * (ratfinder_configs.ref_center_point
-			 * .y-mark_length)*ratfinder_configs.common_configs.width); for(int
-			 * c=0;c<mark_length*2;c++)//i<(pos_x+mark_length + pos_y*width)*3 {
-			 * if(i<0)i=ratfinder_configs.ref_center_point.y*ratfinder_configs.
-			 * common_configs.width; if(j<0)
-			 * j=ratfinder_configs.ref_center_point.x; if(i<len & j<len){
-			 * buf_data[i]= 0x00FF0000; //red buf_data[j]= 0x00FF0000; //red }
-			 * j+=ratfinder_configs.common_configs.width; i+=1; }
-			 */
 		} catch (final Exception e)
 		{
 			System.err.print("Error ya 3am el 7ag, fel index!");
@@ -71,16 +58,21 @@ public class RatFinder extends VideoFilter
 		}
 	}
 
-	public RatFinder(final String name, final FilterConfigs configs)
+	public RatFinder(
+			final String name,
+			final FilterConfigs configs,
+			final Link link_in,
+			final Link link_out)
 	{
-		super(name, configs);
+		super(name, configs, link_in, link_out);
 		ratfinder_configs = (RatFinderFilterConfigs) configs;
 		rat_finder_data = new RatFinderData("Rat Finder Data");
 		center_point = (Point) rat_finder_data.getData();
-		// rat_finder_analyzer = new RatFinderAnalyzer(rat_finder_data);
 
 		// super's stuff:
 		filter_data = rat_finder_data;
+		local_data = new int[configs.common_configs.width * configs.common_configs.height];
+		this.link_out.setData(local_data);
 	}
 
 	private void updateCentroid(final int[] binary_image)
@@ -116,11 +108,6 @@ public class RatFinder extends VideoFilter
 				tmp_max = vert_sum[x];
 			}
 		}
-		// System.out.print(Integer.toString(center_point.x) + " " +
-		// Integer.toString(center_point.y) + "\n");
-		// System.out.print("V: " +
-		// Integer.toString(vert_sum[start_point.x])+"         H :" +
-		// Integer.toString(vert_sum[start_point.y])+"\n");
 	}
 
 	/*
@@ -128,14 +115,13 @@ public class RatFinder extends VideoFilter
 	 * @see utils.video.processors.VideoUtility#process(int[])
 	 */
 	@Override
-	public int[] process(final int[] imageData)
+	public void process()
 	{
 		if (configs.enabled)
 		{
-			updateCentroid(imageData);
-			drawMarkerOnImg(imageData);
+			updateCentroid(link_in.getData());
+			drawMarkerOnImg(link_in.getData());
 		}
-		return imageData;
 	}
 
 	@Override

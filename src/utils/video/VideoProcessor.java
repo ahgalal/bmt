@@ -6,9 +6,11 @@ import java.awt.Point;
 
 import utils.PManager;
 import utils.PManager.ProgramState;
+import utils.StatusManager.StatusSeverity;
 import utils.video.filters.CommonFilterConfigs;
 import utils.video.filters.FilterConfigs;
 import utils.video.filters.FilterManager;
+import utils.video.filters.Link;
 import utils.video.filters.VideoFilter;
 import utils.video.filters.RatFinder.RatFinder;
 import utils.video.filters.RatFinder.RatFinderData;
@@ -19,6 +21,8 @@ import utils.video.filters.recorder.RecorderConfigs;
 import utils.video.filters.recorder.VideoRecorder;
 import utils.video.filters.screendrawer.ScreenDrawer;
 import utils.video.filters.screendrawer.ScreenDrawerConfigs;
+import utils.video.filters.source.SourceFilter;
+import utils.video.filters.source.SourceFilterConfigs;
 import utils.video.filters.subtractionfilter.SubtractionConfigs;
 import utils.video.filters.subtractionfilter.SubtractorFilter;
 import utils.video.input.AGCamLibModule;
@@ -26,6 +30,7 @@ import utils.video.input.JMFModule;
 import utils.video.input.JMyronModule;
 import utils.video.input.OpenCVModule;
 import utils.video.input.VidInputter;
+import control.ShapeController;
 
 public class VideoProcessor
 {
@@ -37,8 +42,6 @@ public class VideoProcessor
 	private final FrameIntArray ref_fia;
 	private final Graphics gfx_sec_screen, gfx_main_screen;
 	private final Component main_screen, secondary_screen;
-	private String prev_lib;
-	private int[] result_image;
 
 	private VidInputter v_in;
 
@@ -67,28 +70,9 @@ public class VideoProcessor
 		secondary_screen = cmpnt_secondary_screen;
 		gfx_main_screen = main_screen.getGraphics();
 		gfx_sec_screen = secondary_screen.getGraphics();
-		prev_lib = "";
 		ref_center_point = new Point();
 		filter_mgr = new FilterManager();
 
-	}
-
-	public int[] process()
-	{
-		/*
-		 * we have 2 options here: 1. subtract the RGB INT arrays
-		 * (width*height*3 subtraction operations) 2. convert the RGB INT arrays
-		 * to byte array (Conversion(byte[]) + width*height subtraction
-		 * operations + Conversion(int[])again ) the 2nd option is implemented
-		 * right now .. we need to investigate its performance!
-		 */
-
-		result_image = ref_fia.frame_data;
-
-		for (final VideoFilter v : filter_mgr.getFilters())
-			result_image = v.process(result_image);
-
-		return result_image;
 	}
 
 	private class RunnableProcessor implements Runnable
@@ -107,8 +91,24 @@ public class VideoProcessor
 
 			while (video_processor_enabled)
 			{
+				while (v_in.getStatus() != 1)
+				{
+					try
+					{
+						Thread.sleep(1000);
+						PManager.log.print(
+								"Device is not Ready!",
+								this,
+								StatusSeverity.ERROR);
+					} catch (final InterruptedException e)
+					{
+						e.printStackTrace();
+					}
+					PManager.log.print("Device is not ready yet!", this);
+				}
 				if (v_in.getStatus() == 1)
-					process();
+					for (final VideoFilter v : filter_mgr.getFilters())
+						v.process();
 
 				try
 				{
@@ -132,35 +132,10 @@ public class VideoProcessor
 		v_in.displayMoreSettings();
 	}
 
-	private void flipBG()
-	{
-		bg_image_rgb = flipImage(
-				bg_image_rgb,
-				common_configs.width,
-				common_configs.height);
-		((SubtractorFilter) filter_mgr.getFilterByName("SubtractionFilter")).setBgImage(bg_image_rgb);
-	}
-
-	private int[] flipImage(final int[] img, final int width, final int height)
-	{
-		final int[] tmp_img = new int[width * height];
-		for (int y = 0; y < height; y++)
-		{
-			for (int x = 0; x < width; x++)
-			{
-				tmp_img[y * width + x] = img[(height - y - 1) * width + x];
-			}
-		}
-		return tmp_img;
-	}
-
 	public int[] getRGBBackground()
 	{
 		updateBG();
-		if (v_in instanceof JMFModule)
-			return flipImage(bg_image_rgb, common_configs.width, common_configs.height);
-		else
-			return bg_image_rgb;
+		return bg_image_rgb;
 	}
 
 	public void updateCommonConfigs(final CommonFilterConfigs common_configs)
@@ -179,8 +154,6 @@ public class VideoProcessor
 			this.common_configs.width = common_configs.width;
 	}
 
-	// public boolean initialize(String v_lib,int frame_rate,int cam_index,int
-	// w,int h,int thresh)
 	public boolean initialize(final CommonFilterConfigs ip_common_configs)
 	{
 		updateCommonConfigs(ip_common_configs);
@@ -197,12 +170,6 @@ public class VideoProcessor
 		else if (common_configs.vid_library.equals("AGCamLib"))
 			v_in = new AGCamLibModule();
 
-		if (bg_is_set)
-			if ((prev_lib.equals("JMF") && (v_in.getName().equals("JMyron") || v_in.getName()
-					.equals("OpenCV")))
-					|| ((prev_lib.equals("JMyron")) || (prev_lib.equals("OpenCV"))
-							&& v_in.getName().equals("JMF")))
-				flipBG();
 		initializeFilters();
 
 		return v_in.initialize(
@@ -214,6 +181,12 @@ public class VideoProcessor
 
 	private void initializeFilters()
 	{
+		final Point dims = new Point(common_configs.width, common_configs.height);
+
+		final Link src_rgb_link = new Link(dims);
+		final Link grey_link = new Link(dims);
+		final Link marker_link = new Link(dims);
+
 		// ////////////////////////////////////
 		// Rat Finder
 		final RatFinderFilterConfigs rat_finder_configs = new RatFinderFilterConfigs(
@@ -221,7 +194,12 @@ public class VideoProcessor
 				100,
 				ref_center_point,
 				common_configs);
-		rat_finder = new RatFinder("RatFinder", rat_finder_configs);
+
+		rat_finder = new RatFinder(
+				"RatFinder",
+				rat_finder_configs,
+				grey_link,
+				marker_link);
 		final RatFinderData rfd = (RatFinderData) rat_finder.getFilterData();
 
 		// ////////////////////////////////////
@@ -233,14 +211,18 @@ public class VideoProcessor
 				200,
 				(Point) (rfd.getData()),
 				common_configs);
-		rearing_det = new RearingDetector("RearingDetector", rearingConfigs);
+		rearing_det = new RearingDetector(
+				"RearingDetector",
+				rearingConfigs,
+				grey_link,
+				null);
 
 		// ////////////////////////////////////
 		// Video Recorder
 		final RecorderConfigs vid_recorder_configs = new RecorderConfigs(
 				"Recorder",
 				common_configs);
-		vid_rec = new VideoRecorder("Recorder", vid_recorder_configs);
+		vid_rec = new VideoRecorder("Recorder", vid_recorder_configs, src_rgb_link, null);
 
 		// ////////////////////////////////////
 		// Screen Drawer
@@ -249,10 +231,15 @@ public class VideoProcessor
 				gfx_main_screen,
 				gfx_sec_screen,
 				v_in,
-				ref_fia,
 				common_configs,
-				true);
-		screen_drawer = new ScreenDrawer("ScreenDrawer", scrn_drwr_cnfgs);
+				true,
+				ShapeController.getDefault());
+		screen_drawer = new ScreenDrawer(
+				"ScreenDrawer",
+				scrn_drwr_cnfgs,
+				src_rgb_link,
+				marker_link,
+				null);
 
 		// ////////////////////////////////////
 		// Subtraction Filter
@@ -260,16 +247,30 @@ public class VideoProcessor
 				"SubtractionFilter",
 				40,
 				common_configs);
-		subtractor_filter = new SubtractorFilter("SubtractionFilter", subtraction_configs);
+		subtractor_filter = new SubtractorFilter(
+				"SubtractionFilter",
+				subtraction_configs,
+				src_rgb_link,
+				grey_link);
 
+		// ////////////////////////////////////
+		// Source Filter
+		final SourceFilterConfigs source_configs = new SourceFilterConfigs(
+				"Source Filter",
+				common_configs,
+				ref_fia);
+		final SourceFilter source_filter = new SourceFilter(
+				"Source Filter",
+				source_configs,
+				null,
+				src_rgb_link);
+
+		filter_mgr.addFilter(source_filter);
 		filter_mgr.addFilter(vid_rec);
 		filter_mgr.addFilter(subtractor_filter);
 		filter_mgr.addFilter(rearing_det);
-
 		filter_mgr.addFilter(rat_finder);
-
 		filter_mgr.addFilter(screen_drawer);
-
 	}
 
 	public boolean isBgSet()
@@ -322,7 +323,6 @@ public class VideoProcessor
 			e.printStackTrace();
 		}
 		v_in.stopModule();
-		prev_lib = v_in.getName();
 		v_in = null;
 		PManager.getDefault().state = ProgramState.IDLE;
 	}
@@ -330,7 +330,7 @@ public class VideoProcessor
 	private void updateBG()
 	{
 		bg_image_rgb = ref_fia.frame_data;
-		((SubtractorFilter) filter_mgr.getFilterByName("SubtractionFilter")).setBgImage(bg_image_rgb);
+		((SubtractorFilter) filter_mgr.getFilterByName("SubtractionFilter")).updateBG();
 		bg_is_set = true;
 	}
 

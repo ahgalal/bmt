@@ -1,6 +1,7 @@
 package utils.video.filters.rearingdetection;
 
 import utils.video.filters.FilterConfigs;
+import utils.video.filters.Link;
 import utils.video.filters.VideoFilter;
 
 public class RearingDetector extends VideoFilter
@@ -13,9 +14,9 @@ public class RearingDetector extends VideoFilter
 	public boolean is_rearing;
 	public int current_rat_area;
 
-	public RearingDetector(final String name, final FilterConfigs configs)
+	public RearingDetector(final String name, final FilterConfigs configs,Link link_in,Link link_out)
 	{
-		super(name, configs);
+		super(name, configs,link_in,link_out);
 		rearing_configs = (RearingFilterConfigs) configs;
 		rearing_data = new RearingData("Rearing Data");
 
@@ -74,8 +75,9 @@ public class RearingDetector extends VideoFilter
 	}
 
 	@Override
-	public int[] process(final int[] imageData)
+	public void process()
 	{
+		final int[] imageData=link_in.getData();
 		if (configs.enabled)
 		{
 			if (imageData != null)
@@ -102,7 +104,6 @@ public class RearingDetector extends VideoFilter
 			}
 		}
 		rearing_data.setRearing(is_rearing);
-		return imageData;
 	}
 
 	@Override

@@ -10,18 +10,21 @@ package utils.video.filters;
  */
 public abstract class VideoFilter
 {
-
-	// protected boolean enabled;
 	protected String name;
 	protected FilterData filter_data;
 	protected FilterConfigs configs;
+	protected Link link_in,link_out;
 
-	// protected Module data_analyzer;
-
-	public VideoFilter(final String name, final FilterConfigs configs)
+	public VideoFilter(
+			final String name,
+			final FilterConfigs configs,
+			final Link link_in,
+			final Link link_out)
 	{
 		this.name = name;
 		this.configs = configs;
+		this.link_in=link_in;
+		this.link_out=link_out;
 	}
 
 	public FilterConfigs getConfigs()
@@ -34,7 +37,7 @@ public abstract class VideoFilter
 		this.configs.mergeConfigs(configs);
 	}
 
-	public abstract int[] process(int[] image_data);
+	public abstract void process();
 
 	public boolean enable(final boolean enable)
 	{

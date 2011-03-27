@@ -75,8 +75,8 @@ public class CtrlCamOptions extends ControllerUI
 					null,
 					null,
 					null,
-					null,
-					true);
+					true,
+					null);
 			pm.initializeVideoProcessor(common_configs);
 			pm.getVideoProcessor().updateFiltersConfigs(
 					new FilterConfigs[] { scrn_drwr_cfgs });

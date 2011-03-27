@@ -8,6 +8,7 @@ import utils.PManager;
 import utils.PManager.ProgramState;
 import utils.StatusManager.StatusSeverity;
 import utils.video.filters.FilterConfigs;
+import utils.video.filters.Link;
 import utils.video.filters.VideoFilter;
 
 public class VideoRecorder extends VideoFilter
@@ -17,9 +18,9 @@ public class VideoRecorder extends VideoFilter
 	private StreamToAVI avi_saver;
 	private final RecorderConfigs recorder_configs;
 
-	public VideoRecorder(final String name, final FilterConfigs configs)
+	public VideoRecorder(final String name, final FilterConfigs configs,Link link_in,Link link_out)
 	{
-		super(name, configs);
+		super(name, configs,link_in,link_out);
 		recorder_configs = (RecorderConfigs) configs;
 		pm = PManager.getDefault();
 	}
@@ -46,11 +47,13 @@ public class VideoRecorder extends VideoFilter
 	 * @see utils.video.processors.VideoFilter#process(int[])
 	 */
 	@Override
-	public int[] process(final int[] imageData)
+	public void process()
 	{
 		if (configs.enabled)
+		{
+			final int[] imageData=link_in.getData();
 			avi_saver.writeFrame(imageData);
-		return imageData;
+		}
 	}
 
 	@Override

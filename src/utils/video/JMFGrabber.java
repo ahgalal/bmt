@@ -9,7 +9,7 @@ import javax.media.format.YUVFormat;
 
 import utils.video.input.JMFCamFrame;
 
-public class AnalysisEffect implements Effect
+public class JMFGrabber implements Effect
 {
 	private final FrameIntArray fia;
 	private final Format[] informats;
@@ -92,10 +92,10 @@ public class AnalysisEffect implements Effect
 			if (inbuf.getFormat().getClass() == YUVFormat.class)
 			{
 				final byte[] da = curr_frame.convertYUV2RGB(null);
-				fia.frame_data = byteArr2RGBIntArr(da);
+				fia.frame_data = ImageManipulator.flipImage(ImageManipulator.byteRGB2IntRGB(da),width,height);
 			} else
 			{
-				fia.frame_data = curr_frame.getRGBIntArray();
+				fia.frame_data = ImageManipulator.flipImage(curr_frame.getRGBIntArray(),width,height);
 			}
 			// System.out.print("Duration: "+(tstart) + "\n");
 			status = 1;
@@ -125,7 +125,7 @@ public class AnalysisEffect implements Effect
 		return rgbarr;
 	}
 
-	public AnalysisEffect(final int width, final int height, final FrameIntArray fia)
+	public JMFGrabber(final int width, final int height, final FrameIntArray fia)
 	{
 		this.fia = fia;
 		informats = new Format[1];
@@ -137,19 +137,7 @@ public class AnalysisEffect implements Effect
 			null_data[j] = (byte) 0xFF;
 	}
 
-	public int[] byteArr2RGBIntArr(final byte[] barr)
-	{
-		final int[] iarr = new int[barr.length / 3];
-		int r, g, b;
-		for (int i = 0; i < barr.length; i += 3)
-		{
-			r = barr[i + 2];
-			g = barr[i + 1];
-			b = barr[i];
-			iarr[i / 3] = (b & 0xff) | ((g & 0xff) << 8) | ((r & 0xff) << 16);
-		}
-		return iarr;
-	}
+
 
 	/*
 	 * public void setBackGroundImage(Buffer buf) { if(bg_frame==null) bg_frame

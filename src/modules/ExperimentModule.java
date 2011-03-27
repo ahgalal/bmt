@@ -4,6 +4,7 @@ import model.business.Experiment;
 import model.business.Group;
 import model.business.Grp2GUI;
 import model.business.Rat;
+import utils.PManager;
 import utils.saveengines.ExcelEngine;
 import utils.saveengines.TextEngine;
 import utils.video.filters.Data;
@@ -18,6 +19,7 @@ public class ExperimentModule extends Module
 
 	private final TextEngine text_engine;
 	private final ExcelEngine excel_engine;
+	private boolean exp_is_set;
 
 	public ExperimentModule(final String name, final ModuleConfigs config)
 	{
@@ -78,7 +80,7 @@ public class ExperimentModule extends Module
 
 	public boolean isExperimentPresent()
 	{
-		return (exp != null);
+		return exp_is_set;
 	}
 
 	public boolean isThereAnyGroups()
@@ -93,6 +95,7 @@ public class ExperimentModule extends Module
 			final String notes)
 	{
 		exp.setExperimentInfo(name, user, date, notes);
+		exp_is_set=true;
 	}
 
 	public void saveGrpInfo(
@@ -156,7 +159,14 @@ public class ExperimentModule extends Module
 
 	public void loadInfoFromTXTFile(final String file_name)
 	{
-		text_engine.readExpInfoFromTXTFile(file_name, exp);
+		if (text_engine.readExpInfoFromTXTFile(file_name, exp))
+		{
+			PManager.getDefault().frm_exp.fillForm(exp);
+			final Grp2GUI[] arr_grps = new Grp2GUI[exp.getNoGroups()];
+			exp.getGroups().toArray(arr_grps);
+			PManager.getDefault().frm_grps.loadDataToForm(arr_grps);
+			exp_is_set=true;
+		}
 	}
 
 	public void writeToExcelFile(final String FilePath)
@@ -206,6 +216,7 @@ public class ExperimentModule extends Module
 	{
 		exp.clearExperimentData();
 		excel_engine.reset();
+		exp_is_set = false;
 	}
 
 	@Override
