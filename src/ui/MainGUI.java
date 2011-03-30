@@ -51,6 +51,7 @@ public class MainGUI extends BaseUI
 	private MenuItem mnutm_file_exit = null;
 	private MenuItem mnutm_experiment_loadexp = null;
 	private MenuItem mnutm_experiment_exporttoexcel = null;
+	private MenuItem mnuitm_edt_exp;
 	private MenuItem mnutm_camera_start = null;
 	private Button btn_start_tracking = null;
 	private Composite cmpst_secondary = null;
@@ -192,6 +193,16 @@ public class MainGUI extends BaseUI
 	public void btnNotRearingEnable(final boolean enable)
 	{
 		btn_not_rearing.setEnabled(enable);
+	}
+	
+	public void editExpMenuItemEnable(final boolean enable)
+	{
+		mnuitm_edt_exp.setEnabled(enable);
+	}
+	
+	public void exportExpToExcelMenuItemEnable(final boolean enable)
+	{
+		mnutm_experiment_exporttoexcel.setEnabled(enable);
 	}
 
 	/**
@@ -414,7 +425,7 @@ public class MainGUI extends BaseUI
 		mnutm_experiment_loadexp = new MenuItem(mnu_experiment, 0);
 		mnutm_experiment_loadexp.setText("Load Exp.");
 		mnutm_experiment_loadexp.setEnabled(true);
-		final MenuItem mnuitm_edt_exp = new MenuItem(mnu_experiment, SWT.PUSH);
+		mnuitm_edt_exp = new MenuItem(mnu_experiment, SWT.PUSH);
 		mnutm_experiment_exporttoexcel = new MenuItem(mnu_experiment, 0);
 		mnutm_experiment_exporttoexcel.setText("Export to Excel");
 		mnutm_experiment_exporttoexcel.setEnabled(true);

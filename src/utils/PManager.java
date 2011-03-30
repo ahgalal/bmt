@@ -90,9 +90,10 @@ public class PManager
 		cam_options = new CtrlCamOptions();
 		options_window = new CtrlOptionsWindow();
 		log = new Logger();
+		new ModulesManager();
 		main_gui = new CtrlMainGUI();
 		main_gui.show(true);
-		new ModulesManager();
+		
 
 		zone_controller.init();
 		shape_controller.init();

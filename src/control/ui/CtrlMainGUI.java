@@ -109,14 +109,28 @@ public class CtrlMainGUI extends ControllerUI
 		@Override
 		public void run()
 		{
+			final ExperimentModule local_exp_module = (ExperimentModule) ModulesManager.getDefault().getModuleByName(
+			"Experiment Module");
+			
 			while (ui_is_opened)
 			{
-
 				Display.getDefault().asyncExec(new Runnable() {
 					@Override
 					public void run()
 					{
 						if (!ui.getShell().isDisposed())
+						{
+							if(!local_exp_module.isExperimentPresent())
+							{
+								ui.editExpMenuItemEnable(false);
+								ui.exportExpToExcelMenuItemEnable(false);
+							}
+							else
+							{
+								ui.editExpMenuItemEnable(true);
+								ui.exportExpToExcelMenuItemEnable(true);
+							}
+							
 							switch (pm.state)
 							{
 							case IDLE:
@@ -144,6 +158,7 @@ public class CtrlMainGUI extends ControllerUI
 								ui.btnStopRecordEnable(false);
 								break;
 							}
+						}
 					}
 				});
 				try
