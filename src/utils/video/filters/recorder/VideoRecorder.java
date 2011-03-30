@@ -11,6 +11,11 @@ import utils.video.filters.FilterConfigs;
 import utils.video.filters.Link;
 import utils.video.filters.VideoFilter;
 
+/**
+ * Records video frames from the incoming data stream.
+ * @author Creative
+ *
+ */
 public class VideoRecorder extends VideoFilter
 {
 
@@ -18,6 +23,13 @@ public class VideoRecorder extends VideoFilter
 	private StreamToAVI avi_saver;
 	private final RecorderConfigs recorder_configs;
 
+	/**
+	 * Initializes the filter.
+	 * @param name filter's name
+	 * @param configs filter's configurations
+	 * @param link_in input Link for the filter
+	 * @param link_out output Link from the filter
+	 */
 	public VideoRecorder(final String name, final FilterConfigs configs,Link link_in,Link link_out)
 	{
 		super(name, configs,link_in,link_out);
@@ -25,6 +37,10 @@ public class VideoRecorder extends VideoFilter
 		pm = PManager.getDefault();
 	}
 
+	/**
+	 * Renames the current video file to the given name.
+	 * @param file_name new name of the video file
+	 */
 	public void renameVideoFile(final String file_name)
 	{
 		final File tmp_file = new File("video.avi");
@@ -32,11 +48,18 @@ public class VideoRecorder extends VideoFilter
 			PManager.log.print("Couldn't rename video file", this, StatusSeverity.ERROR);
 	}
 
+	/**
+	 * Closes the video writer.
+	 */
 	public void close()
 	{
 		avi_saver.close();
 	}
 
+	/**
+	 * Saves the current video with the given file name.
+	 * @param fileName name of the file to save data to
+	 */
 	public void saveVideoFile(final String fileName)
 	{
 		renameVideoFile(fileName);

@@ -6,6 +6,11 @@ import utils.video.FrameIntArray;
 import cam_lib.JAGCamLib;
 import cam_lib.ReturnValue;
 
+/**
+ * AGCamLib video library.
+ * @author Creative
+ *
+ */
 public class AGCamLibModule implements VidInputter
 {
 
@@ -94,11 +99,16 @@ public class AGCamLibModule implements VidInputter
 	public void setFormat(final String s)
 	{
 		/**
-		 *Empty ... AGCamLib encapsulates the video format .. and returns an
+		 * Empty ... AGCamLib encapsulates the video format .. and returns an
 		 * RGB integer array to the VideoProcessor .. just like OpenCV!
 		 */
 	}
 
+	/**
+	 * Runnable to update the image stream from the webcam.
+	 * @author Creative
+	 *
+	 */
 	private class RunnableAGCamLib implements Runnable
 	{
 		@Override

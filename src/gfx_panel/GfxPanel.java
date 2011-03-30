@@ -27,7 +27,6 @@ import org.eclipse.swt.widgets.Shell;
 
 public class GfxPanel
 {
-
 	private final ArrayList<Shape> shp_arr;
 	private final Frame awt_frame;
 	private final int width, height;

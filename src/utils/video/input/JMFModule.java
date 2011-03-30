@@ -30,6 +30,11 @@ import javax.media.protocol.DataSource;
 import utils.video.JMFGrabber;
 import utils.video.FrameIntArray;
 
+/**
+ * JMF video library.
+ * @author Creative
+ *
+ */
 public class JMFModule implements VidInputter
 {
 	private String format;
@@ -37,16 +42,15 @@ public class JMFModule implements VidInputter
 	private Processor proc_1;
 	private Player pl;
 	private JMFGrabber ana_eff = null;
-	private final int width, height;
+	private int width;
+	private int height;
 	private int cam_index = 0;
 
-	public JMFModule(final String format, final int w, final int h)
-	{
-		this.format = format;
-		width = w;
-		height = h;
-	}
-
+	/**
+	 * Creates the MediaLocator for the webcam device.
+	 * @param format_to_use VideoFormat, either RGB or YUV
+	 * @return MediaLocator object corresponding to the webcam
+	 */
 	@SuppressWarnings("unchecked")
 	private MediaLocator obtainMediaLocator(final VideoFormat format_to_use)
 	{
@@ -98,12 +102,15 @@ public class JMFModule implements VidInputter
 		return ml;
 	}
 
-	// @SuppressWarnings("unchecked")
+	/**
+	 * Initializes the MediaLocator,VideoFormat,Processor and JMFGrabber Effect.
+	 * @param fia image data container
+	 * @return true for success
+	 */
 	private boolean initializeJMF(final FrameIntArray fia)
 	{
 		try
 		{
-			// MainGUI.getDefault().createAWTFrame();
 			MediaLocator ml = null;
 
 			final RGBFormat rgb640x480 = new RGBFormat(
@@ -375,10 +382,12 @@ public class JMFModule implements VidInputter
 			final int height,
 			final int cam_index)
 	{
+		this.width=width;
+		this.height=height;
 		this.cam_index = cam_index;
 		return initializeJMF(fia);
 	}
-
+	@Override
 	public void setFormat(final String s)
 	{
 		format = s;

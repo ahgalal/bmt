@@ -65,7 +65,7 @@ public class PManager
 	private GfxPanel gfx_panel;
 	public static Logger log;
 	public CtrlOptionsWindow options_window;
-	private final ShapeController shape_controller;
+	public final ShapeController shape_controller;
 	public ProgramState state;
 	public StatusManager status_mgr;
 	private final VideoProcessor vp;
@@ -96,7 +96,7 @@ public class PManager
 
 		zone_controller.init();
 		shape_controller.init();
-		vp = new VideoProcessor(main_gui.getMainAWTFrame(), main_gui.getSecAWTFrame());
+		vp = new VideoProcessor();
 	}
 
 	public GfxPanel getGfxPanel()

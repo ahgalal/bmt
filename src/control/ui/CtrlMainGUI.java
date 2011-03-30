@@ -1,7 +1,5 @@
 package control.ui;
 
-import java.awt.Frame;
-
 import modules.ExperimentModule;
 import modules.ModulesManager;
 import modules.RearingModule;
@@ -20,6 +18,7 @@ import utils.video.filters.FilterConfigs;
 import utils.video.filters.rearingdetection.RearingDetector;
 import utils.video.filters.recorder.VideoRecorder;
 import utils.video.filters.screendrawer.ScreenDrawerConfigs;
+import utils.video.filters.subtractionfilter.SubtractorFilter;
 
 /**
  * Controller of the MainGUI window.
@@ -50,16 +49,6 @@ public class CtrlMainGUI extends ControllerUI
 
 		pm.status_mgr.initialize(ui.getStatusLabel());
 		ctrl_about_box = new CtrlAbout();
-	}
-
-	public Frame getMainAWTFrame()
-	{
-		return ui.getAwtVideoMain();
-	}
-
-	public Frame getSecAWTFrame()
-	{
-		return ui.getAwtVideoSec();
 	}
 
 	public boolean isShellDisposed()
@@ -221,7 +210,8 @@ public class CtrlMainGUI extends ControllerUI
 	{
 		if (pm.state == ProgramState.STREAMING)
 		{
-			pm.getGfxPanel().setBackground(pm.getVideoProcessor().getRGBBackground());
+			pm.getGfxPanel().setBackground(pm.getVideoProcessor().updateRGBBackground());
+			((SubtractorFilter) pm.getVideoProcessor().getFilterManager().getFilterByName("SubtractionFilter")).updateBG();
 		} else if (pm.state == ProgramState.TRACKING)
 			pm.status_mgr.setStatus(
 					"Background can't be taken while tracking.",
@@ -239,8 +229,6 @@ public class CtrlMainGUI extends ControllerUI
 	{
 		if (pm.state == ProgramState.IDLE)
 		{
-			// CommonConfigs commonConfigs = new CommonConfigs(640, 480, 30, 0,
-			// "JMyron", null);
 			final CommonFilterConfigs commonConfigs = new CommonFilterConfigs(
 					640,
 					480,
@@ -248,21 +236,27 @@ public class CtrlMainGUI extends ControllerUI
 					0,
 					"AGCamLib",
 					null);
-			final ScreenDrawerConfigs scrn_drwr_cfgs = new ScreenDrawerConfigs(
-					null,
-					null,
-					null,
-					null,
-					null,
-					true,
-					null);
 			pm.initializeVideoProcessor(commonConfigs);
-			pm.getVideoProcessor().updateFiltersConfigs(
-					new FilterConfigs[] { scrn_drwr_cfgs });
+			configureScreenDrawerFilter("ScreenDrawer", commonConfigs,true);
 			pm.status_mgr.setStatus("Camera is Starting..", StatusSeverity.WARNING);
 		} else
 			pm.status_mgr.setStatus("Camera is already started.", StatusSeverity.ERROR);
 
+	}
+
+	public void configureScreenDrawerFilter(
+			final String name,
+			final CommonFilterConfigs configs,
+			final boolean enable_sec_screen)
+	{
+		pm.getVideoProcessor().updateFiltersConfigs(new FilterConfigs[]{
+				new ScreenDrawerConfigs(
+						name,
+						ui.getAwtVideoMain().getGraphics(),
+						ui.getAwtVideoSec().getGraphics(),
+						configs,
+						true,
+						pm.shape_controller)});
 	}
 
 	/**

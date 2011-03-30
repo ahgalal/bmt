@@ -14,7 +14,9 @@ import ui.FormZoneType;
 import utils.PManager;
 
 /**
- * @author Creative Handles all shapes to be displayed on the GfxPanel
+ * Handles all shapes to be displayed on the GfxPanel
+ * 
+ * @author Creative
  */
 public class ShapeController implements GfxPanelNotifiee
 {

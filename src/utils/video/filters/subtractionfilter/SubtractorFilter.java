@@ -8,12 +8,30 @@ import utils.video.filters.FilterConfigs;
 import utils.video.filters.Link;
 import utils.video.filters.VideoFilter;
 
+/**
+ * Subtracts the input image from a background image and produces an image of
+ * differences (binary image).
+ * 
+ * @author Creative
+ */
 public class SubtractorFilter extends VideoFilter
 {
 	private final FrameIntArray bg_image_gray;
 	private final SubtractionConfigs subtraction_configs;
 	private int[] local_data;
 
+	/**
+	 * Initializes the filter.
+	 * 
+	 * @param name
+	 *            filter's name
+	 * @param configs
+	 *            filter's configurations
+	 * @param link_in
+	 *            input Link for the filter
+	 * @param link_out
+	 *            output Link from the filter
+	 */
 	public SubtractorFilter(
 			final String name,
 			final FilterConfigs configs,
@@ -26,6 +44,12 @@ public class SubtractorFilter extends VideoFilter
 		bg_image_gray = new FrameIntArray();
 	}
 
+	/**
+	 * Subtract two images and produces a thresholed byte array image.
+	 * @param img1 input image 1
+	 * @param img2 input image 2
+	 * @return difference image as a byte array (binary image)
+	 */
 	@SuppressWarnings("unused")
 	private byte[] subtractGrayImages(final byte[] img1, final byte[] img2)
 	{
@@ -54,6 +78,9 @@ public class SubtractorFilter extends VideoFilter
 		return null;
 	}
 
+	/**
+	 * Updates the background image of the filter.
+	 */
 	public void updateBG()
 	{
 		if (link_in.getData() != null)

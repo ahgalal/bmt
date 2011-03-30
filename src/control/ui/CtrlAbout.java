@@ -3,11 +3,18 @@ package control.ui;
 import ui.About;
 import utils.PManager;
 
+/**
+ * Controller of the About Dialog box.
+ * @author Creative
+ */
 public class CtrlAbout extends ControllerUI
 {
 
 	private final About ui;
 
+	/**
+	 * Initializes class attributes.
+	 */
 	public CtrlAbout()
 	{
 		pm = PManager.getDefault();
@@ -15,6 +22,9 @@ public class CtrlAbout extends ControllerUI
 		ui.setController(this);
 	}
 
+	/**
+	 * Hides the window.
+	 */
 	public void btnOkAction()
 	{
 		show(false);

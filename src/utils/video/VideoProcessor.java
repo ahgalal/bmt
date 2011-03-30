@@ -1,7 +1,5 @@
 package utils.video;
 
-import java.awt.Component;
-import java.awt.Graphics;
 import java.awt.Point;
 
 import utils.PManager;
@@ -32,55 +30,57 @@ import utils.video.input.OpenCVModule;
 import utils.video.input.VidInputter;
 import control.ShapeController;
 
+/**
+ * Main Video Manager, manages all video operations.
+ * 
+ * @author Creative
+ */
 public class VideoProcessor
 {
 	private int[] bg_image_rgb;
 	private boolean bg_is_set;
 
-	private final Point ref_center_point;
-
 	private final FrameIntArray ref_fia;
-	private final Graphics gfx_sec_screen, gfx_main_screen;
-	private final Component main_screen, secondary_screen;
 
 	private VidInputter v_in;
 
-	private SubtractorFilter subtractor_filter;
-	private RatFinder rat_finder;
-	private RearingDetector rearing_det;
-	private VideoRecorder vid_rec;
-	private ScreenDrawer screen_drawer;
 	private boolean video_processor_enabled;
 	private final FilterManager filter_mgr;
 	private final CommonFilterConfigs common_configs;
 
+	/**
+	 * Gets the filter manager.
+	 * 
+	 * @return instance of the filter manager
+	 */
 	public FilterManager getFilterManager()
 	{
 		return filter_mgr;
 	}
 
-	public VideoProcessor(
-			final Component cmpnt_main_screen,
-			final Component cmpnt_secondary_screen)
+	/**
+	 * Initialization.
+	 */
+	public VideoProcessor()
 	{
 		common_configs = new CommonFilterConfigs(0, 0, 0, 0, null, null);
 		video_processor_enabled = true;
 		ref_fia = new FrameIntArray();
-		main_screen = cmpnt_main_screen;
-		secondary_screen = cmpnt_secondary_screen;
-		gfx_main_screen = main_screen.getGraphics();
-		gfx_sec_screen = secondary_screen.getGraphics();
-		ref_center_point = new Point();
 		filter_mgr = new FilterManager();
-
 	}
 
+	/**
+	 * Runnable for grabing image from the input library and pass it to all
+	 * filters.
+	 * 
+	 * @author Creative
+	 */
 	private class RunnableProcessor implements Runnable
 	{
 		@Override
 		public void run()
 		{
-			PManager.log.print("Started Video Processing", this);
+			PManager.log.print("Started Video Streaming", this);
 
 			try
 			{
@@ -123,21 +123,37 @@ public class VideoProcessor
 
 			filter_mgr.disableAll();
 
-			PManager.log.print("Ended Video Processing", this);
+			PManager.log.print("Ended Video Streaming", this);
 		}
 	}
 
+	/**
+	 * Display additional settings of the input video library.
+	 */
 	public void displayMoreSettings()
 	{
 		v_in.displayMoreSettings();
 	}
 
-	public int[] getRGBBackground()
+	/**
+	 * Updates the RGB background of the subtraction filter with the current
+	 * image, and returns the current image.
+	 * 
+	 * @return
+	 */
+	public int[] updateRGBBackground()
 	{
-		updateBG();
+		bg_image_rgb = ref_fia.frame_data;
+		bg_is_set = true;
 		return bg_image_rgb;
 	}
 
+	/**
+	 * Updates common configurations used by almost all filters.
+	 * 
+	 * @param common_configs
+	 *            common configurations to apply
+	 */
 	public void updateCommonConfigs(final CommonFilterConfigs common_configs)
 	{
 		if (common_configs.cam_index != -1)
@@ -152,17 +168,22 @@ public class VideoProcessor
 			this.common_configs.height = common_configs.height;
 		if (common_configs.width != -1)
 			this.common_configs.width = common_configs.width;
+		common_configs.validate();
 	}
 
+	/**
+	 * Initialization of the video library and vifeo filters.
+	 * 
+	 * @param ip_common_configs
+	 *            common configurations object, used by almost all filters
+	 * @return true: success
+	 */
 	public boolean initialize(final CommonFilterConfigs ip_common_configs)
 	{
 		updateCommonConfigs(ip_common_configs);
 
 		if (common_configs.vid_library.equals("JMF"))
-			v_in = new JMFModule(
-					common_configs.format,
-					common_configs.width,
-					common_configs.height);
+			v_in = new JMFModule();
 		else if (common_configs.vid_library.equals("JMyron"))
 			v_in = new JMyronModule();
 		else if (common_configs.vid_library.equals("OpenCV"))
@@ -172,6 +193,8 @@ public class VideoProcessor
 
 		initializeFilters();
 
+		v_in.setFormat(common_configs.format);
+
 		return v_in.initialize(
 				ref_fia,
 				common_configs.width,
@@ -179,7 +202,12 @@ public class VideoProcessor
 				common_configs.cam_index);
 	}
 
-	private void initializeFilters()
+	/**
+	 * Initializes video filters, and applies their configurations.
+	 * 
+	 * @return true: success
+	 */
+	private boolean initializeFilters()
 	{
 		final Point dims = new Point(common_configs.width, common_configs.height);
 
@@ -187,14 +215,18 @@ public class VideoProcessor
 		final Link grey_link = new Link(dims);
 		final Link marker_link = new Link(dims);
 
+		SubtractorFilter subtractor_filter;
+		RatFinder rat_finder;
+		RearingDetector rearing_det;
+		VideoRecorder vid_rec;
+		ScreenDrawer screen_drawer;
+		SourceFilter source_filter;
+
 		// ////////////////////////////////////
 		// Rat Finder
 		final RatFinderFilterConfigs rat_finder_configs = new RatFinderFilterConfigs(
 				"RatFinder",
-				100,
-				ref_center_point,
 				common_configs);
-
 		rat_finder = new RatFinder(
 				"RatFinder",
 				rat_finder_configs,
@@ -209,7 +241,7 @@ public class VideoProcessor
 				1000,
 				200,
 				200,
-				(Point) (rfd.getData()),
+				(rfd.getCenterPoint()),
 				common_configs);
 		rearing_det = new RearingDetector(
 				"RearingDetector",
@@ -228,9 +260,8 @@ public class VideoProcessor
 		// Screen Drawer
 		final ScreenDrawerConfigs scrn_drwr_cnfgs = new ScreenDrawerConfigs(
 				"ScreenDrawer",
-				gfx_main_screen,
-				gfx_sec_screen,
-				v_in,
+				null,
+				null,
 				common_configs,
 				true,
 				ShapeController.getDefault());
@@ -259,34 +290,57 @@ public class VideoProcessor
 				"Source Filter",
 				common_configs,
 				ref_fia);
-		final SourceFilter source_filter = new SourceFilter(
-				"Source Filter",
-				source_configs,
-				null,
-				src_rgb_link);
+		source_filter = new SourceFilter("Source Filter", source_configs, src_rgb_link);
 
+		// ////////////////////////////////////
+		// add filters to the filter manager
 		filter_mgr.addFilter(source_filter);
 		filter_mgr.addFilter(vid_rec);
 		filter_mgr.addFilter(subtractor_filter);
 		filter_mgr.addFilter(rearing_det);
 		filter_mgr.addFilter(rat_finder);
 		filter_mgr.addFilter(screen_drawer);
+
+		// ///////////////////////////////////
+		// check that configurations of all filters are valid
+		for (final VideoFilter vf : filter_mgr.getFilters())
+			if (!vf.getConfigs().validate())
+			{
+				PManager.log.print(
+						"Filter Configurations failed for: " + vf.getName(),
+						this,
+						StatusSeverity.ERROR);
+				return false;
+			}
+		return true;
 	}
 
+	/**
+	 * Checks if the Background (Subtraction filter) has been set.
+	 * 
+	 * @return
+	 */
 	public boolean isBgSet()
 	{
 		return bg_is_set;
 	}
 
+	/**
+	 * Starts processing of the video stream and activating most of the video
+	 * filters.
+	 */
 	public void startProcessing()
 	{
-		subtractor_filter.enable(true);
-		rat_finder.enable(true);
-		rearing_det.enable(true);
+		filter_mgr.enableFilter("SubtractionFilter", true);
+		filter_mgr.enableFilter("RatFinder", true);
+		filter_mgr.enableFilter("RearingDetector", true);
 		PManager.getDefault().state = ProgramState.TRACKING;
 		filter_mgr.submitDataObjects();
 	}
 
+	/**
+	 * Starts video streaming.
+	 */
 	public void startStreaming()
 	{
 		try
@@ -294,7 +348,7 @@ public class VideoProcessor
 			video_processor_enabled = true;
 			while (!v_in.startStream())
 				Thread.sleep(100);
-			screen_drawer.enable(true);
+			filter_mgr.enableFilter("ScreenDrawer", true);
 			final Thread th_main = new Thread(new RunnableProcessor());
 			th_main.start();
 			PManager.getDefault().state = ProgramState.STREAMING;
@@ -304,14 +358,20 @@ public class VideoProcessor
 		}
 	}
 
+	/**
+	 * Stops processing of the video stream.
+	 */
 	public void stopProcessing()
 	{
-		subtractor_filter.enable(false);
-		rearing_det.enable(false);
-		rat_finder.enable(false);
+		filter_mgr.enableFilter("SubtractionFilter", false);
+		filter_mgr.enableFilter("RearingDetector", false);
+		filter_mgr.enableFilter("RatFinder", false);
 		PManager.getDefault().state = ProgramState.STREAMING;
 	}
 
+	/**
+	 * Unloads the video library.
+	 */
 	public void unloadLibrary()
 	{
 		video_processor_enabled = false;
@@ -327,13 +387,13 @@ public class VideoProcessor
 		PManager.getDefault().state = ProgramState.IDLE;
 	}
 
-	private void updateBG()
-	{
-		bg_image_rgb = ref_fia.frame_data;
-		((SubtractorFilter) filter_mgr.getFilterByName("SubtractionFilter")).updateBG();
-		bg_is_set = true;
-	}
-
+	/**
+	 * Updates the configurations of filters
+	 * 
+	 * @param filters_configs
+	 *            an array of filters configurations, each configuration object
+	 *            will be applied to its designated filter.
+	 */
 	public void updateFiltersConfigs(final FilterConfigs[] filters_configs)
 	{
 		for (final FilterConfigs f_cfg : filters_configs)

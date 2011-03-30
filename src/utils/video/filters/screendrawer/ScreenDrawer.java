@@ -10,6 +10,11 @@ import utils.video.filters.FilterConfigs;
 import utils.video.filters.Link;
 import utils.video.filters.VideoFilter;
 
+/**
+ * Draws the incoming data streams on Graphics objects.
+ * 
+ * @author Creative
+ */
 public class ScreenDrawer extends VideoFilter
 {
 
@@ -18,6 +23,20 @@ public class ScreenDrawer extends VideoFilter
 	private final ScreenDrawerConfigs scrn_drwr_cnfgs;
 	private final Link link_in2;
 
+	/**
+	 * Initializes the filter.
+	 * 
+	 * @param name
+	 *            filter's name
+	 * @param configs
+	 *            filter's configurations
+	 * @param link_in
+	 *            main input Link for the filter
+	 * @param link_in2
+	 *            secondary input Link for the filter
+	 * @param link_out
+	 *            output Link from the filter
+	 */
 	public ScreenDrawer(
 			final String name,
 			final FilterConfigs configs,
@@ -53,11 +72,33 @@ public class ScreenDrawer extends VideoFilter
 		return super.enable(enable);
 	}
 
+	/**
+	 * Runnable for drawing the incoming data on the Graphics objects.
+	 * 
+	 * @author Creative
+	 */
 	private class RunnableDrawer implements Runnable
 	{
 		@Override
 		public void run()
 		{
+			int wait_count = 0;
+			while (scrn_drwr_cnfgs.ref_gfx_sec_screen == null
+					|| scrn_drwr_cnfgs.ref_gfx_sec_screen == null)
+				try
+				{
+					Thread.sleep(100);
+					wait_count++;
+					if (wait_count == 10)
+						PManager.log.print(
+								"Drawing Screen is NULL!",
+								this,
+								StatusSeverity.ERROR);
+				} catch (final InterruptedException e2)
+				{
+					e2.printStackTrace();
+				}
+
 			try
 			{
 				try

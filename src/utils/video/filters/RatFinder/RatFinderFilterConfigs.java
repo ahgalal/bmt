@@ -1,25 +1,28 @@
 package utils.video.filters.RatFinder;
 
-import java.awt.Point;
-
+import utils.PManager;
+import utils.StatusManager.StatusSeverity;
 import utils.video.filters.CommonFilterConfigs;
 import utils.video.filters.FilterConfigs;
 
+/**
+ * Configurations for the RatFinder filter.
+ * 
+ * @author Creative
+ */
 public class RatFinderFilterConfigs extends FilterConfigs
 {
 
-	public int max_thresh;
-
-	// public Point ref_center_point;
-
+	/**
+	 * Initializes the configurations.
+	 * @param filt_name name of the filter this configurations will be applied to
+	 * @param common_configs CommonConfigurations used by all filters
+	 */
 	public RatFinderFilterConfigs(
 			final String filt_name,
-			final int max_thresh,
-			final Point ref_center_point,
 			final CommonFilterConfigs common_configs)
 	{
 		super(filt_name, common_configs);
-		this.max_thresh = max_thresh;
 	}
 
 	@Override
@@ -28,10 +31,23 @@ public class RatFinderFilterConfigs extends FilterConfigs
 		final RatFinderFilterConfigs tmp_ratfiner_configs = (RatFinderFilterConfigs) configs;
 		if (tmp_ratfiner_configs.common_configs != null)
 			common_configs = tmp_ratfiner_configs.common_configs;
-		if (tmp_ratfiner_configs.max_thresh != -1)
-			max_thresh = tmp_ratfiner_configs.max_thresh;
-		// if(tmp_ratfiner_configs.ref_center_point!=null)
-		// ref_center_point=tmp_ratfiner_configs.ref_center_point;
+	}
+	
+	/**
+	 * Checks that All configurations are set. (for testing purposes only)
+	 * @return true: success
+	 */
+	public boolean validate()
+	{
+		if (common_configs==null)
+		{
+			PManager.log.print(
+					"Configs are not completely configured!",
+					this,
+					StatusSeverity.ERROR);
+			return false;
+		}
+		return true;
 	}
 
 }

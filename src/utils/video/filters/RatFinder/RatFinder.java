@@ -6,16 +6,27 @@ import utils.video.filters.FilterConfigs;
 import utils.video.filters.Link;
 import utils.video.filters.VideoFilter;
 
+/**
+ * Finds the moving object's position.
+ * @author Creative
+ *
+ */
 public class RatFinder extends VideoFilter
 {
-
 	private int tmp_max;
 	private final RatFinderFilterConfigs ratfinder_configs;
 	private final RatFinderData rat_finder_data;
+	
+	final int[] hori_sum;
+	final int[] vert_sum;
 
 	private final Point center_point;
 	private final int[] local_data;
 
+	/**
+	 * Draws a cross at the center of the moving object.
+	 * @param binary_image image to draw the cross on
+	 */
 	private void drawMarkerOnImg(final int[] binary_image)
 	{
 		System.arraycopy(binary_image, 0, local_data, 0, binary_image.length);
@@ -58,6 +69,13 @@ public class RatFinder extends VideoFilter
 		}
 	}
 
+	/**
+	 * Initializes the filter.
+	 * @param name filter's name
+	 * @param configs filter's configurations
+	 * @param link_in input Link for the filter
+	 * @param link_out output Link from the filter
+	 */
 	public RatFinder(
 			final String name,
 			final FilterConfigs configs,
@@ -67,7 +85,10 @@ public class RatFinder extends VideoFilter
 		super(name, configs, link_in, link_out);
 		ratfinder_configs = (RatFinderFilterConfigs) configs;
 		rat_finder_data = new RatFinderData("Rat Finder Data");
-		center_point = (Point) rat_finder_data.getData();
+		center_point = (Point) rat_finder_data.getCenterPoint();
+		
+		hori_sum = new int[ratfinder_configs.common_configs.height];
+		vert_sum = new int[ratfinder_configs.common_configs.width];
 
 		// super's stuff:
 		filter_data = rat_finder_data;
@@ -75,11 +96,14 @@ public class RatFinder extends VideoFilter
 		this.link_out.setData(local_data);
 	}
 
+	/**
+	 * Updates the center point (ie: finds the location of the moving object).
+	 * @param binary_image
+	 */
 	private void updateCentroid(final int[] binary_image)
 	{
-		tmp_max = ratfinder_configs.max_thresh;
-		final int[] hori_sum = new int[ratfinder_configs.common_configs.height];
-		final int[] vert_sum = new int[ratfinder_configs.common_configs.width];
+		tmp_max = 0;
+
 		for (int y = 0; y < ratfinder_configs.common_configs.height; y++) // Horizontal
 		// Sum
 		{
@@ -94,7 +118,7 @@ public class RatFinder extends VideoFilter
 			}
 		}
 
-		tmp_max = ratfinder_configs.max_thresh;
+		tmp_max = 0;
 		for (int x = 0; x < ratfinder_configs.common_configs.width; x++) // Vertical
 		// Sum
 		{
@@ -127,7 +151,7 @@ public class RatFinder extends VideoFilter
 	@Override
 	public boolean initialize()
 	{
-		return false;
+		return true;
 	}
 
 }

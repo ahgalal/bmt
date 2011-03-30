@@ -4,13 +4,29 @@ import utils.video.filters.FilterConfigs;
 import utils.video.filters.Link;
 import utils.video.filters.VideoFilter;
 
+/**
+ * Takes the data coming from the input device and puts it on its output link,
+ * to be used by other filters.
+ * 
+ * @author Creative
+ */
 public class SourceFilter extends VideoFilter
 {
-	private SourceFilterConfigs source_configs;
-	public SourceFilter(String name, FilterConfigs configs, Link linkIn, Link linkOut)
+	private final SourceFilterConfigs source_configs;
+
+	/**
+	 * Initializes the filter.
+	 * @param name	filter's name
+	 * @param configs common configurations
+	 * @param linkOut output link that will distribute the data on other filters
+	 */
+	public SourceFilter(
+			final String name,
+			final FilterConfigs configs,
+			final Link linkOut)
 	{
-		super(name, configs, linkIn, linkOut);
-		source_configs=(SourceFilterConfigs)configs;
+		super(name, configs, null,linkOut);
+		source_configs = (SourceFilterConfigs) configs;
 	}
 
 	@Override

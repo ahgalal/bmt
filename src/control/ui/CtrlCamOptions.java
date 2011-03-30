@@ -3,8 +3,6 @@ package control.ui;
 import ui.CamOptions;
 import utils.PManager;
 import utils.video.filters.CommonFilterConfigs;
-import utils.video.filters.FilterConfigs;
-import utils.video.filters.screendrawer.ScreenDrawerConfigs;
 import control.ZonesController;
 
 /**
@@ -59,31 +57,20 @@ public class CtrlCamOptions extends ControllerUI
 	 */
 	public void unloadAndLoadLibProcedures()
 	{
-		// if(lib_is_already_created==false | !library.equals(prev_library))
-		{
-			pm.unloadVideoProcessor();
-			final CommonFilterConfigs common_configs = new CommonFilterConfigs(
-					width,
-					height,
-					frame_rate,
-					cam_num,
-					library,
-					format);
-			final ScreenDrawerConfigs scrn_drwr_cfgs = new ScreenDrawerConfigs(
-					null,
-					null,
-					null,
-					null,
-					null,
-					true,
-					null);
-			pm.initializeVideoProcessor(common_configs);
-			pm.getVideoProcessor().updateFiltersConfigs(
-					new FilterConfigs[] { scrn_drwr_cfgs });
-			ZonesController.getDefault().setWidthandHeight(width, height);
-			// lib_is_already_created=true;
-			// prev_library = library.substring(0);
-		}
+		pm.unloadVideoProcessor();
+		final CommonFilterConfigs common_configs = new CommonFilterConfigs(
+				width,
+				height,
+				frame_rate,
+				cam_num,
+				library,
+				format);
+		pm.initializeVideoProcessor(common_configs);
+		PManager.main_gui.configureScreenDrawerFilter(
+				"ScreenDrawer",
+				null,
+				true);
+		ZonesController.getDefault().setWidthandHeight(width, height);
 	}
 
 	/**

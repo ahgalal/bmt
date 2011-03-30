@@ -1,42 +1,25 @@
 package utils.video.input;
 
-import java.awt.Graphics;
-import java.awt.Image;
-import java.awt.image.BufferedImage;
-import java.awt.image.PixelGrabber;
-
 import javax.media.Buffer;
-import javax.media.format.VideoFormat;
-import javax.media.util.BufferToImage;
 
 import utils.video.ImageManipulator;
 
+/**
+ * Image frame for JMF video library.
+ * @author Creative
+ *
+ */
 public class JMFCamFrame
 {
 	private Buffer buffer = null;
-	private final BufferedImage displayable_bufimg;
-	private BufferedImage tmp_bufimg;
+	private int width;
+	private int height;
 
-	public static byte[] intRGB2ByteRGB(final int[] dImg_1DimInt)
-	{ // 4ms
-
-		final byte[] res = new byte[dImg_1DimInt.length * 3];
-		for (int i = 0; i < res.length; i += 3)
-		{
-			res[i] = (byte) ((byte) dImg_1DimInt[i / 3] & (255)); // B
-			res[i + 1] = (byte) ((dImg_1DimInt[i / 3] >> 8) & (255)); // G
-			res[i + 2] = (byte) ((byte) (dImg_1DimInt[i / 3] >> 16) & (255)); // R
-
-		}
-
-		return res;
-	}
-
-	public Buffer getBuffer()
-	{
-		return buffer;
-	}
-
+	/**
+	 * Converts YUV frame to RGB byte frame.
+	 * @param yuv_data1 YUV data byte array 
+	 * @return byte array representing the RGB image
+	 */
 	public byte[] convertYUV2RGB(final byte[] yuv_data1)
 	{
 		final byte[] yuv_data = (byte[]) buffer.getData();
@@ -51,9 +34,6 @@ public class JMFCamFrame
 			final int u = yuv_data[i + 1] & 0xff;
 			final int y2 = yuv_data[i + 2] & 0xff;
 			final int v = yuv_data[i + 3] & 0xff;
-
-			// System.out.print("y1:" + y1 +"  u1:" + u +"  y2:" + y2 +"  v:" +
-			// v + "\n");
 
 			int b1, r1, g1, r2, g2, b2;
 
@@ -109,245 +89,81 @@ public class JMFCamFrame
 		return rgb_data;
 	}
 
-	/*
-	 * public void drawMarkerOnDisplayableBufferedImg(int pos_x,int pos_y) {
-	 * byte[] buf_data=(byte[]) buffer.getData(); try { int mark_length=10; int
-	 * j=(pos_x + (pos_y-mark_length)*width)*3; int i=(pos_x-mark_length +
-	 * pos_y*width)*3; for(int c=0;c<mark_length*2;c++)//i<(pos_x+mark_length +
-	 * pos_y*width)*3 { if(i<0) i=0; if(j<0) j=0; if(i<0) i=pos_y*width*3;
-	 * if(j<0) j=pos_x*3; buf_data[i]=buf_data[i+1]=0; buf_data[i+2]=(byte) 255;
-	 * buf_data[j]=buf_data[j+1]=0; buf_data[j+2]=(byte) 255; j+=width*3; i+=3;
-	 * } //buffer.setData(buf_data); } catch (Exception e) {
-	 * System.err.print("Error ya 3am el 7ag, fel index !"); } }
+	/**
+	 * Updates buffer's data.
+	 * @param newdata new buffer's data
 	 */
-
-	public BufferedImage getBufImg(final int ImageType)
-	{
-		updateDiplayableBufImg();
-		tmp_bufimg = new BufferedImage(width, height, ImageType);
-		tmp_bufimg.getGraphics().drawImage(
-				displayable_bufimg,
-				0,
-				0,
-				width,
-				height,
-				0,
-				height,
-				width,
-				0,
-				null);
-		return tmp_bufimg;
-	}
-
-	private void updateDiplayableBufImg()
-	{
-		final BufferToImage b2i = new BufferToImage((VideoFormat) buffer.getFormat());
-		final Image tmp_img = b2i.createImage(buffer);
-		displayable_bufimg.getGraphics().drawImage(tmp_img, 0, 0, null);
-	}
-
 	public void updateBufferData(final byte[] newdata)
 	{
 		buffer.setData(newdata);
 	}
 
+	/**
+	 * Gets RGB integerr array for the image.
+	 * @return RGB integer array representing the image's data
+	 */
 	public int[] getRGBIntArray()
 	{
 		return ImageManipulator.byteRGB2IntRGB((byte[]) buffer.getData());
 	}
 
+	/**
+	 * Gets the image as a 2D integer array.
+	 * @return 2D integer array representing the RGB image
+	 */
 	public int[][] get2DIntArray()
 	{
-		return intArrayTo2DIntArray(getRGBIntArray());
+		return ImageManipulator.intArrayTo2DIntArray(getRGBIntArray(),width,height);
 	}
 
-	private int[][] intArrayTo2DIntArray(final int[] arr)
-	{
-		final int[][] res = new int[width][height];
-		for (int i = 0; i < arr.length; i++)
-		{
-			res[i % width][i / width] = (byte) arr[i];
-		}
-		return res;
-	}
-
+	/**
+	 * Gets the image's RGB data as an array of bytes.
+	 * @return byte arry representing the image's RGB data
+	 */
 	public byte[] getRGBByteArray()
 	{
 		return (byte[]) buffer.getData();
 	}
 
+	/**
+	 * Gets the data of the image in Grayscale format.
+	 * @return byte array representing the image's data
+	 */
 	public byte[] getGrayByteArray()
 	{
-		return rgbByteArray2GrayByteArray((byte[]) buffer.getData());
+		return ImageManipulator.rgbByteArray2GrayByteArray((byte[]) buffer.getData());
 	}
 
-	private byte[] rgbByteArray2GrayByteArray(final byte[] rgb_byte_arr)
-	{
-		final byte[] gray_arr = new byte[rgb_byte_arr.length / 3];
-		int r, g, b;
-		for (int i = 0; i < rgb_byte_arr.length; i += 3)
-		{
-			r = rgb_byte_arr[i + 2] & 0xff;
-			g = rgb_byte_arr[i + 1] & 0xff;
-			b = rgb_byte_arr[i] & 0xff;
-			gray_arr[i / 3] = (byte) (0.2989 * r + 0.5870 * g + 0.1140 * b);
-		}
-		return gray_arr;
-	}
-
-	private byte rgb2GrayValue(final int r, final int g, final int b)
-	{
-		final byte gray = (byte) (0.2989 * r + 0.5870 * g + 0.1140 * b);
-		// System.out.print(Integer.toString(r)+ " "
-		// +Integer.toString(g)+" "+Integer.toString(b)+"\n");
-		return gray;
-	}
-
-	private byte[][] d_img_2_dim_gray;
-	private int[] d_img_1_dim_int;
-	private byte[] d_img_1_dim_byte_gray;
-	private BufferedImage p_rgb_img_buf;
-	private int width;
-	private int height;
-
+	/**
+	 * Gets the image's width.
+	 * @return integer with the value of the image's width
+	 */
 	public int getWidth()
 	{
 		return width;
 	}
 
+	/**
+	 * Gets the image's height.
+	 * @return integer with the value of the image's height
+	 */
 	public int getHeight()
 	{
 		return height;
 	}
 
+	/**
+	 * Initializes the frame data and parameters.
+	 * @param data image data to initialize the frame with
+	 * @param w image's width
+	 * @param h image's height
+	 */
 	public JMFCamFrame(final byte[] data, final int w, final int h)
 	{
 		width = w;
 		height = h;
 		buffer = new Buffer();
-		displayable_bufimg = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
 		updateBufferData(data);
-		updateDiplayableBufImg();
-		constructImage(displayable_bufimg);
-
-	}
-
-	public BufferedImage getRgbImgBuf()
-	{
-		return p_rgb_img_buf;
-	}
-
-	public void setRgbImgBuf(final BufferedImage rgbImgBuf)
-	{
-		constructImage(rgbImgBuf);
-	}
-
-	public byte[][] getImgTo2DimGray()
-	{
-		if (d_img_2_dim_gray != null)
-			return d_img_2_dim_gray;
-		else if (d_img_1_dim_byte_gray != null)
-		{
-			d_img_2_dim_gray = singleDim2DoubleDim(d_img_1_dim_byte_gray, width, height);
-			return d_img_2_dim_gray;
-		} else
-		{
-			d_img_1_dim_byte_gray = rgbInt2GrayByteArray(d_img_1_dim_int);
-			d_img_2_dim_gray = singleDim2DoubleDim(d_img_1_dim_byte_gray, width, height);
-			return d_img_2_dim_gray;
-		}
-	}
-
-	public void setImage(final int[] img_1Dim, final int width, final int height)
-	{
-		d_img_1_dim_int = img_1Dim;
-		this.width = width;
-		this.height = height;
-	}
-
-	// Manipulation Methods:
-	private byte[] rgbInt2GrayByteArray(final int[] rgb_image)
-	{
-		int r = 0, g = 0, b = 0, k = 0;
-		final byte[] gray_array = new byte[rgb_image.length];
-		for (int i = 0; i < rgb_image.length; i++)
-		{
-			if (i % 3 == 0) // Blue
-				b = rgb_image[i];
-			else if ((i + 2) % 3 == 0) // Green
-				g = rgb_image[i];
-			else if ((i + 1) % 3 == 0) // Red
-				r = rgb_image[i];
-
-			if (i > 0 && (i + 1) % 3 == 0)
-			{
-				gray_array[k] = rgb2GrayValue(r, g, b);
-				k++;
-			}
-
-			gray_array[i] = rgb2GrayValue(
-					(byte) (rgb_image[i] >> 16),
-					(byte) (rgb_image[i] >> 8),
-					(byte) (rgb_image[i]));
-
-		}
-		return gray_array;
-	}
-
-	private byte rgb2GrayValue(final byte r, final byte g, final byte b)
-	{
-		return (byte) ((r + g + b) / 3);
-	}
-
-	private byte[][] singleDim2DoubleDim(
-			final byte[] imgin,
-			final int width,
-			final int height)
-	{
-		final byte[][] res = new byte[width][height];
-		for (int i = 0; i < imgin.length; i++)
-		{
-			res[i % width][i / width] = imgin[i];
-		}
-		return res;
-	}
-
-	public void clearFrameData()
-	{
-		d_img_1_dim_int = null;
-		d_img_1_dim_byte_gray = null;
-		d_img_2_dim_gray = null;
-		p_rgb_img_buf = null;
-	}
-
-	public Graphics getGraphicsObject()
-	{
-		return p_rgb_img_buf.getGraphics();
-	}
-
-	private void constructImage(final BufferedImage rgbImgBuf)
-	{
-		p_rgb_img_buf = rgbImgBuf;
-		width = rgbImgBuf.getWidth();
-		height = rgbImgBuf.getHeight();
-
-		final PixelGrabber pg = new PixelGrabber(
-				rgbImgBuf,
-				0,
-				0,
-				rgbImgBuf.getWidth(),
-				rgbImgBuf.getHeight(),
-				false);
-		try
-		{
-			pg.grabPixels();
-		} catch (final InterruptedException e)
-		{
-			e.printStackTrace();
-		}
-		d_img_1_dim_int = p_rgb_img_buf.getRGB(0, 0, width, height, null, 0, width);
-		// d_img_1_dim_int = (int[]) pg.getPixels();
-
 	}
 
 }

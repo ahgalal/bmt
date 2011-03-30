@@ -110,21 +110,6 @@ public class JMFGrabber implements Effect
 		return 0;
 	}
 
-	public byte[] grayByteArray2RGBByteArray(final byte[] grayarr) // 3ms
-	{
-		// long tstart=System.currentTimeMillis();
-		final byte[] rgbarr = new byte[grayarr.length * 3];
-		int valgray;
-		for (int i = 0; i < grayarr.length * 3; i += 3)
-		{
-			valgray = grayarr[i / 3];
-			rgbarr[i] = rgbarr[i + 1] = rgbarr[i + 2] = (byte) valgray;
-		}
-		// long tend=System.currentTimeMillis();
-		// System.out.print("Duration: "+(tend-tstart) + "\n");
-		return rgbarr;
-	}
-
 	public JMFGrabber(final int width, final int height, final FrameIntArray fia)
 	{
 		this.fia = fia;
@@ -137,19 +122,6 @@ public class JMFGrabber implements Effect
 			null_data[j] = (byte) 0xFF;
 	}
 
-
-
-	/*
-	 * public void setBackGroundImage(Buffer buf) { if(bg_frame==null) bg_frame
-	 * = new JMFCamFrame(JMFCamFrame.intRGB2ByteRGB( (int[])
-	 * buf.getData()),width,height); else
-	 * bg_frame.updateBufferData(JMFCamFrame.intRGB2ByteRGB( (int[])
-	 * buf.getData())); } public void setBackGroundImage() { byte[] data = new
-	 * byte[width*height*3]; System.arraycopy(curr_frame.getRGBByteArray(), 0,
-	 * data, 0, curr_frame.getRGBByteArray().length); if(bg_frame==null)
-	 * bg_frame = new JMFCamFrame(data,width,height); else
-	 * bg_frame.updateBufferData(data); }
-	 */
 	Format matches(final Format in, final Format outs[])
 	{
 		for (int i = 0; i < outs.length; i++)
@@ -175,26 +147,6 @@ public class JMFGrabber implements Effect
 		outformatt = output;
 		outformats[0] = output;
 		return output;
-
-		/*
-		 * //outformats[0]=outformatt = output; //return outformatt; if (output
-		 * == null || matches(output, outformats) == null) return null;
-		 * RGBFormat incoming = (RGBFormat) output; Dimension size =
-		 * incoming.getSize(); int maxDataLength = incoming.getMaxDataLength();
-		 * int lineStride = incoming.getLineStride(); float frameRate =
-		 * incoming.getFrameRate(); int flipped = incoming.getFlipped(); int
-		 * endian = incoming.getEndian(); if (size == null) return null; if
-		 * (maxDataLength < size.width * size.height * 3) maxDataLength =
-		 * size.width * size.height * 3; if (lineStride < size.width * 3)
-		 * lineStride = size.width * 3; if (flipped != Format.FALSE) flipped =
-		 * Format.FALSE; outformatt = outformats[0].intersects(new
-		 * RGBFormat(size, maxDataLength, null, frameRate, Format.NOT_SPECIFIED,
-		 * Format.NOT_SPECIFIED, Format.NOT_SPECIFIED, Format.NOT_SPECIFIED,
-		 * Format.NOT_SPECIFIED, lineStride, Format.NOT_SPECIFIED,
-		 * Format.NOT_SPECIFIED)); //System.out.println("final outputformat = "
-		 * + outputFormat); return outformatt;
-		 */
-
 	}
 
 	@Override
@@ -231,28 +183,4 @@ public class JMFGrabber implements Effect
 	{
 		return null;
 	}
-
-	/*
-	 * private void reduceNoise(JMFCamFrame frame,int mask_length) { byte[]
-	 * newdata =new byte[width*height*3]; byte[] olddata =
-	 * frame.getRGBByteArray(); int sum=0; for(int
-	 * x=0+mask_length/2;x<width-mask_length/2;x++) { for(int
-	 * y=0+mask_length/2;y<height-mask_length/2;y++) { for(int c=0;c<3;c++)
-	 * //color loop { for(int m =-mask_length/2;m<=mask_length/2;m++) { for(int
-	 * n =-mask_length/2;n<=mask_length/2;n++) { sum+= (
-	 * olddata[((y+m)*width+(x+n))*3 +c] ); } } newdata[((y)*width+x)*3
-	 * +c]=(byte) (sum/(mask_length*mask_length)); sum=0; } } }
-	 * frame.getBuffer().setData(newdata); }
-	 */
-
-	/*
-	 * private BufferedImage buf2BufferedImage(Buffer bufin) { BufferedImage
-	 * bufimg = new BufferedImage(width,height,BufferedImage.TYPE_INT_RGB);
-	 * //bufimg.setRGB(0, 0, width,height, byteArr2RGBIntArr((byte[])
-	 * bufin.getData()), 0, width); BufferToImage b2i = new
-	 * BufferToImage((VideoFormat)bufin.getFormat());
-	 * bufimg.getGraphics().drawImage(b2i.createImage(bufin), 0,
-	 * 0,width,height,0,height,width,0, null) ; return bufimg; }
-	 */
-
 }

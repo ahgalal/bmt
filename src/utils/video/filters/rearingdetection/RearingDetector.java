@@ -4,16 +4,28 @@ import utils.video.filters.FilterConfigs;
 import utils.video.filters.Link;
 import utils.video.filters.VideoFilter;
 
+/**
+ * Detects whether the rat is rearing or not.
+ * @author Creative
+ *
+ */
 public class RearingDetector extends VideoFilter
 {
 	private final RearingFilterConfigs rearing_configs;
 	private final RearingData rearing_data;
 
-	public boolean rearing_now;
-	public Integer normal_rat_area;
-	public boolean is_rearing;
-	public int current_rat_area;
+	private boolean rearing_now;
+	private int normal_rat_area;
+	private boolean is_rearing;
+	private int current_rat_area;
 
+	/**
+	 * Initializes the filter.
+	 * @param name filter's name
+	 * @param configs filter's configurations
+	 * @param link_in input Link for the filter
+	 * @param link_out output Link from the filter
+	 */
 	public RearingDetector(final String name, final FilterConfigs configs,Link link_in,Link link_out)
 	{
 		super(name, configs,link_in,link_out);
@@ -26,6 +38,10 @@ public class RearingDetector extends VideoFilter
 		rearing_data.setRearing(false);
 	}
 
+	/**
+	 * Used to train the filter of the white area of the rat when (walking/rearing).
+	 * @param rearing whether the rat is rearing now or not
+	 */
 	public void rearingNow(final boolean rearing)
 	{
 
@@ -46,6 +62,11 @@ public class RearingDetector extends VideoFilter
 
 	}
 
+	/**
+	 * Runnable to calculate the mean rat area.
+	 * @author Creative
+	 *
+	 */
 	private class NormalRatAreaThread implements Runnable
 	{
 		private static final long rat_area_training_time = 3;

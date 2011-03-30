@@ -243,7 +243,7 @@ public class ZonesModule extends Module
 		{
 			rat_finder_data = (RatFinderData) data;
 			this.data[0] = rat_finder_data;
-			current_position = (Point) rat_finder_data.getData();
+			current_position = (Point) rat_finder_data.getCenterPoint();
 		}
 	}
 

@@ -69,8 +69,8 @@ public class CtrlOptionsWindow extends ControllerUI
 			final RearingFilterConfigs rearing_configs = new RearingFilterConfigs(
 					"RearingDetector",
 					rearing_thresh,
-					200,
-					200,
+					200, //TODO: add set margin option in GUI
+					200, //TODO: add set margin option in GUI
 					null,
 					null);
 
