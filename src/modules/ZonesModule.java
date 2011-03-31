@@ -10,6 +10,11 @@ import utils.video.filters.Data;
 import utils.video.filters.RatFinder.RatFinderData;
 import control.ZonesController;
 
+/**
+ * Manages zones counters (entrance counters, central time, etc..)
+ * 
+ * @author Creative
+ */
 public class ZonesModule extends Module
 {
 
@@ -35,6 +40,14 @@ public class ZonesModule extends Module
 
 	private final ZonesModuleConfigs zones_configs;
 
+	/**
+	 * Initializes the module.
+	 * 
+	 * @param name
+	 *            module instance's name
+	 * @param configs
+	 *            ZonesModuleConfigs object to configure the module
+	 */
 	public ZonesModule(final String name, final ZonesModuleConfigs configs)
 	{
 		super(name, configs);
@@ -135,21 +148,42 @@ public class ZonesModule extends Module
 		}
 	}
 
+	/**
+	 * Gets the number of all zones entrance (when the object moves from one
+	 * zone to another, this counter is incremented).
+	 * 
+	 * @return number of all zones entrances
+	 */
 	public int getAllEntrance()
 	{
 		return all_entrance;
 	}
 
+	/**
+	 * Gets the number of central zones entrances.
+	 * 
+	 * @return number of central zones entrances
+	 */
 	public int getCentralEntrance()
 	{
 		return central_entrance;
 	}
 
+	/**
+	 * Gets the zone number of the zone which the object is in.
+	 * 
+	 * @return zone number of the current zone
+	 */
 	public int getCurrentZoneNumber()
 	{
 		return current_zone_num;
 	}
 
+	/**
+	 * Gets totoal time spent in the central zones.
+	 * 
+	 * @return total time spent in the central zones
+	 */
 	public float getCentralTime()
 	{
 		return central_zone_time;
@@ -163,6 +197,7 @@ public class ZonesModule extends Module
 	 */
 	private void addPointToPosArray(final Point pos)
 	{
+		// TODO: implement to add the functionality of path recording.
 		// we need to add some tolerance due to noise
 		// path.add(new Point(pos.x,pos.y));
 	}
@@ -243,7 +278,7 @@ public class ZonesModule extends Module
 		{
 			rat_finder_data = (RatFinderData) data;
 			this.data[0] = rat_finder_data;
-			current_position = (Point) rat_finder_data.getCenterPoint();
+			current_position = rat_finder_data.getCenterPoint();
 		}
 	}
 
@@ -253,6 +288,11 @@ public class ZonesModule extends Module
 
 	}
 
+	/**
+	 * Gets total distance covered by the object.
+	 * 
+	 * @return
+	 */
 	public long getTotalDistance()
 	{
 		return total_distance;
@@ -268,8 +308,6 @@ public class ZonesModule extends Module
 			total_distance += current_position.distance(old_position) / scale;
 	}
 
-	// Scaling measurement function...takes (x1,y1) & (x2,y2) & resolution of
-	// the picture width & height
 	/**
 	 * Calculates the scale between real world and the cam image. using the
 	 * distance between two points on the screen and the distance between them

@@ -82,6 +82,9 @@ public class ExcelWrapper
 		return nxt_row_idx - 1;
 	}
 
+	/**
+	 * Initializes the excel objects.
+	 */
 	private void init()
 	{
 		wb = new XSSFWorkbook();

@@ -3,6 +3,11 @@ package modules;
 import utils.video.filters.Data;
 import utils.video.filters.rearingdetection.RearingData;
 
+/**
+ * Rearing module, keeps record of number of rearings of the rat.
+ * 
+ * @author Creative
+ */
 public class RearingModule extends Module
 {
 
@@ -11,8 +16,14 @@ public class RearingModule extends Module
 	private RearingData rearing_data;
 	private final RearingModuleConfigs rearing_configs;
 
-	// private RearingConfigs
-
+	/**
+	 * Initializes the module.
+	 * 
+	 * @param name
+	 *            module instance's name
+	 * @param configs
+	 *            RearingModuleConfigs to configure the module
+	 */
 	public RearingModule(final String name, final RearingModuleConfigs configs)
 	{
 		super(name, configs);
@@ -22,16 +33,29 @@ public class RearingModule extends Module
 		initialize();
 	}
 
+	/**
+	 * Increments the rearing counter, called by GUI when manual rearing
+	 * detection is active.
+	 */
 	public void incrementRearingCounter()
 	{
 		rearing_ctr++;
 	}
 
+	/**
+	 * Decrements the rearing counter, called by GUI when manual rearing
+	 * detection is active.
+	 */
 	public void decrementRearingCounter()
 	{
 		rearing_ctr--;
 	}
 
+	/**
+	 * Gets the number of rearings the rat has made in this experiment.
+	 * 
+	 * @return number of rearings till now.
+	 */
 	public int getRearingCounter()
 	{
 		return rearing_ctr;

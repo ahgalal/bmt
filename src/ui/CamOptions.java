@@ -20,9 +20,10 @@ import control.ui.CtrlCamOptions;
  */
 public class CamOptions extends BaseUI
 {
-	// txt_width.getText()
-	CtrlCamOptions controller; // @jve:decl-index=0:
 
+	/**
+	 * Initializes the GUI components.
+	 */
 	public CamOptions()
 	{
 		createShell();
@@ -46,7 +47,7 @@ public class CamOptions extends BaseUI
 	private Combo cmbo_cam_lib = null;
 	private Label lbl_cam_lib = null;
 	private Button btn_jmyron_settings = null;
-
+	private CtrlCamOptions controller; // @jve:decl-index=0:
 	private Button btn_cancel = null;
 
 	/**

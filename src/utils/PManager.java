@@ -12,12 +12,12 @@ import control.ShapeController;
 import control.ZonesController;
 import control.ui.CtrlAbout;
 import control.ui.CtrlCamOptions;
+import control.ui.CtrlDrawZones;
 import control.ui.CtrlExperimentForm;
 import control.ui.CtrlGroupsForm;
 import control.ui.CtrlMainGUI;
 import control.ui.CtrlOptionsWindow;
 import control.ui.CtrlRatInfoForm;
-import control.ui.CtrlDrawZones;
 
 /**
  * Program Manager, contains the main function, creates GUI and Controllers.
@@ -27,14 +27,84 @@ import control.ui.CtrlDrawZones;
 public class PManager
 {
 
+	/**
+	 * Defines program states.
+	 * 
+	 * @author Creative
+	 */
 	public enum ProgramState
 	{
+		/**
+		 * IDLE: doing nothing, STREAMING: displaying video frames on the
+		 * screen, TRACKING: tracking the object: STREAMING + TRACKING,
+		 * RECORDING: recording video: STREAMING + TRACKING + RECORDING
+		 */
 		IDLE, RECORDING, STREAMING, TRACKING;
 	}
 
 	private static PManager default_me;
+	/**
+	 * MainGUI static instance, Main GUI screen of the program.
+	 */
 	public static CtrlMainGUI main_gui;
+	/**
+	 * CamOptions GUI instance, used to change camera options.
+	 */
+	public CtrlCamOptions cam_options;
+	/**
+	 * DrawZones GUI instance.
+	 */
+	public CtrlDrawZones drw_zns;
+	/**
+	 * Excel engine instance, used to write data to excel sheets.
+	 */
+	public ExcelEngine excel_engine;
+	/**
+	 * Experiment form, used to Add/Edit experiment information.
+	 */
+	public CtrlExperimentForm frm_exp;
+	/**
+	 * Groups form, used to Add/Edit groups of rats.
+	 */
+	public CtrlGroupsForm frm_grps;
+	/**
+	 * Rat form, used to enter next rat number/group.
+	 */
+	public CtrlRatInfoForm frm_rat;
+	/**
+	 * Logger instance, used to log messages to the console.
+	 */
+	public static Logger log;
+	/**
+	 * Options window, used to alter filters/modules options.
+	 */
+	public CtrlOptionsWindow options_window;
+	/**
+	 * ShapeController instance, used to handle the graphical representation of
+	 * zones.
+	 */
+	public final ShapeController shape_controller;
+	/**
+	 * Program's state, check the documentation of ProgramState enumeration.
+	 */
+	public ProgramState state;
+	/**
+	 * Status manager instance, manages the status label at the bottom of the
+	 * MainGUI.
+	 */
+	public StatusManager status_mgr;
+	private final VideoProcessor vp;
+	private final ZonesController zone_controller;
+	/**
+	 * About Dialog box instance, displays credits of this software.
+	 */
+	public CtrlAbout about;
 
+	/**
+	 * Gets the Singleton object.
+	 * 
+	 * @return Static PManager instance
+	 */
 	public static PManager getDefault()
 	{
 		return default_me;
@@ -55,22 +125,6 @@ public class PManager
 		}
 		display.dispose();
 	}
-
-	public CtrlCamOptions cam_options;
-	public CtrlDrawZones drw_zns;
-	public ExcelEngine excel_engine;
-	public CtrlExperimentForm frm_exp;
-	public CtrlGroupsForm frm_grps;
-	public CtrlRatInfoForm frm_rat;
-	private GfxPanel gfx_panel;
-	public static Logger log;
-	public CtrlOptionsWindow options_window;
-	public final ShapeController shape_controller;
-	public ProgramState state;
-	public StatusManager status_mgr;
-	private final VideoProcessor vp;
-	private final ZonesController zone_controller;
-	public CtrlAbout about;
 
 	/**
 	 * Initializes GUI controllers, Model Controllers and Video Controller.
@@ -99,11 +153,11 @@ public class PManager
 		vp = new VideoProcessor();
 	}
 
-	public GfxPanel getGfxPanel()
-	{
-		return gfx_panel;
-	}
-
+	/**
+	 * Gets the VideoProcessor instance.
+	 * 
+	 * @return VideoProcessor instance
+	 */
 	public VideoProcessor getVideoProcessor()
 	{
 		return vp;
@@ -131,7 +185,6 @@ public class PManager
 	 */
 	public void linkGFXPanelWithShapeCtrlr(final GfxPanel gfx_panel)
 	{
-		this.gfx_panel = gfx_panel;
 		shape_controller.linkWithGFXPanel(gfx_panel);
 	}
 

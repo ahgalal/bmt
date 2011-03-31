@@ -12,6 +12,14 @@ public class Logger
 
 	private boolean enabled = true; // is it enabled?
 
+	/**
+	 * Prints messages on the screen, along with the caller object name.
+	 * 
+	 * @param str
+	 *            String to print to the console
+	 * @param o
+	 *            caller object (caller object should send "this")
+	 */
 	public void print(final String str, final Object o)
 	{
 		if (enabled)
@@ -19,12 +27,12 @@ public class Logger
 	}
 
 	/**
-	 * Prints message to console.
+	 * Prints messages on the screen, along with the caller object name.
 	 * 
 	 * @param str
-	 *            message string
+	 *            String to print to the console
 	 * @param o
-	 *            object that sends the message
+	 *            caller object (caller object should send "this")
 	 * @param type
 	 *            message type
 	 */

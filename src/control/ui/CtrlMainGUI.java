@@ -224,7 +224,7 @@ public class CtrlMainGUI extends ControllerUI
 	{
 		if (pm.state == ProgramState.STREAMING)
 		{
-			pm.getGfxPanel().setBackground(pm.getVideoProcessor().updateRGBBackground());
+			pm.drw_zns.setBackground(pm.getVideoProcessor().updateRGBBackground());
 			((SubtractorFilter) pm.getVideoProcessor()
 					.getFilterManager()
 					.getFilterByName("SubtractionFilter")).updateBG();

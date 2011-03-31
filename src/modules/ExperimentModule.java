@@ -142,7 +142,7 @@ public class ExperimentModule extends Module
 
 		for (int i = 0; i < measurements_list.length; i++)
 		{
-			rat_tmp.setValueByMeasurementName(
+			rat_tmp.setValueByParameterName(
 					measurements_list[i],
 					data[getIndexByStringValue(code_names, measurements_list[i])]);
 		}

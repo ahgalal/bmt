@@ -80,6 +80,11 @@ public class CtrlDrawZones extends ControllerUI
 			zone_controller.loadZonesFromFile(file_name);
 	}
 
+	public void setBackground(int[] img)
+	{
+		ui.getGFXPanel().setBackground(img);
+	}
+
 	public void btn_hide_Action()
 	{
 		zone_controller.updateZoneMap();

@@ -86,6 +86,11 @@ public class RatInfoForm extends BaseUI
 		});
 	}
 
+	/**
+	 * Gets the SWT shell of this GUI.
+	 * 
+	 * @return SWT shell of this GUI window
+	 */
 	public Shell getShell()
 	{
 		return sShell;

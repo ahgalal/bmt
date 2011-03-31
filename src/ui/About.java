@@ -12,17 +12,24 @@ import org.eclipse.swt.widgets.Text;
 import control.ui.ControllerUI;
 import control.ui.CtrlAbout;
 
+/**
+ * About dialog box, displays program description and credits.
+ * 
+ * @author Creative
+ */
 public class About extends BaseUI
 {
-	CtrlAbout controller; // @jve:decl-index=0:
+	@SuppressWarnings("unused")
+	private CtrlAbout controller; // @jve:decl-index=0:
 
+	/**
+	 * Initializes the GUI components.
+	 */
 	public About()
 	{
 		createSShell();
 		super.sShell = sShell;
 	}
-
-	// private Ctrl_About controller;
 
 	private Shell sShell = null; // @jve:decl-index=0:visual-constraint="4,7"
 	private Label lbl_proj_desc = null;
@@ -83,39 +90,14 @@ public class About extends BaseUI
 		txt_owner_email.setText("ceng.ahmedgalal@gmail.com\na.mohamed.aly0@gmail.com\nmido_emak@hotmail.com\neltabbal@gmail.com");
 	}
 
-	/*
-	 * Temporary main generation
-	 */
-	// public static void main(String[] args) {
-	// // before you run this, make sure to set up the following in
-	// // the launch configuration (Arguments->VM Arguments) for the correct SWT
-	// lib. path
-	// // the following is a windows example,
-	// //
-	// -Djava.library.path="installation_directory\plugins\org.eclipse.swt.win32_3.0.1\os\win32\x86"
-	// org.eclipse.swt.widgets.Display display = org.eclipse.swt.widgets.Display
-	// .getDefault();
-	// About test = new About();
-	// //test.createSShell();
-	// test.sShell.open();
-	//	
-	// while (!test.sShell.isDisposed()) {
-	// if (!display.readAndDispatch())
-	// display.sleep();
-	// }
-	// display.dispose();
-	// } // @jve:decl-index=0:visual-constraint="245,5"
-
 	@Override
 	public void clearForm()
 	{
-		// TODO Auto-generated method stub
 	}
 
 	@Override
 	public void loadData(final String[] strArray)
 	{
-		// TODO Auto-generated method stub
 	}
 
 	@Override

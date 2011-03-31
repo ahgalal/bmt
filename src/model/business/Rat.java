@@ -5,49 +5,89 @@ import utils.PManager;
 import utils.StatusManager.StatusSeverity;
 
 /**
- * @author ShaQ Handles rat's info
+ * Handles rat's info.
+ * 
+ * @author ShaQ
  */
 public class Rat
 {
 
 	private final Cargo info;
 
-	public Rat(final String[] measurements_list, final String[] values)
+	/**
+	 * Initializes the rat object.
+	 * 
+	 * @param paramaters_list
+	 *            list of parameters measured in the experiment for each rat
+	 * @param values
+	 *            values of the parameters in the list
+	 */
+	public Rat(final String[] paramaters_list, final String[] values)
 	{
-		this(measurements_list);
+		this(paramaters_list);
 		info.setData(values);
 	}
 
-	public Rat(final String[] measurements_list)
+	/**
+	 * Initializes the rat object.
+	 * 
+	 * @param paramaters_list
+	 *            list of parameters measured in the experiment for each rat
+	 */
+	public Rat(final String[] paramaters_list)
 	{
-		info = new Cargo(measurements_list);
+		info = new Cargo(paramaters_list);
 	}
 
+	/**
+	 * Gets the values of parameters for this rat.
+	 * 
+	 * @return parameters' values
+	 */
 	public String[] getValues()
 	{
 		return info.getData();
 	}
 
-	public String getValueByMeasurementName(final String measurement_name)
+	/**
+	 * Gets the value of the parameter, using parameter's name
+	 * 
+	 * @param parameter_name
+	 * @return
+	 */
+	public String getValueByParameterName(final String parameter_name)
 	{
-		return info.getDataByTag(measurement_name);
+		return info.getDataByTag(parameter_name);
 	}
 
-	public boolean setValueByMeasurementName(
-			final String measurement_name,
-			final String value)
+	/**
+	 * Sets the value of a parameter using the parameter name.
+	 * 
+	 * @param parameter_name
+	 *            name of the parameter to set its value
+	 * @param value
+	 *            new value of the parameter
+	 * @return success: true
+	 */
+	public boolean setValueByParameterName(final String parameter_name, final String value)
 	{
 		try
 		{
-			info.setDataByTag(measurement_name, value);
+			info.setDataByTag(parameter_name, value);
 		} catch (final Exception e)
 		{
-			PManager.log.print("Error in measurement name!", this, StatusSeverity.ERROR);
+			PManager.log.print("Error in parameter name!", this, StatusSeverity.ERROR);
 			return false;
 		}
 		return true;
 	}
 
+	/**
+	 * Converts the rat object, with all the info it holds into a printable
+	 * string.
+	 * 
+	 * @return String containing the rat's info
+	 */
 	public String rat2String()
 	{
 		// String values = " ";

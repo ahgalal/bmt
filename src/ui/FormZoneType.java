@@ -71,6 +71,12 @@ public class FormZoneType
 		cmbo_type.select(0);
 	}
 
+	/**
+	 * Opens/Shows the window.
+	 * 
+	 * @param shape_number
+	 *            number of the shape being added
+	 */
 	public void open(final int shape_number)
 	{
 		this.shape_number = shape_number;

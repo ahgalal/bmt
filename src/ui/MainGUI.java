@@ -175,31 +175,67 @@ public class MainGUI extends BaseUI
 		});
 	}
 
+	/**
+	 * Enables/disables the start recording button.
+	 * 
+	 * @param enable
+	 *            true/false
+	 */
 	public void btnStartRecordEnable(final boolean enable)
 	{
 		btn_start_record.setEnabled(enable);
 	}
 
+	/**
+	 * Enables/disables the stop recording button.
+	 * 
+	 * @param enable
+	 *            true/false
+	 */
 	public void btnStopRecordEnable(final boolean enable)
 	{
 		btn_stop_record.setEnabled(enable);
 	}
 
+	/**
+	 * Enables/disables the rearing now button.
+	 * 
+	 * @param enable
+	 *            true/false
+	 */
 	public void btnRearingNowEnable(final boolean enable)
 	{
 		btn_rearing_now.setEnabled(enable);
 	}
 
+	/**
+	 * Enables/disables the not rearing now button.
+	 * 
+	 * @param enable
+	 *            true/false
+	 */
 	public void btnNotRearingEnable(final boolean enable)
 	{
 		btn_not_rearing.setEnabled(enable);
 	}
 
+	/**
+	 * Enables/disables the edit experiment menu item.
+	 * 
+	 * @param enable
+	 *            true/false
+	 */
 	public void editExpMenuItemEnable(final boolean enable)
 	{
 		mnuitm_edt_exp.setEnabled(enable);
 	}
 
+	/**
+	 * Enables/disables the export experiment to excel menu item.
+	 * 
+	 * @param enable
+	 *            true/false
+	 */
 	public void exportExpToExcelMenuItemEnable(final boolean enable)
 	{
 		mnutm_experiment_exporttoexcel.setEnabled(enable);
@@ -282,6 +318,9 @@ public class MainGUI extends BaseUI
 		createCmpstMain();
 	}
 
+	/**
+	 * Creates the Main screen's AWT frame.
+	 */
 	private void createMainAWTFrame()
 	{
 		awt_video_main = SWT_AWT.new_Frame(cmpst_main);
@@ -289,6 +328,9 @@ public class MainGUI extends BaseUI
 		getAwtVideoMain().setSize(cmpst_main.getSize().x, cmpst_main.getSize().y);
 	}
 
+	/**
+	 * Creates the Secondary screen's AWT frame.
+	 */
 	private void createSecAWTFrame()
 	{
 		awt_video_sec = SWT_AWT.new_Frame(cmpst_secondary);
@@ -540,16 +582,34 @@ public class MainGUI extends BaseUI
 		this.controller = (CtrlMainGUI) super.controller;
 	}
 
+	/**
+	 * Gets the Main screen's AWT frame.
+	 * 
+	 * @return AWT frame of the main screen
+	 */
 	public Frame getAwtVideoMain()
 	{
 		return awt_video_main;
 	}
 
+	/**
+	 * Gets the Secondary screen's AWT frame.
+	 * 
+	 * @return AWT frame of the Secondary screen
+	 */
 	public Frame getAwtVideoSec()
 	{
 		return awt_video_sec;
 	}
 
+	/**
+	 * Fill the info/statistics table.
+	 * 
+	 * @param names
+	 *            names of fields in the table (left column)
+	 * @param values
+	 *            values to fill the table with (right column)
+	 */
 	public void fillDataTable(final String[] names, final String[] values)
 	{
 		if (names != null)

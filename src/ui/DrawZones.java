@@ -46,11 +46,19 @@ public class DrawZones extends BaseUI
 		super.sShell = sShell;
 	}
 
+	/**
+	 * Gets the GFXPanel instance.
+	 * 
+	 * @return GFXPanel instance
+	 */
 	public GfxPanel getGFXPanel()
 	{
 		return gfx_panel;
 	}
 
+	/**
+	 * Creates the composite
+	 */
 	private void createComposite()
 	{
 		composite = new Composite(sShell, SWT.BORDER);
@@ -357,6 +365,13 @@ public class DrawZones extends BaseUI
 		}
 	}
 
+	/**
+	 * Gets a tableitem using the zone number.
+	 * 
+	 * @param zone_number
+	 *            zone number to select the table item corresponding to
+	 * @return
+	 */
 	private TableItem getTableItemByNumber(final int zone_number)
 	{
 		for (final TableItem ti : tbl_zones.getItems())

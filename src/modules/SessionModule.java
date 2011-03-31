@@ -2,6 +2,11 @@ package modules;
 
 import utils.video.filters.Data;
 
+/**
+ * Manages session's start/end time, etc..
+ * 
+ * @author Creative
+ */
 public class SessionModule extends Module
 {
 
@@ -11,6 +16,14 @@ public class SessionModule extends Module
 
 	private final SessionModuleConfigs session_configs;
 
+	/**
+	 * Initializations of the module.
+	 * 
+	 * @param name
+	 *            module instance's name
+	 * @param config
+	 *            SessionModuleConfigs object to configure the module
+	 */
 	public SessionModule(final String name, final ModuleConfigs config)
 	{
 		super(name, config);
@@ -69,20 +82,25 @@ public class SessionModule extends Module
 		session_end_time = System.currentTimeMillis();
 	}
 
+	/**
+	 * Gets the total time of the session.
+	 * 
+	 * @return total time of the session
+	 */
 	public long getTotalSessionTime()
 	{
-		final long totalTime = (session_end_time - session_start_time) / (1000);// total
-		// time
-		// in
-		// seconds
+		final long totalTime = (session_end_time - session_start_time) / (1000);
 		return totalTime;
 	}
 
+	/**
+	 * Gets session's elapsed time till now.
+	 * 
+	 * @return session's elapsed time till now
+	 */
 	private float getSessionTimeTillNow()
 	{
-		final long time = (System.currentTimeMillis() - session_start_time) / (1000);// time
-		// in
-		// seconds
+		final long time = (System.currentTimeMillis() - session_start_time) / (1000);
 		return time;
 	}
 

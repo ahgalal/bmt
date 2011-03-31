@@ -46,7 +46,7 @@ public class Group implements Grp2GUI
 	{
 		for (final Rat r_tmp : arr_rats)
 		{
-			if (Integer.parseInt(r_tmp.getValueByMeasurementName("Number")) == num)
+			if (Integer.parseInt(r_tmp.getValueByParameterName("Number")) == num)
 				return r_tmp;
 		}
 		return null;

@@ -15,6 +15,12 @@ public abstract class BaseUI
 	protected Shell sShell; // Shell fo the GUI (SWT)
 	ControllerUI controller; // Controller instance
 
+	/**
+	 * Shows/Hides the GUI window.
+	 * 
+	 * @param visibility
+	 *            visible: true/false
+	 */
 	public void show(final boolean visibility)
 	{
 		sShell.setVisible(visibility);

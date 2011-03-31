@@ -156,7 +156,7 @@ public class ShapeController implements GfxPanelNotifiee, ShapeCollection
 	 */
 	public void linkWithGFXPanel(final GfxPanel gfx_panel)
 	{
-		this.gfx_panel = PManager.getDefault().getGfxPanel();
+		this.gfx_panel = gfx_panel;
 		shp_arr = gfx_panel.getShapeArray();
 		gfx_panel.registerForNotifications(this);
 	}
