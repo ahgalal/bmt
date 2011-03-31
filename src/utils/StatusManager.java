@@ -85,8 +85,16 @@ public class StatusManager
 
 	}
 
+	/**
+	 * Enumeration of the severity of message.
+	 * 
+	 * @author Creative
+	 */
 	public enum StatusSeverity
 	{
+		/**
+		 * ERROR: for Error messages WARNING: for normal messages
+		 */
 		ERROR, WARNING;
 	}
 }

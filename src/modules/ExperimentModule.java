@@ -95,7 +95,7 @@ public class ExperimentModule extends Module
 			final String notes)
 	{
 		exp.setExperimentInfo(name, user, date, notes);
-		exp_is_set=true;
+		exp_is_set = true;
 	}
 
 	public void saveGrpInfo(
@@ -165,7 +165,7 @@ public class ExperimentModule extends Module
 			final Grp2GUI[] arr_grps = new Grp2GUI[exp.getNoGroups()];
 			exp.getGroups().toArray(arr_grps);
 			PManager.getDefault().frm_grps.loadDataToForm(arr_grps);
-			exp_is_set=true;
+			exp_is_set = true;
 		}
 	}
 

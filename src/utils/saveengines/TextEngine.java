@@ -125,6 +125,13 @@ public class TextEngine
 		}
 	}
 
+	/**
+	 * Parses a line of data into an array of Strings (split char is \t).
+	 * 
+	 * @param line
+	 *            line to parse
+	 * @return array of Strings containing line data after splitting
+	 */
 	private String[] readLineData(final String line)
 	{
 		final String[] res = line.split("\t");

@@ -48,12 +48,14 @@ public abstract class FilterConfigs
 	 * info on the caller side), those null fileds should be filtered out, and
 	 * only valid fields are copied to "this" object.
 	 * 
-	 * @param configs incoming configurations object
+	 * @param configs
+	 *            incoming configurations object
 	 */
 	public abstract void mergeConfigs(FilterConfigs configs);
-	
+
 	/**
 	 * Checks that All configurations are set. (for testing purposes only)
+	 * 
 	 * @return true: success
 	 */
 	public abstract boolean validate();

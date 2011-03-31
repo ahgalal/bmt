@@ -88,8 +88,8 @@ public class JMyronModule implements VidInputter
 
 	/**
 	 * Runnable for updating the image stream from the webcam.
+	 * 
 	 * @author Creative
-	 *
 	 */
 	private class RunnableJMyron implements Runnable
 	{

@@ -38,7 +38,7 @@ public class RecorderConfigs extends FilterConfigs
 	@Override
 	public boolean validate()
 	{
-		if (common_configs==null)
+		if (common_configs == null)
 		{
 			PManager.log.print(
 					"Configs are not completely configured!",

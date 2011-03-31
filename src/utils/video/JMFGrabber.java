@@ -9,6 +9,11 @@ import javax.media.format.YUVFormat;
 
 import utils.video.input.JMFCamFrame;
 
+/**
+ * JMF Effect for grabbing frames from the webcam buffer.
+ * 
+ * @author Creative
+ */
 public class JMFGrabber implements Effect
 {
 	private final FrameIntArray fia;
@@ -28,6 +33,11 @@ public class JMFGrabber implements Effect
 		return informats;
 	}
 
+	/**
+	 * Gets the status of the Grabber.
+	 * 
+	 * @return 1: ready
+	 */
 	public int getStatus()
 	{
 		return status;
@@ -46,6 +56,15 @@ public class JMFGrabber implements Effect
 		 */
 	}
 
+	/**
+	 * Fills the byte array of the buffer to the required size.
+	 * 
+	 * @param buffer
+	 *            buffer to be filled
+	 * @param newSize
+	 *            size to fill the buffer to
+	 * @return
+	 */
 	byte[] validateByteArraySize(final Buffer buffer, final int newSize)
 	{
 		final Object objectArray = buffer.getData();
@@ -92,10 +111,16 @@ public class JMFGrabber implements Effect
 			if (inbuf.getFormat().getClass() == YUVFormat.class)
 			{
 				final byte[] da = curr_frame.convertYUV2RGB(null);
-				fia.frame_data = ImageManipulator.flipImage(ImageManipulator.byteRGB2IntRGB(da),width,height);
+				fia.frame_data = ImageManipulator.flipImage(
+						ImageManipulator.byteRGB2IntRGB(da),
+						width,
+						height);
 			} else
 			{
-				fia.frame_data = ImageManipulator.flipImage(curr_frame.getRGBIntArray(),width,height);
+				fia.frame_data = ImageManipulator.flipImage(
+						curr_frame.getRGBIntArray(),
+						width,
+						height);
 			}
 			// System.out.print("Duration: "+(tstart) + "\n");
 			status = 1;
@@ -110,6 +135,16 @@ public class JMFGrabber implements Effect
 		return 0;
 	}
 
+	/**
+	 * Initializes the Grabber.
+	 * 
+	 * @param width
+	 *            image's width
+	 * @param height
+	 *            image's height
+	 * @param fia
+	 *            Frame data container
+	 */
 	public JMFGrabber(final int width, final int height, final FrameIntArray fia)
 	{
 		this.fia = fia;
@@ -122,6 +157,16 @@ public class JMFGrabber implements Effect
 			null_data[j] = (byte) 0xFF;
 	}
 
+	/**
+	 * Matches two JMF formats.
+	 * 
+	 * @param in
+	 *            first format
+	 * @param outs
+	 *            second format
+	 * @return if the two formats are matched, one of them is returned, else
+	 *         returns null
+	 */
 	Format matches(final Format in, final Format outs[])
 	{
 		for (int i = 0; i < outs.length; i++)

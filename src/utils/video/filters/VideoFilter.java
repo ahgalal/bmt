@@ -115,9 +115,10 @@ public abstract class VideoFilter
 	 * @return true: success, false: failure
 	 */
 	public abstract boolean initialize();
-	
+
 	/**
 	 * Gets the Filter configurations object.
+	 * 
 	 * @return filter configurations object
 	 */
 	public FilterConfigs getConfigurations()

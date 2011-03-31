@@ -32,8 +32,8 @@ import utils.video.FrameIntArray;
 
 /**
  * JMF video library.
+ * 
  * @author Creative
- *
  */
 public class JMFModule implements VidInputter
 {
@@ -48,7 +48,9 @@ public class JMFModule implements VidInputter
 
 	/**
 	 * Creates the MediaLocator for the webcam device.
-	 * @param format_to_use VideoFormat, either RGB or YUV
+	 * 
+	 * @param format_to_use
+	 *            VideoFormat, either RGB or YUV
 	 * @return MediaLocator object corresponding to the webcam
 	 */
 	@SuppressWarnings("unchecked")
@@ -104,7 +106,9 @@ public class JMFModule implements VidInputter
 
 	/**
 	 * Initializes the MediaLocator,VideoFormat,Processor and JMFGrabber Effect.
-	 * @param fia image data container
+	 * 
+	 * @param fia
+	 *            image data container
 	 * @return true for success
 	 */
 	private boolean initializeJMF(final FrameIntArray fia)
@@ -382,11 +386,12 @@ public class JMFModule implements VidInputter
 			final int height,
 			final int cam_index)
 	{
-		this.width=width;
-		this.height=height;
+		this.width = width;
+		this.height = height;
 		this.cam_index = cam_index;
 		return initializeJMF(fia);
 	}
+
 	@Override
 	public void setFormat(final String s)
 	{

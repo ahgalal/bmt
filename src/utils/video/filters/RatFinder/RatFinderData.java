@@ -6,8 +6,8 @@ import utils.video.filters.FilterData;
 
 /**
  * Data for the RatFinder filter.
+ * 
  * @author Creative
- *
  */
 public class RatFinderData extends FilterData
 {
@@ -16,16 +16,19 @@ public class RatFinderData extends FilterData
 
 	/**
 	 * Initialized the data.
-	 * @param name name of the data object
+	 * 
+	 * @param name
+	 *            name of the data object
 	 */
 	public RatFinderData(final String name)
 	{
 		super(name);
 		this.center = new Point();
 	}
-	
+
 	/**
 	 * Gets the current location of the rat.
+	 * 
 	 * @return Point object representing the rat's current position
 	 */
 	public Point getCenterPoint()

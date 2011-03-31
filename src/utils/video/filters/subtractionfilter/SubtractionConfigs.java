@@ -51,7 +51,7 @@ public class SubtractionConfigs extends FilterConfigs
 	@Override
 	public boolean validate()
 	{
-		if (common_configs==null || threshold <=0)
+		if (common_configs == null || threshold <= 0)
 		{
 			PManager.log.print(
 					"Configs are not completely configured!",

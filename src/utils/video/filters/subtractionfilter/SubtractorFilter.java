@@ -46,8 +46,11 @@ public class SubtractorFilter extends VideoFilter
 
 	/**
 	 * Subtract two images and produces a thresholed byte array image.
-	 * @param img1 input image 1
-	 * @param img2 input image 2
+	 * 
+	 * @param img1
+	 *            input image 1
+	 * @param img2
+	 *            input image 2
 	 * @return difference image as a byte array (binary image)
 	 */
 	@SuppressWarnings("unused")

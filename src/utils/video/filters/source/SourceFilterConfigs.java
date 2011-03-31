@@ -44,7 +44,7 @@ public class SourceFilterConfigs extends FilterConfigs
 	@Override
 	public boolean validate()
 	{
-		if (common_configs==null || fia ==null)
+		if (common_configs == null || fia == null)
 		{
 			PManager.log.print(
 					"Configs are not completely configured!",

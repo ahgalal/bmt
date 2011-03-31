@@ -15,8 +15,11 @@ public class RatFinderFilterConfigs extends FilterConfigs
 
 	/**
 	 * Initializes the configurations.
-	 * @param filt_name name of the filter this configurations will be applied to
-	 * @param common_configs CommonConfigurations used by all filters
+	 * 
+	 * @param filt_name
+	 *            name of the filter this configurations will be applied to
+	 * @param common_configs
+	 *            CommonConfigurations used by all filters
 	 */
 	public RatFinderFilterConfigs(
 			final String filt_name,
@@ -32,14 +35,15 @@ public class RatFinderFilterConfigs extends FilterConfigs
 		if (tmp_ratfiner_configs.common_configs != null)
 			common_configs = tmp_ratfiner_configs.common_configs;
 	}
-	
+
 	/**
 	 * Checks that All configurations are set. (for testing purposes only)
+	 * 
 	 * @return true: success
 	 */
 	public boolean validate()
 	{
-		if (common_configs==null)
+		if (common_configs == null)
 		{
 			PManager.log.print(
 					"Configs are not completely configured!",

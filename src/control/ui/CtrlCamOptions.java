@@ -66,10 +66,7 @@ public class CtrlCamOptions extends ControllerUI
 				library,
 				format);
 		pm.initializeVideoProcessor(common_configs);
-		PManager.main_gui.configureScreenDrawerFilter(
-				"ScreenDrawer",
-				null,
-				true);
+		PManager.main_gui.configureScreenDrawerFilter("ScreenDrawer", null, true);
 		ZonesController.getDefault().setWidthandHeight(width, height);
 	}
 

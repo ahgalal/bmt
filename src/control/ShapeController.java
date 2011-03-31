@@ -18,7 +18,7 @@ import utils.PManager;
  * 
  * @author Creative
  */
-public class ShapeController implements GfxPanelNotifiee
+public class ShapeController implements GfxPanelNotifiee, ShapeCollection
 {
 	static ShapeController default_controller;
 

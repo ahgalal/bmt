@@ -93,7 +93,6 @@ public class PManager
 		new ModulesManager();
 		main_gui = new CtrlMainGUI();
 		main_gui.show(true);
-		
 
 		zone_controller.init();
 		shape_controller.init();

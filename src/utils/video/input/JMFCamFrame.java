@@ -6,8 +6,8 @@ import utils.video.ImageManipulator;
 
 /**
  * Image frame for JMF video library.
+ * 
  * @author Creative
- *
  */
 public class JMFCamFrame
 {
@@ -17,7 +17,9 @@ public class JMFCamFrame
 
 	/**
 	 * Converts YUV frame to RGB byte frame.
-	 * @param yuv_data1 YUV data byte array 
+	 * 
+	 * @param yuv_data1
+	 *            YUV data byte array
 	 * @return byte array representing the RGB image
 	 */
 	public byte[] convertYUV2RGB(final byte[] yuv_data1)
@@ -91,7 +93,9 @@ public class JMFCamFrame
 
 	/**
 	 * Updates buffer's data.
-	 * @param newdata new buffer's data
+	 * 
+	 * @param newdata
+	 *            new buffer's data
 	 */
 	public void updateBufferData(final byte[] newdata)
 	{
@@ -100,6 +104,7 @@ public class JMFCamFrame
 
 	/**
 	 * Gets RGB integerr array for the image.
+	 * 
 	 * @return RGB integer array representing the image's data
 	 */
 	public int[] getRGBIntArray()
@@ -109,15 +114,17 @@ public class JMFCamFrame
 
 	/**
 	 * Gets the image as a 2D integer array.
+	 * 
 	 * @return 2D integer array representing the RGB image
 	 */
 	public int[][] get2DIntArray()
 	{
-		return ImageManipulator.intArrayTo2DIntArray(getRGBIntArray(),width,height);
+		return ImageManipulator.intArrayTo2DIntArray(getRGBIntArray(), width, height);
 	}
 
 	/**
 	 * Gets the image's RGB data as an array of bytes.
+	 * 
 	 * @return byte arry representing the image's RGB data
 	 */
 	public byte[] getRGBByteArray()
@@ -127,6 +134,7 @@ public class JMFCamFrame
 
 	/**
 	 * Gets the data of the image in Grayscale format.
+	 * 
 	 * @return byte array representing the image's data
 	 */
 	public byte[] getGrayByteArray()
@@ -136,6 +144,7 @@ public class JMFCamFrame
 
 	/**
 	 * Gets the image's width.
+	 * 
 	 * @return integer with the value of the image's width
 	 */
 	public int getWidth()
@@ -145,6 +154,7 @@ public class JMFCamFrame
 
 	/**
 	 * Gets the image's height.
+	 * 
 	 * @return integer with the value of the image's height
 	 */
 	public int getHeight()
@@ -154,9 +164,13 @@ public class JMFCamFrame
 
 	/**
 	 * Initializes the frame data and parameters.
-	 * @param data image data to initialize the frame with
-	 * @param w image's width
-	 * @param h image's height
+	 * 
+	 * @param data
+	 *            image data to initialize the frame with
+	 * @param w
+	 *            image's width
+	 * @param h
+	 *            image's height
 	 */
 	public JMFCamFrame(final byte[] data, final int w, final int h)
 	{

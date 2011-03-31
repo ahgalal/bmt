@@ -7,24 +7,22 @@ import utils.video.FrameIntArray;
  * OpenCV video library.
  * 
  * @author Creative
- *
  */
 public class OpenCVModule implements VidInputter
 {
 	private static final long serialVersionUID = 1L;
-	private int status;					//cam status: 1 ready
+	private int status; // cam status: 1 ready
 	private int cam_index = 0;
 	private FrameIntArray fia;
 	private int width, height;
-	OpenCV cv = null; 					// OpenCV Object
-	Thread th_update_image = null;	 	// the sample thread
+	OpenCV cv = null; // OpenCV Object
+	Thread th_update_image = null; // the sample thread
 	private boolean stop_stream;
 
 	/**
 	 * Runnable for updating the image stream from the webcam.
 	 * 
 	 * @author Creative
-	 *
 	 */
 	private class RunnableOpenCV implements Runnable
 	{

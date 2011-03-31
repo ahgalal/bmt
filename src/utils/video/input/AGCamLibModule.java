@@ -8,8 +8,8 @@ import cam_lib.ReturnValue;
 
 /**
  * AGCamLib video library.
+ * 
  * @author Creative
- *
  */
 public class AGCamLibModule implements VidInputter
 {
@@ -106,8 +106,8 @@ public class AGCamLibModule implements VidInputter
 
 	/**
 	 * Runnable to update the image stream from the webcam.
+	 * 
 	 * @author Creative
-	 *
 	 */
 	private class RunnableAGCamLib implements Runnable
 	{

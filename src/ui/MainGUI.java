@@ -194,12 +194,12 @@ public class MainGUI extends BaseUI
 	{
 		btn_not_rearing.setEnabled(enable);
 	}
-	
+
 	public void editExpMenuItemEnable(final boolean enable)
 	{
 		mnuitm_edt_exp.setEnabled(enable);
 	}
-	
+
 	public void exportExpToExcelMenuItemEnable(final boolean enable)
 	{
 		mnutm_experiment_exporttoexcel.setEnabled(enable);

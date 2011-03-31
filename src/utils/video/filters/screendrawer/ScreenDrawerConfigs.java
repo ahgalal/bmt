@@ -6,7 +6,7 @@ import utils.PManager;
 import utils.StatusManager.StatusSeverity;
 import utils.video.filters.CommonFilterConfigs;
 import utils.video.filters.FilterConfigs;
-import control.ShapeController;
+import control.ShapeCollection;
 
 /**
  * Configurations for the ScreenDrawer filter.
@@ -40,7 +40,7 @@ public class ScreenDrawerConfigs extends FilterConfigs
 			final Graphics refGfxSecScreen,
 			final CommonFilterConfigs common_configs,
 			final boolean enable_sec_screen,
-			final ShapeController shp_controller)
+			final ShapeCollection shp_controller)
 	{
 		super(filt_name, common_configs);
 		ref_gfx_main_screen = refGfxMainScreen;
@@ -60,9 +60,10 @@ public class ScreenDrawerConfigs extends FilterConfigs
 	 */
 	public boolean enable_sec_screen;
 	/**
-	 * instance of ShapeController that will draw its shapes on the main stream.
+	 * instance of a ShapeCollection that will draw its shapes on the main
+	 * stream.
 	 */
-	public ShapeController shape_controller;
+	public ShapeCollection shape_controller;
 
 	@Override
 	public void mergeConfigs(final FilterConfigs configs)

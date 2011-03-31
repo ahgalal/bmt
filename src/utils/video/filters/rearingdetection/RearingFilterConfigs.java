@@ -9,19 +9,26 @@ import utils.video.filters.FilterConfigs;
 
 /**
  * Configurations for the RearingFilter filter.
+ * 
  * @author Creative
- *
  */
 public class RearingFilterConfigs extends FilterConfigs
 {
 	/**
 	 * Initializes the configurations.
-	 * @param filt_name name of the filter this configurations will be applied to
-	 * @param rearingThresh rearing threshold
-	 * @param marginX x-margin for searching around the current object's position
-	 * @param marginY y-margin for searching around the current object's position
-	 * @param ref_center_point reference to the center point (current location of the object)
-	 * @param common_configs CommonConfigurations used by all filters
+	 * 
+	 * @param filt_name
+	 *            name of the filter this configurations will be applied to
+	 * @param rearingThresh
+	 *            rearing threshold
+	 * @param marginX
+	 *            x-margin for searching around the current object's position
+	 * @param marginY
+	 *            y-margin for searching around the current object's position
+	 * @param ref_center_point
+	 *            reference to the center point (current location of the object)
+	 * @param common_configs
+	 *            CommonConfigurations used by all filters
 	 */
 	public RearingFilterConfigs(
 			final String filt_name,
@@ -43,20 +50,13 @@ public class RearingFilterConfigs extends FilterConfigs
 	 */
 	public int rearing_thresh;
 	/**
-	 * x-margin for white pixel counting (around the current location of the object).
-	 *  _________________________________
-	 *  |               |               |
-	 *  |               |y_margin       |
-	 *  |               |               |
-	 * 	|---x_margin----0----x_margin---|
-	 *  |               |               |
-	 *  |               |y_margin       |
-	 *  |               |               |
-	 *  |--------------------------------
-	 *  0: current position of the object.
-	 *  count white pixels inside this area only (to save the processing power)
+	 * x-margin for white pixel counting (around the current location of the
+	 * object). _________________________________ | | | | |y_margin | | | |
+	 * |---x_margin----0----x_margin---| | | | | |y_margin | | | |
+	 * |-------------------------------- 0: current position of the object.
+	 * count white pixels inside this area only (to save the processing power)
 	 */
-	public int margin_x,margin_y;
+	public int margin_x, margin_y;
 	/**
 	 * reference to the current object's position.
 	 */
@@ -81,7 +81,7 @@ public class RearingFilterConfigs extends FilterConfigs
 	@Override
 	public boolean validate()
 	{
-		if (common_configs==null)
+		if (common_configs == null)
 		{
 			PManager.log.print(
 					"Configs are not completely configured!",
@@ -91,6 +91,5 @@ public class RearingFilterConfigs extends FilterConfigs
 		}
 		return true;
 	}
-	
 
 }

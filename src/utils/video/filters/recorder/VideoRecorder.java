@@ -13,8 +13,8 @@ import utils.video.filters.VideoFilter;
 
 /**
  * Records video frames from the incoming data stream.
+ * 
  * @author Creative
- *
  */
 public class VideoRecorder extends VideoFilter
 {
@@ -25,21 +25,32 @@ public class VideoRecorder extends VideoFilter
 
 	/**
 	 * Initializes the filter.
-	 * @param name filter's name
-	 * @param configs filter's configurations
-	 * @param link_in input Link for the filter
-	 * @param link_out output Link from the filter
+	 * 
+	 * @param name
+	 *            filter's name
+	 * @param configs
+	 *            filter's configurations
+	 * @param link_in
+	 *            input Link for the filter
+	 * @param link_out
+	 *            output Link from the filter
 	 */
-	public VideoRecorder(final String name, final FilterConfigs configs,Link link_in,Link link_out)
+	public VideoRecorder(
+			final String name,
+			final FilterConfigs configs,
+			Link link_in,
+			Link link_out)
 	{
-		super(name, configs,link_in,link_out);
+		super(name, configs, link_in, link_out);
 		recorder_configs = (RecorderConfigs) configs;
 		pm = PManager.getDefault();
 	}
 
 	/**
 	 * Renames the current video file to the given name.
-	 * @param file_name new name of the video file
+	 * 
+	 * @param file_name
+	 *            new name of the video file
 	 */
 	public void renameVideoFile(final String file_name)
 	{
@@ -58,7 +69,9 @@ public class VideoRecorder extends VideoFilter
 
 	/**
 	 * Saves the current video with the given file name.
-	 * @param fileName name of the file to save data to
+	 * 
+	 * @param fileName
+	 *            name of the file to save data to
 	 */
 	public void saveVideoFile(final String fileName)
 	{
@@ -74,7 +87,7 @@ public class VideoRecorder extends VideoFilter
 	{
 		if (configs.enabled)
 		{
-			final int[] imageData=link_in.getData();
+			final int[] imageData = link_in.getData();
 			avi_saver.writeFrame(imageData);
 		}
 	}

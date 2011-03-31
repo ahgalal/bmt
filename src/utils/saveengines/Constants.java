@@ -1,5 +1,10 @@
 package utils.saveengines;
 
+/**
+ * Class containing All String constants used by the program.
+ * 
+ * @author Creative
+ */
 public class Constants
 {
 	public static final String h_exp = "[Experiment Info]";

@@ -54,7 +54,9 @@ public class CommonFilterConfigs
 	public String vid_library, format;
 
 	/**
-	 * Checks that All common configurations are set. (for testing purposes only)
+	 * Checks that All common configurations are set. (for testing purposes
+	 * only)
+	 * 
 	 * @return true: success
 	 */
 	public boolean validate()
@@ -64,7 +66,7 @@ public class CommonFilterConfigs
 				|| frame_rate <= 0
 				|| cam_index < 0
 				|| vid_library == null
-				/*|| format == null*/) //Ignoring format check as it is optional
+		/* || format == null */) // Ignoring format check as it is optional
 		{
 			PManager.log.print(
 					"Common Configs are not completely configured!",

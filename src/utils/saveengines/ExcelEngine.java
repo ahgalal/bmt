@@ -13,10 +13,13 @@ import utils.ExcelWrapper;
 public class ExcelEngine
 {
 
-	ExcelWrapper excel_wrapper; // Excel wrapper utility for creating
+	private final ExcelWrapper excel_wrapper; // Excel wrapper utility for
 
-	// sheets/cells
+	// creating sheets/cells
 
+	/**
+	 * Used to ecport Experiment's data to an excel document.
+	 */
 	public ExcelEngine()
 	{
 		excel_wrapper = new ExcelWrapper();

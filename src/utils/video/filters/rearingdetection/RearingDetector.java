@@ -6,8 +6,8 @@ import utils.video.filters.VideoFilter;
 
 /**
  * Detects whether the rat is rearing or not.
+ * 
  * @author Creative
- *
  */
 public class RearingDetector extends VideoFilter
 {
@@ -21,14 +21,23 @@ public class RearingDetector extends VideoFilter
 
 	/**
 	 * Initializes the filter.
-	 * @param name filter's name
-	 * @param configs filter's configurations
-	 * @param link_in input Link for the filter
-	 * @param link_out output Link from the filter
+	 * 
+	 * @param name
+	 *            filter's name
+	 * @param configs
+	 *            filter's configurations
+	 * @param link_in
+	 *            input Link for the filter
+	 * @param link_out
+	 *            output Link from the filter
 	 */
-	public RearingDetector(final String name, final FilterConfigs configs,Link link_in,Link link_out)
+	public RearingDetector(
+			final String name,
+			final FilterConfigs configs,
+			Link link_in,
+			Link link_out)
 	{
-		super(name, configs,link_in,link_out);
+		super(name, configs, link_in, link_out);
 		rearing_configs = (RearingFilterConfigs) configs;
 		rearing_data = new RearingData("Rearing Data");
 
@@ -39,8 +48,11 @@ public class RearingDetector extends VideoFilter
 	}
 
 	/**
-	 * Used to train the filter of the white area of the rat when (walking/rearing).
-	 * @param rearing whether the rat is rearing now or not
+	 * Used to train the filter of the white area of the rat when
+	 * (walking/rearing).
+	 * 
+	 * @param rearing
+	 *            whether the rat is rearing now or not
 	 */
 	public void rearingNow(final boolean rearing)
 	{
@@ -64,8 +76,8 @@ public class RearingDetector extends VideoFilter
 
 	/**
 	 * Runnable to calculate the mean rat area.
+	 * 
 	 * @author Creative
-	 *
 	 */
 	private class NormalRatAreaThread implements Runnable
 	{
@@ -98,7 +110,7 @@ public class RearingDetector extends VideoFilter
 	@Override
 	public void process()
 	{
-		final int[] imageData=link_in.getData();
+		final int[] imageData = link_in.getData();
 		if (configs.enabled)
 		{
 			if (imageData != null)

@@ -16,16 +16,17 @@ public class SourceFilter extends VideoFilter
 
 	/**
 	 * Initializes the filter.
-	 * @param name	filter's name
-	 * @param configs common configurations
-	 * @param linkOut output link that will distribute the data on other filters
+	 * 
+	 * @param name
+	 *            filter's name
+	 * @param configs
+	 *            common configurations
+	 * @param linkOut
+	 *            output link that will distribute the data on other filters
 	 */
-	public SourceFilter(
-			final String name,
-			final FilterConfigs configs,
-			final Link linkOut)
+	public SourceFilter(final String name, final FilterConfigs configs, final Link linkOut)
 	{
-		super(name, configs, null,linkOut);
+		super(name, configs, null, linkOut);
 		source_configs = (SourceFilterConfigs) configs;
 	}
 

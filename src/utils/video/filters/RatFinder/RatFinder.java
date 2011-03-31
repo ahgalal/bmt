@@ -8,15 +8,15 @@ import utils.video.filters.VideoFilter;
 
 /**
  * Finds the moving object's position.
+ * 
  * @author Creative
- *
  */
 public class RatFinder extends VideoFilter
 {
 	private int tmp_max;
 	private final RatFinderFilterConfigs ratfinder_configs;
 	private final RatFinderData rat_finder_data;
-	
+
 	final int[] hori_sum;
 	final int[] vert_sum;
 
@@ -25,7 +25,9 @@ public class RatFinder extends VideoFilter
 
 	/**
 	 * Draws a cross at the center of the moving object.
-	 * @param binary_image image to draw the cross on
+	 * 
+	 * @param binary_image
+	 *            image to draw the cross on
 	 */
 	private void drawMarkerOnImg(final int[] binary_image)
 	{
@@ -71,10 +73,15 @@ public class RatFinder extends VideoFilter
 
 	/**
 	 * Initializes the filter.
-	 * @param name filter's name
-	 * @param configs filter's configurations
-	 * @param link_in input Link for the filter
-	 * @param link_out output Link from the filter
+	 * 
+	 * @param name
+	 *            filter's name
+	 * @param configs
+	 *            filter's configurations
+	 * @param link_in
+	 *            input Link for the filter
+	 * @param link_out
+	 *            output Link from the filter
 	 */
 	public RatFinder(
 			final String name,
@@ -86,7 +93,7 @@ public class RatFinder extends VideoFilter
 		ratfinder_configs = (RatFinderFilterConfigs) configs;
 		rat_finder_data = new RatFinderData("Rat Finder Data");
 		center_point = (Point) rat_finder_data.getCenterPoint();
-		
+
 		hori_sum = new int[ratfinder_configs.common_configs.height];
 		vert_sum = new int[ratfinder_configs.common_configs.width];
 
@@ -98,6 +105,7 @@ public class RatFinder extends VideoFilter
 
 	/**
 	 * Updates the center point (ie: finds the location of the moving object).
+	 * 
 	 * @param binary_image
 	 */
 	private void updateCentroid(final int[] binary_image)

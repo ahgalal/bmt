@@ -5,6 +5,7 @@ import utils.PManager;
 
 /**
  * Controller of the About Dialog box.
+ * 
  * @author Creative
  */
 public class CtrlAbout extends ControllerUI

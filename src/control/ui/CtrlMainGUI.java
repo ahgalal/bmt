@@ -109,9 +109,9 @@ public class CtrlMainGUI extends ControllerUI
 		@Override
 		public void run()
 		{
-			final ExperimentModule local_exp_module = (ExperimentModule) ModulesManager.getDefault().getModuleByName(
-			"Experiment Module");
-			
+			final ExperimentModule local_exp_module = (ExperimentModule) ModulesManager.getDefault()
+					.getModuleByName("Experiment Module");
+
 			while (ui_is_opened)
 			{
 				Display.getDefault().asyncExec(new Runnable() {
@@ -120,17 +120,16 @@ public class CtrlMainGUI extends ControllerUI
 					{
 						if (!ui.getShell().isDisposed())
 						{
-							if(!local_exp_module.isExperimentPresent())
+							if (!local_exp_module.isExperimentPresent())
 							{
 								ui.editExpMenuItemEnable(false);
 								ui.exportExpToExcelMenuItemEnable(false);
-							}
-							else
+							} else
 							{
 								ui.editExpMenuItemEnable(true);
 								ui.exportExpToExcelMenuItemEnable(true);
 							}
-							
+
 							switch (pm.state)
 							{
 							case IDLE:
@@ -226,7 +225,9 @@ public class CtrlMainGUI extends ControllerUI
 		if (pm.state == ProgramState.STREAMING)
 		{
 			pm.getGfxPanel().setBackground(pm.getVideoProcessor().updateRGBBackground());
-			((SubtractorFilter) pm.getVideoProcessor().getFilterManager().getFilterByName("SubtractionFilter")).updateBG();
+			((SubtractorFilter) pm.getVideoProcessor()
+					.getFilterManager()
+					.getFilterByName("SubtractionFilter")).updateBG();
 		} else if (pm.state == ProgramState.TRACKING)
 			pm.status_mgr.setStatus(
 					"Background can't be taken while tracking.",
@@ -252,7 +253,7 @@ public class CtrlMainGUI extends ControllerUI
 					"AGCamLib",
 					null);
 			pm.initializeVideoProcessor(commonConfigs);
-			configureScreenDrawerFilter("ScreenDrawer", commonConfigs,true);
+			configureScreenDrawerFilter("ScreenDrawer", commonConfigs, true);
 			pm.status_mgr.setStatus("Camera is Starting..", StatusSeverity.WARNING);
 		} else
 			pm.status_mgr.setStatus("Camera is already started.", StatusSeverity.ERROR);
@@ -264,14 +265,14 @@ public class CtrlMainGUI extends ControllerUI
 			final CommonFilterConfigs configs,
 			final boolean enable_sec_screen)
 	{
-		pm.getVideoProcessor().updateFiltersConfigs(new FilterConfigs[]{
-				new ScreenDrawerConfigs(
+		pm.getVideoProcessor().updateFiltersConfigs(
+				new FilterConfigs[] { new ScreenDrawerConfigs(
 						name,
 						ui.getAwtVideoMain().getGraphics(),
 						ui.getAwtVideoSec().getGraphics(),
 						configs,
 						true,
-						pm.shape_controller)});
+						pm.shape_controller) });
 	}
 
 	/**

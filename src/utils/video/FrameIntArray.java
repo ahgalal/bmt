@@ -1,7 +1,14 @@
 package utils.video;
 
+/**
+ * Frame data container.
+ * 
+ * @author Creative
+ */
 public class FrameIntArray
 {
-	public boolean busy;
+	/**
+	 * Array containing the image data as an array of integers.
+	 */
 	public int[] frame_data;
 }
