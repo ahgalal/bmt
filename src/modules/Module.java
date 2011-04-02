@@ -2,9 +2,13 @@ package modules;
 
 import utils.video.filters.Data;
 
+/**
+ * Parent of all modules classes.
+ * @author Creative
+ *
+ */
 public abstract class Module
 {
-
 	protected Cargo gui_cargo;
 	protected Cargo file_cargo;
 	protected ModuleConfigs configs;
@@ -12,54 +16,84 @@ public abstract class Module
 
 	protected Data[] data;
 
+	/**
+	 * Gets the data cargo to be sent to GUI.
+	 * @return Cargo containing data for GUI
+	 */
 	public Cargo getGUICargo()
 	{
 		return gui_cargo;
 	}
 
+	/**
+	 * Gets the data cargo to be sent to file writer.
+	 * @return Cargo containing data for file writer
+	 */
 	public Cargo getFileCargo()
 	{
 		return file_cargo;
 	}
 
+	/**
+	 * Initializes the module.
+	 */
 	public abstract void initialize();
 
+	/**
+	 * Gets the module's name.
+	 * @return String containing the module's name
+	 */
 	public String getName()
 	{
 		return name;
 	}
 
+	/**
+	 * Deinitializes the module.
+	 */
 	public abstract void deInitialize();
 
+	/**
+	 * Updates the configurations of the module.
+	 * @param config configurations object containing new values
+	 */
 	public abstract void updateConfigs(ModuleConfigs config);
 
+	/**
+	 * Process , do all the work the module should do at each time interval.
+	 */
 	public abstract void process();
 
+	/**
+	 * Updates the cargo data to be sent to GUI.
+	 */
 	public abstract void updateGUICargoData();
 
+	/**
+	 * Updates the cargo data to be sent to file writer.
+	 */
 	public abstract void updateFileCargoData();
 
-	public abstract void updateDataObject(Data data);
+	/**
+	 * Registers a data object of a video filter with the module.
+	 * @param data data object of a video filer
+	 */
+	public abstract void registerDataObject(Data data);
+	
+	/**
+	 * Unregisters a data object of a video filter from the module.
+	 * @param data data object of a video filer
+	 */
+	public abstract void deRegisterDataObject(Data data);
 
+	/**
+	 * Initializes the module.
+	 * @param name module's name
+	 * @param config initial configurations of the module
+	 */
 	public Module(final String name, final ModuleConfigs config)
 	{
 		this.name = name;
 		configs = config;
 	}
-
-	/*
-	 * public void addModule(Modulable module) { Modulable[] tmp=modules; int
-	 * len=tmp.length; modules=new Modulable[len+1]; System.arraycopy(tmp, 0,
-	 * modules, 0,len); modules[len]=module; tmp=null; } public void
-	 * deleteModule(Modulable module) { Modulable[] tmp=new
-	 * Modulable[modules.length-1]; int len=tmp.length; for(int i=0,
-	 * j=0;i<len+1;i++) if(modules[i]!=module) { tmp[j]=modules[i]; j++; }
-	 * modules=tmp; tmp=null; }
-	 */
-
-	/*
-	 * public void distributeDataOnModules() { for(Modulable m: modules)
-	 * m.process(data); }
-	 */
-
 }

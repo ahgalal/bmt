@@ -67,7 +67,7 @@ public class ExperimentModule extends Module
 	}
 
 	@Override
-	public void updateDataObject(final Data data)
+	public void registerDataObject(final Data data)
 	{
 		// TODO Auto-generated method stub
 
@@ -226,6 +226,13 @@ public class ExperimentModule extends Module
 				"Rat Number" });
 
 		file_cargo = new Cargo(new String[] { "Number", "Group" });
+	}
+
+	@Override
+	public void deRegisterDataObject(Data data)
+	{
+		// TODO Auto-generated method stub
+		
 	}
 
 }

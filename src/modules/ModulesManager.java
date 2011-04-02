@@ -4,6 +4,11 @@ import java.util.ArrayList;
 
 import utils.video.filters.Data;
 
+/**
+ * Manager for all modules.
+ * 
+ * @author Creative
+ */
 public class ModulesManager
 {
 
@@ -23,7 +28,13 @@ public class ModulesManager
 	private String[] file_data_array;
 	private String[] file_names_array;
 
-	public void runAnalyzers(final boolean run)
+	/**
+	 * Starts/Stops running all modules.
+	 * 
+	 * @param run
+	 *            true/false to start/stop
+	 */
+	public void runModules(final boolean run)
 	{
 		if (run & !run_modules)
 		{
@@ -49,36 +60,52 @@ public class ModulesManager
 		}
 	}
 
+	/**
+	 * Get the singleton instance.
+	 * 
+	 * @return the singleton instance
+	 */
 	public static ModulesManager getDefault()
 	{
 		return me;
 	}
 
+	/**
+	 * Initializes modules.
+	 */
 	public ModulesManager()
 	{
 		me = this;
 		data_objects = new ArrayList<Data>();
 		modules = new ArrayList<Module>();
 
+		// ////////////////////////////////
+		// Rearing Module
 		final RearingModuleConfigs rearing_configs = new RearingModuleConfigs(
 				"Rearing Module");
-		final ZonesModuleConfigs zones_configs = new ZonesModuleConfigs(
-				"Zones Module",
-				50);// TODO:
-		// change
-		// 50
-		final SessionModuleConfigs session_configs = new SessionModuleConfigs(
-				"Session Module");
-		final ExperimentModuleConfigs experiment_configs = new ExperimentModuleConfigs(
-				"Experiment Module");
-
 		final RearingModule rearing_module = new RearingModule(
 				"Rearing Module",
 				rearing_configs);
+
+		// ////////////////////////////////
+		// Zones Module
+		final ZonesModuleConfigs zones_configs = new ZonesModuleConfigs(
+				"Zones Module",
+				50);// TODO: change 50
 		final ZonesModule zones_module = new ZonesModule("Zones Module", zones_configs);
+
+		// ////////////////////////////////
+		// Session Module
+		final SessionModuleConfigs session_configs = new SessionModuleConfigs(
+				"Session Module");
 		final SessionModule session_module = new SessionModule(
 				"Session Module",
 				session_configs);
+
+		// ////////////////////////////////
+		// Experiment Module
+		final ExperimentModuleConfigs experiment_configs = new ExperimentModuleConfigs(
+				"Experiment Module");
 		final ExperimentModule experiment_module = new ExperimentModule(
 				"Experiment Module",
 				experiment_configs);
@@ -89,6 +116,9 @@ public class ModulesManager
 		modules.add(session_module);
 	}
 
+	/**
+	 * Initializes Cargo array.
+	 */
 	public void initialize()
 	{
 		data_objects.clear();
@@ -100,19 +130,39 @@ public class ModulesManager
 		runnable_modules = new RunnableModulesThread();
 	}
 
+	/**
+	 * Passes incoming data object to all modules, only modules interested in
+	 * that data object, will accept it.
+	 * 
+	 * @param data
+	 *            incoming data object from a video filter
+	 */
 	public void addDataObject(final Data data)
 	{
 		data_objects.add(data);
 		for (final Module module : modules)
-			module.updateDataObject(data);
+			module.registerDataObject(data);
 	}
 
+	/**
+	 * Removes a data object (deRegisters it) from all modules registered with
+	 * it.
+	 * 
+	 * @param data
+	 *            data object of a video filter
+	 */
 	public void removeDataObject(final Data data)
 	{
 		data_objects.remove(data);
-		// constructCargoArray();
+		for (final Module mo : modules)
+			mo.deRegisterDataObject(data);
 	}
 
+	/**
+	 * Gets the information to be sent to GUI.
+	 * 
+	 * @return String array containing data to be sent to GUI
+	 */
 	public String[] getGUIData()
 	{
 		for (final Module mo : modules)
@@ -131,6 +181,11 @@ public class ModulesManager
 		return gui_data_array;
 	}
 
+	/**
+	 * Gets the information to be sent to file writer.
+	 * 
+	 * @return String array containing data to be sent to file writer
+	 */
 	public String[] getFileData()
 	{
 		for (final Module mo : modules)
@@ -149,17 +204,32 @@ public class ModulesManager
 		return file_data_array;
 	}
 
+	/**
+	 * Gets list of parameters (columns names) to be sent to GUI.
+	 * 
+	 * @return String array containing parameters (columns names) to be sent to
+	 *         GUI
+	 */
 	public String[] getGUINames()
 	{
 
 		return gui_names_array;
 	}
 
+	/**
+	 * Gets list of parameters (columns names) to be sent to file writer.
+	 * 
+	 * @return String array containing parameters (columns names) to be sent to
+	 *         file writer
+	 */
 	public String[] getCodeNames()
 	{
 		return file_names_array;
 	}
 
+	/**
+	 * Builds the Cargo array based on the number of instantiated modules.
+	 */
 	private void constructCargoArray()
 	{
 		gui_cargos = null;
@@ -218,6 +288,11 @@ public class ModulesManager
 		}
 	}
 
+	/**
+	 * Runnable for running Modules.
+	 * 
+	 * @author Creative
+	 */
 	private class RunnableModulesThread implements Runnable
 	{
 		@Override
@@ -240,6 +315,13 @@ public class ModulesManager
 		}
 	}
 
+	/**
+	 * Gets a module using the module's name.
+	 * 
+	 * @param name
+	 *            name of the module to return
+	 * @return module instance having the name specified
+	 */
 	public Module getModuleByName(final String name)
 	{
 		for (final Module mo : modules)
@@ -248,6 +330,14 @@ public class ModulesManager
 		return null;
 	}
 
+	/**
+	 * Updates the configurations of the modules.
+	 * 
+	 * @param configs
+	 *            array of ModuleConfigs, containing configurations objects for
+	 *            the modules. each module will be configured according to its
+	 *            configurations object in the array.
+	 */
 	public void updateModuleConfigs(final ModuleConfigs[] configs)
 	{
 		for (int i = 0; i < configs.length; i++)

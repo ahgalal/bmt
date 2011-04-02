@@ -61,7 +61,7 @@ public class SessionModule extends Module
 	}
 
 	@Override
-	public void updateDataObject(final Data data)
+	public void registerDataObject(final Data data)
 	{
 		// we don't need any data from any filter here!
 	}
@@ -138,6 +138,12 @@ public class SessionModule extends Module
 	{
 		endSession();
 		session_is_running = false;
+	}
+
+	@Override
+	public void deRegisterDataObject(Data data)
+	{
+		
 	}
 
 }

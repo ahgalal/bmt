@@ -272,7 +272,7 @@ public class ZonesModule extends Module
 	}
 
 	@Override
-	public void updateDataObject(final Data data)
+	public void registerDataObject(final Data data)
 	{
 		if (data instanceof RatFinderData)
 		{
@@ -328,6 +328,17 @@ public class ZonesModule extends Module
 
 		final double cmResult = screen_distance / real_distance;
 		scale = (float) cmResult;
+	}
+
+	@Override
+	public void deRegisterDataObject(Data data)
+	{
+		if(rat_finder_data==data)
+		{
+			rat_finder_data=null;
+			this.data[0]=null;
+			current_position=null;
+		}		
 	}
 
 }

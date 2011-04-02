@@ -91,7 +91,7 @@ public class CtrlMainGUI extends ControllerUI
 			th_update_gui.start();
 
 			pm.getVideoProcessor().startProcessing();
-			ModulesManager.getDefault().runAnalyzers(true);
+			ModulesManager.getDefault().runModules(true);
 		} else
 			pm.status_mgr.setStatus(
 					"Please start the camera first.",
@@ -399,7 +399,7 @@ public class CtrlMainGUI extends ControllerUI
 		if (pm.state == ProgramState.TRACKING | pm.state == ProgramState.RECORDING)
 		{
 
-			ModulesManager.getDefault().runAnalyzers(false);
+			ModulesManager.getDefault().runModules(false);
 			if (pm.state == ProgramState.RECORDING)
 				stoprecordAction();
 

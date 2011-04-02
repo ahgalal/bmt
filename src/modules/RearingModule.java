@@ -74,7 +74,7 @@ public class RearingModule extends Module
 	}
 
 	@Override
-	public void updateDataObject(final Data data)
+	public void registerDataObject(final Data data)
 	{
 		if (data instanceof RearingData)
 		{
@@ -110,6 +110,16 @@ public class RearingModule extends Module
 		gui_cargo = new Cargo(new String[] { "Rearing Counter" });
 
 		file_cargo = new Cargo(new String[] { "RRNG" });
+	}
+
+	@Override
+	public void deRegisterDataObject(Data data)
+	{
+		if(rearing_data==data)
+		{
+			rearing_data=null;
+			this.data[0]=null;
+		}
 	}
 
 }
