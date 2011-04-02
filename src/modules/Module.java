@@ -1,5 +1,7 @@
 package modules;
 
+import java.util.Hashtable;
+
 import utils.video.filters.Data;
 
 /**
@@ -11,7 +13,7 @@ public abstract class Module
 {
 	protected Cargo gui_cargo;
 	protected Cargo file_cargo;
-	protected ModuleConfigs configs;
+		protected ModuleConfigs configs;
 	protected String name;
 
 	protected Data[] data;
@@ -32,6 +34,17 @@ public abstract class Module
 	public Cargo getFileCargo()
 	{
 		return file_cargo;
+	}
+	
+	/**
+	 * Initializes a HashTable with empty data.
+	 * @param hash HashTable to initialize
+	 * @param keys keys of the hashtable
+	 */
+	protected void initializeHashKeys(Hashtable<String, String> hash, String[] keys)
+	{
+		for(String s: keys)
+			hash.put(s, "");
 	}
 
 	/**

@@ -25,26 +25,53 @@ public class Zone
 		zone_type = zoneType;
 	}
 
+	/**
+	 * Gets the zone's number.
+	 * 
+	 * @return integer representing the zone's number
+	 */
 	public int getZone_number()
 	{
 		return zone_number;
 	}
 
+	/**
+	 * Sets the zone's number.
+	 * 
+	 * @param zoneNumber
+	 *            the new number of the zone
+	 */
 	public void setZone_number(final int zoneNumber)
 	{
 		zone_number = zoneNumber;
 	}
 
+	/**
+	 * Gets the type of the zone {@link ZoneType}.
+	 * 
+	 * @return the type of the zone
+	 */
 	public ZoneType getZone_type()
 	{
 		return zone_type;
 	}
 
-	public void setZone_type(final ZoneType zoneTpye)
+	/**
+	 * Sets the type of the zone, check {@link ZoneType}.
+	 * 
+	 * @param zoneType
+	 *            new type of the zone
+	 */
+	public void setZone_type(final ZoneType zoneType)
 	{
-		zone_type = zoneTpye;
+		zone_type = zoneType;
 	}
 
+	/**
+	 * Collection of zone types.
+	 * 
+	 * @author Creative
+	 */
 	public enum ZoneType
 	{
 		CENTRAL_ZONE, NORMAL_ZONE;

@@ -5,7 +5,9 @@ import java.util.ArrayList;
 import utils.saveengines.Constants;
 
 /**
- * @author ShaQ Handles all groups and their info
+ * Handles all groups and their info
+ * 
+ * @author ShaQ
  */
 public class Group implements Grp2GUI
 {
@@ -14,12 +16,7 @@ public class Group implements Grp2GUI
 	private int id;
 	private String rats_numbering;
 	private String notes;
-	private ArrayList<Rat> arr_rats;
-
-	public Group()
-	{
-
-	}
+	private final ArrayList<Rat> arr_rats;
 
 	public Group(
 			final int id,
@@ -79,10 +76,6 @@ public class Group implements Grp2GUI
 	 * (Exception e) { e.printStackTrace(); } }
 	 */
 
-	/*
-	 * (non-Javadoc)
-	 * @see model.If_Grp2GUI#getName()
-	 */
 	public String getName()
 	{
 		return name;
@@ -93,19 +86,11 @@ public class Group implements Grp2GUI
 		this.name = name;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see model.If_Grp2GUI#getNo_rats()
-	 */
 	public int getNoRats()
 	{
 		return arr_rats.size();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see model.If_Grp2GUI#getRats_numbering()
-	 */
 	public String getRatsNumbering()
 	{
 		return rats_numbering;
@@ -116,10 +101,6 @@ public class Group implements Grp2GUI
 		rats_numbering = ratsNumbering;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see model.If_Grp2GUI#getNotes()
-	 */
 	public String getNotes()
 	{
 		return notes;
@@ -137,7 +118,7 @@ public class Group implements Grp2GUI
 
 	/*
 	 * (non-Javadoc)
-	 * @see model.If_Grp2GUI#getId()
+	 * @see model.business.Grp2GUI#getId()
 	 */
 	public int getId()
 	{
@@ -166,7 +147,6 @@ public class Group implements Grp2GUI
 				+ System.getProperty("line.separator"));
 		str_ret_buf.append("" + System.getProperty("line.separator"));
 		str_ret_buf.append(Constants.h_rat + System.getProperty("line.separator"));
-		// String tags = "";
 		final StringBuffer tags_buf = new StringBuffer();
 		for (final String s : measurements_list)
 			// tags += s + '\t'; // TODO:tab after the last item ??!!
@@ -174,14 +154,7 @@ public class Group implements Grp2GUI
 		str_ret_buf.append(tags_buf.toString() + System.getProperty("line.separator"));
 
 		for (final Rat rat_tmp : getAllRats())
-		{
-			/*
-			 * String values=" "; for(String s:rat_tmp.getValues())
-			 * values+=s+'\t'; //TODO:tab after the last item ??!!
-			 * str_ret+=values + System.getProperty("line.separator");
-			 */
 			str_ret_buf.append(rat_tmp.rat2String());
-		}
 		return str_ret_buf.toString();
 	}
 

@@ -43,12 +43,6 @@ public class CtrlRatInfoForm extends ControllerUI
 		return false;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see control.ui.ControllerUI#show(boolean) Before we show the window, we
-	 * collect groups' names from InfoController and load them to GUI. note:
-	 * params[0] is reserved for the rat number.
-	 */
 	@Override
 	public void show(final boolean visibility)
 	{

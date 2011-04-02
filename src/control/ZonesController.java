@@ -28,7 +28,6 @@ import utils.PManager;
  */
 public class ZonesController
 {
-
 	private static ZonesController default_controller;
 	ShapeController shape_controller;
 	private byte[] zone_map;
@@ -268,19 +267,6 @@ public class ZonesController
 					+ System.getProperty("line.separator")
 					+ ZoneType.zoneType2String(getZoneByNumber(tmp_shp.getShapeNumber()).getZoneType())
 					+ System.getProperty("line.separator"));
-			/*
-			 * res += tmp_shp.getShapeNumber() +
-			 * System.getProperty("line.separator") + tmp_shp.getX() +
-			 * System.getProperty("line.separator") + tmp_shp.getY() +
-			 * System.getProperty("line.separator") + width_diameterx +
-			 * System.getProperty("line.separator") + height_diametery +
-			 * System.getProperty("line.separator") +
-			 * Shape.color2String(tmp_shp.getColor()) +
-			 * System.getProperty("line.separator") +
-			 * ZoneType.zoneType2String(getZoneByNumber
-			 * (tmp_shp.getShapeNumber()).getZoneType()) +
-			 * System.getProperty("line.separator");
-			 */
 		}
 		return res_buf.toString();
 	}

@@ -12,13 +12,13 @@ import utils.saveengines.Constants;
 public class Experiment implements Exp2GUI
 {
 
-	private ArrayList<model.business.Group> groups;
+	private final ArrayList<model.business.Group> groups;
 	private String name;
 	private String user;
 	private String date;
 	private String notes;
 
-	private String[] measurements_list;
+	private String[] exp_params;
 
 	/**
 	 * Clears the experiment info(data) This functions loops on all the groups
@@ -93,9 +93,8 @@ public class Experiment implements Exp2GUI
 		groups.add(g);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see model.If_Exp2GUI#getName()
+	/* (non-Javadoc)
+	 * @see model.business.Exp2GUI#getName()
 	 */
 	public String getName()
 	{
@@ -107,9 +106,8 @@ public class Experiment implements Exp2GUI
 		this.name = name;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see model.If_Exp2GUI#getUser()
+	/* (non-Javadoc)
+	 * @see model.business.Exp2GUI#getUser()
 	 */
 	public String getUser()
 	{
@@ -121,18 +119,16 @@ public class Experiment implements Exp2GUI
 		this.user = user;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see model.If_Exp2GUI#getDate()
+	/* (non-Javadoc)
+	 * @see model.business.Exp2GUI#getDate()
 	 */
 	public String getDate()
 	{
 		return date;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see model.If_Exp2GUI#getNotes()
+	/* (non-Javadoc)
+	 * @see model.business.Exp2GUI#getNotes()
 	 */
 	public String getNotes()
 	{
@@ -162,37 +158,23 @@ public class Experiment implements Exp2GUI
 		return groups.size();
 	}
 
-	public void setMeasurementsList(final String[] lineData)
+	public void setMeasurementsList(final String[] exp_parameters)
 	{
-		measurements_list = lineData;
+		exp_params = exp_parameters;
 	}
 
-	public String[] getMeasurementsList()
+	public String[] getExpParametersList()
 	{
-		return measurements_list;
+		return exp_params;
 	}
 
 	public String expInfo2String()
 	{
-		// String exp_info = "";
 		final StringBuffer exp_info_buf = new StringBuffer();
 
 		try
 		{ // TODO: replace System.getProperty("line.separator") by an endl
 			// String
-			/*
-			 * exp_info += Constants.h_exp +
-			 * System.getProperty("line.separator"); exp_info +=
-			 * Constants.h_exp_name + getName() +
-			 * System.getProperty("line.separator"); exp_info +=
-			 * Constants.h_exp_user + getUser() +
-			 * System.getProperty("line.separator"); exp_info +=
-			 * Constants.h_exp_date + getDate() + " " +
-			 * System.getProperty("line.separator"); exp_info +=
-			 * Constants.h_exp_notes + getNotes() +
-			 * System.getProperty("line.separator");
-			 */
-
 			exp_info_buf.append(Constants.h_exp
 					+ System.getProperty("line.separator")
 					+ Constants.h_exp_name
@@ -210,34 +192,8 @@ public class Experiment implements Exp2GUI
 					+ System.getProperty("line.separator"));
 
 			for (final Group grp_tmp : getGroups())
-			{/*
-			 * exp_info+=Cls_Constants.h_grp+
-			 * System.getProperty("line.separator");
-			 * exp_info+=Cls_Constants.h_grp_id + grp_tmp.getId()+
-			 * System.getProperty("line.separator");
-			 * exp_info+=Cls_Constants.h_grp_name + grp_tmp.getName()+
-			 * System.getProperty("line.separator");
-			 * exp_info+=Cls_Constants.h_grp_no_rats + grp_tmp.getNo_rats()+
-			 * System.getProperty("line.separator");
-			 * exp_info+=Cls_Constants.h_grp_rats_numbers +
-			 * grp_tmp.getRats_numbering() +
-			 * System.getProperty("line.separator");
-			 * exp_info+=Cls_Constants.h_grp_notes + grp_tmp.getNotes() +
-			 * System.getProperty("line.separator"); exp_info+="" +
-			 * System.getProperty("line.separator");
-			 * exp_info+=Cls_Constants.h_rat +
-			 * System.getProperty("line.separator"); String tags=""; for(String
-			 * s:getMeasurementsList()) tags+=s+'\t'; //TODO:tab after the last
-			 * item ??!! exp_info+=tags + System.getProperty("line.separator");
-			 * for(Rat rat_tmp:grp_tmp.getAllRats()){ String values=" ";
-			 * for(String s:rat_tmp.getValues()) values+=s+'\t'; //TODO:tab
-			 * after the last item ??!! exp_info+=values +
-			 * System.getProperty("line.separator"); }
-			 */
-				// exp_info += grp_tmp.grp2String(getMeasurementsList());
-				exp_info_buf.append(grp_tmp.grp2String(getMeasurementsList()));
+				exp_info_buf.append(grp_tmp.grp2String(getExpParametersList()));
 
-			}
 		} catch (final Exception e)
 		{
 			e.printStackTrace();

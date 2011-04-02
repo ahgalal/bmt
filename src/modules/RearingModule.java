@@ -11,6 +11,8 @@ import utils.video.filters.rearingdetection.RearingData;
 public class RearingModule extends Module
 {
 
+	private static final String GUI_REARING_COUNTER = "Rearing Counter";
+	private static final String FILE_REARING_COUNTER = "RRNG";
 	private int rearing_ctr;
 	private boolean is_rearing;
 	private RearingData rearing_data;
@@ -64,13 +66,13 @@ public class RearingModule extends Module
 	@Override
 	public void updateGUICargoData()
 	{
-		gui_cargo.setDataByIndex(0, Integer.toString(rearing_ctr));
+		gui_cargo.setDataByTag(GUI_REARING_COUNTER, Integer.toString(rearing_ctr));
 	}
 
 	@Override
 	public void updateFileCargoData()
 	{
-		file_cargo.setDataByIndex(0, Integer.toString(rearing_ctr));
+		file_cargo.setDataByTag(FILE_REARING_COUNTER, Integer.toString(rearing_ctr));
 	}
 
 	@Override
@@ -107,9 +109,9 @@ public class RearingModule extends Module
 	@Override
 	public void initialize()
 	{
-		gui_cargo = new Cargo(new String[] { "Rearing Counter" });
+		gui_cargo = new Cargo(new String[] { GUI_REARING_COUNTER });
 
-		file_cargo = new Cargo(new String[] { "RRNG" });
+		file_cargo = new Cargo(new String[] { FILE_REARING_COUNTER });
 	}
 
 	@Override

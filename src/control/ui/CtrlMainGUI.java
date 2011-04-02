@@ -62,11 +62,6 @@ public class CtrlMainGUI extends ControllerUI
 		return true;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see control.ui.ControllerUI#show(boolean) Shows the GUI window and
-	 * starts the thread "RunnableKeepMainGUIStateUpdated"
-	 */
 	@Override
 	public void show(final boolean visibility)
 	{

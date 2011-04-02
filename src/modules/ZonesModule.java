@@ -18,12 +18,21 @@ import control.ZonesController;
 public class ZonesModule extends Module
 {
 
+	private static final String GUI_CURRENT_ZONE = "Current Zone";
+	private static final String GUI_ALL_ENTRANCE = "All Entrance";
+	private static final String GUI_CENTRAL_ENTRANCE = "Central Entrance";
+	private static final String GUI_CENTRAL_TIME = "Central Time";
+	private static final String GUI_TOTAL_DISTANCE = "Total Distance";
+	private static final String FILE_ALL_ENTRANCE = "AZE";
+	private static final String FILE_CENTRAL_ENTRANCE = "CZE";
+	private static final String FILE_CENTRAL_TIME = "CT";
+	private static final String FILE_TOTAL_DISTANCE = "Distance";
+	
 	private int current_zone_num;
 	private final ZonesController zone_controller;
 	private long central_start_tmp;
 	private boolean central_flag;
 	private int updated_zone_number;
-
 	private int all_entrance, central_entrance;
 	private long central_zone_time_tmp;
 	private int central_zone_time;
@@ -221,10 +230,18 @@ public class ZonesModule extends Module
 
 		arr_path.clear();
 
-		gui_cargo = new Cargo(new String[] { "Current Zone", "All Entrance",
-				"Central Entrance", "Central Time", "Total Distance" });
+		gui_cargo = new Cargo(new String[] {
+				GUI_CURRENT_ZONE,
+				GUI_ALL_ENTRANCE,
+				GUI_CENTRAL_ENTRANCE,
+				GUI_CENTRAL_TIME,
+				GUI_TOTAL_DISTANCE });
 
-		file_cargo = new Cargo(new String[] { "AZE", "CZE", "CT", "Distance" });
+		file_cargo = new Cargo(new String[] {
+				FILE_ALL_ENTRANCE,
+				FILE_CENTRAL_ENTRANCE,
+				FILE_CENTRAL_TIME,
+				FILE_TOTAL_DISTANCE });
 	}
 
 	@Override
@@ -248,20 +265,20 @@ public class ZonesModule extends Module
 	@Override
 	public void updateGUICargoData()
 	{
-		gui_cargo.setDataByIndex(0, Integer.toString(current_zone_num));
-		gui_cargo.setDataByIndex(1, Integer.toString(all_entrance));
-		gui_cargo.setDataByIndex(2, Integer.toString(central_entrance));
-		gui_cargo.setDataByIndex(3, Integer.toString(central_zone_time));
-		gui_cargo.setDataByIndex(4, Long.toString(total_distance));
+		gui_cargo.setDataByTag(GUI_CURRENT_ZONE, Integer.toString(current_zone_num));
+		gui_cargo.setDataByTag(GUI_ALL_ENTRANCE, Integer.toString(all_entrance));
+		gui_cargo.setDataByTag(GUI_CENTRAL_ENTRANCE, Integer.toString(central_entrance));
+		gui_cargo.setDataByTag(GUI_CENTRAL_TIME, Integer.toString(central_zone_time));
+		gui_cargo.setDataByTag(GUI_TOTAL_DISTANCE, Long.toString(total_distance));
 	}
 
 	@Override
 	public void updateFileCargoData()
 	{
-		file_cargo.setDataByIndex(0, Integer.toString(all_entrance));
-		file_cargo.setDataByIndex(1, Integer.toString(central_entrance));
-		file_cargo.setDataByIndex(2, Integer.toString(central_zone_time));
-		file_cargo.setDataByIndex(3, Long.toString(total_distance));
+		file_cargo.setDataByTag(FILE_ALL_ENTRANCE, Integer.toString(all_entrance));
+		file_cargo.setDataByTag(FILE_CENTRAL_ENTRANCE, Integer.toString(central_entrance));
+		file_cargo.setDataByTag(FILE_CENTRAL_TIME, Integer.toString(central_zone_time));
+		file_cargo.setDataByTag(FILE_TOTAL_DISTANCE, Long.toString(total_distance));
 	}
 
 	@Override
@@ -331,14 +348,14 @@ public class ZonesModule extends Module
 	}
 
 	@Override
-	public void deRegisterDataObject(Data data)
+	public void deRegisterDataObject(final Data data)
 	{
-		if(rat_finder_data==data)
+		if (rat_finder_data == data)
 		{
-			rat_finder_data=null;
-			this.data[0]=null;
-			current_position=null;
-		}		
+			rat_finder_data = null;
+			this.data[0] = null;
+			current_position = null;
+		}
 	}
 
 }

@@ -66,7 +66,7 @@ public class ExcelEngine
 
 				excel_wrapper.fillRow(-1, new Object[] { "" });
 
-				excel_wrapper.fillRow(-1, exp.getMeasurementsList());
+				excel_wrapper.fillRow(-1, exp.getExpParametersList());
 				for (final Rat rat_tmp : grp_tmp.getAllRats())
 				{
 					excel_wrapper.fillRow(-1, rat_tmp.getValues());

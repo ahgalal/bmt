@@ -9,9 +9,18 @@ import utils.saveengines.ExcelEngine;
 import utils.saveengines.TextEngine;
 import utils.video.filters.Data;
 
+/**
+ * Experiment Module, it saves, loads and updated experiment's data.
+ * 
+ * @author Creative
+ */
 public class ExperimentModule extends Module
 {
-
+	private static final String GUI_EXP_NAME = "Experiment's Name";
+	private static final String GUI_GROUP_NAME = "Group's Name";
+	private static final String GUI_RAT_NUMBER = "Rat Number";
+	private static final String FILE_RAT_NUMBER = "Number";
+	private static final String FILE_GROUP_NAME = "Group";
 	private int curr_rat_number;
 	private String curr_grp_name;
 	private final Experiment exp;
@@ -21,6 +30,14 @@ public class ExperimentModule extends Module
 	private final ExcelEngine excel_engine;
 	private boolean exp_is_set;
 
+	/**
+	 * Initializes the Experiment module.
+	 * 
+	 * @param name
+	 *            module's name
+	 * @param config
+	 *            module's configurations
+	 */
 	public ExperimentModule(final String name, final ModuleConfigs config)
 	{
 		super(name, config);
@@ -46,17 +63,17 @@ public class ExperimentModule extends Module
 	@Override
 	public void updateGUICargoData()
 	{
-		gui_cargo.setDataByIndex(0, exp.getName());
-		gui_cargo.setDataByIndex(1, curr_grp_name);
-		gui_cargo.setDataByIndex(2, Integer.toString(curr_rat_number));
-
+		gui_cargo.setDataByTag(GUI_EXP_NAME,  exp.getName());
+		gui_cargo.setDataByTag(GUI_GROUP_NAME, curr_grp_name);
+		gui_cargo.setDataByTag(GUI_RAT_NUMBER, Integer.toString(curr_rat_number));
 	}
 
 	@Override
 	public void updateFileCargoData()
 	{
-		file_cargo.setDataByIndex(0, Integer.toString(curr_rat_number));
-		file_cargo.setDataByIndex(1, curr_grp_name);
+		file_cargo.setDataByTag(FILE_RAT_NUMBER, Integer.toString(curr_rat_number));
+		file_cargo.setDataByTag(FILE_GROUP_NAME, curr_grp_name);
+
 	}
 
 	@Override
@@ -73,21 +90,49 @@ public class ExperimentModule extends Module
 
 	}
 
+	/**
+	 * Sets the file name to save the experiment to.
+	 * 
+	 * @param f_name
+	 *            file name to save the experiment to
+	 */
 	public void setExpFileName(final String f_name)
 	{
 		exp_file_name = f_name;
 	}
 
+	/**
+	 * is there an active experiment?
+	 * 
+	 * @return true/false
+	 */
 	public boolean isExperimentPresent()
 	{
 		return exp_is_set;
 	}
 
+	/**
+	 * Does the active experiment have any groups?
+	 * 
+	 * @return true/false
+	 */
 	public boolean isThereAnyGroups()
 	{
 		return (exp.getNoGroups() != 0);
 	}
 
+	/**
+	 * Saves experiment's information.
+	 * 
+	 * @param name
+	 *            experiment's name
+	 * @param user
+	 *            experiment's user name
+	 * @param date
+	 *            experiment's date of creation
+	 * @param notes
+	 *            notes on the experiment
+	 */
 	public void saveExpInfo(
 			final String name,
 			final String user,
@@ -98,6 +143,19 @@ public class ExperimentModule extends Module
 		exp_is_set = true;
 	}
 
+	/**
+	 * Saves group information, if the group exists, it is updated; else, a new
+	 * group is created.
+	 * 
+	 * @param grp_id
+	 *            id of the coup to edit
+	 * @param name
+	 *            new name of the group
+	 * @param rats_numbering
+	 *            numbers of rats already experimented
+	 * @param notes
+	 *            notes on the group
+	 */
 	public void saveGrpInfo(
 			final int grp_id,
 			final String name,
@@ -118,6 +176,15 @@ public class ExperimentModule extends Module
 		}
 	}
 
+	/**
+	 * Gets the index of an element in an array, using the element's value.
+	 * 
+	 * @param arr
+	 *            array to get the index from
+	 * @param val
+	 *            value to get it's index in the array
+	 * @return index of the value in the array
+	 */
 	private int getIndexByStringValue(final String[] arr, final String val)
 	{
 		for (int i = 0; i < arr.length; i++)
@@ -126,25 +193,28 @@ public class ExperimentModule extends Module
 		return -1;
 	}
 
+	/**
+	 * Saves the rat's info to the experiment object.
+	 */
 	public void saveRatInfo()
 	{
-		if (exp.getMeasurementsList() == null)
+		if (exp.getExpParametersList() == null)
 			exp.setMeasurementsList(ModulesManager.getDefault().getCodeNames());
-		final String[] measurements_list = exp.getMeasurementsList();
+		final String[] params_list = exp.getExpParametersList();
 		final String[] data = ModulesManager.getDefault().getFileData();
 		final String[] code_names = ModulesManager.getDefault().getCodeNames();
 		boolean override_rat = false;
 		Rat rat_tmp = exp.getGroupByName(curr_grp_name).getRatByNumber(curr_rat_number);
 		if (rat_tmp == null)
-			rat_tmp = new Rat(measurements_list);
+			rat_tmp = new Rat(params_list);
 		else
 			override_rat = true;
 
-		for (int i = 0; i < measurements_list.length; i++)
+		for (int i = 0; i < params_list.length; i++)
 		{
 			rat_tmp.setValueByParameterName(
-					measurements_list[i],
-					data[getIndexByStringValue(code_names, measurements_list[i])]);
+					params_list[i],
+					data[getIndexByStringValue(code_names, params_list[i])]);
 		}
 
 		if (!override_rat)
@@ -152,11 +222,23 @@ public class ExperimentModule extends Module
 		writeToTXTFile(exp_file_name);
 	}
 
+	/**
+	 * Writes the experiment to a text file.
+	 * 
+	 * @param FilePath
+	 *            file path to write to
+	 */
 	public void writeToTXTFile(final String FilePath)
 	{
 		text_engine.writeExpInfoToTXTFile(FilePath, exp);
 	}
 
+	/**
+	 * Loads an experiment from a text file to an experiment object.
+	 * 
+	 * @param file_name
+	 *            file name to load the experiment from
+	 */
 	public void loadInfoFromTXTFile(final String file_name)
 	{
 		if (text_engine.readExpInfoFromTXTFile(file_name, exp))
@@ -169,11 +251,22 @@ public class ExperimentModule extends Module
 		}
 	}
 
+	/**
+	 * Saves the experiment to an Excel file.
+	 * 
+	 * @param FilePath
+	 *            FilePath file path to write to
+	 */
 	public void writeToExcelFile(final String FilePath)
 	{
 		excel_engine.writeExpInfoToExcelFile(FilePath, exp);
 	}
 
+	/**
+	 * Gets the names of groups in the active experiment.
+	 * 
+	 * @return String array containing groups' names
+	 */
 	public String[] getGroupsNames()
 	{
 		final String[] res = new String[exp.getGroups().size()];
@@ -186,6 +279,16 @@ public class ExperimentModule extends Module
 		return res;
 	}
 
+	/**
+	 * Checks that the group already exists, and if the rat already exists.
+	 * 
+	 * @param rat_num
+	 *            rat number to check its existence
+	 * @param grp_name
+	 *            group name to check its existence
+	 * @return integer: 0: Group exists, rat doesn't exist (it's a new rat);
+	 *         1:Group exists, rat also exists; -1: Group doesn't exist
+	 */
 	public int validateRatAndGroup(final int rat_num, final String grp_name)
 	{
 		final Group tmp_grp = exp.getGroupByName(grp_name);
@@ -200,6 +303,15 @@ public class ExperimentModule extends Module
 			return -1;
 	}
 
+	/**
+	 * Sets the active group and rat number.
+	 * 
+	 * @param rat_num
+	 *            rat number to be active and save exp. info to
+	 * @param grp_name
+	 *            group name to be active and save the active rat to
+	 * @return
+	 */
 	public int setCurrentRatAndGroup(final int rat_num, final String grp_name)
 	{
 		final Group tmp_grp = exp.getGroupByName(grp_name);
@@ -212,6 +324,9 @@ public class ExperimentModule extends Module
 			return -1;
 	}
 
+	/**
+	 * Clears and unloads the active experiment.
+	 */
 	public void unloadExperiment()
 	{
 		exp.clearExperimentData();
@@ -222,17 +337,17 @@ public class ExperimentModule extends Module
 	@Override
 	public void initialize()
 	{
-		gui_cargo = new Cargo(new String[] { "Experiment's Name", "Group's Name",
-				"Rat Number" });
+		gui_cargo = new Cargo(
+				new String[] { GUI_EXP_NAME, GUI_GROUP_NAME, GUI_RAT_NUMBER });
 
-		file_cargo = new Cargo(new String[] { "Number", "Group" });
+		file_cargo = new Cargo(new String[] { FILE_RAT_NUMBER, FILE_GROUP_NAME });
 	}
 
 	@Override
-	public void deRegisterDataObject(Data data)
+	public void deRegisterDataObject(final Data data)
 	{
 		// TODO Auto-generated method stub
-		
+
 	}
 
 }

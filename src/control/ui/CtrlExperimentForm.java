@@ -21,10 +21,6 @@ public class CtrlExperimentForm extends ControllerUI
 	private String name, user, date, notes;
 	private final ExperimentForm ui;
 
-	/*
-	 * (non-Javadoc)
-	 * @see control.ui.ControllerUI#setVars(java.lang.String[])
-	 */
 	@Override
 	public boolean setVars(final String[] strs)
 	{

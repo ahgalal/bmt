@@ -97,10 +97,8 @@ public class ShapeController implements GfxPanelNotifiee, ShapeCollection
 		gfx_panel.refreshDrawingArea();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see ui.GfxPanel_Notifiee#shapeAdded(int) displays a "select zone type"
-	 * dialog box
+	/* (non-Javadoc)
+	 * @see gfx_panel.GfxPanelNotifiee#shapeAdded(int)
 	 */
 	@Override
 	public void shapeAdded(final int shapeNumber)
@@ -116,10 +114,8 @@ public class ShapeController implements GfxPanelNotifiee, ShapeCollection
 		});
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see ui.GfxPanel_Notifiee#shapeModified(int) calls zone_controller to
-	 * update the modified shape's data in GUI data updated: color & zone type
+	/* (non-Javadoc)
+	 * @see gfx_panel.GfxPanelNotifiee#shapeModified(int)
 	 */
 	@Override
 	public void shapeModified(final int shapeNumber)
@@ -134,10 +130,8 @@ public class ShapeController implements GfxPanelNotifiee, ShapeCollection
 
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see ui.GfxPanel_Notifiee#shapeSelected(int) calls zone_controller to
-	 * select the zone corresponding to the selected shape, in the GUI table
+	/* (non-Javadoc)
+	 * @see gfx_panel.GfxPanelNotifiee#shapeSelected(int)
 	 */
 	@Override
 	public void shapeSelected(final int shapeNumber)
@@ -169,6 +163,9 @@ public class ShapeController implements GfxPanelNotifiee, ShapeCollection
 		zone_conteroller = ZonesController.getDefault();
 	}
 
+	/* (non-Javadoc)
+	 * @see control.ShapeCollection#drawaAllShapes(java.awt.Graphics)
+	 */
 	public void drawaAllShapes(final Graphics gfx)
 	{
 		int i = 0;
@@ -178,11 +175,6 @@ public class ShapeController implements GfxPanelNotifiee, ShapeCollection
 		}
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see ui.GfxPanel_Notifiee#mouseClicked(java.awt.Point) used to record
-	 * measure points when setting the scale in DrawZones GUI
-	 */
 	@Override
 	public void mouseClicked(final Point pos)
 	{
@@ -190,10 +182,6 @@ public class ShapeController implements GfxPanelNotifiee, ShapeCollection
 			pm.drw_zns.addMeasurePoint(pos);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see ui.GfxPanel_Notifiee#dragOccured(int, int) not implemented
-	 */
 	@Override
 	public void dragOccured(final int draggedShape, final int draggedOnShape)
 	{

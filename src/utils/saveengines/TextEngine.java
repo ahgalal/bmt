@@ -94,7 +94,7 @@ public class TextEngine
 							for (int i = 0; i < line_data.length; i++)
 								line_data[i] = line_data[i].trim();
 							final Rat tmp_rat = new Rat(
-									exp.getMeasurementsList(),
+									exp.getExpParametersList(),
 									line_data);
 							grp_tmp.addRat(tmp_rat);
 						} else
