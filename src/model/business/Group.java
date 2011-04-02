@@ -18,14 +18,18 @@ public class Group implements Grp2GUI
 	private String notes;
 	private final ArrayList<Rat> arr_rats;
 
+	/**
+	 * Initializes the group.
+	 * @param id group's unique id
+	 * @param name group's name
+	 * @param notes group's notes
+	 */
 	public Group(
 			final int id,
 			final String name,
-			final String rats_numbering,
 			final String notes)
 	{
 		this.name = name;
-		this.rats_numbering = rats_numbering;
 		this.notes = notes;
 		this.id = id;
 		arr_rats = new ArrayList<Rat>();
@@ -60,57 +64,69 @@ public class Group implements Grp2GUI
 		arr_rats.add(new_rat);
 	}
 
+	/**
+	 * Gets all rats belonging to the group
+	 * @return ArrayList of rats
+	 */
 	public ArrayList<Rat> getAllRats()
 	{
 		return arr_rats;
 	}
 
-	/*
-	 * public void saveData(PrintStream p){ try { // Create a new file output
-	 * stream // connected to "myfile.txt" p.println("Group Info :");
-	 * p.println("Group Name" + '\t' + "Number of Rats" + '\t' +
-	 * "Rats Numbering" + '\t' + "Notes"); p.println(name + '\t' + no_rats +
-	 * '\t' + rats_numbering + '\t' + notes); p.println("Group Name : " + name);
-	 * p.println("Number of Rats : " + no_rats); p.println("Rats Numbering : " +
-	 * rats_numbering); p.println("Notes : " + notes); p.close(); } catch
-	 * (Exception e) { e.printStackTrace(); } }
+	/* (non-Javadoc)
+	 * @see model.business.Grp2GUI#getName()
 	 */
-
 	public String getName()
 	{
 		return name;
 	}
 
+	/**
+	 * Sets the group's name.
+	 * @param name new name of the group
+	 */
 	public void setName(final String name)
 	{
 		this.name = name;
 	}
 
+	/* (non-Javadoc)
+	 * @see model.business.Grp2GUI#getNoRats()
+	 */
 	public int getNoRats()
 	{
 		return arr_rats.size();
 	}
 
+	/* (non-Javadoc)
+	 * @see model.business.Grp2GUI#getRatsNumbering()
+	 */
 	public String getRatsNumbering()
 	{
 		return rats_numbering;
 	}
 
-	public void setRatsNumbering(final String ratsNumbering)
-	{
-		rats_numbering = ratsNumbering;
-	}
-
+	/* (non-Javadoc)
+	 * @see model.business.Grp2GUI#getNotes()
+	 */
 	public String getNotes()
 	{
 		return notes;
 	}
 
+	/**
+	 * Sets the notes of the group.
+	 * @param notes new notes of the group
+	 */
 	public void setNotes(final String notes)
 	{
 		this.notes = notes;
 	}
 
+	/**
+	 * Sets the unique identifier for the group.
+	 * @param id unique identifier
+	 */
 	public void setId(final int id)
 	{
 		this.id = id;
@@ -125,7 +141,12 @@ public class Group implements Grp2GUI
 		return id;
 	}
 
-	public String grp2String(final String[] measurements_list)
+	/**
+	 * Gets the group's info in the form of a string.
+	 * @param parameters_list list of parameters for rats
+	 * @return
+	 */
+	public String grp2String(final String[] parameters_list)
 	{
 		// String str_ret = "";
 		final StringBuffer str_ret_buf = new StringBuffer();
@@ -148,9 +169,8 @@ public class Group implements Grp2GUI
 		str_ret_buf.append("" + System.getProperty("line.separator"));
 		str_ret_buf.append(Constants.h_rat + System.getProperty("line.separator"));
 		final StringBuffer tags_buf = new StringBuffer();
-		for (final String s : measurements_list)
-			// tags += s + '\t'; // TODO:tab after the last item ??!!
-			tags_buf.append(s + '\t');
+		for (final String s : parameters_list)
+			tags_buf.append(s + '\t');	// TODO:tab after the last item ??!!
 		str_ret_buf.append(tags_buf.toString() + System.getProperty("line.separator"));
 
 		for (final Rat rat_tmp : getAllRats())

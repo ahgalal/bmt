@@ -2,7 +2,7 @@ package control.ui;
 
 import modules.ModuleConfigs;
 import modules.ModulesManager;
-import modules.ZonesModuleConfigs;
+import modules.zones.ZonesModuleConfigs;
 import ui.OptionsWindow;
 import utils.PManager;
 import utils.video.filters.FilterConfigs;
@@ -81,7 +81,7 @@ public class CtrlOptionsWindow extends ControllerUI
 			pm.getVideoProcessor().updateFiltersConfigs(filters_configs);
 			final ZonesModuleConfigs zones_configs = new ZonesModuleConfigs(
 					"Zones Module",
-					hyst);
+					hyst,-1,-1);
 
 			ModulesManager.getDefault().updateModuleConfigs(
 					new ModuleConfigs[] { zones_configs });

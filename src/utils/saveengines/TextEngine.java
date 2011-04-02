@@ -9,12 +9,11 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintStream;
 
-import utils.PManager;
-import utils.StatusManager.StatusSeverity;
-
 import model.business.Experiment;
 import model.business.Group;
 import model.business.Rat;
+import utils.PManager;
+import utils.StatusManager.StatusSeverity;
 
 /**
  * Responsible for saving/loading Experiment's data to/from Text files.
@@ -76,10 +75,16 @@ public class TextEngine
 					Integer.parseInt(buf_rdr.readLine().substring(
 							Constants.h_grp_no_rats.length()));
 					final String tmp_rats_numbers = buf_rdr.readLine().substring(
-							Constants.h_grp_rats_numbers.length());
+							Constants.h_grp_rats_numbers.length()); // TODO:
+																	// remove
+																	// this as
+																	// rat
+																	// numbers
+																	// are read
+																	// dynamically
 					final String tmp_notes = buf_rdr.readLine().substring(
 							Constants.h_grp_notes.length());
-					grp_tmp = new Group(tmp_id, tmp_name, tmp_rats_numbers, tmp_notes);
+					grp_tmp = new Group(tmp_id, tmp_name, tmp_notes);
 					exp.addGroup(grp_tmp);
 				} else if (tmp_line.equals(Constants.h_rat))
 				{

@@ -1,9 +1,11 @@
 package control.ui;
 
+import modules.ModuleConfigs;
+import modules.ModulesManager;
+import modules.zones.ZonesModuleConfigs;
 import ui.CamOptions;
 import utils.PManager;
 import utils.video.filters.CommonFilterConfigs;
-import control.ZonesController;
 
 /**
  * Controller of the CamOptions GUI window.
@@ -67,7 +69,12 @@ public class CtrlCamOptions extends ControllerUI
 				format);
 		pm.initializeVideoProcessor(common_configs);
 		PManager.main_gui.configureScreenDrawerFilter("ScreenDrawer", null, true);
-		ZonesController.getDefault().setWidthandHeight(width, height);
+		ModulesManager.getDefault().updateModuleConfigs(
+				new ModuleConfigs[] { new ZonesModuleConfigs(
+						"Zones Module",
+						-1,
+						width,
+						height) });
 	}
 
 	/**

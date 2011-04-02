@@ -1,8 +1,8 @@
 package control.ui;
 
-import modules.ExperimentModule;
 import modules.ModulesManager;
-import modules.RearingModule;
+import modules.experiment.ExperimentModule;
+import modules.rearing.RearingModule;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Display;

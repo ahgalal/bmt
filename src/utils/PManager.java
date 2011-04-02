@@ -9,7 +9,6 @@ import utils.saveengines.ExcelEngine;
 import utils.video.VideoProcessor;
 import utils.video.filters.CommonFilterConfigs;
 import control.ShapeController;
-import control.ZonesController;
 import control.ui.CtrlAbout;
 import control.ui.CtrlCamOptions;
 import control.ui.CtrlDrawZones;
@@ -94,7 +93,6 @@ public class PManager
 	 */
 	public StatusManager status_mgr;
 	private final VideoProcessor vp;
-	private final ZonesController zone_controller;
 	/**
 	 * About Dialog box instance, displays credits of this software.
 	 */
@@ -135,7 +133,7 @@ public class PManager
 		excel_engine = new ExcelEngine();
 		default_me = this;
 		status_mgr = new StatusManager();
-		zone_controller = ZonesController.getDefault();
+		
 		shape_controller = ShapeController.getDefault();
 		drw_zns = new CtrlDrawZones();
 		frm_exp = new CtrlExperimentForm();
@@ -148,8 +146,6 @@ public class PManager
 		main_gui = new CtrlMainGUI();
 		main_gui.show(true);
 
-		zone_controller.init();
-		shape_controller.init();
 		vp = new VideoProcessor();
 	}
 
@@ -171,7 +167,7 @@ public class PManager
 	 */
 	public void initializeVideoProcessor(final CommonFilterConfigs common_configs)
 	{
-		zone_controller.setWidthandHeight(common_configs.width, common_configs.height);
+		ModulesManager.getDefault().setWidthandHeight(common_configs.width, common_configs.height);
 		if (vp.initialize(common_configs))
 			vp.startStreaming();
 	}

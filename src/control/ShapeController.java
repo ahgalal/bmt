@@ -8,6 +8,9 @@ import java.awt.Graphics;
 import java.awt.Point;
 import java.util.ArrayList;
 
+import modules.ModulesManager;
+import modules.zones.ZonesModule;
+
 import org.eclipse.swt.widgets.Display;
 
 import ui.FormZoneType;
@@ -29,7 +32,6 @@ public class ShapeController implements GfxPanelNotifiee, ShapeCollection
 
 	private GfxPanel gfx_panel;
 	private ArrayList<Shape> shp_arr;
-	private ZonesController zone_conteroller;
 	private final PManager pm;
 	private boolean setting_scale;
 
@@ -120,13 +122,13 @@ public class ShapeController implements GfxPanelNotifiee, ShapeCollection
 	@Override
 	public void shapeModified(final int shapeNumber)
 	{
-		zone_conteroller.updateZoneDataInGUI(shapeNumber);
+		((ZonesModule) ModulesManager.getDefault().getModuleByName("Zones Module")).updateZoneDataInGUI(shapeNumber);
 	}
 
 	@Override
 	public void shapeDeleted(final int shapeNumber)
 	{
-		zone_conteroller.deleteZone(shapeNumber);
+		((ZonesModule) ModulesManager.getDefault().getModuleByName("Zones Module")).deleteZone(shapeNumber);
 
 	}
 
@@ -136,7 +138,7 @@ public class ShapeController implements GfxPanelNotifiee, ShapeCollection
 	@Override
 	public void shapeSelected(final int shapeNumber)
 	{
-		zone_conteroller.selectZoneInGUI(shapeNumber);
+		((ZonesModule) ModulesManager.getDefault().getModuleByName("Zones Module")).selectZoneInGUI(shapeNumber);
 	}
 
 	/**
@@ -155,13 +157,6 @@ public class ShapeController implements GfxPanelNotifiee, ShapeCollection
 		gfx_panel.registerForNotifications(this);
 	}
 
-	/**
-	 * just get the instance of the ZoneController (Singleton).
-	 */
-	public void init()
-	{
-		zone_conteroller = ZonesController.getDefault();
-	}
 
 	/* (non-Javadoc)
 	 * @see control.ShapeCollection#drawaAllShapes(java.awt.Graphics)
@@ -175,6 +170,9 @@ public class ShapeController implements GfxPanelNotifiee, ShapeCollection
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see gfx_panel.GfxPanelNotifiee#mouseClicked(java.awt.Point)
+	 */
 	@Override
 	public void mouseClicked(final Point pos)
 	{

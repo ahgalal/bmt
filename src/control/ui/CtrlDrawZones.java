@@ -3,7 +3,7 @@ package control.ui;
 import java.awt.Point;
 
 import modules.ModulesManager;
-import modules.ZonesModule;
+import modules.zones.ZonesModule;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.FileDialog;
@@ -12,7 +12,6 @@ import org.eclipse.swt.widgets.Shell;
 import ui.DrawZones;
 import utils.PManager;
 import control.ShapeController;
-import control.ZonesController;
 
 /**
  * Controller of the DrawZones GUI window.
@@ -23,7 +22,6 @@ public class CtrlDrawZones extends ControllerUI
 {
 
 	private final DrawZones ui;
-	private final ZonesController zone_controller;
 
 	/**
 	 * Initializes class attributes (DrawZones , PManager and ZoneController)
@@ -31,7 +29,6 @@ public class CtrlDrawZones extends ControllerUI
 	 */
 	public CtrlDrawZones()
 	{
-		zone_controller = ZonesController.getDefault();
 		pm = PManager.getDefault();
 		ui = new DrawZones();
 		ui.setController(this);
@@ -77,17 +74,17 @@ public class CtrlDrawZones extends ControllerUI
 		final FileDialog fileDialog = new FileDialog(shell, SWT.OPEN);
 		final String file_name = fileDialog.open();
 		if (file_name != null)
-			zone_controller.loadZonesFromFile(file_name);
+			((ZonesModule) ModulesManager.getDefault().getModuleByName("Zones Module")).loadZonesFromFile(file_name);
 	}
 
-	public void setBackground(int[] img)
+	public void setBackground(final int[] img)
 	{
 		ui.getGFXPanel().setBackground(img);
 	}
 
 	public void btn_hide_Action()
 	{
-		zone_controller.updateZoneMap();
+		((ZonesModule) ModulesManager.getDefault().getModuleByName("Zones Module")).updateZoneMap();
 		show(false);
 	}
 
@@ -96,7 +93,7 @@ public class CtrlDrawZones extends ControllerUI
 		final FileDialog fileDialog = new FileDialog(shell, SWT.SAVE);
 		final String file_name = fileDialog.open();
 		if (file_name != null)
-			zone_controller.saveZonesToFile(file_name);
+			((ZonesModule) ModulesManager.getDefault().getModuleByName("Zones Module")).saveZonesToFile(file_name);
 	}
 
 	/**

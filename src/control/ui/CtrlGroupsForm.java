@@ -3,8 +3,8 @@ package control.ui;
 import java.util.ArrayList;
 
 import model.business.Grp2GUI;
-import modules.ExperimentModule;
 import modules.ModulesManager;
+import modules.experiment.ExperimentModule;
 import ui.GroupsForm;
 import ui.GroupsForm.TabContents;
 
@@ -42,18 +42,16 @@ public class CtrlGroupsForm extends ControllerUI
 	{
 		try
 		{
-			String name, rats_numbering, notes;
+			String name,  notes;
 
 			for (final TabContents tc : arr_tabs)
 			{
 				name = tc.txt_name.getText();
-				rats_numbering = tc.txt_rats_numbers.getText();
 				notes = tc.txt_notes.getText();
 				((ExperimentModule) ModulesManager.getDefault().getModuleByName(
 						"Experiment Module")).saveGrpInfo(
 						tc.grp_id,
 						name,
-						rats_numbering,
 						notes);
 			}
 

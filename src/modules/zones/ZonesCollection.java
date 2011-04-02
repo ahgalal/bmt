@@ -1,4 +1,4 @@
-package control;
+package modules.zones;
 
 import gfx_panel.OvalShape;
 import gfx_panel.RectangleShape;
@@ -19,143 +19,32 @@ import model.Zone.ZoneType;
 
 import org.eclipse.swt.graphics.RGB;
 
+import control.ShapeController;
+
 import utils.PManager;
 
-/**
- * Manages zones.
- * 
- * @author Creative
- */
-public class ZonesController
+public class ZonesCollection
 {
-	private static ZonesController default_controller;
-	ShapeController shape_controller;
-	private byte[] zone_map;
+
 	private final ArrayList<Zone> zones;
-	private final PManager pm;
-
-	private int width = 640, height = 480;
-
+	private ShapeController shape_controller;
+	
+	public ZonesCollection()
+	{
+		zones = new ArrayList<Zone>();
+		shape_controller = ShapeController.getDefault();
+	}
+	
 	public int getNumberOfZones()
 	{
 		return zones.size();
 	}
-
-	private void clearAllZones()
+	
+	public Zone[] getAllZones()
 	{
-		zones.clear();
-	}
-
-	public void setWidthandHeight(final int width, final int height)
-	{
-		this.width = width;
-		this.height = height;
-		zone_map = new byte[width * height];
-	}
-
-	public ZonesController()
-	{
-		zones = new ArrayList<Zone>();
-		pm = PManager.getDefault();
-	}
-
-	/**
-	 * Updates the zone map array according to the shapes setup on the GfxPanel
-	 * Note: zone map is an array of bytes, we can imagine it as a two dim.
-	 * array (width*height) , where each byte contains the number of the zone
-	 * existing at that point (x,y)
-	 */
-	public void updateZoneMap()
-	{
-		RectangleShape tmp_rect;
-		OvalShape tmp_oval;
-		int tmp_zone_number;
-		zone_map = new byte[width * height];
-		initializeZoneMap(-1);
-		for (int i = 0; i < zones.size(); i++)
-		{
-			tmp_zone_number = zones.get(i).getZoneNumber();
-			final Shape tmp_shp = shape_controller.getShapeByNumber(tmp_zone_number);
-
-			if (tmp_shp instanceof RectangleShape)
-			{
-				tmp_rect = (RectangleShape) tmp_shp;
-				for (int x = tmp_rect.getX(); x < tmp_rect.getX() + tmp_rect.getWidth(); x++)
-				{
-					if (x > -1 & x < width)
-						for (int y = tmp_rect.getY(); y < tmp_rect.getY()
-								+ tmp_rect.getHeight(); y++)
-						{
-							if (y > -1 & y < height)
-								zone_map[x + (height - y) * width] = (byte) tmp_zone_number;
-						}
-				}
-			} else if (tmp_shp instanceof OvalShape)
-			{
-				tmp_oval = (OvalShape) tmp_shp;
-				final int rx = tmp_oval.getWidth() / 2, ry = tmp_oval.getHeight() / 2, x_ov = tmp_oval.getX()
-						+ rx, y_ov = tmp_oval.getY() + ry;
-				float x_final, y_final;
-
-				for (int x = tmp_oval.getX(); x < tmp_oval.getX() + rx * 2; x++)
-				{
-					if (x > -1 & x < width)
-						for (int y = tmp_oval.getY(); y < tmp_oval.getY() + ry * 2; y++)
-						{
-							if (y > -1 & y < height)
-							{
-								x_final = x - x_ov;
-								y_final = y - y_ov;
-								if ((x_final * x_final)
-										/ (rx * rx)
-										+ (y_final * y_final)
-										/ (ry * ry) < 1)
-									zone_map[x + (height - y) * width] = (byte) tmp_zone_number;
-							}
-						}
-				}
-			}
-		}
-	}
-
-	/**
-	 * Fills the zone map with a given number.
-	 * 
-	 * @param null_zone_number
-	 *            Number to fill the zone map array with
-	 */
-	private void initializeZoneMap(final int null_zone_number)
-	{
-		for (int i = 0; i < zone_map.length; i++)
-			zone_map[i] = (byte) null_zone_number;
-	}
-
-	public int getZone(final int x, final int y)
-	{
-		return zone_map[x + y * width];
-	}
-
-	/**
-	 * Gets the zone instance given the zone number.
-	 * 
-	 * @param zone_number
-	 *            Number of zone to return
-	 * @return Zone instance having the zone number given
-	 */
-	public Zone getZoneByNumber(final int zone_number)
-	{
-		for (final Zone z : zones)
-			if (z.getZoneNumber() == zone_number)
-				return z;
-		return null;
-	}
-
-	public static ZonesController getDefault()
-	{
-		if (default_controller == null)
-			default_controller = new ZonesController();
-
-		return default_controller;
+		Zone[] tmp_znz_array = new Zone[getNumberOfZones()];
+		zones.toArray(tmp_znz_array);
+		return tmp_znz_array;
 	}
 
 	/**
@@ -279,9 +168,9 @@ public class ZonesController
 	 */
 	public void loadZonesFromFile(final String path) // THINK of XML =D
 	{
-		clearAllZones();
+		zones.clear();
 		shape_controller.clearAllShapes();
-		pm.drw_zns.clearTable();
+		PManager.getDefault().drw_zns.clearTable();
 		String data = readFromFile(path);
 		String tmp_line = "";
 		String shape_type = "";
@@ -332,6 +221,21 @@ public class ZonesController
 	}
 
 	/**
+	 * Gets the zone instance given the zone number.
+	 * 
+	 * @param zone_number
+	 *            Number of zone to return
+	 * @return Zone instance having the zone number given
+	 */
+	public Zone getZoneByNumber(final int zone_number)
+	{
+		for (final Zone z : zones)
+			if (z.getZoneNumber() == zone_number)
+				return z;
+		return null;
+	}
+
+	/**
 	 * Changes the zone type of the zone specified by "zonenumber", and updates
 	 * the zone's information in the GUI table.
 	 * 
@@ -344,28 +248,11 @@ public class ZonesController
 	{
 		final Zone z = getZoneByNumber(zonenumber);
 		z.setZoneType(zonetype);
-		pm.drw_zns.editZoneDataInTable(
+		PManager.getDefault().drw_zns.editZoneDataInTable(
 				zonenumber,
 				Shape.color2String(shape_controller.getShapeByNumber(zonenumber)
 						.getColor()),
 				ZoneType.zoneType2String(zonetype));
-	}
-
-	/**
-	 * Updates the zone's information in the GUI table.
-	 * 
-	 * @param zonenumber
-	 *            zone number of the zone to update its information in GUI
-	 *            table.
-	 */
-	public void updateZoneDataInGUI(final int zonenumber)
-	{
-		final Zone z = getZoneByNumber(zonenumber);
-		pm.drw_zns.editZoneDataInTable(
-				zonenumber,
-				Shape.color2String(shape_controller.getShapeByNumber(zonenumber)
-						.getColor()),
-				ZoneType.zoneType2String(z.getZoneType()));
 	}
 
 	/**
@@ -380,60 +267,17 @@ public class ZonesController
 	{
 		Zone tmp = new Zone(zone_number, type);
 		zones.add(tmp);
-		pm.drw_zns.addZoneToTable(
+		PManager.getDefault().drw_zns.addZoneToTable(
 				Integer.toString(zone_number),
 				Shape.color2String(shape_controller.getShapeByNumber(zone_number)
 						.getColor()),
 				ZoneType.zoneType2String(type));
-		updateZoneMap();
 		tmp = null;
-	}
-
-	/**
-	 * Adds all zones in the collectoin to the GUI table.
-	 */
-	public void addAllZonesToGUI()
-	{
-		int zonenumber;
-		for (final Zone z : zones)
-		{
-			if (z != null)
-			{
-				zonenumber = z.getZoneNumber();
-				pm.drw_zns.addZoneToTable(
-						Integer.toString(zonenumber),
-						Shape.color2String(shape_controller.getShapeByNumber(zonenumber)
-								.getColor()),
-						ZoneType.zoneType2String(z.getZoneType()));
-			}
-		}
 	}
 
 	public void deleteZone(final int zonenumber)
 	{
 		zones.remove(getZoneByNumber(zonenumber));
-		updateZoneMap();
-		pm.drw_zns.clearTable();
-		addAllZonesToGUI();
-	}
 
-	/**
-	 * Selects the zone in the GUI table.
-	 * 
-	 * @param zone_number
-	 *            number of the zone to select in the GUI table.
-	 */
-	public void selectZoneInGUI(final int zone_number)
-	{
-		pm.drw_zns.selectZoneInTable(zone_number);
 	}
-
-	/**
-	 * Initialize the ShapeController instance.
-	 */
-	public void init()
-	{
-		shape_controller = ShapeController.getDefault();
-	}
-
 }

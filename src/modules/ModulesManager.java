@@ -2,6 +2,14 @@ package modules;
 
 import java.util.ArrayList;
 
+import modules.experiment.ExperimentModule;
+import modules.experiment.ExperimentModuleConfigs;
+import modules.rearing.RearingModule;
+import modules.rearing.RearingModuleConfigs;
+import modules.session.SessionModule;
+import modules.session.SessionModuleConfigs;
+import modules.zones.ZonesModule;
+import modules.zones.ZonesModuleConfigs;
 import utils.video.filters.Data;
 
 /**
@@ -27,6 +35,8 @@ public class ModulesManager
 
 	private String[] file_data_array;
 	private String[] file_names_array;
+	private int width;
+	private int height;
 
 	/**
 	 * Starts/Stops running all modules.
@@ -91,7 +101,9 @@ public class ModulesManager
 		// Zones Module
 		final ZonesModuleConfigs zones_configs = new ZonesModuleConfigs(
 				"Zones Module",
-				50);// TODO: change 50
+				50,	// TODO: change 50
+				width,
+				height);
 		final ZonesModule zones_module = new ZonesModule("Zones Module", zones_configs);
 
 		// ////////////////////////////////
@@ -117,7 +129,7 @@ public class ModulesManager
 	}
 
 	/**
-	 * Initializes Cargo array.
+	 * Initializes modules.
 	 */
 	public void initialize()
 	{
@@ -346,6 +358,14 @@ public class ModulesManager
 			if (tmp != null)
 				tmp.updateConfigs(configs[i]);
 		}
+	}
+
+	public void setWidthandHeight(final int width, final int height)
+	{
+		this.width = width;
+		this.height = height;
+		
+		updateModuleConfigs(new ModuleConfigs[] {new ZonesModuleConfigs("Zones Module", -1, width, height)});
 	}
 
 }

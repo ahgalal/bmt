@@ -1,19 +1,22 @@
-package modules;
+package modules.experiment;
+
+import modules.ModuleConfigs;
 
 /**
- * Configuration class for the Rearing module.
+ * Configuration class for the Experiment module.
  * @author Creative
  *
  */
-public class RearingModuleConfigs extends ModuleConfigs
+public class ExperimentModuleConfigs extends ModuleConfigs
 {
+
 	/**
 	 * Initializations for the configurations.
 	 * 
 	 * @param moduleName
 	 *            name of the module instance
 	 */
-	public RearingModuleConfigs(final String moduleName)
+	public ExperimentModuleConfigs(final String moduleName)
 	{
 		super(moduleName);
 	}
@@ -21,6 +24,7 @@ public class RearingModuleConfigs extends ModuleConfigs
 	@Override
 	protected void mergeConfigs(final ModuleConfigs config)
 	{
+		// TODO Auto-generated method stub
 
 	}
 

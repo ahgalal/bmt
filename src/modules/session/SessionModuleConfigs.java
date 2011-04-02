@@ -1,4 +1,6 @@
-package modules;
+package modules.session;
+
+import modules.ModuleConfigs;
 
 /**
  * Configuration class for the Session module.

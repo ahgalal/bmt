@@ -1,5 +1,8 @@
-package modules;
+package modules.rearing;
 
+import modules.Cargo;
+import modules.Module;
+import modules.ModuleConfigs;
 import utils.video.filters.Data;
 import utils.video.filters.rearingdetection.RearingData;
 

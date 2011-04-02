@@ -1,9 +1,13 @@
-package modules;
+package modules.experiment;
 
 import model.business.Experiment;
 import model.business.Group;
 import model.business.Grp2GUI;
 import model.business.Rat;
+import modules.Cargo;
+import modules.Module;
+import modules.ModuleConfigs;
+import modules.ModulesManager;
 import utils.PManager;
 import utils.saveengines.ExcelEngine;
 import utils.saveengines.TextEngine;
@@ -151,28 +155,24 @@ public class ExperimentModule extends Module
 	 *            id of the coup to edit
 	 * @param name
 	 *            new name of the group
-	 * @param rats_numbering
-	 *            numbers of rats already experimented
 	 * @param notes
 	 *            notes on the group
 	 */
 	public void saveGrpInfo(
 			final int grp_id,
 			final String name,
-			final String rats_numbering,
 			final String notes)
 	{
 		final Group tmp_grp = exp.getGroupByID(grp_id);
 		if (tmp_grp == null)
 		{
-			final Group gp = new Group(grp_id, name, rats_numbering, notes);
+			final Group gp = new Group(grp_id, name, notes);
 			exp.addGroup(gp);
 		} else
 		// group is already existing ... edit it..
 		{
 			tmp_grp.setName(name);
 			tmp_grp.setNotes(notes);
-			tmp_grp.setRatsNumbering(rats_numbering);
 		}
 	}
 

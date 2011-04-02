@@ -1,7 +1,7 @@
 package control.ui;
 
-import modules.ExperimentModule;
 import modules.ModulesManager;
+import modules.experiment.ExperimentModule;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.MessageBox;

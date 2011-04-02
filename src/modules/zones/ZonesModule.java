@@ -1,14 +1,22 @@
-package modules;
+package modules.zones;
+
+import gfx_panel.OvalShape;
+import gfx_panel.RectangleShape;
+import gfx_panel.Shape;
 
 import java.awt.Point;
 import java.util.ArrayList;
 
+import model.Zone;
 import model.Zone.ZoneType;
+import modules.Cargo;
+import modules.Module;
+import modules.ModuleConfigs;
 import utils.PManager;
 import utils.StatusManager.StatusSeverity;
 import utils.video.filters.Data;
 import utils.video.filters.RatFinder.RatFinderData;
-import control.ZonesController;
+import control.ShapeController;
 
 /**
  * Manages zones counters (entrance counters, central time, etc..)
@@ -27,9 +35,12 @@ public class ZonesModule extends Module
 	private static final String FILE_CENTRAL_ENTRANCE = "CZE";
 	private static final String FILE_CENTRAL_TIME = "CT";
 	private static final String FILE_TOTAL_DISTANCE = "Distance";
-	
+
+	private final ShapeController shape_controller;
+	private final int width = 640, height = 480;
+	private byte[] zone_map;
+	private final ZonesCollection zones;
 	private int current_zone_num;
-	private final ZonesController zone_controller;
 	private long central_start_tmp;
 	private boolean central_flag;
 	private int updated_zone_number;
@@ -64,10 +75,96 @@ public class ZonesModule extends Module
 		zones_configs = configs;
 
 		data = new Data[1];
-		zone_controller = ZonesController.getDefault();
 		scale = 10;
 		arr_path = new ArrayList<Point>();
+		zones = new ZonesCollection();
+		shape_controller = ShapeController.getDefault();
 		initialize();
+	}
+
+	/**
+	 * Gets the zone at the position x,y.
+	 * 
+	 * @param x
+	 *            x co-ordinate of the point
+	 * @param y
+	 *            y co-ordinate of the point
+	 * @return zone's number located at the pixel of x,y
+	 */
+	private int getZone(final int x, final int y)
+	{
+		return zone_map[x + y * width];
+	}
+
+	/**
+	 * Fills the zone map with a given number.
+	 * 
+	 * @param null_zone_number
+	 *            Number to fill the zone map array with
+	 */
+	private void initializeZoneMap(final int null_zone_number)
+	{
+		for (int i = 0; i < zone_map.length; i++)
+			zone_map[i] = (byte) null_zone_number;
+	}
+
+	/**
+	 * Updates the zone map array according to the shapes setup on the GfxPanel
+	 * Note: zone map is an array of bytes, we can imagine it as a two dim.
+	 * array (width*height) , where each byte contains the number of the zone
+	 * existing at that point (x,y)
+	 */
+	public void updateZoneMap()
+	{
+		RectangleShape tmp_rect;
+		OvalShape tmp_oval;
+		int tmp_zone_number;
+		zone_map = new byte[width * height];
+		initializeZoneMap(-1);
+		for (int i = 0; i < zones.getNumberOfZones(); i++)
+		{
+			tmp_zone_number = zones.getZoneByNumber(i).getZoneNumber();
+			final Shape tmp_shp = shape_controller.getShapeByNumber(tmp_zone_number);
+
+			if (tmp_shp instanceof RectangleShape)
+			{
+				tmp_rect = (RectangleShape) tmp_shp;
+				for (int x = tmp_rect.getX(); x < tmp_rect.getX() + tmp_rect.getWidth(); x++)
+				{
+					if (x > -1 & x < width)
+						for (int y = tmp_rect.getY(); y < tmp_rect.getY()
+								+ tmp_rect.getHeight(); y++)
+						{
+							if (y > -1 & y < height)
+								zone_map[x + (height - y) * width] = (byte) tmp_zone_number;
+						}
+				}
+			} else if (tmp_shp instanceof OvalShape)
+			{
+				tmp_oval = (OvalShape) tmp_shp;
+				final int rx = tmp_oval.getWidth() / 2, ry = tmp_oval.getHeight() / 2, x_ov = tmp_oval.getX()
+						+ rx, y_ov = tmp_oval.getY() + ry;
+				float x_final, y_final;
+
+				for (int x = tmp_oval.getX(); x < tmp_oval.getX() + rx * 2; x++)
+				{
+					if (x > -1 & x < width)
+						for (int y = tmp_oval.getY(); y < tmp_oval.getY() + ry * 2; y++)
+						{
+							if (y > -1 & y < height)
+							{
+								x_final = x - x_ov;
+								y_final = y - y_ov;
+								if ((x_final * x_final)
+										/ (rx * rx)
+										+ (y_final * y_final)
+										/ (ry * ry) < 1)
+									zone_map[x + (height - y) * width] = (byte) tmp_zone_number;
+							}
+						}
+				}
+			}
+		}
 	}
 
 	/**
@@ -88,16 +185,16 @@ public class ZonesModule extends Module
 			int zone_up_left = 0, zone_up_right = 0, zone_down_left = 0, zone_down_right = 0;
 			try
 			{
-				zone_up_left = zone_controller.getZone(current_position.x
-						- zones_configs.hyst_value
-						/ 2, current_position.y + zones_configs.hyst_value / 2);
-				zone_up_right = zone_controller.getZone(current_position.x
-						+ zones_configs.hyst_value
-						/ 2, current_position.y + zones_configs.hyst_value / 2);
-				zone_down_left = zone_controller.getZone(current_position.x
+				zone_up_left = getZone(
+						current_position.x - zones_configs.hyst_value / 2,
+						current_position.y + zones_configs.hyst_value / 2);
+				zone_up_right = getZone(
+						current_position.x + zones_configs.hyst_value / 2,
+						current_position.y + zones_configs.hyst_value / 2);
+				zone_down_left = getZone(current_position.x
 						- zones_configs.hyst_value
 						/ 2, current_position.y - zones_configs.hyst_value / 2);
-				zone_down_right = zone_controller.getZone(current_position.x
+				zone_down_right = getZone(current_position.x
 						+ zones_configs.hyst_value
 						/ 2, current_position.y - zones_configs.hyst_value / 2);
 			} catch (final Exception e)
@@ -125,8 +222,8 @@ public class ZonesModule extends Module
 	{
 		current_zone_num = updated_zone_number;
 		all_entrance++;
-		if (zone_controller.getZoneByNumber(current_zone_num) != null)
-			if (zone_controller.getZoneByNumber(current_zone_num).getZoneType() == ZoneType.CENTRAL_ZONE)
+		if (zones.getZoneByNumber(current_zone_num) != null)
+			if (zones.getZoneByNumber(current_zone_num).getZoneType() == ZoneType.CENTRAL_ZONE)
 				central_entrance++;
 	}
 
@@ -135,26 +232,86 @@ public class ZonesModule extends Module
 	 */
 	private void updateCentralZoneTime()
 	{
-		if (zone_controller.getNumberOfZones() != -1)
+		if (zones.getNumberOfZones() != -1)
 		{
-			if (current_zone_num != -1
-					& zone_controller.getZoneByNumber(current_zone_num) != null)
-				if (zone_controller.getZoneByNumber(current_zone_num).getZoneType() == ZoneType.CENTRAL_ZONE
+			if (current_zone_num != -1 & zones.getZoneByNumber(current_zone_num) != null)
+				if (zones.getZoneByNumber(current_zone_num).getZoneType() == ZoneType.CENTRAL_ZONE
 						& central_flag == false)
 				{
 					central_start_tmp = System.currentTimeMillis();
 					central_flag = true;
-				} else if (zone_controller.getZoneByNumber(current_zone_num)
-						.getZoneType() == ZoneType.CENTRAL_ZONE
+				} else if (zones.getZoneByNumber(current_zone_num).getZoneType() == ZoneType.CENTRAL_ZONE
 						&& central_flag == true)
 					central_zone_time_tmp = ((System.currentTimeMillis() - central_start_tmp) / 1000);
-				else if (zone_controller.getZoneByNumber(current_zone_num).getZoneType() != ZoneType.CENTRAL_ZONE
+				else if (zones.getZoneByNumber(current_zone_num).getZoneType() != ZoneType.CENTRAL_ZONE
 						&& central_flag == true)
 				{
 					central_zone_time += central_zone_time_tmp;
 					central_flag = false;
 				}
 		}
+	}
+
+	/**
+	 * Updates the zone's information in the GUI table.
+	 * 
+	 * @param zonenumber
+	 *            zone number of the zone to update its information in GUI
+	 *            table.
+	 */
+	public void updateZoneDataInGUI(final int zonenumber)
+	{
+		final Zone z = zones.getZoneByNumber(zonenumber);
+		PManager.getDefault().drw_zns.editZoneDataInTable(
+				zonenumber,
+				Shape.color2String(shape_controller.getShapeByNumber(zonenumber)
+						.getColor()),
+				ZoneType.zoneType2String(z.getZoneType()));
+	}
+
+	/**
+	 * Adds all zones in the collectoin to the GUI table.
+	 */
+	public void addAllZonesToGUI()
+	{
+		int zonenumber;
+		for (final Zone z : zones.getAllZones())
+		{
+			if (z != null)
+			{
+				zonenumber = z.getZoneNumber();
+				PManager.getDefault().drw_zns.addZoneToTable(
+						Integer.toString(zonenumber),
+						Shape.color2String(shape_controller.getShapeByNumber(zonenumber)
+								.getColor()),
+						ZoneType.zoneType2String(z.getZoneType()));
+			}
+		}
+	}
+
+	/**
+	 * Adds a new zone to the collection.
+	 * 
+	 * @param zone_number
+	 *            zone's number
+	 * @param type
+	 *            zones' type
+	 */
+	public void addZone(final int zone_number, final ZoneType type)
+	{
+		zones.addZone(zone_number, type);
+		updateZoneMap();
+	}
+
+	/**
+	 * Selects the zone in the GUI table.
+	 * 
+	 * @param zone_number
+	 *            number of the zone to select in the GUI table.
+	 */
+	public void selectZoneInGUI(final int zone_number)
+	{
+		PManager.getDefault().drw_zns.selectZoneInTable(zone_number);
 	}
 
 	/**
@@ -214,7 +371,6 @@ public class ZonesModule extends Module
 	/**
 	 * Initializes the zone controller instance.
 	 */
-
 	@Override
 	public void initialize()
 	{
@@ -247,9 +403,7 @@ public class ZonesModule extends Module
 	@Override
 	public void process()
 	{
-		updated_zone_number = zone_controller.getZone(
-				current_position.x,
-				current_position.y);
+		updated_zone_number = getZone(current_position.x, current_position.y);
 		zoneHysteresis();
 		updateTotalDistance();
 		updateCentralZoneTime();
@@ -308,7 +462,7 @@ public class ZonesModule extends Module
 	/**
 	 * Gets total distance covered by the object.
 	 * 
-	 * @return
+	 * @return total distance covered by the object
 	 */
 	public long getTotalDistance()
 	{
@@ -356,6 +510,36 @@ public class ZonesModule extends Module
 			this.data[0] = null;
 			current_position = null;
 		}
+	}
+
+	/**
+	 * Deletes a zone from the collection.
+	 * @param zoneNumber number of the zone to delete
+	 */
+	public void deleteZone(final int zoneNumber)
+	{
+		zones.deleteZone(zoneNumber);
+		updateZoneMap();
+		PManager.getDefault().drw_zns.clearTable();
+		addAllZonesToGUI();
+	}
+
+	/**
+	 * Loads zones from a text file.
+	 * @param fileName file path to load the zones from 
+	 */
+	public void loadZonesFromFile(final String fileName)
+	{
+		zones.loadZonesFromFile(fileName);
+	}
+
+	/**
+	 * Saves the zones into a text file.
+	 * @param fileName file path of the file to save the zones to
+	 */
+	public void saveZonesToFile(final String fileName)
+	{
+		zones.saveZonesToFile(fileName);
 	}
 
 }

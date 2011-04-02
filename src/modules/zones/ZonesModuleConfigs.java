@@ -1,6 +1,8 @@
-package modules;
+package modules.zones;
 
 import javax.annotation.Resource;
+
+import modules.ModuleConfigs;
 
 /**
  * Configuration class for the zones module.
@@ -47,7 +49,7 @@ public class ZonesModuleConfigs extends ModuleConfigs
 	 *   	calculating number of entering/leaving of zones. 
 	 *   
 	 */
-	public int hyst_value = 50;
+	public int hyst_value = 50,width,height;
 
 	/**
 	 * Initializations for the configurations.
@@ -57,10 +59,16 @@ public class ZonesModuleConfigs extends ModuleConfigs
 	 * @param hyst_val
 	 *            initial hysteresis value
 	 */
-	public ZonesModuleConfigs(final String module_name, final int hyst_val)
+	public ZonesModuleConfigs(
+			final String module_name,
+			final int hyst_val,
+			final int width,
+			final int height)
 	{
 		super(module_name);
 		hyst_value = hyst_val;
+		this.width=width;
+		this.height=height;
 	}
 
 	@Override
@@ -69,5 +77,9 @@ public class ZonesModuleConfigs extends ModuleConfigs
 		final ZonesModuleConfigs tmp_zonConfigs = (ZonesModuleConfigs) configs;
 		if (tmp_zonConfigs.hyst_value != -1)
 			hyst_value = tmp_zonConfigs.hyst_value;
+		if (tmp_zonConfigs.width != -1)
+			width = tmp_zonConfigs.width;
+		if (tmp_zonConfigs.height!= -1)
+			height = tmp_zonConfigs.height;
 	}
 }
