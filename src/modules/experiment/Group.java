@@ -14,7 +14,6 @@ public class Group implements Grp2GUI
 
 	private String name;
 	private int id;
-	private String rats_numbering;
 	private String notes;
 	private final ArrayList<Rat> arr_rats;
 
@@ -103,7 +102,10 @@ public class Group implements Grp2GUI
 	 */
 	public String getRatsNumbering()
 	{
-		return rats_numbering;
+		StringBuffer str_buf = new StringBuffer();
+		for(Rat rat:arr_rats)
+			str_buf.append(rat.getValueByParameterName(ExperimentModule.FILE_RAT_NUMBER)+ ", ") ;
+		return str_buf.substring(0, str_buf.length()-2);
 	}
 
 	/* (non-Javadoc)

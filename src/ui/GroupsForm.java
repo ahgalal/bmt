@@ -270,6 +270,7 @@ public class GroupsForm extends BaseUI
 			tmp_tab.txt_rats_numbers = new Text(tmp_tab.cmpst, SWT.BORDER);
 			tmp_tab.txt_rats_numbers.setBounds(new Rectangle(140, 98, 183, 21));
 			tmp_tab.txt_rats_numbers.setText(rat_numbers);
+			tmp_tab.txt_rats_numbers.setEditable(false);
 			tmp_tab.txt_notes = new Text(tmp_tab.cmpst, SWT.BORDER | SWT.MULTI);
 			tmp_tab.txt_notes.setBounds(new Rectangle(140, 140, 183, 99));
 			tmp_tab.txt_notes.setText(notes);

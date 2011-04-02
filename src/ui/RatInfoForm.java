@@ -14,8 +14,10 @@ import control.ui.ControllerUI;
 import control.ui.CtrlRatInfoForm;
 
 /**
- * @author Creative Enables you to identify your Rat's Number & the Group Name
- *         that your rat will join
+ * Enables you to identify your Rat's Number & the Group Name that your rat will
+ * join
+ * 
+ * @author Creative
  */
 public class RatInfoForm extends BaseUI
 {

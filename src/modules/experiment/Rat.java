@@ -11,7 +11,6 @@ import utils.StatusManager.StatusSeverity;
  */
 public class Rat
 {
-
 	private final Cargo info;
 
 	/**

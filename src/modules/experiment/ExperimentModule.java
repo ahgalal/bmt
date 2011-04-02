@@ -16,11 +16,11 @@ import utils.video.filters.Data;
  */
 public class ExperimentModule extends Module
 {
-	private static final String GUI_EXP_NAME = "Experiment's Name";
-	private static final String GUI_GROUP_NAME = "Group's Name";
-	private static final String GUI_RAT_NUMBER = "Rat Number";
-	private static final String FILE_RAT_NUMBER = "Number";
-	private static final String FILE_GROUP_NAME = "Group";
+	public static final String GUI_EXP_NAME = "Experiment's Name";
+	public static final String GUI_GROUP_NAME = "Group's Name";
+	public static final String GUI_RAT_NUMBER = "Rat Number";
+	public static final String FILE_RAT_NUMBER = "Number";
+	public static final String FILE_GROUP_NAME = "Group";
 	private int curr_rat_number;
 	private String curr_grp_name;
 	private final Experiment exp;
