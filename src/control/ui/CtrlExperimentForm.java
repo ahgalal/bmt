@@ -1,7 +1,7 @@
 package control.ui;
 
-import model.business.Exp2GUI;
 import modules.ModulesManager;
+import modules.experiment.Exp2GUI;
 import modules.experiment.ExperimentModule;
 
 import org.eclipse.swt.SWT;

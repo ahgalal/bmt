@@ -14,35 +14,52 @@ import java.io.IOException;
 import java.io.PrintStream;
 import java.util.ArrayList;
 
-import model.Zone;
-import model.Zone.ZoneType;
+import modules.zones.Zone.ZoneType;
 
 import org.eclipse.swt.graphics.RGB;
 
+import utils.PManager;
 import control.ShapeController;
 
-import utils.PManager;
-
+/**
+ * Collection of zones, with the facilities to add, remove and get zones in an
+ * easy way.
+ * 
+ * @author Creative
+ */
 public class ZonesCollection
 {
 
 	private final ArrayList<Zone> zones;
-	private ShapeController shape_controller;
-	
+	private final ShapeController shape_controller;
+
+	/**
+	 * Initializes the Collection.
+	 */
 	public ZonesCollection()
 	{
 		zones = new ArrayList<Zone>();
 		shape_controller = ShapeController.getDefault();
 	}
-	
+
+	/**
+	 * Gets the number of zones stored in the collection.
+	 * 
+	 * @return integer representing the number of zones
+	 */
 	public int getNumberOfZones()
 	{
 		return zones.size();
 	}
-	
+
+	/**
+	 * Gets all zones stored in the collection.
+	 * 
+	 * @return array of zones
+	 */
 	public Zone[] getAllZones()
 	{
-		Zone[] tmp_znz_array = new Zone[getNumberOfZones()];
+		final Zone[] tmp_znz_array = new Zone[getNumberOfZones()];
 		zones.toArray(tmp_znz_array);
 		return tmp_znz_array;
 	}
@@ -58,6 +75,14 @@ public class ZonesCollection
 		write2file(file_path, prepareShapesZonesDescription());
 	}
 
+	/**
+	 * Writes a string to a file.
+	 * 
+	 * @param path
+	 *            file path to write the string to
+	 * @param data
+	 *            String data to write to the file
+	 */
 	private void write2file(final String path, final String data)
 	{
 		FileOutputStream out; // declare a file output object
@@ -75,6 +100,13 @@ public class ZonesCollection
 		}
 	}
 
+	/**
+	 * Reads file contents and puts them in a String.
+	 * 
+	 * @param path
+	 *            file path to rread data from
+	 * @return String containing the contents of the file
+	 */
 	@SuppressWarnings("deprecation")
 	private String readFromFile(final String path)
 	{
@@ -275,6 +307,12 @@ public class ZonesCollection
 		tmp = null;
 	}
 
+	/**
+	 * Deletes a zone from the collection.
+	 * 
+	 * @param zonenumber
+	 *            number of the zone to delete
+	 */
 	public void deleteZone(final int zonenumber)
 	{
 		zones.remove(getZoneByNumber(zonenumber));

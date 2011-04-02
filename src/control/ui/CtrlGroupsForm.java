@@ -2,9 +2,9 @@ package control.ui;
 
 import java.util.ArrayList;
 
-import model.business.Grp2GUI;
 import modules.ModulesManager;
 import modules.experiment.ExperimentModule;
+import modules.experiment.Grp2GUI;
 import ui.GroupsForm;
 import ui.GroupsForm.TabContents;
 

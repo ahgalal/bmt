@@ -1,4 +1,4 @@
-package model.business;
+package modules.experiment;
 
 import modules.Cargo;
 import utils.PManager;

@@ -1,4 +1,4 @@
-package model.logic;
+package modules.zones;
 
 /**
  * Represents a zone that the rat can enter.
@@ -30,7 +30,7 @@ public class Zone
 	 * 
 	 * @return integer representing the zone's number
 	 */
-	public int getZone_number()
+	public int getZoneNumber()
 	{
 		return zone_number;
 	}
@@ -41,7 +41,7 @@ public class Zone
 	 * @param zoneNumber
 	 *            the new number of the zone
 	 */
-	public void setZone_number(final int zoneNumber)
+	public void setZoneNumber(final int zoneNumber)
 	{
 		zone_number = zoneNumber;
 	}
@@ -51,7 +51,7 @@ public class Zone
 	 * 
 	 * @return the type of the zone
 	 */
-	public ZoneType getZone_type()
+	public ZoneType getZoneType()
 	{
 		return zone_type;
 	}
@@ -62,7 +62,7 @@ public class Zone
 	 * @param zoneType
 	 *            new type of the zone
 	 */
-	public void setZone_type(final ZoneType zoneType)
+	public void setZoneType(final ZoneType zoneType)
 	{
 		zone_type = zoneType;
 	}
@@ -74,6 +74,10 @@ public class Zone
 	 */
 	public enum ZoneType
 	{
+
+		/**
+		 * Types of zones available.
+		 */
 		CENTRAL_ZONE, NORMAL_ZONE;
 
 		/**

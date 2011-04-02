@@ -7,11 +7,10 @@ import gfx_panel.Shape;
 import java.awt.Point;
 import java.util.ArrayList;
 
-import model.Zone;
-import model.Zone.ZoneType;
 import modules.Cargo;
 import modules.Module;
 import modules.ModuleConfigs;
+import modules.zones.Zone.ZoneType;
 import utils.PManager;
 import utils.StatusManager.StatusSeverity;
 import utils.video.filters.Data;
@@ -514,7 +513,9 @@ public class ZonesModule extends Module
 
 	/**
 	 * Deletes a zone from the collection.
-	 * @param zoneNumber number of the zone to delete
+	 * 
+	 * @param zoneNumber
+	 *            number of the zone to delete
 	 */
 	public void deleteZone(final int zoneNumber)
 	{
@@ -526,7 +527,9 @@ public class ZonesModule extends Module
 
 	/**
 	 * Loads zones from a text file.
-	 * @param fileName file path to load the zones from 
+	 * 
+	 * @param fileName
+	 *            file path to load the zones from
 	 */
 	public void loadZonesFromFile(final String fileName)
 	{
@@ -535,7 +538,9 @@ public class ZonesModule extends Module
 
 	/**
 	 * Saves the zones into a text file.
-	 * @param fileName file path of the file to save the zones to
+	 * 
+	 * @param fileName
+	 *            file path of the file to save the zones to
 	 */
 	public void saveZonesToFile(final String fileName)
 	{

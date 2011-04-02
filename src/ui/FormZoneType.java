@@ -1,8 +1,8 @@
 package ui;
 
-import model.Zone.ZoneType;
 import modules.ModulesManager;
 import modules.zones.ZonesModule;
+import modules.zones.Zone.ZoneType;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Point;
@@ -48,7 +48,8 @@ public class FormZoneType
 			@Override
 			public void widgetSelected(final org.eclipse.swt.events.SelectionEvent e)
 			{
-				((ZonesModule) ModulesManager.getDefault().getModuleByName("Zones Module"))
+				((ZonesModule) ModulesManager.getDefault()
+						.getModuleByName("Zones Module"))
 						.addZone(
 								shape_number,
 								ZoneType.string2ZoneType(cmbo_type.getItem(cmbo_type.getSelectionIndex())));

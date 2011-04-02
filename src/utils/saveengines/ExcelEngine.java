@@ -1,8 +1,8 @@
 package utils.saveengines;
 
-import model.business.Experiment;
-import model.business.Group;
-import model.business.Rat;
+import modules.experiment.Experiment;
+import modules.experiment.Group;
+import modules.experiment.Rat;
 import utils.ExcelWrapper;
 
 /**

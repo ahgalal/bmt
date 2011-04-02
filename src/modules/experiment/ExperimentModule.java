@@ -1,9 +1,5 @@
 package modules.experiment;
 
-import model.business.Experiment;
-import model.business.Group;
-import model.business.Grp2GUI;
-import model.business.Rat;
 import modules.Cargo;
 import modules.Module;
 import modules.ModuleConfigs;
@@ -199,7 +195,7 @@ public class ExperimentModule extends Module
 	public void saveRatInfo()
 	{
 		if (exp.getExpParametersList() == null)
-			exp.setMeasurementsList(ModulesManager.getDefault().getCodeNames());
+			exp.setParametersList(ModulesManager.getDefault().getCodeNames());
 		final String[] params_list = exp.getExpParametersList();
 		final String[] data = ModulesManager.getDefault().getFileData();
 		final String[] code_names = ModulesManager.getDefault().getCodeNames();

@@ -360,6 +360,11 @@ public class ModulesManager
 		}
 	}
 
+	/**
+	 * Sets the width and height of the module manager, to be used by any module later.
+	 * @param width webcam image's width
+	 * @param height webcam image's height
+	 */
 	public void setWidthandHeight(final int width, final int height)
 	{
 		this.width = width;

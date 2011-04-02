@@ -1,4 +1,4 @@
-package model.business;
+package modules.experiment;
 
 import java.util.ArrayList;
 
@@ -12,7 +12,7 @@ import utils.saveengines.Constants;
 public class Experiment implements Exp2GUI
 {
 
-	private final ArrayList<model.business.Group> groups;
+	private final ArrayList<modules.experiment.Group> groups;
 	private String name;
 	private String user;
 	private String date;
@@ -101,6 +101,10 @@ public class Experiment implements Exp2GUI
 		return name;
 	}
 
+	/**
+	 * Sets the experiment's name.
+	 * @param name new name for the experiment
+	 */
 	public void setName(final String name)
 	{
 		this.name = name;
@@ -114,6 +118,10 @@ public class Experiment implements Exp2GUI
 		return user;
 	}
 
+	/**
+	 * Sets the experiment's user name.
+	 * @param user new user name for the experiment
+	 */
 	public void setUser(final String user)
 	{
 		this.user = user;
@@ -135,11 +143,20 @@ public class Experiment implements Exp2GUI
 		return notes;
 	}
 
-	public ArrayList<model.business.Group> getGroups()
+	/**
+	 * Gets the collection of groups stored in this experiment.
+	 * @return ArrayList containing the groups
+	 */
+	public ArrayList<Group> getGroups()
 	{
 		return groups;
 	}
 
+	/**
+	 * Gets a group using the group's name.
+	 * @param name name of the group to retrieve
+	 * @return Group having the specified name
+	 */
 	public Group getGroupByName(final String name)
 	{
 		for (final Group tmp_g : groups)
@@ -158,16 +175,28 @@ public class Experiment implements Exp2GUI
 		return groups.size();
 	}
 
-	public void setMeasurementsList(final String[] exp_parameters)
+	/**
+	 * Sets the parameters collected in the experiment.
+	 * @param exp_parameters array of strings containing experiment's parameters
+	 */
+	public void setParametersList(final String[] exp_parameters)
 	{
 		exp_params = exp_parameters;
 	}
 
+	/**
+	 * Gets the parameters of the experiment.
+	 * @return array of strings containing experiment's parameters
+	 */
 	public String[] getExpParametersList()
 	{
 		return exp_params;
 	}
 
+	/**
+	 * Stores all the experiment's information in a string.
+	 * @return String containing the experiment's information
+	 */
 	public String expInfo2String()
 	{
 		final StringBuffer exp_info_buf = new StringBuffer();

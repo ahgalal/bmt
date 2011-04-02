@@ -9,9 +9,9 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintStream;
 
-import model.business.Experiment;
-import model.business.Group;
-import model.business.Rat;
+import modules.experiment.Experiment;
+import modules.experiment.Group;
+import modules.experiment.Rat;
 import utils.PManager;
 import utils.StatusManager.StatusSeverity;
 
@@ -90,7 +90,7 @@ public class TextEngine
 				{
 					tmp_line = buf_rdr.readLine();
 					line_data = readLineData(tmp_line);
-					exp.setMeasurementsList(line_data);
+					exp.setParametersList(line_data);
 					while (buf_rdr.ready())
 					{
 						if (!(tmp_line = buf_rdr.readLine()).substring(0, 1).equals("["))
