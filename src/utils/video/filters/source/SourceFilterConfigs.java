@@ -14,7 +14,7 @@ import utils.video.filters.FilterConfigs;
 public class SourceFilterConfigs extends FilterConfigs
 {
 	/**
-	 * image data container
+	 * image data container.
 	 */
 	public FrameIntArray fia;
 

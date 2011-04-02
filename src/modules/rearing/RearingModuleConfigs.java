@@ -4,8 +4,8 @@ import modules.ModuleConfigs;
 
 /**
  * Configuration class for the Rearing module.
+ * 
  * @author Creative
- *
  */
 public class RearingModuleConfigs extends ModuleConfigs
 {

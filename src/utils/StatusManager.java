@@ -93,7 +93,7 @@ public class StatusManager
 	public enum StatusSeverity
 	{
 		/**
-		 * ERROR: for Error messages WARNING: for normal messages
+		 * ERROR: for Error messages WARNING: for normal messages.
 		 */
 		ERROR, WARNING;
 	}

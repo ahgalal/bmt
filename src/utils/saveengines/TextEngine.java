@@ -74,14 +74,12 @@ public class TextEngine
 					// int tmp_no_rats =
 					Integer.parseInt(buf_rdr.readLine().substring(
 							Constants.h_grp_no_rats.length()));
-					final String tmp_rats_numbers = buf_rdr.readLine().substring(
-							Constants.h_grp_rats_numbers.length()); // TODO:
-																	// remove
-																	// this as
-																	// rat
-																	// numbers
-																	// are read
-																	// dynamically
+					/*
+					 * Just a holder to skip the Rats'
+					 * numbers line, we can know their numbers 
+					 * later (no need to read, parse etc..)
+					 */ 
+					buf_rdr.readLine(); 
 					final String tmp_notes = buf_rdr.readLine().substring(
 							Constants.h_grp_notes.length());
 					grp_tmp = new Group(tmp_id, tmp_name, tmp_notes);

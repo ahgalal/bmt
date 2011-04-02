@@ -46,17 +46,34 @@ public class RearingFilterConfigs extends FilterConfigs
 	}
 
 	/**
-	 * if white pixels number > rearingthreshold => not rearing rat
+	 * if white pixels number > rearingthreshold => not rearing rat.
 	 */
 	public int rearing_thresh;
+
 	/**
 	 * x-margin for white pixel counting (around the current location of the
-	 * object). _________________________________ | | | | |y_margin | | | |
-	 * |---x_margin----0----x_margin---| | | | | |y_margin | | | |
-	 * |-------------------------------- 0: current position of the object.
-	 * count white pixels inside this area only (to save the processing power)
+	 * object).
 	 */
 	public int margin_x, margin_y;
+	/*
+	 *             _________________________________ 
+	 *             |               |               |
+	 *             |               |               |
+	 *             |            y_margin           |
+	 *             |               |               |
+	 *             |               |               |
+	 *             |---x_margin----O----x_margin---|
+	 *             |               |               |
+	 *             |               |               |
+	 *             |            y_margin           |
+	 *             |               |               |
+	 *             |               |               |
+	 *             |-------------------------------|
+	 *              
+	 * O: current position of the object.
+	 * count white pixels inside this area only (to save the processing power)
+	 */
+
 	/**
 	 * reference to the current object's position.
 	 */

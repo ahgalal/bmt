@@ -29,7 +29,7 @@ public class CtrlMainGUI extends ControllerUI
 {
 	private final MainGUI ui;
 	private final PManager pm; // @jve:decl-index=0:
-	public boolean stop_tracking = false;
+	private boolean stop_tracking = false;
 	private Thread th_update_gui; // @jve:decl-index=0:
 	private final Shell ui_shell;
 	private boolean ui_is_opened;
@@ -51,6 +51,11 @@ public class CtrlMainGUI extends ControllerUI
 		ctrl_about_box = new CtrlAbout();
 	}
 
+	/**
+	 * is the Shell disposed/unloaded?.
+	 * 
+	 * @return true/false
+	 */
 	public boolean isShellDisposed()
 	{
 		return ui_shell.isDisposed();
@@ -174,9 +179,13 @@ public class CtrlMainGUI extends ControllerUI
 	 */
 	private class RunnableUpdateGUI implements Runnable
 	{
+		/*
+		 * (non-Javadoc)
+		 * @see java.lang.Runnable#run()
+		 */
+		@Override
 		public void run()
 		{
-
 			setTableNamesColumn();
 			while (!stop_tracking)
 			{
@@ -199,6 +208,9 @@ public class CtrlMainGUI extends ControllerUI
 		}
 	}
 
+	/**
+	 * Fills the column of displaying parameters in the table.
+	 */
 	private void setTableNamesColumn()
 	{
 		Display.getDefault().asyncExec(new Runnable() {
@@ -255,6 +267,17 @@ public class CtrlMainGUI extends ControllerUI
 
 	}
 
+	/**
+	 * Configures the ScreenDrawer filter and sets its two screens to the AWT
+	 * screens in this form.
+	 * 
+	 * @param name
+	 *            name of the ScreenDrawer filter
+	 * @param configs
+	 *            common configurations instance
+	 * @param enable_sec_screen
+	 *            whether to enable secondary screen
+	 */
 	public void configureScreenDrawerFilter(
 			final String name,
 			final CommonFilterConfigs configs,
@@ -285,21 +308,33 @@ public class CtrlMainGUI extends ControllerUI
 					StatusSeverity.ERROR);
 	}
 
+	/**
+	 * Handles the camera options menu item click action.
+	 */
 	public void mnutmCameraOptionsAction()
 	{
 		pm.cam_options.show(true);
 	}
 
+	/**
+	 * Handles the "Zone editor" menu item click action.
+	 */
 	public void mnutmEditOpenZoneEditorAction()
 	{
 		pm.drw_zns.show(true);
 	}
 
+	/**
+	 * Handles the "Edit options" menu item click action.
+	 */
 	public void mnutmEditOptionsAction()
 	{
 		pm.options_window.show(true);
 	}
 
+	/**
+	 * Handles the "Edit Experiment" menu item click action.
+	 */
 	public void mnuitmEditExpAction()
 	{
 		pm.frm_exp.show(true);
@@ -323,6 +358,7 @@ public class CtrlMainGUI extends ControllerUI
 	 * previous experiment and loads the new experiment from the selected file.
 	 * 
 	 * @param sShell
+	 *            parent shell for the open dialogbox
 	 */
 	public void mnutmExperimentLoadexpAction(final Shell sShell)
 	{
@@ -422,6 +458,9 @@ public class CtrlMainGUI extends ControllerUI
 					StatusSeverity.ERROR);
 	}
 
+	/**
+	 * Clears the GUI data.
+	 */
 	public void clearForm()
 	{
 		ui.clearForm();
@@ -440,11 +479,17 @@ public class CtrlMainGUI extends ControllerUI
 					"Experiment Module")).writeToExcelFile(file_name);
 	}
 
+	/**
+	 * Handles the "Not Rearing" button click action.
+	 */
 	public void btnNotRearingAction()
 	{
 		rearingNow(false);
 	}
 
+	/**
+	 * Handles the "Rearing Now" button click action.
+	 */
 	public void btnRearingNowAction()
 	{
 		rearingNow(true);
@@ -485,6 +530,9 @@ public class CtrlMainGUI extends ControllerUI
 		 */
 	}
 
+	/**
+	 * Handles the "Add Rearing" button click action.
+	 */
 	public void btnAddRearingAction()
 	{
 		if (pm.state == ProgramState.TRACKING | pm.state == ProgramState.RECORDING)
@@ -492,6 +540,9 @@ public class CtrlMainGUI extends ControllerUI
 					.getModuleByName("Rearing Module")).incrementRearingCounter();
 	}
 
+	/**
+	 * Handles the "Subtract Rearing" button click action.
+	 */
 	public void btnSubRearingAction()
 	{
 		if (pm.state == ProgramState.TRACKING | pm.state == ProgramState.RECORDING)
@@ -499,6 +550,9 @@ public class CtrlMainGUI extends ControllerUI
 					.getModuleByName("Rearing Module")).decrementRearingCounter();
 	}
 
+	/**
+	 * Handles the "About" menu item click action.
+	 */
 	public void mnutmHelpAboutAction()
 	{
 		ctrl_about_box.show(true);

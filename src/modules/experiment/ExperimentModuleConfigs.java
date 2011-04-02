@@ -4,8 +4,8 @@ import modules.ModuleConfigs;
 
 /**
  * Configuration class for the Experiment module.
+ * 
  * @author Creative
- *
  */
 public class ExperimentModuleConfigs extends ModuleConfigs
 {

@@ -15,15 +15,26 @@ import org.eclipse.swt.graphics.RGB;
 public abstract class Shape
 {
 
-	protected int shape_number; // Shape identifier
-	protected int x, y, width, height; // Dimensions
-	protected RGB rgb_color; // Color
-	protected int selectionbox_length; // side length of the selection box drawn
-	// at corners
-	protected ArrayList<Shape> arr_attachee; // array of attached shapes to this
-
-	// shape, they move as this
-	// shape moves
+	/**
+	 * Shape identifier.
+	 */
+	protected int shape_number;
+	/**
+	 * Dimensions.
+	 */
+	protected int x, y, width, height;
+	/**
+	 * Color.
+	 */
+	protected RGB rgb_color;
+	/**
+	 * side length of the selection box drawn at corners.
+	 */
+	protected int selectionbox_length;
+	/**
+	 * array of attached shapes to this shape, they move as this shape moves.
+	 */
+	protected ArrayList<Shape> arr_attachee;
 
 	/**
 	 * Draw the Shape on the graphics object.
@@ -41,7 +52,9 @@ public abstract class Shape
 	 * @param y
 	 *            top left corner of the shape in the y dimension
 	 * @param width
+	 *            shape's width (bounding box)
 	 * @param height
+	 *            shape's height (bounding box)
 	 * @param c
 	 *            shape's color
 	 */
@@ -55,46 +68,95 @@ public abstract class Shape
 		arr_attachee = new ArrayList<Shape>();
 	}
 
+	/**
+	 * Gets shape's width.
+	 * 
+	 * @return integer representing the width of the shape
+	 */
 	public int getWidth()
 	{
 		return width;
 	}
 
+	/**
+	 * Sets shape's width.
+	 * 
+	 * @param width
+	 *            integer representing the new width of the shape
+	 */
 	public void setWidth(final int width)
 	{
 		this.width = width;
 	}
 
+	/**
+	 * Gets shape's height.
+	 * 
+	 * @return integer representing the height of the shape
+	 */
 	public int getHeight()
 	{
 		return height;
 	}
 
+	/**
+	 * ets shape's height.
+	 * 
+	 * @param height
+	 *            integer representing the new height of the shape
+	 */
 	public void setHeight(final int height)
 	{
 		this.height = height;
 	}
 
+	/**
+	 * Sets the shape number.
+	 * 
+	 * @param shape_number
+	 *            the new shape number
+	 */
 	public void setShapeNumber(final int shape_number)
 	{
 		this.shape_number = shape_number;
 	}
 
+	/**
+	 * Gets the shape number.
+	 * 
+	 * @return integer representing the shape's number
+	 */
 	public int getShapeNumber()
 	{
 		return shape_number;
 	}
 
+	/**
+	 * Sets the color of the shape.
+	 * 
+	 * @param color
+	 *            new shape's color
+	 */
 	public void setColor(final RGB color)
 	{
 		this.rgb_color = color;
 	}
 
+	/**
+	 * Gets the color of the shape.
+	 * 
+	 * @return RGB color representing the color of the shape
+	 */
 	public RGB getColor()
 	{
 		return rgb_color;
 	}
 
+	/**
+	 * Gets the surface area of the shape.
+	 * 
+	 * @return integer representing the surface area (unit is pixels)
+	 */
 	public abstract int getArea();
 
 	/**
@@ -113,11 +175,6 @@ public abstract class Shape
 		gfx.fillRect(x + width - length, y, length, length);
 		gfx.fillRect(x, y + height - length, length, length);
 		gfx.fillRect(x + width - length, y + height - length, length, length);
-	}
-
-	public void deselect(final Graphics gfx)
-	{
-
 	}
 
 	/**
@@ -214,6 +271,7 @@ public abstract class Shape
 	 * Converts RGB color objects to a string value of: R G B.
 	 * 
 	 * @param color
+	 *            color to be converted
 	 * @return
 	 */
 	public static String color2String(final RGB color)
@@ -262,6 +320,11 @@ public abstract class Shape
 		setY(y + delta_y);
 	}
 
+	/**
+	 * Gets the X co-ordinate of the shape.
+	 * 
+	 * @return integer value representing the X co-ordinate
+	 */
 	public int getX()
 	{
 		return x;
@@ -280,6 +343,11 @@ public abstract class Shape
 		this.y = y;
 	}
 
+	/**
+	 * Gets the YX co-ordinate of the shape.
+	 * 
+	 * @return integer value representing the Y co-ordinate
+	 */
 	public int getY()
 	{
 		return y;

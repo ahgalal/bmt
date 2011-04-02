@@ -166,7 +166,7 @@ public class ImageManipulator
 	 * Converts single dimensional byte array image to a two dimensional byte
 	 * array image.
 	 * 
-	 * @param arr
+	 * @param imgin
 	 *            input single dimensional array
 	 * @param width
 	 *            image's width

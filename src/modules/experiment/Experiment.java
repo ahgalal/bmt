@@ -93,9 +93,11 @@ public class Experiment implements Exp2GUI
 		groups.add(g);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see model.business.Exp2GUI#getName()
 	 */
+	@Override
 	public String getName()
 	{
 		return name;
@@ -103,16 +105,20 @@ public class Experiment implements Exp2GUI
 
 	/**
 	 * Sets the experiment's name.
-	 * @param name new name for the experiment
+	 * 
+	 * @param name
+	 *            new name for the experiment
 	 */
 	public void setName(final String name)
 	{
 		this.name = name;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see model.business.Exp2GUI#getUser()
 	 */
+	@Override
 	public String getUser()
 	{
 		return user;
@@ -120,24 +126,30 @@ public class Experiment implements Exp2GUI
 
 	/**
 	 * Sets the experiment's user name.
-	 * @param user new user name for the experiment
+	 * 
+	 * @param user
+	 *            new user name for the experiment
 	 */
 	public void setUser(final String user)
 	{
 		this.user = user;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see model.business.Exp2GUI#getDate()
 	 */
+	@Override
 	public String getDate()
 	{
 		return date;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see model.business.Exp2GUI#getNotes()
 	 */
+	@Override
 	public String getNotes()
 	{
 		return notes;
@@ -145,6 +157,7 @@ public class Experiment implements Exp2GUI
 
 	/**
 	 * Gets the collection of groups stored in this experiment.
+	 * 
 	 * @return ArrayList containing the groups
 	 */
 	public ArrayList<Group> getGroups()
@@ -154,7 +167,9 @@ public class Experiment implements Exp2GUI
 
 	/**
 	 * Gets a group using the group's name.
-	 * @param name name of the group to retrieve
+	 * 
+	 * @param name
+	 *            name of the group to retrieve
 	 * @return Group having the specified name
 	 */
 	public Group getGroupByName(final String name)
@@ -177,7 +192,9 @@ public class Experiment implements Exp2GUI
 
 	/**
 	 * Sets the parameters collected in the experiment.
-	 * @param exp_parameters array of strings containing experiment's parameters
+	 * 
+	 * @param exp_parameters
+	 *            array of strings containing experiment's parameters
 	 */
 	public void setParametersList(final String[] exp_parameters)
 	{
@@ -186,6 +203,7 @@ public class Experiment implements Exp2GUI
 
 	/**
 	 * Gets the parameters of the experiment.
+	 * 
 	 * @return array of strings containing experiment's parameters
 	 */
 	public String[] getExpParametersList()
@@ -195,6 +213,7 @@ public class Experiment implements Exp2GUI
 
 	/**
 	 * Stores all the experiment's information in a string.
+	 * 
 	 * @return String containing the experiment's information
 	 */
 	public String expInfo2String()

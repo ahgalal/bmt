@@ -5,6 +5,7 @@ import modules.Module;
 import modules.ModuleConfigs;
 import modules.ModulesManager;
 import utils.PManager;
+import utils.saveengines.Constants;
 import utils.saveengines.ExcelEngine;
 import utils.saveengines.TextEngine;
 import utils.video.filters.Data;
@@ -16,11 +17,7 @@ import utils.video.filters.Data;
  */
 public class ExperimentModule extends Module
 {
-	public static final String GUI_EXP_NAME = "Experiment's Name";
-	public static final String GUI_GROUP_NAME = "Group's Name";
-	public static final String GUI_RAT_NUMBER = "Rat Number";
-	public static final String FILE_RAT_NUMBER = "Number";
-	public static final String FILE_GROUP_NAME = "Group";
+
 	private int curr_rat_number;
 	private String curr_grp_name;
 	private final Experiment exp;
@@ -63,16 +60,16 @@ public class ExperimentModule extends Module
 	@Override
 	public void updateGUICargoData()
 	{
-		gui_cargo.setDataByTag(GUI_EXP_NAME, exp.getName());
-		gui_cargo.setDataByTag(GUI_GROUP_NAME, curr_grp_name);
-		gui_cargo.setDataByTag(GUI_RAT_NUMBER, Integer.toString(curr_rat_number));
+		gui_cargo.setDataByTag(Constants.GUI_EXP_NAME, exp.getName());
+		gui_cargo.setDataByTag(Constants.GUI_GROUP_NAME, curr_grp_name);
+		gui_cargo.setDataByTag(Constants.GUI_RAT_NUMBER, Integer.toString(curr_rat_number));
 	}
 
 	@Override
 	public void updateFileCargoData()
 	{
-		file_cargo.setDataByTag(FILE_RAT_NUMBER, Integer.toString(curr_rat_number));
-		file_cargo.setDataByTag(FILE_GROUP_NAME, curr_grp_name);
+		file_cargo.setDataByTag(Constants.FILE_RAT_NUMBER, Integer.toString(curr_rat_number));
+		file_cargo.setDataByTag(Constants.FILE_GROUP_NAME, curr_grp_name);
 
 	}
 
@@ -343,9 +340,9 @@ public class ExperimentModule extends Module
 	public void initialize()
 	{
 		gui_cargo = new Cargo(
-				new String[] { GUI_EXP_NAME, GUI_GROUP_NAME, GUI_RAT_NUMBER });
+				new String[] { Constants.GUI_EXP_NAME, Constants.GUI_GROUP_NAME, Constants.GUI_RAT_NUMBER });
 
-		file_cargo = new Cargo(new String[] { FILE_RAT_NUMBER, FILE_GROUP_NAME });
+		file_cargo = new Cargo(new String[] { Constants.FILE_RAT_NUMBER, Constants.FILE_GROUP_NAME });
 	}
 
 	@Override

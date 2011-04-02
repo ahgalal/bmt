@@ -36,7 +36,7 @@ public class PManager
 		/**
 		 * IDLE: doing nothing, STREAMING: displaying video frames on the
 		 * screen, TRACKING: tracking the object: STREAMING + TRACKING,
-		 * RECORDING: recording video: STREAMING + TRACKING + RECORDING
+		 * RECORDING: recording video: STREAMING + TRACKING + RECORDING.
 		 */
 		IDLE, RECORDING, STREAMING, TRACKING;
 	}
@@ -133,7 +133,7 @@ public class PManager
 		excel_engine = new ExcelEngine();
 		default_me = this;
 		status_mgr = new StatusManager();
-		
+
 		shape_controller = ShapeController.getDefault();
 		drw_zns = new CtrlDrawZones();
 		frm_exp = new CtrlExperimentForm();
@@ -167,7 +167,9 @@ public class PManager
 	 */
 	public void initializeVideoProcessor(final CommonFilterConfigs common_configs)
 	{
-		ModulesManager.getDefault().setWidthandHeight(common_configs.width, common_configs.height);
+		ModulesManager.getDefault().setWidthandHeight(
+				common_configs.width,
+				common_configs.height);
 		if (vp.initialize(common_configs))
 			vp.startStreaming();
 	}

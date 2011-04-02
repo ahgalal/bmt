@@ -7,14 +7,32 @@ import java.io.IOException;
 
 import lib_avi.AVIOutputStream.VideoFormat;
 
+/**
+ * Video Stream to AVI Utility.
+ * 
+ * @author Creative
+ */
 public class StreamToAVI
 {
-
 	private AVIOutputStream avi_op;
 	private BufferedImage image;
 	private int[] data;
 	private State state;
 
+	/**
+	 * Initialization.
+	 * 
+	 * @param filename
+	 *            filename to save the video frames to
+	 * @param format
+	 *            video format
+	 * @param framerate
+	 *            frame rate of the video file
+	 * @param width
+	 *            video frame width
+	 * @param height
+	 *            video frame height
+	 */
 	public void initialize(
 			final String filename,
 			final VideoFormat format,
@@ -36,6 +54,12 @@ public class StreamToAVI
 		}
 	}
 
+	/**
+	 * Writes video frame to the video file.
+	 * 
+	 * @param frame_data
+	 *            video frame image
+	 */
 	public void writeFrame(final int[] frame_data)
 	{
 		if (state == State.INITIALIZED)
@@ -51,6 +75,9 @@ public class StreamToAVI
 		}
 	}
 
+	/**
+	 * Closes the AVI session.
+	 */
 	public void close()
 	{
 		try
@@ -62,6 +89,11 @@ public class StreamToAVI
 		}
 	}
 
+	/**
+	 * Specification of the state of the object.
+	 * 
+	 * @author Creative
+	 */
 	private enum State
 	{
 		INITIALIZED

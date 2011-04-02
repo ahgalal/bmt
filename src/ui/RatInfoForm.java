@@ -15,7 +15,7 @@ import control.ui.CtrlRatInfoForm;
 
 /**
  * Enables you to identify your Rat's Number & the Group Name that your rat will
- * join
+ * join.
  * 
  * @author Creative
  */

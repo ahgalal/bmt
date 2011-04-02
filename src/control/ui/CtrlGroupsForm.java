@@ -42,7 +42,7 @@ public class CtrlGroupsForm extends ControllerUI
 	{
 		try
 		{
-			String name,  notes;
+			String name, notes;
 
 			for (final TabContents tc : arr_tabs)
 			{
@@ -88,6 +88,9 @@ public class CtrlGroupsForm extends ControllerUI
 		}
 	}
 
+	/**
+	 * Clears the GUI data.
+	 */
 	public void clearForm()
 	{
 		ui.clearForm();

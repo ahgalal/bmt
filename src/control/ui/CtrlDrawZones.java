@@ -35,12 +35,20 @@ public class CtrlDrawZones extends ControllerUI
 		pm.linkGFXPanelWithShapeCtrlr(ui.getGFXPanel());
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see control.ui.ControllerUI#setVars(java.lang.String[])
+	 */
 	@Override
 	public boolean setVars(final String[] objs)
 	{
 		return true;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see control.ui.ControllerUI#show(boolean)
+	 */
 	@Override
 	public void show(final boolean visibility)
 	{
@@ -69,6 +77,9 @@ public class CtrlDrawZones extends ControllerUI
 				Integer.parseInt(str_real_distance));
 	}
 
+	/**
+	 * Handles the "Load Zones" button click action.
+	 */
 	public void btn_load_zonesAction(final Shell shell)
 	{
 		final FileDialog fileDialog = new FileDialog(shell, SWT.OPEN);
@@ -77,17 +88,29 @@ public class CtrlDrawZones extends ControllerUI
 			((ZonesModule) ModulesManager.getDefault().getModuleByName("Zones Module")).loadZonesFromFile(file_name);
 	}
 
+	/**
+	 * Sets the background of the GfxPanel.
+	 * 
+	 * @param img
+	 *            new Background image
+	 */
 	public void setBackground(final int[] img)
 	{
 		ui.getGFXPanel().setBackground(img);
 	}
 
+	/**
+	 * Handles the "Hide" button click action.
+	 */
 	public void btn_hide_Action()
 	{
 		((ZonesModule) ModulesManager.getDefault().getModuleByName("Zones Module")).updateZoneMap();
 		show(false);
 	}
 
+	/**
+	 * Handles the "Save Zones" button click action.
+	 */
 	public void btn_save_zones_Action(final Shell shell)
 	{
 		final FileDialog fileDialog = new FileDialog(shell, SWT.SAVE);
@@ -163,6 +186,12 @@ public class CtrlDrawZones extends ControllerUI
 		ui.selectZoneInTable(zone_number);
 	}
 
+	/**
+	 * Notifies the ShapeController that a "setting scale" operation is taking
+	 * place, in order to start capturing measure points.
+	 * 
+	 * @param enable
+	 */
 	public void settingScale(final boolean enable)
 	{
 		ShapeController.getDefault().setSettingScale(enable);

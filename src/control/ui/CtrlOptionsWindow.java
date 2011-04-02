@@ -81,7 +81,7 @@ public class CtrlOptionsWindow extends ControllerUI
 			pm.getVideoProcessor().updateFiltersConfigs(filters_configs);
 			final ZonesModuleConfigs zones_configs = new ZonesModuleConfigs(
 					"Zones Module",
-					hyst,-1,-1);
+					hyst, -1, -1);
 
 			ModulesManager.getDefault().updateModuleConfigs(
 					new ModuleConfigs[] { zones_configs });

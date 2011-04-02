@@ -388,7 +388,7 @@ public class VideoProcessor
 	}
 
 	/**
-	 * Updates the configurations of filters
+	 * Updates the configurations of filters.
 	 * 
 	 * @param filters_configs
 	 *            an array of filters configurations, each configuration object

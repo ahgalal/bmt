@@ -13,7 +13,7 @@ public abstract class FilterConfigs
 	 */
 	public CommonFilterConfigs common_configs;
 	/**
-	 * is the filter enable
+	 * is the filter enable.
 	 */
 	public boolean enabled;
 	private final String name;

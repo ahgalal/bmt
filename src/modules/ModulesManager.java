@@ -101,7 +101,7 @@ public class ModulesManager
 		// Zones Module
 		final ZonesModuleConfigs zones_configs = new ZonesModuleConfigs(
 				"Zones Module",
-				50,	// TODO: change 50
+				50, // TODO: change 50
 				width,
 				height);
 		final ZonesModule zones_module = new ZonesModule("Zones Module", zones_configs);
@@ -361,16 +361,24 @@ public class ModulesManager
 	}
 
 	/**
-	 * Sets the width and height of the module manager, to be used by any module later.
-	 * @param width webcam image's width
-	 * @param height webcam image's height
+	 * Sets the width and height of the module manager, to be used by any module
+	 * later.
+	 * 
+	 * @param width
+	 *            webcam image's width
+	 * @param height
+	 *            webcam image's height
 	 */
 	public void setWidthandHeight(final int width, final int height)
 	{
 		this.width = width;
 		this.height = height;
-		
-		updateModuleConfigs(new ModuleConfigs[] {new ZonesModuleConfigs("Zones Module", -1, width, height)});
+
+		updateModuleConfigs(new ModuleConfigs[] { new ZonesModuleConfigs(
+				"Zones Module",
+				-1,
+				width,
+				height) });
 	}
 
 }

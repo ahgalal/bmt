@@ -49,7 +49,7 @@ public class Rat
 	}
 
 	/**
-	 * Gets the value of the parameter, using parameter's name
+	 * Gets the value of the parameter, using parameter's name.
 	 * 
 	 * @param parameter_name
 	 * @return

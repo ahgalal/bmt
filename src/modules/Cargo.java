@@ -35,6 +35,7 @@ public class Cargo
 
 	/**
 	 * Initializes the cargo.
+	 * 
 	 * @param tags
 	 */
 	public Cargo(final String[] tags)
@@ -45,7 +46,9 @@ public class Cargo
 
 	/**
 	 * Gets the data from the cargo using its index in the array of data.
-	 * @param index index to get the data of
+	 * 
+	 * @param index
+	 *            index to get the data of
 	 * @return data at the index from the data array
 	 */
 	public String getDataByIndex(final int index)
@@ -55,7 +58,9 @@ public class Cargo
 
 	/**
 	 * Gets the data from the cargo using the tag's name.
-	 * @param tag name of the tag to get the data corresponding to
+	 * 
+	 * @param tag
+	 *            name of the tag to get the data corresponding to
 	 * @return data corresponding to the tag
 	 */
 	public String getDataByTag(final String tag)
@@ -66,6 +71,7 @@ public class Cargo
 
 	/**
 	 * Gets the data in the form of an array.
+	 * 
 	 * @return array containing the cargo's data
 	 */
 	public String[] getData()
@@ -75,6 +81,7 @@ public class Cargo
 
 	/**
 	 * Gets the cargo's tags' names.
+	 * 
 	 * @return array of Strings containing tags' names
 	 */
 	public String[] getTags()
@@ -83,9 +90,13 @@ public class Cargo
 	}
 
 	/**
-	 * Sets the data inside the cargo using the index of the data in the data array.
-	 * @param index data index inside the data's array
-	 * @param data new data value
+	 * Sets the data inside the cargo using the index of the data in the data
+	 * array.
+	 * 
+	 * @param index
+	 *            data index inside the data's array
+	 * @param data
+	 *            new data value
 	 */
 	public void setDataByIndex(final int index, final String data)
 	{
@@ -94,8 +105,11 @@ public class Cargo
 
 	/**
 	 * Sets the data inside the cargo using the tag's name.
-	 * @param tag tag's name to set the data corresponding to it
-	 * @param data new data value
+	 * 
+	 * @param tag
+	 *            tag's name to set the data corresponding to it
+	 * @param data
+	 *            new data value
 	 */
 	public void setDataByTag(final String tag, final String data)
 	{
@@ -105,7 +119,9 @@ public class Cargo
 
 	/**
 	 * Gets the index of a tag using the tag's name.
-	 * @param tag name of the tag
+	 * 
+	 * @param tag
+	 *            name of the tag
 	 * @return index of the tag's name in the tags arrray
 	 */
 	private int getIndexByTag(final String tag)

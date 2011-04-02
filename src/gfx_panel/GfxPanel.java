@@ -25,6 +25,12 @@ import org.eclipse.swt.widgets.ColorDialog;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Shell;
 
+/**
+ * A drawing panel that supports different shapes and many features like
+ * snapping.
+ * 
+ * @author Creative
+ */
 public class GfxPanel
 {
 	private final ArrayList<Shape> shp_arr;
@@ -53,6 +59,18 @@ public class GfxPanel
 	private final Point current_click_pos;
 	private final Snapper snapper;
 
+	/**
+	 * Creates the main composite
+	 * 
+	 * @param parent_shell
+	 *            parent shell
+	 * @param parent
+	 *            parent composite
+	 * @param w
+	 *            width
+	 * @param h
+	 *            height
+	 */
 	private void createMainComposite(
 			final Shell parent_shell,
 			final Composite parent,
@@ -64,6 +82,12 @@ public class GfxPanel
 		composite.setBounds(new Rectangle(0, 0, w, h));
 	}
 
+	/**
+	 * Generates a number to be used for the newly created shape as a shape
+	 * number.
+	 * 
+	 * @return integer representing the new shape's number
+	 */
 	private int generateNewShapeNumber()
 	{
 		if (shp_arr.size() == 0)
@@ -86,6 +110,12 @@ public class GfxPanel
 		return -1;
 	}
 
+	/**
+	 * Initializes the background of the panel.
+	 * 
+	 * @param rgb_value
+	 *            Color of the background [0x00 B G R]
+	 */
 	private void initializeBackground(final int rgb_value)
 	{
 		for (int i = 0; i < bg.length; i++)
@@ -94,35 +124,58 @@ public class GfxPanel
 		}
 	}
 
-	public void enableDraw(final boolean en)
+	/**
+	 * Enables drawing on the panel.
+	 * 
+	 * @param enable
+	 *            true/false
+	 */
+	public void enableDraw(final boolean enable)
 	{
-		btn_add_rect_shape.setEnabled(en);
-		btn_add_circle_shape.setEnabled(en);
+		btn_add_rect_shape.setEnabled(enable);
+		btn_add_circle_shape.setEnabled(enable);
 	}
 
-	public boolean startDrawingShape(final Shape shp)
+	/**
+	 * Starts drawing a new shape.
+	 * 
+	 * @param shp
+	 *            shape to start drawing
+	 */
+	public void startDrawingShape(final Shape shp)
 	{
 		shp_to_draw = shp;
-		return true;
 	}
 
+	/**
+	 * Initializes the panel.
+	 * 
+	 * @param parent_shell
+	 *            parent shell of the panel
+	 * @param parent
+	 *            parent composite of the panel
+	 * @param width
+	 *            panel's width
+	 * @param height
+	 *            panel's height (must add 35 to the image's size)
+	 */
 	public GfxPanel(
 			final Shell parent_shell,
 			final Composite parent,
-			final int width_,
-			final int height_)
+			final int width,
+			final int height)
 	{
-		this.width = width_;
-		this.height = height_;
+		this.width = width;
+		this.height = height;
 		current_click_pos = new Point();
 		current_click_pos.x = -1;
-		img_w = width_;
-		img_h = height_ - 35;
+		img_w = width;
+		img_h = height - 35;
 
 		bg_buff_img = new BufferedImage(img_w, img_h, BufferedImage.TYPE_INT_RGB);
 		bg = ((DataBufferInt) bg_buff_img.getRaster().getDataBuffer()).getData();
 		initializeBackground(0xFFFFFF);
-		createMainComposite(parent_shell, parent, width_, height_);
+		createMainComposite(parent_shell, parent, width, height);
 		parent_shell.addKeyListener(new KeyListener() {
 
 			@Override
@@ -337,17 +390,28 @@ public class GfxPanel
 				{
 					// Resizing:
 					if (!moving && isResizing(shp_selected, e.getX(), e.getY()))
-						resizingShape(shp_selected, e.getX(), e.getY());
+						resizeShape(shp_selected, e.getX(), e.getY());
 					// Moving:
 					else
-						movingShape(shp_selected, e.getX(), e.getY());
+						moveShape(shp_selected, e.getX(), e.getY());
 				}
 			}
 		});
 
 	}
 
-	private void movingShape(final Shape tmp_shp, final int x, final int y)
+	/**
+	 * Moves the selected shape according to the cursor movement (taking
+	 * snapping into account if enabled).
+	 * 
+	 * @param shp
+	 *            shape to move
+	 * @param x
+	 *            cursor's position on the x axis
+	 * @param y
+	 *            cursor's position on the y axis
+	 */
+	private void moveShape(final Shape shp, final int x, final int y)
 	{
 		moving = true;
 		SnapResults snp_res;
@@ -358,12 +422,21 @@ public class GfxPanel
 				cursor_pos_in_shp_x,
 				cursor_pos_in_shp_y);
 		if (!snp_res.snapped_x)
-			tmp_shp.setX(x - cursor_pos_in_shp_x);
+			shp.setX(x - cursor_pos_in_shp_x);
 		if (!snp_res.snapped_y)
-			tmp_shp.setY(y - cursor_pos_in_shp_y);
+			shp.setY(y - cursor_pos_in_shp_y);
 		refreshDrawingArea();
 	}
 
+	/**
+	 * Gets the shape being dragged on.
+	 * 
+	 * @param x
+	 *            cursor's position on the x axis
+	 * @param y
+	 *            cursor's position on the y axis
+	 * @return shape being dragged on
+	 */
 	private Shape getDraggedOnShape(final int x, final int y)
 	{
 		final Shape[] possible_shapes = getShapesByPosition(x, y);
@@ -374,6 +447,14 @@ public class GfxPanel
 		return getShapeWithleastArea(possible_shapes);
 	}
 
+	/**
+	 * Notifies the Notifiees about the dragging operation.
+	 * 
+	 * @param shp_dragged
+	 *            shape dragged
+	 * @param shp_dragged_on
+	 *            shape being dragged on
+	 */
 	private void notifyTargettedDragOperation(
 			final Shape shp_dragged,
 			final Shape shp_dragged_on)
@@ -387,12 +468,23 @@ public class GfxPanel
 		}
 	}
 
-	private boolean isResizing(final Shape tmp_sh, final int x, final int y)
+	/**
+	 * Determines if the active shape is being resized.
+	 * 
+	 * @param shp
+	 *            active shape
+	 * @param x
+	 *            cursor's position on the x axis
+	 * @param y
+	 *            cursor's position on the y axis
+	 * @return true: resizing, false: not resizing
+	 */
+	private boolean isResizing(final Shape shp, final int x, final int y)
 	{
-		final int sel_x = tmp_sh.getX(), sel_y = tmp_sh.getY();
+		final int sel_x = shp.getX(), sel_y = shp.getY();
 		int width = 0, height = 0;
-		width = tmp_sh.getWidth();
-		height = tmp_sh.getHeight();
+		width = shp.getWidth();
+		height = shp.getHeight();
 		resizing_x_left = resizing_x_left
 				| ((Math.abs(x - (sel_x)) < 5) & (y < (sel_y + height)) & (y > sel_y));
 		resizing_y_up = resizing_y_up
@@ -405,65 +497,92 @@ public class GfxPanel
 		return (resizing_x_right | resizing_y_down | resizing_x_left | resizing_y_up);
 	}
 
-	private void resizingShape(final Shape tmp_sh, final int x, final int y)
+	/**
+	 * Resizes the shape.
+	 * 
+	 * @param shp
+	 *            shape to resize
+	 * @param x
+	 *            cursor's position on the x axis
+	 * @param y
+	 *            cursor's position on the y axis
+	 */
+	private void resizeShape(final Shape shp, final int x, final int y)
 	{
-		final int sel_x = tmp_sh.getX(), sel_y = tmp_sh.getY();
+		final int sel_x = shp.getX(), sel_y = shp.getY();
 
-		final int w = tmp_sh.getWidth(), h = tmp_sh.getHeight();
+		final int w = shp.getWidth(), h = shp.getHeight();
 		SnapResults snp_res;
 		snp_res = snapper.prepareSnapSize(shp_selected, x, y);
 		if (!snp_res.snapped_x)
 		{
 			if (resizing_x_right)
 			{
-				tmp_sh.setWidth(x - sel_x);
+				shp.setWidth(x - sel_x);
 			}
 			if (resizing_x_left)
 			{
-				tmp_sh.setX(x);
-				tmp_sh.setWidth(w + sel_x - x);
+				shp.setX(x);
+				shp.setWidth(w + sel_x - x);
 			}
 		}
 		if (!snp_res.snapped_y)
 		{
 			if (resizing_y_down)
 			{
-				tmp_sh.setHeight(y - sel_y);
+				shp.setHeight(y - sel_y);
 			}
 
 			if (resizing_y_up)
 			{
-				tmp_sh.setY(y);
-				tmp_sh.setHeight(h + sel_y - y);
+				shp.setY(y);
+				shp.setHeight(h + sel_y - y);
 			}
 		}
 		refreshDrawingArea();
 	}
 
-	private void updateNewShape(final Shape tmp_shp, final int x, final int y)
+	/**
+	 * Refreshed the new shape that is being drawn. (it is not added yet to the
+	 * shapes collection, so we must refresh it explicitly here).
+	 * 
+	 * @param shp
+	 *            active shape
+	 * @param x
+	 *            cursor's position on the x axis
+	 * @param y
+	 *            cursor's position on the y axis
+	 */
+	private void updateNewShape(final Shape shp, final int x, final int y)
 	{
 		if (x > ini_x)
-			tmp_shp.setWidth(x - ini_x);
+			shp.setWidth(x - ini_x);
 		if (x < ini_x)
 		{
-			tmp_shp.setX(x);
-			tmp_shp.setWidth(ini_x - x);
+			shp.setX(x);
+			shp.setWidth(ini_x - x);
 		}
 
 		if (y > ini_y)
-			tmp_shp.setHeight(y - ini_y);
+			shp.setHeight(y - ini_y);
 		if (y < ini_y)
 		{
-			tmp_shp.setY(y);
-			tmp_shp.setHeight(ini_y - y);
+			shp.setY(y);
+			shp.setHeight(ini_y - y);
 		}
 	}
 
+	/**
+	 * Clears the panel.
+	 */
 	public void clearDrawingArea()
 	{
 		gfx.clearRect(0, 0, width, height);
 	}
 
+	/**
+	 * Redraws all the shapes.
+	 */
 	public void redrawAllShapes()
 	{
 		final int cleaning_margin = 30;
@@ -499,6 +618,13 @@ public class GfxPanel
 			sh.draw(gfx);
 	}
 
+	/**
+	 * Adds a new shape to the collection.
+	 * 
+	 * @param shp
+	 *            new shape
+	 * @return integer representing the new shape's number
+	 */
 	private int addShape(final Shape shp)
 	{
 		final int new_shp_number = generateNewShapeNumber();
@@ -507,11 +633,23 @@ public class GfxPanel
 		return new_shp_number;
 	}
 
+	/**
+	 * Registers a new Notifiee to receive notifications from us.
+	 * 
+	 * @param notifiee
+	 *            object will be notified with events occurring to the panel
+	 */
 	public void registerForNotifications(final GfxPanelNotifiee notifiee)
 	{
 		arr_notifiee.add(notifiee);
 	}
 
+	/**
+	 * Notifies all Notifiees of the newly added shape.
+	 * 
+	 * @param shape_number
+	 *            number of the new shape
+	 */
 	private void notifyShapeAdded(final int shape_number)
 	{
 		for (final GfxPanelNotifiee notifiee : arr_notifiee)
@@ -520,6 +658,13 @@ public class GfxPanel
 		}
 	}
 
+	/**
+	 * Notifies all the Notifiess of a mouse click
+	 * 
+	 * @param pos
+	 *            position of the mouse click with respect to the panel's top
+	 *            left
+	 */
 	private void notifyMouseClick(final Point pos)
 	{
 		for (final GfxPanelNotifiee notifiee : arr_notifiee)
@@ -528,6 +673,12 @@ public class GfxPanel
 		}
 	}
 
+	/**
+	 * Notifies all the Notifiees of the modified shape.
+	 * 
+	 * @param shape_number
+	 *            number of the modified shape
+	 */
 	private void notifyShapeModified(final int shape_number)
 	{
 		for (final GfxPanelNotifiee notifiee : arr_notifiee)
@@ -536,6 +687,12 @@ public class GfxPanel
 		}
 	}
 
+	/**
+	 * Notifies all the Notifiees of the deleted shape.
+	 * 
+	 * @param shape_number
+	 *            number of the deleted shape
+	 */
 	private void notifyShapeDeleted(final int shape_number)
 	{
 		for (final GfxPanelNotifiee notifiee : arr_notifiee)
@@ -544,6 +701,12 @@ public class GfxPanel
 		}
 	}
 
+	/**
+	 * Notifies all the Notifiees of the selected shape.
+	 * 
+	 * @param shape_number
+	 *            number of the selected shape
+	 */
 	private void notifyShapeSelected(final int shape_number)
 	{
 		for (final GfxPanelNotifiee notifiee : arr_notifiee)
@@ -552,6 +715,15 @@ public class GfxPanel
 		}
 	}
 
+	/**
+	 * Gets the shapes existing on the specified pixel position.
+	 * 
+	 * @param x
+	 *            x axis position to get the shapes existing there
+	 * @param y
+	 *            y axis position to get the shapes existing there
+	 * @return array of shapes existing on the specified pixel
+	 */
 	private Shape[] getShapesByPosition(final int x, final int y)
 	{
 		final ArrayList<Shape> possible_shps = new ArrayList<Shape>();
@@ -574,12 +746,29 @@ public class GfxPanel
 		// position
 	}
 
+	/**
+	 * Gets the shape existing on the specified pixel position.
+	 * 
+	 * @param x
+	 *            x axis position to get the shape existing there
+	 * @param y
+	 *            y axis position to get the shape existing there
+	 * @return shape existing on the specified pixel
+	 */
 	private Shape getShapeByPosition(final int x, final int y)
 	{
 		final Shape[] possible_shps = getShapesByPosition(x, y);
 		return getShapeWithleastArea(possible_shps);
 	}
 
+	/**
+	 * Gets the shape having the least area compared to the others shapes in the
+	 * array.
+	 * 
+	 * @param possible_shps
+	 *            array of shapes to get the least area shape from
+	 * @return shape having the least area
+	 */
 	private Shape getShapeWithleastArea(final Shape[] possible_shps)
 	{
 		Shape tmp_shp = null;
@@ -596,30 +785,59 @@ public class GfxPanel
 		return tmp_shp; // returns the shape having the smallest area
 	}
 
+	/**
+	 * Refreshes the drawing area of the panel.
+	 */
 	public void refreshDrawingArea()
 	{
-		// clearDrawingArea();
 		redrawAllShapes();
 		if (shp_selected != null)
 			draw4Corners(shp_selected, 5);
 	}
 
+	/**
+	 * Deleted a shape.
+	 * 
+	 * @param shp
+	 *            shape to be deleted
+	 */
 	public void deleteShape(final Shape shp)
 	{
 		shp_arr.remove(shp);
 	}
 
+	/**
+	 * Attaches the "attachedshape" to the "mainshape".
+	 * 
+	 * @param attachedshape
+	 *            shape to be attached to the "mainshape", it will be moved with
+	 *            the main shape
+	 * @param mainshape
+	 *            shape to attach to
+	 */
 	public void attachShapes(final int attachedshape, final int mainshape)
 	{
 		getShapeByNumber(mainshape).attachToMe(getShapeByNumber(attachedshape));
 	}
 
-	public boolean deattachShapes(final int mainshape, final int attachedshape)
+	/**
+	 * Detaches two shapes.
+	 * 
+	 * @param mainshape
+	 *            main shape
+	 * @param attachedshape
+	 *            attached shape to the main shape
+	 */
+	public void deattachShapes(final int mainshape, final int attachedshape)
 	{
 		getShapeByNumber(mainshape).deattachFromMe(getShapeByNumber(attachedshape));
-		return false;
 	}
 
+	/**
+	 * Deleted the selected shape.
+	 * 
+	 * @return true: success, false: failure
+	 */
 	public boolean deleteSelectedShape()
 	{
 		if (shp_selected != null)
@@ -633,16 +851,36 @@ public class GfxPanel
 		return false;
 	}
 
-	private void draw4Corners(final Shape shp, final int l)
+	/**
+	 * Draws the selection corners for the specified shape.
+	 * 
+	 * @param shp
+	 *            shape to draw selection corners to
+	 * @param length
+	 *            length of the side of each selection corner box
+	 */
+	private void draw4Corners(final Shape shp, final int length)
 	{
-		shp.select(gfx, l);
+		shp.select(gfx, length);
 	}
 
+	/**
+	 * Gets the collection of shapes.
+	 * 
+	 * @return arraylist containing all the shapes on the panel
+	 */
 	public ArrayList<Shape> getShapeArray()
 	{
 		return shp_arr;
 	}
 
+	/**
+	 * Gets a shape using its number.
+	 * 
+	 * @param shapenumber
+	 *            number of the shape to get
+	 * @return shape having the specified number
+	 */
 	public Shape getShapeByNumber(final int shapenumber)
 	{
 		for (int i = 0; i < shp_arr.size(); i++)
@@ -651,6 +889,11 @@ public class GfxPanel
 		return null;
 	}
 
+	/**
+	 * Gets the number of the selected shape.
+	 * 
+	 * @return integer representing the number of the selected shape
+	 */
 	public int getSelectedShapeNumber()
 	{
 		if (shp_selected != null)
@@ -660,25 +903,51 @@ public class GfxPanel
 		return -100;
 	}
 
+	/**
+	 * Selects a shape.
+	 * 
+	 * @param shape_number
+	 *            number of the shape to select
+	 */
 	public void selectShape(final int shape_number)
 	{
 		shp_selected = getShapeByNumber(shape_number);
 		refreshDrawingArea();
 	}
 
+	/**
+	 * Sets the background of the panel to the given image
+	 * 
+	 * @param bg_data
+	 *            new background image
+	 */
 	public void setBackground(final int[] bg_data)
 	{
 		System.arraycopy(bg_data, 0, bg, 0, bg_data.length);
 	}
 
-	public void setEnable_snap(final boolean enable_snap)
+	/**
+	 * Enables/Disables snapping.
+	 * 
+	 * @param enable_snap
+	 *            true/false
+	 */
+	public void setEnableSnap(final boolean enable_snap)
 	{
 		chk_enable_snap.setSelection(enable_snap);
 		snapper.enableSnap(enable_snap);
 	}
 
+	/**
+	 * Direction, used in snapping and maybe othe stuff in the future.
+	 * 
+	 * @author Creative
+	 */
 	public enum Direction
 	{
+		/**
+		 * the four directions.
+		 */
 		LEFT, RIGHT, UP, DOWN;
 	}
 

@@ -13,28 +13,18 @@ import modules.ModuleConfigs;
 import modules.zones.Zone.ZoneType;
 import utils.PManager;
 import utils.StatusManager.StatusSeverity;
+import utils.saveengines.Constants;
 import utils.video.filters.Data;
 import utils.video.filters.RatFinder.RatFinderData;
 import control.ShapeController;
 
 /**
- * Manages zones counters (entrance counters, central time, etc..)
+ * Manages zones counters (entrance counters, central time, etc..).
  * 
  * @author Creative
  */
 public class ZonesModule extends Module
 {
-
-	private static final String GUI_CURRENT_ZONE = "Current Zone";
-	private static final String GUI_ALL_ENTRANCE = "All Entrance";
-	private static final String GUI_CENTRAL_ENTRANCE = "Central Entrance";
-	private static final String GUI_CENTRAL_TIME = "Central Time";
-	private static final String GUI_TOTAL_DISTANCE = "Total Distance";
-	private static final String FILE_ALL_ENTRANCE = "AZE";
-	private static final String FILE_CENTRAL_ENTRANCE = "CZE";
-	private static final String FILE_CENTRAL_TIME = "CT";
-	private static final String FILE_TOTAL_DISTANCE = "Distance";
-
 	private final ShapeController shape_controller;
 	private byte[] zone_map;
 	private final ZonesCollection zones;
@@ -134,7 +124,9 @@ public class ZonesModule extends Module
 								+ tmp_rect.getHeight(); y++)
 						{
 							if (y > -1 & y < zones_configs.height)
-								zone_map[x + (zones_configs.height - y) * zones_configs.width] = (byte) tmp_zone_number;
+								zone_map[x
+										+ (zones_configs.height - y)
+										* zones_configs.width] = (byte) tmp_zone_number;
 						}
 				}
 			} else if (tmp_shp instanceof OvalShape)
@@ -157,7 +149,9 @@ public class ZonesModule extends Module
 										/ (rx * rx)
 										+ (y_final * y_final)
 										/ (ry * ry) < 1)
-									zone_map[x + (zones_configs.height - y) * zones_configs.width] = (byte) tmp_zone_number;
+									zone_map[x
+											+ (zones_configs.height - y)
+											* zones_configs.width] = (byte) tmp_zone_number;
 							}
 						}
 				}
@@ -385,18 +379,18 @@ public class ZonesModule extends Module
 		arr_path.clear();
 
 		gui_cargo = new Cargo(new String[] {
-				GUI_CURRENT_ZONE,
-				GUI_ALL_ENTRANCE,
-				GUI_CENTRAL_ENTRANCE,
-				GUI_CENTRAL_TIME,
-				GUI_TOTAL_DISTANCE });
+				Constants.GUI_CURRENT_ZONE,
+				Constants.GUI_ALL_ENTRANCE,
+				Constants.GUI_CENTRAL_ENTRANCE,
+				Constants.GUI_CENTRAL_TIME,
+				Constants.GUI_TOTAL_DISTANCE });
 
 		file_cargo = new Cargo(new String[] {
-				FILE_ALL_ENTRANCE,
-				FILE_CENTRAL_ENTRANCE,
-				FILE_CENTRAL_TIME,
-				FILE_TOTAL_DISTANCE });
-		
+				Constants.FILE_ALL_ENTRANCE,
+				Constants.FILE_CENTRAL_ENTRANCE,
+				Constants.FILE_CENTRAL_TIME,
+				Constants.FILE_TOTAL_DISTANCE });
+
 		zone_map = new byte[zones_configs.width * zones_configs.height];
 	}
 
@@ -419,20 +413,36 @@ public class ZonesModule extends Module
 	@Override
 	public void updateGUICargoData()
 	{
-		gui_cargo.setDataByTag(GUI_CURRENT_ZONE, Integer.toString(current_zone_num));
-		gui_cargo.setDataByTag(GUI_ALL_ENTRANCE, Integer.toString(all_entrance));
-		gui_cargo.setDataByTag(GUI_CENTRAL_ENTRANCE, Integer.toString(central_entrance));
-		gui_cargo.setDataByTag(GUI_CENTRAL_TIME, Integer.toString(central_zone_time));
-		gui_cargo.setDataByTag(GUI_TOTAL_DISTANCE, Long.toString(total_distance));
+		gui_cargo.setDataByTag(
+				Constants.GUI_CURRENT_ZONE,
+				Integer.toString(current_zone_num));
+		gui_cargo.setDataByTag(Constants.GUI_ALL_ENTRANCE, Integer.toString(all_entrance));
+		gui_cargo.setDataByTag(
+				Constants.GUI_CENTRAL_ENTRANCE,
+				Integer.toString(central_entrance));
+		gui_cargo.setDataByTag(
+				Constants.GUI_CENTRAL_TIME,
+				Integer.toString(central_zone_time));
+		gui_cargo.setDataByTag(
+				Constants.GUI_TOTAL_DISTANCE,
+				Long.toString(total_distance));
 	}
 
 	@Override
 	public void updateFileCargoData()
 	{
-		file_cargo.setDataByTag(FILE_ALL_ENTRANCE, Integer.toString(all_entrance));
-		file_cargo.setDataByTag(FILE_CENTRAL_ENTRANCE, Integer.toString(central_entrance));
-		file_cargo.setDataByTag(FILE_CENTRAL_TIME, Integer.toString(central_zone_time));
-		file_cargo.setDataByTag(FILE_TOTAL_DISTANCE, Long.toString(total_distance));
+		file_cargo.setDataByTag(
+				Constants.FILE_ALL_ENTRANCE,
+				Integer.toString(all_entrance));
+		file_cargo.setDataByTag(
+				Constants.FILE_CENTRAL_ENTRANCE,
+				Integer.toString(central_entrance));
+		file_cargo.setDataByTag(
+				Constants.FILE_CENTRAL_TIME,
+				Integer.toString(central_zone_time));
+		file_cargo.setDataByTag(
+				Constants.FILE_TOTAL_DISTANCE,
+				Long.toString(total_distance));
 	}
 
 	@Override

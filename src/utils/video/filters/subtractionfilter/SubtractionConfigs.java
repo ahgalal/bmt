@@ -34,7 +34,7 @@ public class SubtractionConfigs extends FilterConfigs
 
 	/**
 	 * subtraction threshold, pixel value> threshold will be white, while pixel
-	 * value < threshold will be black in the output image
+	 * value < threshold will be black in the output image.
 	 */
 	public int threshold;
 

@@ -8,7 +8,11 @@ import java.awt.Graphics;
 
 import org.eclipse.swt.graphics.RGB;
 
-// this class inherited form Shape class
+/**
+ * this class inherited form Shape class.
+ * 
+ * @author A.Ramadan
+ */
 public class OvalShape extends Shape
 {
 
@@ -16,39 +20,52 @@ public class OvalShape extends Shape
 	private int diameter_x; // position in X-axis
 	private int diameter_y; // postion in Y-axis
 
-	/*
-	 * the definition of this class need 4 parameters its position in x-axis its
-	 * position in y-axis and its color
+	/**
+	 * the definition of this class need 5 parameters its position/length in
+	 * x-axis its position/length in y-axis and its color.
+	 * 
+	 * @param dx
+	 *            diameter on the x axis
+	 * @param dy
+	 *            diameter on the y axis
+	 * @param x
+	 *            position on the x axis
+	 * @param y
+	 *            position on the y axis
+	 * @param c
+	 *            color of the shape
 	 */
-	public OvalShape(final int rx, final int ry, final int x, final int y, final RGB c)
+	public OvalShape(final int dx, final int dy, final int x, final int y, final RGB c)
 	{
-		super(x, y, rx, ry, c);
-		this.diameter_x = rx;
-		this.diameter_y = ry;
+		super(x, y, dx, dy, c);
+		this.diameter_x = dx;
+		this.diameter_y = dy;
 	}
 
-	/*
-	 * this is by definition calling
+	/**
+	 * this is by definition calling (Initializes the OvalShape).
 	 */
 	public OvalShape()
 	{
 		this(0, 0, 0, 0, null);
 	}
 
-	@Override
 	/*
-	 * this function to set the height in Y-axis
+	 * (non-Javadoc)
+	 * @see gfx_panel.Shape#setHeight(int)
 	 */
+	@Override
 	public void setHeight(final int height)
 	{
 		super.setHeight(height);
 		diameter_y = height;
 	}
 
-	@Override
 	/*
-	 * this funtion is to set the width of oval
+	 * (non-Javadoc)
+	 * @see gfx_panel.Shape#setWidth(int)
 	 */
+	@Override
 	public void setWidth(final int width)
 	{
 		super.setWidth(width);
@@ -56,7 +73,8 @@ public class OvalShape extends Shape
 	}
 
 	/*
-	 * this funtion to get the area of the circle
+	 * (non-Javadoc)
+	 * @see gfx_panel.Shape#getArea()
 	 */
 	@Override
 	public int getArea()
@@ -65,7 +83,8 @@ public class OvalShape extends Shape
 	}
 
 	/*
-	 * this function is responsible for drawing the shape in the screen
+	 * (non-Javadoc)
+	 * @see gfx_panel.Shape#draw(java.awt.Graphics)
 	 */
 	@Override
 	public void draw(final Graphics g)

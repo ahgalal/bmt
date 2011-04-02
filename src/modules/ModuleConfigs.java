@@ -38,7 +38,8 @@ public abstract class ModuleConfigs
 	 * null fields (due to the caller not knowing the values), so the non-null
 	 * fields ONLY should be merged with the current configurations.
 	 * 
-	 * @param config incoming configurations object
+	 * @param config
+	 *            incoming configurations object
 	 */
 	protected abstract void mergeConfigs(ModuleConfigs config);
 }

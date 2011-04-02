@@ -57,7 +57,7 @@ public class DrawZones extends BaseUI
 	}
 
 	/**
-	 * Creates the composite
+	 * Creates the composite.
 	 */
 	private void createComposite()
 	{
@@ -69,7 +69,7 @@ public class DrawZones extends BaseUI
 				composite,
 				composite.getSize().x,
 				composite.getSize().y);
-		gfx_panel.setEnable_snap(true);
+		gfx_panel.setEnableSnap(true);
 	}
 
 	private Button btn_hide = null;

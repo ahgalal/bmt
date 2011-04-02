@@ -49,7 +49,7 @@ public class ZonesModuleConfigs extends ModuleConfigs
 	 *   	calculating number of entering/leaving of zones. 
 	 *   
 	 */
-	public int hyst_value = 50,width,height;
+	public int hyst_value = 50, width, height;
 
 	/**
 	 * Initializations for the configurations.
@@ -67,8 +67,8 @@ public class ZonesModuleConfigs extends ModuleConfigs
 	{
 		super(module_name);
 		hyst_value = hyst_val;
-		this.width=width;
-		this.height=height;
+		this.width = width;
+		this.height = height;
 	}
 
 	@Override
@@ -79,7 +79,7 @@ public class ZonesModuleConfigs extends ModuleConfigs
 			hyst_value = tmp_zonConfigs.hyst_value;
 		if (tmp_zonConfigs.width != -1)
 			width = tmp_zonConfigs.width;
-		if (tmp_zonConfigs.height!= -1)
+		if (tmp_zonConfigs.height != -1)
 			height = tmp_zonConfigs.height;
 	}
 }

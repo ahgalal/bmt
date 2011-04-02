@@ -3,6 +3,7 @@ package modules.session;
 import modules.Cargo;
 import modules.Module;
 import modules.ModuleConfigs;
+import utils.saveengines.Constants;
 import utils.video.filters.Data;
 
 /**
@@ -12,9 +13,6 @@ import utils.video.filters.Data;
  */
 public class SessionModule extends Module
 {
-
-	private static final String GUI_SESSION_TIME = "Session Time";
-	private static final String FILE_SESSION_TIME = "ST";
 	private long session_start_time;
 	private long session_end_time;
 	private boolean session_is_running;
@@ -50,13 +48,15 @@ public class SessionModule extends Module
 	@Override
 	public void updateGUICargoData()
 	{
-		gui_cargo.setDataByTag(GUI_SESSION_TIME, Float.toString(getSessionTimeTillNow()));
+		gui_cargo.setDataByTag(Constants.GUI_SESSION_TIME, Float.toString(getSessionTimeTillNow()));
 	}
 
 	@Override
 	public void updateFileCargoData()
 	{
-		file_cargo.setDataByTag(FILE_SESSION_TIME, Float.toString(getSessionTimeTillNow()));
+		file_cargo.setDataByTag(
+				Constants.FILE_SESSION_TIME,
+				Float.toString(getSessionTimeTillNow()));
 	}
 
 	@Override
@@ -115,9 +115,9 @@ public class SessionModule extends Module
 		session_start_time = 0;
 		session_end_time = 0;
 
-		gui_cargo = new Cargo(new String[] { GUI_SESSION_TIME });
+		gui_cargo = new Cargo(new String[] { Constants.GUI_SESSION_TIME });
 
-		file_cargo = new Cargo(new String[] { FILE_SESSION_TIME });
+		file_cargo = new Cargo(new String[] { Constants.FILE_SESSION_TIME });
 	}
 
 	/**
@@ -148,7 +148,7 @@ public class SessionModule extends Module
 	@Override
 	public void deRegisterDataObject(Data data)
 	{
-		
+
 	}
 
 }

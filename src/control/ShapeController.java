@@ -17,7 +17,7 @@ import ui.FormZoneType;
 import utils.PManager;
 
 /**
- * Handles all shapes to be displayed on the GfxPanel
+ * Handles all shapes to be displayed on the GfxPanel.
  * 
  * @author Creative
  */
@@ -25,6 +25,12 @@ public class ShapeController implements GfxPanelNotifiee, ShapeCollection
 {
 	static ShapeController default_controller;
 
+	/**
+	 * Notifies this object that a "setting scale" operation is taking place.
+	 * 
+	 * @param settingScale
+	 *            true: yes, false: no
+	 */
 	public void setSettingScale(final boolean settingScale)
 	{
 		setting_scale = settingScale;
@@ -35,11 +41,19 @@ public class ShapeController implements GfxPanelNotifiee, ShapeCollection
 	private final PManager pm;
 	private boolean setting_scale;
 
+	/**
+	 * Clears all shapes stored.
+	 */
 	public void clearAllShapes()
 	{
 		shp_arr.clear();
 	}
 
+	/**
+	 * Gets the number of shapes stored.
+	 * 
+	 * @return integer representing the number of shapes
+	 */
 	public int getNumberOfShapes()
 	{
 		return shp_arr.size();
@@ -73,16 +87,16 @@ public class ShapeController implements GfxPanelNotifiee, ShapeCollection
 		return shp_arr.get(index);
 	}
 
+	/**
+	 * Gets the singleton instance.
+	 * 
+	 * @return singleton instance
+	 */
 	public static ShapeController getDefault()
 	{
 		if (default_controller == null)
 			default_controller = new ShapeController();
 		return default_controller;
-	}
-
-	public void drawAllShapes()
-	{
-		gfx_panel.redrawAllShapes();
 	}
 
 	/**
@@ -99,7 +113,8 @@ public class ShapeController implements GfxPanelNotifiee, ShapeCollection
 		gfx_panel.refreshDrawingArea();
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see gfx_panel.GfxPanelNotifiee#shapeAdded(int)
 	 */
 	@Override
@@ -116,7 +131,8 @@ public class ShapeController implements GfxPanelNotifiee, ShapeCollection
 		});
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see gfx_panel.GfxPanelNotifiee#shapeModified(int)
 	 */
 	@Override
@@ -125,6 +141,10 @@ public class ShapeController implements GfxPanelNotifiee, ShapeCollection
 		((ZonesModule) ModulesManager.getDefault().getModuleByName("Zones Module")).updateZoneDataInGUI(shapeNumber);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see gfx_panel.GfxPanelNotifiee#shapeDeleted(int)
+	 */
 	@Override
 	public void shapeDeleted(final int shapeNumber)
 	{
@@ -132,7 +152,8 @@ public class ShapeController implements GfxPanelNotifiee, ShapeCollection
 
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see gfx_panel.GfxPanelNotifiee#shapeSelected(int)
 	 */
 	@Override
@@ -157,10 +178,11 @@ public class ShapeController implements GfxPanelNotifiee, ShapeCollection
 		gfx_panel.registerForNotifications(this);
 	}
 
-
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see control.ShapeCollection#drawaAllShapes(java.awt.Graphics)
 	 */
+	@Override
 	public void drawaAllShapes(final Graphics gfx)
 	{
 		int i = 0;
@@ -170,7 +192,8 @@ public class ShapeController implements GfxPanelNotifiee, ShapeCollection
 		}
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see gfx_panel.GfxPanelNotifiee#mouseClicked(java.awt.Point)
 	 */
 	@Override
@@ -183,8 +206,6 @@ public class ShapeController implements GfxPanelNotifiee, ShapeCollection
 	@Override
 	public void dragOccured(final int draggedShape, final int draggedOnShape)
 	{
-		// pm.log.print("Shape: " +draggedShape+ " is Dragged on the Shape: "
-		// +draggedOnShape ,this);
 	}
 
 }

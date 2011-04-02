@@ -4,23 +4,47 @@ import gfx_panel.GfxPanel.Direction;
 
 import java.util.ArrayList;
 
+/**
+ * Snapping utility, to snap shapes to each other.
+ * 
+ * @author Creative
+ */
 public class Snapper
 {
 	private boolean enable_snap;
 	private final SnapResults snp_results;
 	private final ArrayList<Shape> arr_shp;
 
+	/**
+	 * Initializes the Snapper.
+	 * 
+	 * @param arr_shp
+	 *            array of shapes to snap
+	 */
 	public Snapper(final ArrayList<Shape> arr_shp)
 	{
 		snp_results = new SnapResults();
 		this.arr_shp = arr_shp;
 	}
 
+	/**
+	 * Enable/Disable snapping.
+	 * 
+	 * @param enable
+	 *            true/false
+	 */
 	public void enableSnap(final boolean enable)
 	{
 		enable_snap = enable;
 	}
 
+	/**
+	 * Snaps (moves) the active shape according to the Snap information.
+	 * 
+	 * @param snapInfo
+	 *            snap information like direction
+	 * @return
+	 */
 	public SnapResults snap(final SnapInfo snapInfo)
 	{
 		final Shape shp_snap_to = snapInfo.shp_snap_to, shp_snap = snapInfo.shp_snap;
@@ -47,6 +71,23 @@ public class Snapper
 		return snp_results;
 	}
 
+	/**
+	 * Snap position preparation.
+	 * 
+	 * @param shp
+	 *            shape to snap
+	 * @param cur_x
+	 *            cursor position x
+	 * @param cur_y
+	 *            cursor position y
+	 * @param cursor_pos_in_shp_x
+	 *            cursor's position relative to the top-left of the selected
+	 *            shape on the x axis
+	 * @param cursor_pos_in_shp_y
+	 *            cursor's position relative to the top-left of the selected
+	 *            shape on the y axis
+	 * @return SnapResults indicating the direction of the snap if performed
+	 */
 	public SnapResults prepareSnapPosition(
 			final Shape shp,
 			final int cur_x,
@@ -80,10 +121,14 @@ public class Snapper
 					if ((shp_y >= tmp_y & shp_y < tmp_y + tmp_h)
 							| (tmp_y > shp_y & tmp_y < shp_y + shp_h))
 					{
-						/*
-						 * _______ ______ | | ______ | || shp | | | | ||_____| |
-						 * | | tmp | OR | tmp |_______ | | | || | |_____|
-						 * |_____|| shp | |_____|
+						/*        _______
+						 * ______ |     |     ______ 
+						 * |     || shp |     |     |
+						 * |     ||_____|     |     |
+						 * | tmp |        OR  | tmp |_______        
+						 * |     |            |     ||     |
+						 * |_____|            |_____|| shp |
+						 *                           |_____|
 						 */
 						if (edge_x > tmp_x + tmp_w)
 						{
@@ -115,10 +160,16 @@ public class Snapper
 					if ((shp_x >= tmp_x & shp_x < tmp_x + tmp_w)
 							| (tmp_x > shp_x & tmp_x < shp_x + shp_w))
 					{
-						/*
-						 * _______ _______ | | | | | shp | | shp | |_____|
-						 * |_____| ______ ______ | | | | | | | | | tmp | OR |
-						 * tmp | | | | | |_____| |_____|
+						/*   _______            _______
+						 *   |     |            |     |
+						 *   | shp |            | shp |
+						 *   |_____|            |_____|
+						 *       ______      ______ 
+						 *       |     |     |     |
+						 *       |     |     |     |
+						 *       | tmp | OR  | tmp |        
+						 *       |     |     |     |
+						 *       |_____|     |_____|
 						 */
 						if (edge_y > tmp_y + tmp_h)
 						{
@@ -183,6 +234,13 @@ public class Snapper
 		return snp_results;
 	}
 
+	/**
+	 * Snap size preparation.
+	 * @param shp shape to snap
+	 * @param x cursor position on the x axis
+	 * @param y cursor position on the y axis
+	 * @return SnapResults indicating the direction of the snap if performed 
+	 */
 	public SnapResults prepareSnapSize(final Shape shp, final int x, final int y)
 	{
 		if (enable_snap)
@@ -236,12 +294,38 @@ public class Snapper
 		return snp_results;
 	}
 
+	/**
+	 * Snap Information, to guid the snapping process.
+	 * 
+	 * @author Creative
+	 */
 	private class SnapInfo
 	{
+		/**
+		 * Shapes involved in the process.
+		 */
 		public Shape shp_snap_to, shp_snap;
+		/**
+		 * Direction of the snap.
+		 */
 		public Direction direction;
+		/**
+		 * Distance to snap.
+		 */
 		public int distance;
 
+		/**
+		 * Initializes the snap information.
+		 * 
+		 * @param shp_to_snap
+		 *            Shape to snap (moving)
+		 * @param shp_to_snap_to
+		 *            Shape to snap to (still)
+		 * @param direction
+		 *            direction of the snap
+		 * @param distance
+		 *            distance to snap
+		 */
 		public SnapInfo(
 				final Shape shp_to_snap,
 				final Shape shp_to_snap_to,
@@ -255,8 +339,16 @@ public class Snapper
 		}
 	}
 
+	/**
+	 * An indication on how the snap process completed.
+	 * 
+	 * @author Creative
+	 */
 	public class SnapResults
 	{
+		/**
+		 * Did we snap in the x direction? y direction?
+		 */
 		public boolean snapped_x, snapped_y;
 	}
 }

@@ -105,6 +105,9 @@ public class CtrlExperimentForm extends ControllerUI
 		pm.frm_grps.show(true);
 	}
 
+	/**
+	 * Clears the GUI data.
+	 */
 	public void clearForm()
 	{
 		ui.clearForm();

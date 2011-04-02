@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import utils.saveengines.Constants;
 
 /**
- * Handles all groups and their info
+ * Handles all groups and their info.
  * 
  * @author ShaQ
  */
@@ -19,9 +19,13 @@ public class Group implements Grp2GUI
 
 	/**
 	 * Initializes the group.
-	 * @param id group's unique id
-	 * @param name group's name
-	 * @param notes group's notes
+	 * 
+	 * @param id
+	 *            group's unique id
+	 * @param name
+	 *            group's name
+	 * @param notes
+	 *            group's notes
 	 */
 	public Group(
 			final int id,
@@ -64,7 +68,8 @@ public class Group implements Grp2GUI
 	}
 
 	/**
-	 * Gets all rats belonging to the group
+	 * Gets all rats belonging to the group.
+	 * 
 	 * @return ArrayList of rats
 	 */
 	public ArrayList<Rat> getAllRats()
@@ -72,9 +77,11 @@ public class Group implements Grp2GUI
 		return arr_rats;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see model.business.Grp2GUI#getName()
 	 */
+	@Override
 	public String getName()
 	{
 		return name;
@@ -82,35 +89,44 @@ public class Group implements Grp2GUI
 
 	/**
 	 * Sets the group's name.
-	 * @param name new name of the group
+	 * 
+	 * @param name
+	 *            new name of the group
 	 */
 	public void setName(final String name)
 	{
 		this.name = name;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see model.business.Grp2GUI#getNoRats()
 	 */
+	@Override
 	public int getNoRats()
 	{
 		return arr_rats.size();
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see model.business.Grp2GUI#getRatsNumbering()
 	 */
+	@Override
 	public String getRatsNumbering()
 	{
 		StringBuffer str_buf = new StringBuffer();
-		for(Rat rat:arr_rats)
-			str_buf.append(rat.getValueByParameterName(ExperimentModule.FILE_RAT_NUMBER)+ ", ") ;
-		return str_buf.substring(0, str_buf.length()-2);
+		for (Rat rat : arr_rats)
+			str_buf.append(rat.getValueByParameterName(Constants.FILE_RAT_NUMBER)
+					+ ", ");
+		return str_buf.substring(0, str_buf.length() - 2);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see model.business.Grp2GUI#getNotes()
 	 */
+	@Override
 	public String getNotes()
 	{
 		return notes;
@@ -118,7 +134,9 @@ public class Group implements Grp2GUI
 
 	/**
 	 * Sets the notes of the group.
-	 * @param notes new notes of the group
+	 * 
+	 * @param notes
+	 *            new notes of the group
 	 */
 	public void setNotes(final String notes)
 	{
@@ -127,7 +145,9 @@ public class Group implements Grp2GUI
 
 	/**
 	 * Sets the unique identifier for the group.
-	 * @param id unique identifier
+	 * 
+	 * @param id
+	 *            unique identifier
 	 */
 	public void setId(final int id)
 	{
@@ -138,6 +158,7 @@ public class Group implements Grp2GUI
 	 * (non-Javadoc)
 	 * @see model.business.Grp2GUI#getId()
 	 */
+	@Override
 	public int getId()
 	{
 		return id;
@@ -145,7 +166,9 @@ public class Group implements Grp2GUI
 
 	/**
 	 * Gets the group's info in the form of a string.
-	 * @param parameters_list list of parameters for rats
+	 * 
+	 * @param parameters_list
+	 *            list of parameters for rats
 	 * @return
 	 */
 	public String grp2String(final String[] parameters_list)
@@ -172,7 +195,7 @@ public class Group implements Grp2GUI
 		str_ret_buf.append(Constants.h_rat + System.getProperty("line.separator"));
 		final StringBuffer tags_buf = new StringBuffer();
 		for (final String s : parameters_list)
-			tags_buf.append(s + '\t');	// TODO:tab after the last item ??!!
+			tags_buf.append(s + '\t'); // TODO:tab after the last item ??!!
 		str_ret_buf.append(tags_buf.toString() + System.getProperty("line.separator"));
 
 		for (final Rat rat_tmp : getAllRats())
