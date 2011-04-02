@@ -1,10 +1,11 @@
-package lib_avi;
+package utils.video.filters.recorder;
 
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferInt;
 import java.io.File;
 import java.io.IOException;
 
+import lib_avi.AVIOutputStream;
 import lib_avi.AVIOutputStream.VideoFormat;
 
 /**

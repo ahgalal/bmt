@@ -2,7 +2,6 @@ package utils.video.filters.recorder;
 
 import java.io.File;
 
-import lib_avi.StreamToAVI;
 import lib_avi.AVIOutputStream.VideoFormat;
 import utils.PManager;
 import utils.PManager.ProgramState;
@@ -38,8 +37,8 @@ public class VideoRecorder extends VideoFilter
 	public VideoRecorder(
 			final String name,
 			final FilterConfigs configs,
-			Link link_in,
-			Link link_out)
+			final Link link_in,
+			final Link link_out)
 	{
 		super(name, configs, link_in, link_out);
 		recorder_configs = (RecorderConfigs) configs;
