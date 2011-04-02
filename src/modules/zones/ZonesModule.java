@@ -36,7 +36,6 @@ public class ZonesModule extends Module
 	private static final String FILE_TOTAL_DISTANCE = "Distance";
 
 	private final ShapeController shape_controller;
-	private final int width = 640, height = 480;
 	private byte[] zone_map;
 	private final ZonesCollection zones;
 	private int current_zone_num;
@@ -92,7 +91,7 @@ public class ZonesModule extends Module
 	 */
 	private int getZone(final int x, final int y)
 	{
-		return zone_map[x + y * width];
+		return zone_map[x + y * zones_configs.width];
 	}
 
 	/**
@@ -118,7 +117,7 @@ public class ZonesModule extends Module
 		RectangleShape tmp_rect;
 		OvalShape tmp_oval;
 		int tmp_zone_number;
-		zone_map = new byte[width * height];
+		zone_map = new byte[zones_configs.width * zones_configs.height];
 		initializeZoneMap(-1);
 		for (int i = 0; i < zones.getNumberOfZones(); i++)
 		{
@@ -130,12 +129,12 @@ public class ZonesModule extends Module
 				tmp_rect = (RectangleShape) tmp_shp;
 				for (int x = tmp_rect.getX(); x < tmp_rect.getX() + tmp_rect.getWidth(); x++)
 				{
-					if (x > -1 & x < width)
+					if (x > -1 & x < zones_configs.width)
 						for (int y = tmp_rect.getY(); y < tmp_rect.getY()
 								+ tmp_rect.getHeight(); y++)
 						{
-							if (y > -1 & y < height)
-								zone_map[x + (height - y) * width] = (byte) tmp_zone_number;
+							if (y > -1 & y < zones_configs.height)
+								zone_map[x + (zones_configs.height - y) * zones_configs.width] = (byte) tmp_zone_number;
 						}
 				}
 			} else if (tmp_shp instanceof OvalShape)
@@ -147,10 +146,10 @@ public class ZonesModule extends Module
 
 				for (int x = tmp_oval.getX(); x < tmp_oval.getX() + rx * 2; x++)
 				{
-					if (x > -1 & x < width)
+					if (x > -1 & x < zones_configs.width)
 						for (int y = tmp_oval.getY(); y < tmp_oval.getY() + ry * 2; y++)
 						{
-							if (y > -1 & y < height)
+							if (y > -1 & y < zones_configs.height)
 							{
 								x_final = x - x_ov;
 								y_final = y - y_ov;
@@ -158,7 +157,7 @@ public class ZonesModule extends Module
 										/ (rx * rx)
 										+ (y_final * y_final)
 										/ (ry * ry) < 1)
-									zone_map[x + (height - y) * width] = (byte) tmp_zone_number;
+									zone_map[x + (zones_configs.height - y) * zones_configs.width] = (byte) tmp_zone_number;
 							}
 						}
 				}
@@ -397,6 +396,8 @@ public class ZonesModule extends Module
 				FILE_CENTRAL_ENTRANCE,
 				FILE_CENTRAL_TIME,
 				FILE_TOTAL_DISTANCE });
+		
+		zone_map = new byte[zones_configs.width * zones_configs.height];
 	}
 
 	@Override

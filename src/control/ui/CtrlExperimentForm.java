@@ -100,6 +100,8 @@ public class CtrlExperimentForm extends ControllerUI
 	 */
 	public void btnMngGrpsAction()
 	{
+		((ExperimentModule) ModulesManager.getDefault().getModuleByName(
+				"Experiment Module")).updateGroupGUIData();
 		pm.frm_grps.show(true);
 	}
 

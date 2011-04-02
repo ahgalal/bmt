@@ -63,7 +63,7 @@ public class ExperimentModule extends Module
 	@Override
 	public void updateGUICargoData()
 	{
-		gui_cargo.setDataByTag(GUI_EXP_NAME,  exp.getName());
+		gui_cargo.setDataByTag(GUI_EXP_NAME, exp.getName());
 		gui_cargo.setDataByTag(GUI_GROUP_NAME, curr_grp_name);
 		gui_cargo.setDataByTag(GUI_RAT_NUMBER, Integer.toString(curr_rat_number));
 	}
@@ -240,11 +240,20 @@ public class ExperimentModule extends Module
 		if (text_engine.readExpInfoFromTXTFile(file_name, exp))
 		{
 			PManager.getDefault().frm_exp.fillForm(exp);
-			final Grp2GUI[] arr_grps = new Grp2GUI[exp.getNoGroups()];
-			exp.getGroups().toArray(arr_grps);
-			PManager.getDefault().frm_grps.loadDataToForm(arr_grps);
+			updateGroupGUIData();
 			exp_is_set = true;
 		}
+	}
+
+	/**
+	 * Updates the Groups GUI window with the latest groups information.
+	 */
+	public void updateGroupGUIData()
+	{
+		final Grp2GUI[] arr_grps = new Grp2GUI[exp.getNoGroups()];
+		exp.getGroups().toArray(arr_grps);
+		PManager.getDefault().frm_grps.clearForm();
+		PManager.getDefault().frm_grps.loadDataToForm(arr_grps);
 	}
 
 	/**
