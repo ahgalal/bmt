@@ -92,7 +92,7 @@ public class RatFinder extends VideoFilter
 		super(name, configs, link_in, link_out);
 		ratfinder_configs = (RatFinderFilterConfigs) configs;
 		rat_finder_data = new RatFinderData("Rat Finder Data");
-		center_point = (Point) rat_finder_data.getCenterPoint();
+		center_point = rat_finder_data.getCenterPoint();
 
 		hori_sum = new int[ratfinder_configs.common_configs.height];
 		vert_sum = new int[ratfinder_configs.common_configs.width];
@@ -107,6 +107,7 @@ public class RatFinder extends VideoFilter
 	 * Updates the center point (ie: finds the location of the moving object).
 	 * 
 	 * @param binary_image
+	 *            input image
 	 */
 	private void updateCentroid(final int[] binary_image)
 	{

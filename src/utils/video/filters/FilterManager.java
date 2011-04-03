@@ -134,13 +134,14 @@ public class FilterManager
 	 * Applies a configuration object to a filter, using the name of the filter
 	 * specified in the configuration object.
 	 * 
-	 * @param f_cfgs
+	 * @param cfgs
+	 *            configurations object
 	 */
-	public void applyConfigsToFilter(final FilterConfigs f_cfgs)
+	public void applyConfigsToFilter(final FilterConfigs cfgs)
 	{
-		final VideoFilter tmp_filter = getFilterByName(f_cfgs.getConfigurablename());
+		final VideoFilter tmp_filter = getFilterByName(cfgs.getConfigurablename());
 		if (tmp_filter != null)
-			tmp_filter.updateConfigs(f_cfgs);
+			tmp_filter.updateConfigs(cfgs);
 	}
 
 	/**

@@ -7,8 +7,8 @@ package modules;
  */
 public class Cargo
 {
-	private String arr_data[];
-	private String arr_tags[];
+	private String[] arr_data;
+	private String[] arr_tags;
 
 	/**
 	 * Sets the tags of the Cargo.
@@ -37,6 +37,7 @@ public class Cargo
 	 * Initializes the cargo.
 	 * 
 	 * @param tags
+	 *            a.k.a parameters/keys
 	 */
 	public Cargo(final String[] tags)
 	{

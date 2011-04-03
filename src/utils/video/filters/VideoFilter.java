@@ -42,7 +42,7 @@ public abstract class VideoFilter
 	/**
 	 * Returns the filter's configurations.
 	 * 
-	 * @return
+	 * @return configuration object
 	 */
 	public FilterConfigs getConfigs()
 	{
@@ -53,6 +53,7 @@ public abstract class VideoFilter
 	 * Updates the filter's configurations.
 	 * 
 	 * @param configs
+	 *            configurations object for the filter
 	 */
 	public void updateConfigs(final FilterConfigs configs)
 	{

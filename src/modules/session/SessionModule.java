@@ -48,7 +48,9 @@ public class SessionModule extends Module
 	@Override
 	public void updateGUICargoData()
 	{
-		gui_cargo.setDataByTag(Constants.GUI_SESSION_TIME, Float.toString(getSessionTimeTillNow()));
+		gui_cargo.setDataByTag(
+				Constants.GUI_SESSION_TIME,
+				Float.toString(getSessionTimeTillNow()));
 	}
 
 	@Override
@@ -146,7 +148,7 @@ public class SessionModule extends Module
 	}
 
 	@Override
-	public void deRegisterDataObject(Data data)
+	public void deRegisterDataObject(final Data data)
 	{
 
 	}

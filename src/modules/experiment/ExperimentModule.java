@@ -62,13 +62,17 @@ public class ExperimentModule extends Module
 	{
 		gui_cargo.setDataByTag(Constants.GUI_EXP_NAME, exp.getName());
 		gui_cargo.setDataByTag(Constants.GUI_GROUP_NAME, curr_grp_name);
-		gui_cargo.setDataByTag(Constants.GUI_RAT_NUMBER, Integer.toString(curr_rat_number));
+		gui_cargo.setDataByTag(
+				Constants.GUI_RAT_NUMBER,
+				Integer.toString(curr_rat_number));
 	}
 
 	@Override
 	public void updateFileCargoData()
 	{
-		file_cargo.setDataByTag(Constants.FILE_RAT_NUMBER, Integer.toString(curr_rat_number));
+		file_cargo.setDataByTag(
+				Constants.FILE_RAT_NUMBER,
+				Integer.toString(curr_rat_number));
 		file_cargo.setDataByTag(Constants.FILE_GROUP_NAME, curr_grp_name);
 
 	}
@@ -312,7 +316,7 @@ public class ExperimentModule extends Module
 	 *            rat number to be active and save exp. info to
 	 * @param grp_name
 	 *            group name to be active and save the active rat to
-	 * @return
+	 * @return 0: success, -1: group doesn't exist
 	 */
 	public int setCurrentRatAndGroup(final int rat_num, final String grp_name)
 	{
@@ -340,9 +344,14 @@ public class ExperimentModule extends Module
 	public void initialize()
 	{
 		gui_cargo = new Cargo(
-				new String[] { Constants.GUI_EXP_NAME, Constants.GUI_GROUP_NAME, Constants.GUI_RAT_NUMBER });
+				new String[] {
+						Constants.GUI_EXP_NAME,
+						Constants.GUI_GROUP_NAME,
+						Constants.GUI_RAT_NUMBER });
 
-		file_cargo = new Cargo(new String[] { Constants.FILE_RAT_NUMBER, Constants.FILE_GROUP_NAME });
+		file_cargo = new Cargo(new String[] {
+				Constants.FILE_RAT_NUMBER,
+				Constants.FILE_GROUP_NAME });
 	}
 
 	@Override

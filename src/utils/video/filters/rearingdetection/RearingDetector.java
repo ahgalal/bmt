@@ -34,8 +34,8 @@ public class RearingDetector extends VideoFilter
 	public RearingDetector(
 			final String name,
 			final FilterConfigs configs,
-			Link link_in,
-			Link link_out)
+			final Link link_in,
+			final Link link_out)
 	{
 		super(name, configs, link_in, link_out);
 		rearing_configs = (RearingFilterConfigs) configs;

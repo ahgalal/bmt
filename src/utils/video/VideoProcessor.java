@@ -139,7 +139,7 @@ public class VideoProcessor
 	 * Updates the RGB background of the subtraction filter with the current
 	 * image, and returns the current image.
 	 * 
-	 * @return
+	 * @return integer array representing the RGB background image
 	 */
 	public int[] updateRGBBackground()
 	{
@@ -318,7 +318,7 @@ public class VideoProcessor
 	/**
 	 * Checks if the Background (Subtraction filter) has been set.
 	 * 
-	 * @return
+	 * @return true/false
 	 */
 	public boolean isBgSet()
 	{

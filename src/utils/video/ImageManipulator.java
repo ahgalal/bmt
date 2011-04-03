@@ -197,7 +197,7 @@ public class ImageManipulator
 	public static byte[] rgbIntArray2GrayByteArray(final int[] in)
 	{
 		int r, g, b;
-		final byte res[] = new byte[in.length];
+		final byte[] res = new byte[in.length];
 		for (int i = 0; i < in.length; i++)
 		{
 			r = in[i] & (0x000000FF);
@@ -239,7 +239,7 @@ public class ImageManipulator
 	public static int[] rgbIntArray2GrayIntArray(final int[] in)
 	{
 		int r, g, b;
-		final int res[] = new int[in.length];
+		final int[] res = new int[in.length];
 		for (int i = 0; i < in.length; i++)
 		{
 			r = in[i] & (0x000000FF);

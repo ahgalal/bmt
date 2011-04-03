@@ -272,7 +272,7 @@ public abstract class Shape
 	 * 
 	 * @param color
 	 *            color to be converted
-	 * @return
+	 * @return String describing the RGB color [0x00 B G R]
 	 */
 	public static String color2String(final RGB color)
 	{

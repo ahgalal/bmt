@@ -63,7 +63,7 @@ public class JMFGrabber implements Effect
 	 *            buffer to be filled
 	 * @param newSize
 	 *            size to fill the buffer to
-	 * @return
+	 * @return validated byte array
 	 */
 	byte[] validateByteArraySize(final Buffer buffer, final int newSize)
 	{
@@ -167,7 +167,7 @@ public class JMFGrabber implements Effect
 	 * @return if the two formats are matched, one of them is returned, else
 	 *         returns null
 	 */
-	Format matches(final Format in, final Format outs[])
+	Format matches(final Format in, final Format[] outs)
 	{
 		for (int i = 0; i < outs.length; i++)
 		{

@@ -44,7 +44,6 @@ public class Constants
 	public static final String FILE_CENTRAL_TIME = "CT";
 	public static final String FILE_TOTAL_DISTANCE = "Distance";
 
-	
 	/**
 	 * GUI Headers, used to Load data to GUI.
 	 */

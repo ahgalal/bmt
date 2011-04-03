@@ -36,6 +36,7 @@ public class TextEngine
 	 *            information
 	 * @param exp
 	 *            Experiment object to load the information to
+	 * @return true: success, false: failure
 	 */
 	public boolean readExpInfoFromTXTFile(final String file_name, final Experiment exp)
 	{
@@ -78,8 +79,8 @@ public class TextEngine
 					 * Just a holder to skip the Rats'
 					 * numbers line, we can know their numbers 
 					 * later (no need to read, parse etc..)
-					 */ 
-					buf_rdr.readLine(); 
+					 */
+					buf_rdr.readLine();
 					final String tmp_notes = buf_rdr.readLine().substring(
 							Constants.h_grp_notes.length());
 					grp_tmp = new Group(tmp_id, tmp_name, tmp_notes);

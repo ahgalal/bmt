@@ -43,7 +43,7 @@ public class Snapper
 	 * 
 	 * @param snapInfo
 	 *            snap information like direction
-	 * @return
+	 * @return SnapResults indicating the direction of the snap if performed
 	 */
 	public SnapResults snap(final SnapInfo snapInfo)
 	{
@@ -236,10 +236,14 @@ public class Snapper
 
 	/**
 	 * Snap size preparation.
-	 * @param shp shape to snap
-	 * @param x cursor position on the x axis
-	 * @param y cursor position on the y axis
-	 * @return SnapResults indicating the direction of the snap if performed 
+	 * 
+	 * @param shp
+	 *            shape to snap
+	 * @param x
+	 *            cursor position on the x axis
+	 * @param y
+	 *            cursor position on the y axis
+	 * @return SnapResults indicating the direction of the snap if performed
 	 */
 	public SnapResults prepareSnapSize(final Shape shp, final int x, final int y)
 	{

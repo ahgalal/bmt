@@ -12,8 +12,8 @@ import utils.video.ImageManipulator;
 public class JMFCamFrame
 {
 	private Buffer buffer = null;
-	private int width;
-	private int height;
+	private final int width;
+	private final int height;
 
 	/**
 	 * Converts YUV frame to RGB byte frame.

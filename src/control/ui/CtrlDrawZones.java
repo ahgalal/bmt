@@ -79,8 +79,11 @@ public class CtrlDrawZones extends ControllerUI
 
 	/**
 	 * Handles the "Load Zones" button click action.
+	 * 
+	 * @param shell
+	 *            parent shell for the open dialog box
 	 */
-	public void btn_load_zonesAction(final Shell shell)
+	public void btnLoadZonesAction(final Shell shell)
 	{
 		final FileDialog fileDialog = new FileDialog(shell, SWT.OPEN);
 		final String file_name = fileDialog.open();
@@ -102,7 +105,7 @@ public class CtrlDrawZones extends ControllerUI
 	/**
 	 * Handles the "Hide" button click action.
 	 */
-	public void btn_hide_Action()
+	public void btnHideAction()
 	{
 		((ZonesModule) ModulesManager.getDefault().getModuleByName("Zones Module")).updateZoneMap();
 		show(false);
@@ -110,8 +113,11 @@ public class CtrlDrawZones extends ControllerUI
 
 	/**
 	 * Handles the "Save Zones" button click action.
+	 * 
+	 * @param shell
+	 *            parent shell for the open dialog box
 	 */
-	public void btn_save_zones_Action(final Shell shell)
+	public void btnSaveZonesAction(final Shell shell)
 	{
 		final FileDialog fileDialog = new FileDialog(shell, SWT.SAVE);
 		final String file_name = fileDialog.open();
@@ -191,6 +197,7 @@ public class CtrlDrawZones extends ControllerUI
 	 * place, in order to start capturing measure points.
 	 * 
 	 * @param enable
+	 *            true/false
 	 */
 	public void settingScale(final boolean enable)
 	{

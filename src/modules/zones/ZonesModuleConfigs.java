@@ -58,6 +58,10 @@ public class ZonesModuleConfigs extends ModuleConfigs
 	 *            name of the module
 	 * @param hyst_val
 	 *            initial hysteresis value
+	 * @param width
+	 *            image's width
+	 * @param height
+	 *            image's height
 	 */
 	public ZonesModuleConfigs(
 			final String module_name,

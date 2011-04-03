@@ -27,8 +27,8 @@ import javax.media.format.YUVFormat;
 import javax.media.protocol.CaptureDevice;
 import javax.media.protocol.DataSource;
 
-import utils.video.JMFGrabber;
 import utils.video.FrameIntArray;
+import utils.video.JMFGrabber;
 
 /**
  * JMF video library.

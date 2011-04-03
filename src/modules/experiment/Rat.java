@@ -52,7 +52,9 @@ public class Rat
 	 * Gets the value of the parameter, using parameter's name.
 	 * 
 	 * @param parameter_name
-	 * @return
+	 *            name of the parameter to get the value corresponding to it
+	 * @return String containing the value corresponding to the parameter
+	 *         specified
 	 */
 	public String getValueByParameterName(final String parameter_name)
 	{

@@ -26,6 +26,7 @@ public abstract class ModuleConfigs
 	 * Initializes the configurations.
 	 * 
 	 * @param module_name
+	 *            name of the Module this configuration is to be applied to
 	 */
 	public ModuleConfigs(final String module_name)
 	{

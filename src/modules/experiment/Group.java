@@ -115,8 +115,8 @@ public class Group implements Grp2GUI
 	@Override
 	public String getRatsNumbering()
 	{
-		StringBuffer str_buf = new StringBuffer();
-		for (Rat rat : arr_rats)
+		final StringBuffer str_buf = new StringBuffer();
+		for (final Rat rat : arr_rats)
 			str_buf.append(rat.getValueByParameterName(Constants.FILE_RAT_NUMBER)
 					+ ", ");
 		return str_buf.substring(0, str_buf.length() - 2);
@@ -169,7 +169,7 @@ public class Group implements Grp2GUI
 	 * 
 	 * @param parameters_list
 	 *            list of parameters for rats
-	 * @return
+	 * @return String containing all the group's information
 	 */
 	public String grp2String(final String[] parameters_list)
 	{

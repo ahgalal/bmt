@@ -111,6 +111,9 @@ public class RatInfoForm extends BaseUI
 	/**
 	 * Loads grps_names(groups names) it has(entered before) to the
 	 * cmbo_grp_names(Combo).
+	 * 
+	 * @param grps_names
+	 *            names of the groups to load into the combobox
 	 */
 	private void loadGroupsToCombo(final String[] grps_names)
 	{
@@ -140,6 +143,9 @@ public class RatInfoForm extends BaseUI
 
 	/**
 	 * Shows/Hides the GUI controlled by a child of this class.
+	 * 
+	 * @param visibility
+	 *            true: visible, false: invisible
 	 */
 	@Override
 	public void show(final boolean visibility)

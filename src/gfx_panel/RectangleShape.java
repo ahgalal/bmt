@@ -15,11 +15,17 @@ public class RectangleShape extends Shape
 
 	/**
 	 * Initialized the Rectangle shape.
-	 * @param x top left corner of the shape in the x dimension
-	 * @param y top left corner of the shape in the y dimension
-	 * @param width rectangle's width
-	 * @param height rectangle's height
-	 * @param c rectangle's color
+	 * 
+	 * @param x
+	 *            top left corner of the shape in the x dimension
+	 * @param y
+	 *            top left corner of the shape in the y dimension
+	 * @param width
+	 *            rectangle's width
+	 * @param height
+	 *            rectangle's height
+	 * @param c
+	 *            rectangle's color
 	 */
 	public RectangleShape(
 			final int x,

@@ -166,21 +166,21 @@ public class DrawZones extends BaseUI
 			public void widgetSelected(final org.eclipse.swt.events.SelectionEvent e)
 			{
 				gfx_panel.selectShape(-1);
-				controller.btn_load_zonesAction(sShell);
+				controller.btnLoadZonesAction(sShell);
 			}
 		});
 		btn_save_zones.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
 			@Override
 			public void widgetSelected(final org.eclipse.swt.events.SelectionEvent e)
 			{
-				controller.btn_save_zones_Action(sShell);
+				controller.btnSaveZonesAction(sShell);
 			}
 		});
 		btn_hide.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
 			@Override
 			public void widgetSelected(final org.eclipse.swt.events.SelectionEvent e)
 			{
-				controller.btn_hide_Action();
+				controller.btnHideAction();
 			}
 		});
 
@@ -370,7 +370,7 @@ public class DrawZones extends BaseUI
 	 * 
 	 * @param zone_number
 	 *            zone number to select the table item corresponding to
-	 * @return
+	 * @return table item having the zone specified by the zone number
 	 */
 	private TableItem getTableItemByNumber(final int zone_number)
 	{

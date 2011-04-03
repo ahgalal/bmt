@@ -16,6 +16,7 @@ public abstract class ControllerUI
 	 * Shows/Hides the GUI controlled by a child of this class.
 	 * 
 	 * @param visibility
+	 *            true: visible, false: invisible
 	 */
 	public abstract void show(boolean visibility);
 
@@ -24,6 +25,8 @@ public abstract class ControllerUI
 	 * this array and display strings in their proper positions.
 	 * 
 	 * @param strs
+	 *            array of strings to pass to the GUI
+	 * @return true: success, false: failure
 	 */
 	public abstract boolean setVars(String[] strs);
 

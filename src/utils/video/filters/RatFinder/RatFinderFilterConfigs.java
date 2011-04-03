@@ -41,6 +41,7 @@ public class RatFinderFilterConfigs extends FilterConfigs
 	 * 
 	 * @return true: success
 	 */
+	@Override
 	public boolean validate()
 	{
 		if (common_configs == null)

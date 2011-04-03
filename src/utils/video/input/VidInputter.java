@@ -39,9 +39,10 @@ public interface VidInputter
 	/**
 	 * Sets the image format for the library (RGB/YUV).
 	 * 
-	 * @param s
+	 * @param format
+	 *            new format
 	 */
-	void setFormat(String s);
+	void setFormat(String format);
 
 	/**
 	 * Returns the status of the video library.

@@ -13,6 +13,7 @@ public abstract class Data
 	 * Initializes the name of the data object.
 	 * 
 	 * @param name
+	 *            name of the data object
 	 */
 	public Data(final String name)
 	{

@@ -46,9 +46,11 @@ public abstract class Module
 	 * @param keys
 	 *            keys of the hashtable
 	 */
-	protected void initializeHashKeys(Hashtable<String, String> hash, String[] keys)
+	protected void initializeHashKeys(
+			final Hashtable<String, String> hash,
+			final String[] keys)
 	{
-		for (String s : keys)
+		for (final String s : keys)
 			hash.put(s, "");
 	}
 

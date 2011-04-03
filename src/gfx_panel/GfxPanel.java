@@ -60,7 +60,7 @@ public class GfxPanel
 	private final Snapper snapper;
 
 	/**
-	 * Creates the main composite
+	 * Creates the main composite.
 	 * 
 	 * @param parent_shell
 	 *            parent shell
@@ -659,7 +659,7 @@ public class GfxPanel
 	}
 
 	/**
-	 * Notifies all the Notifiess of a mouse click
+	 * Notifies all the Notifiess of a mouse click.
 	 * 
 	 * @param pos
 	 *            position of the mouse click with respect to the panel's top
@@ -916,7 +916,7 @@ public class GfxPanel
 	}
 
 	/**
-	 * Sets the background of the panel to the given image
+	 * Sets the background of the panel to the given image.
 	 * 
 	 * @param bg_data
 	 *            new background image

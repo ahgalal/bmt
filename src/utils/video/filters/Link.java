@@ -15,8 +15,9 @@ public class Link
 	 * Initializes image data.
 	 * 
 	 * @param dims
+	 *            dimensions of the image the link is to deal with
 	 */
-	public Link(Point dims)// int width,int height)
+	public Link(final Point dims)// int width,int height)
 	{
 		img_data = new int[dims.x * dims.y];
 	}
@@ -35,8 +36,9 @@ public class Link
 	 * Sets the image data on the link.
 	 * 
 	 * @param newdata
+	 *            new data to put on the link
 	 */
-	public void setData(int[] newdata)
+	public void setData(final int[] newdata)
 	{
 		img_data = newdata;
 	}
