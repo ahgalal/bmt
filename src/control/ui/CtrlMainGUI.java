@@ -137,24 +137,32 @@ public class CtrlMainGUI extends ControllerUI
 								ui.btnRearingNowEnable(false);
 								ui.btnStartRecordEnable(false);
 								ui.btnStopRecordEnable(false);
+								ui.btnStartTrackingEnable(true);
+								ui.btnStopTrackingEnable(false);
 								break;
 							case RECORDING:
 								ui.btnNotRearingEnable(true);
 								ui.btnRearingNowEnable(true);
 								ui.btnStartRecordEnable(false);
 								ui.btnStopRecordEnable(true);
+								ui.btnStartTrackingEnable(false);
+								ui.btnStopTrackingEnable(true);
 								break;
 							case STREAMING:
 								ui.btnNotRearingEnable(false);
 								ui.btnRearingNowEnable(false);
 								ui.btnStartRecordEnable(false);
 								ui.btnStopRecordEnable(false);
+								ui.btnStartTrackingEnable(true);
+								ui.btnStopTrackingEnable(false);
 								break;
 							case TRACKING:
 								ui.btnNotRearingEnable(true);
 								ui.btnRearingNowEnable(true);
 								ui.btnStartRecordEnable(true);
 								ui.btnStopRecordEnable(false);
+								ui.btnStartTrackingEnable(false);
+								ui.btnStopTrackingEnable(true);
 								break;
 							}
 						}
