@@ -1,4 +1,4 @@
-package utils.video;
+package utils.video.input;
 
 import javax.media.Buffer;
 import javax.media.Effect;
@@ -7,7 +7,8 @@ import javax.media.ResourceUnavailableException;
 import javax.media.format.VideoFormat;
 import javax.media.format.YUVFormat;
 
-import utils.video.input.JMFCamFrame;
+import utils.video.FrameIntArray;
+import utils.video.ImageManipulator;
 
 /**
  * JMF Effect for grabbing frames from the webcam buffer.
