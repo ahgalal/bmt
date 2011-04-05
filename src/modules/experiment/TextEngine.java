@@ -1,4 +1,4 @@
-package utils.saveengines;
+package modules.experiment;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
@@ -9,9 +9,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintStream;
 
-import modules.experiment.Experiment;
-import modules.experiment.Group;
-import modules.experiment.Rat;
 import utils.PManager;
 import utils.StatusManager.StatusSeverity;
 

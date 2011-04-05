@@ -2,7 +2,6 @@ package modules.experiment;
 
 import java.util.ArrayList;
 
-import utils.saveengines.Constants;
 
 /**
  * Handles all the experiments info.

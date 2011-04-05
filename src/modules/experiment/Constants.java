@@ -1,4 +1,4 @@
-package utils.saveengines;
+package modules.experiment;
 
 /**
  * Class containing All String constants used by the program.
