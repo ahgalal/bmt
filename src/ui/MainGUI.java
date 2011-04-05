@@ -626,5 +626,25 @@ public class MainGUI extends BaseUI
 				if (values[i] != null)
 					tbl_data.getItem(i).setText(1, values[i]);
 	}
+	/**
+	 * Enables/disables the start tracking button.
+	 * 
+	 * @param enable
+	 *            true/false
+	 */
+	public void btnStartTrackingEnable(boolean enable)
+	{
+		btn_start_tracking.setEnabled(enable);
+	}
+	/**
+	 * Enables/disables the start tracking button.
+	 * 
+	 * @param enable
+	 *            true/false
+	 */
+	public void btnStopTrackingEnable(boolean enable)
+	{
+		btn_stop_tracking.setEnabled(enable);
+	}
 
 }

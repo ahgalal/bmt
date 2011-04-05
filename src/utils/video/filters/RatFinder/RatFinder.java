@@ -1,5 +1,6 @@
 package utils.video.filters.RatFinder;
 
+import java.awt.Color;
 import java.awt.Point;
 
 import utils.video.filters.FilterConfigs;
@@ -22,6 +23,7 @@ public class RatFinder extends VideoFilter
 
 	private final Point center_point;
 	private final int[] local_data;
+	private Marker marker;
 
 	/**
 	 * Draws a cross at the center of the moving object.
@@ -35,38 +37,10 @@ public class RatFinder extends VideoFilter
 
 		try
 		{
-			final int mark_length = 30;
-			final int len = binary_image.length;
-
-			int tmp_x = center_point.x
-					- mark_length
-					+ center_point.y
-					* ratfinder_configs.common_configs.width;
-			int tmp_y = (center_point.y - mark_length)
-					* ratfinder_configs.common_configs.width
-					+ center_point.x;
-
-			for (int c = 0; c < mark_length * 2; c++)
-			{
-				if (tmp_x < 0)
-					tmp_x = 0;
-				if (tmp_y < 0)
-					tmp_y = 0;
-				if (tmp_x < len & tmp_y < len)
-				{
-					local_data[tmp_x] = 0x00FF0000; // red
-					if (tmp_x + ratfinder_configs.common_configs.width < len)
-						local_data[tmp_x + ratfinder_configs.common_configs.width] = 0x00FF0000; // red
-					local_data[tmp_y] = 0x00FF0000; // red
-					if (tmp_y + 1 < len)
-						local_data[tmp_y + 1] = 0x00FF0000; // red
-				}
-				tmp_x++;
-				tmp_y += ratfinder_configs.common_configs.width;
-			}
+			marker.draw(local_data, center_point.x, center_point.y);
 		} catch (final Exception e)
 		{
-			System.err.print("Error ya 3am el 7ag, fel index!");
+			System.err.print("Error in marker");
 			e.printStackTrace();
 		}
 	}
@@ -96,6 +70,7 @@ public class RatFinder extends VideoFilter
 
 		hori_sum = new int[ratfinder_configs.common_configs.height];
 		vert_sum = new int[ratfinder_configs.common_configs.width];
+		marker=new CrossMarker(50, 50, 5, Color.RED, configs.common_configs.width, configs.common_configs.height);
 
 		// super's stuff:
 		filter_data = rat_finder_data;
@@ -116,6 +91,7 @@ public class RatFinder extends VideoFilter
 		for (int y = 0; y < ratfinder_configs.common_configs.height; y++) // Horizontal
 		// Sum
 		{
+			hori_sum[y]=0;
 			for (int x = 0; x < ratfinder_configs.common_configs.width; x++)
 				hori_sum[y] += binary_image[y
 						* ratfinder_configs.common_configs.width
@@ -131,6 +107,7 @@ public class RatFinder extends VideoFilter
 		for (int x = 0; x < ratfinder_configs.common_configs.width; x++) // Vertical
 		// Sum
 		{
+			vert_sum[x]=0;
 			for (int y = 0; y < ratfinder_configs.common_configs.height; y++)
 				vert_sum[x] += binary_image[y
 						* ratfinder_configs.common_configs.width
