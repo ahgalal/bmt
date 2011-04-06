@@ -59,14 +59,6 @@ public class VideoRecorder extends VideoFilter
 	}
 
 	/**
-	 * Closes the video writer.
-	 */
-	public void close()
-	{
-		avi_saver.close();
-	}
-
-	/**
 	 * Saves the current video with the given file name.
 	 * 
 	 * @param fileName
