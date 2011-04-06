@@ -17,7 +17,7 @@ public class Link
 	 * @param dims
 	 *            dimensions of the image the link is to deal with
 	 */
-	public Link(final Point dims)// int width,int height)
+	public Link(final Point dims)
 	{
 		img_data = new int[dims.x * dims.y];
 	}

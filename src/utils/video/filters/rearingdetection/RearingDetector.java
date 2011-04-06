@@ -11,14 +11,6 @@ import utils.video.filters.VideoFilter;
  */
 public class RearingDetector extends VideoFilter
 {
-	private final RearingFilterConfigs rearing_configs;
-	private final RearingData rearing_data;
-
-	private boolean rearing_now;
-	private int normal_rat_area;
-	private boolean is_rearing;
-	private int current_rat_area;
-
 	/**
 	 * Initializes the filter.
 	 * 
@@ -31,13 +23,9 @@ public class RearingDetector extends VideoFilter
 	 * @param link_out
 	 *            output Link from the filter
 	 */
-	public RearingDetector(
-			final String name,
-			final FilterConfigs configs,
-			final Link link_in,
-			final Link link_out)
+	public RearingDetector(String name, Link linkIn, Link linkOut)
 	{
-		super(name, configs, link_in, link_out);
+		super(name, linkIn, linkOut);
 		rearing_configs = (RearingFilterConfigs) configs;
 		rearing_data = new RearingData("Rearing Data");
 
@@ -46,6 +34,22 @@ public class RearingDetector extends VideoFilter
 
 		rearing_data.setRearing(false);
 	}
+
+	private RearingFilterConfigs rearing_configs;
+	@Override
+	public boolean configure(FilterConfigs configs)
+	{
+		rearing_configs= (RearingFilterConfigs)configs;
+		return super.configure(configs);
+	}
+
+	private RearingData rearing_data;
+
+	private boolean rearing_now;
+	private int normal_rat_area;
+	private boolean is_rearing;
+	private int current_rat_area;
+
 
 	/**
 	 * Used to train the filter of the white area of the rat when
@@ -137,12 +141,6 @@ public class RearingDetector extends VideoFilter
 			}
 		}
 		rearing_data.setRearing(is_rearing);
-	}
-
-	@Override
-	public boolean initialize()
-	{
-		return false;
 	}
 
 }

@@ -12,8 +12,6 @@ import utils.video.filters.VideoFilter;
  */
 public class SourceFilter extends VideoFilter
 {
-	private final SourceFilterConfigs source_configs;
-
 	/**
 	 * Initializes the filter.
 	 * 
@@ -24,17 +22,20 @@ public class SourceFilter extends VideoFilter
 	 * @param linkOut
 	 *            output link that will distribute the data on other filters
 	 */
-	public SourceFilter(final String name, final FilterConfigs configs, final Link linkOut)
+	public SourceFilter(String name, Link linkIn, Link linkOut)
 	{
-		super(name, configs, null, linkOut);
-		source_configs = (SourceFilterConfigs) configs;
+		super(name, linkIn, linkOut);
 	}
 
+	private SourceFilterConfigs source_configs;
+
+
+
 	@Override
-	public boolean initialize()
+	public boolean configure(FilterConfigs configs)
 	{
-		// TODO Auto-generated method stub
-		return false;
+		source_configs = (SourceFilterConfigs) configs;
+		return super.configure(configs);
 	}
 
 	@Override

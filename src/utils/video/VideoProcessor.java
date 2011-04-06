@@ -1,34 +1,17 @@
 package utils.video;
 
-import java.awt.Point;
-
 import utils.PManager;
 import utils.PManager.ProgramState;
 import utils.StatusManager.StatusSeverity;
 import utils.video.filters.CommonFilterConfigs;
 import utils.video.filters.FilterConfigs;
 import utils.video.filters.FilterManager;
-import utils.video.filters.Link;
 import utils.video.filters.VideoFilter;
-import utils.video.filters.RatFinder.RatFinder;
-import utils.video.filters.RatFinder.RatFinderData;
-import utils.video.filters.RatFinder.RatFinderFilterConfigs;
-import utils.video.filters.rearingdetection.RearingDetector;
-import utils.video.filters.rearingdetection.RearingFilterConfigs;
-import utils.video.filters.recorder.RecorderConfigs;
-import utils.video.filters.recorder.VideoRecorder;
-import utils.video.filters.screendrawer.ScreenDrawer;
-import utils.video.filters.screendrawer.ScreenDrawerConfigs;
-import utils.video.filters.source.SourceFilter;
-import utils.video.filters.source.SourceFilterConfigs;
-import utils.video.filters.subtractionfilter.SubtractionConfigs;
-import utils.video.filters.subtractionfilter.SubtractorFilter;
 import utils.video.input.AGCamLibModule;
 import utils.video.input.JMFModule;
 import utils.video.input.JMyronModule;
 import utils.video.input.OpenCVModule;
 import utils.video.input.VidInputter;
-import control.ShapeController;
 
 /**
  * Main Video Manager, manages all video operations.
@@ -191,7 +174,7 @@ public class VideoProcessor
 		else if (common_configs.vid_library.equals("AGCamLib"))
 			v_in = new AGCamLibModule();
 
-		initializeFilters();
+		filter_mgr.configureFilters(common_configs,ref_fia);
 
 		v_in.setFormat(common_configs.format);
 
@@ -200,119 +183,6 @@ public class VideoProcessor
 				common_configs.width,
 				common_configs.height,
 				common_configs.cam_index);
-	}
-
-	/**
-	 * Initializes video filters, and applies their configurations.
-	 * 
-	 * @return true: success
-	 */
-	private boolean initializeFilters()
-	{
-		final Point dims = new Point(common_configs.width, common_configs.height);
-
-		final Link src_rgb_link = new Link(dims);
-		final Link grey_link = new Link(dims);
-		final Link marker_link = new Link(dims);
-
-		SubtractorFilter subtractor_filter;
-		RatFinder rat_finder;
-		RearingDetector rearing_det;
-		VideoRecorder vid_rec;
-		ScreenDrawer screen_drawer;
-		SourceFilter source_filter;
-
-		// ////////////////////////////////////
-		// Rat Finder
-		final RatFinderFilterConfigs rat_finder_configs = new RatFinderFilterConfigs(
-				"RatFinder",
-				common_configs);
-		rat_finder = new RatFinder(
-				"RatFinder",
-				rat_finder_configs,
-				grey_link,
-				marker_link);
-		final RatFinderData rfd = (RatFinderData) rat_finder.getFilterData();
-
-		// ////////////////////////////////////
-		// Rearing Detector
-		final RearingFilterConfigs rearingConfigs = new RearingFilterConfigs(
-				"RearingDetector",
-				1000,
-				200,
-				200,
-				(rfd.getCenterPoint()),
-				common_configs);
-		rearing_det = new RearingDetector(
-				"RearingDetector",
-				rearingConfigs,
-				grey_link,
-				null);
-
-		// ////////////////////////////////////
-		// Video Recorder
-		final RecorderConfigs vid_recorder_configs = new RecorderConfigs(
-				"Recorder",
-				common_configs);
-		vid_rec = new VideoRecorder("Recorder", vid_recorder_configs, src_rgb_link, null);
-
-		// ////////////////////////////////////
-		// Screen Drawer
-		final ScreenDrawerConfigs scrn_drwr_cnfgs = new ScreenDrawerConfigs(
-				"ScreenDrawer",
-				null,
-				null,
-				common_configs,
-				true,
-				ShapeController.getDefault());
-		screen_drawer = new ScreenDrawer(
-				"ScreenDrawer",
-				scrn_drwr_cnfgs,
-				src_rgb_link,
-				marker_link,
-				null);
-
-		// ////////////////////////////////////
-		// Subtraction Filter
-		final SubtractionConfigs subtraction_configs = new SubtractionConfigs(
-				"SubtractionFilter",
-				40,
-				common_configs);
-		subtractor_filter = new SubtractorFilter(
-				"SubtractionFilter",
-				subtraction_configs,
-				src_rgb_link,
-				grey_link);
-
-		// ////////////////////////////////////
-		// Source Filter
-		final SourceFilterConfigs source_configs = new SourceFilterConfigs(
-				"Source Filter",
-				common_configs,
-				ref_fia);
-		source_filter = new SourceFilter("Source Filter", source_configs, src_rgb_link);
-
-		// ////////////////////////////////////
-		// add filters to the filter manager
-		filter_mgr.addFilter(source_filter);
-		filter_mgr.addFilter(vid_rec);
-		filter_mgr.addFilter(subtractor_filter);
-		filter_mgr.addFilter(rearing_det);
-		filter_mgr.addFilter(rat_finder);
-		filter_mgr.addFilter(screen_drawer);
-
-		// ///////////////////////////////////
-		// check that configurations of all filters are valid
-		for (final VideoFilter vf : filter_mgr.getFilters())
-			if (!vf.getConfigs().validate())
-			{
-				PManager.log.print(
-						"Filter Configurations failed for: " + vf.getName(),
-						this,
-						StatusSeverity.ERROR);
-				return false;
-			}
-		return true;
 	}
 
 	/**

@@ -14,15 +14,35 @@ import utils.video.filters.VideoFilter;
  */
 public class RatFinder extends VideoFilter
 {
+	/**
+	 * Initializes the filter.
+	 * 
+	 * @param name
+	 *            filter's name
+	 * @param configs
+	 *            filter's configurations
+	 * @param link_in
+	 *            input Link for the filter
+	 * @param link_out
+	 *            output Link from the filter
+	 */
+	public RatFinder(String name, Link linkIn, Link linkOut)
+	{
+		super(name, linkIn, linkOut);
+		rat_finder_data = new RatFinderData("Rat Finder Data");
+		filter_data = rat_finder_data;
+		center_point = rat_finder_data.getCenterPoint();
+	}
+
 	private int tmp_max;
-	private final RatFinderFilterConfigs ratfinder_configs;
-	private final RatFinderData rat_finder_data;
+	private RatFinderFilterConfigs ratfinder_configs;
+	private RatFinderData rat_finder_data;
 
-	final int[] hori_sum;
-	final int[] vert_sum;
+	int[] hori_sum;
+	int[] vert_sum;
 
-	private final Point center_point;
-	private final int[] local_data;
+	private Point center_point;
+	private int[] local_data;
 	private Marker marker;
 
 	/**
@@ -45,38 +65,7 @@ public class RatFinder extends VideoFilter
 		}
 	}
 
-	/**
-	 * Initializes the filter.
-	 * 
-	 * @param name
-	 *            filter's name
-	 * @param configs
-	 *            filter's configurations
-	 * @param link_in
-	 *            input Link for the filter
-	 * @param link_out
-	 *            output Link from the filter
-	 */
-	public RatFinder(
-			final String name,
-			final FilterConfigs configs,
-			final Link link_in,
-			final Link link_out)
-	{
-		super(name, configs, link_in, link_out);
-		ratfinder_configs = (RatFinderFilterConfigs) configs;
-		rat_finder_data = new RatFinderData("Rat Finder Data");
-		center_point = rat_finder_data.getCenterPoint();
 
-		hori_sum = new int[ratfinder_configs.common_configs.height];
-		vert_sum = new int[ratfinder_configs.common_configs.width];
-		marker=new CrossMarker(50, 50, 5, Color.RED, configs.common_configs.width, configs.common_configs.height);
-
-		// super's stuff:
-		filter_data = rat_finder_data;
-		local_data = new int[configs.common_configs.width * configs.common_configs.height];
-		this.link_out.setData(local_data);
-	}
 
 	/**
 	 * Updates the center point (ie: finds the location of the moving object).
@@ -91,7 +80,7 @@ public class RatFinder extends VideoFilter
 		for (int y = 0; y < ratfinder_configs.common_configs.height; y++) // Horizontal
 		// Sum
 		{
-			hori_sum[y]=0;
+			hori_sum[y] = 0;
 			for (int x = 0; x < ratfinder_configs.common_configs.width; x++)
 				hori_sum[y] += binary_image[y
 						* ratfinder_configs.common_configs.width
@@ -107,7 +96,7 @@ public class RatFinder extends VideoFilter
 		for (int x = 0; x < ratfinder_configs.common_configs.width; x++) // Vertical
 		// Sum
 		{
-			vert_sum[x]=0;
+			vert_sum[x] = 0;
 			for (int y = 0; y < ratfinder_configs.common_configs.height; y++)
 				vert_sum[x] += binary_image[y
 						* ratfinder_configs.common_configs.width
@@ -135,9 +124,26 @@ public class RatFinder extends VideoFilter
 	}
 
 	@Override
-	public boolean initialize()
+	public boolean configure(
+			final FilterConfigs configs)
 	{
-		return true;
+		ratfinder_configs = (RatFinderFilterConfigs) configs;
+
+		hori_sum = new int[ratfinder_configs.common_configs.height];
+		vert_sum = new int[ratfinder_configs.common_configs.width];
+		marker = new CrossMarker(
+				50,
+				50,
+				5,
+				Color.RED,
+				configs.common_configs.width,
+				configs.common_configs.height);
+
+		// super's stuff:
+		
+		local_data = new int[configs.common_configs.width * configs.common_configs.height];
+		this.link_out.setData(local_data);
+		return super.configure(configs);
 	}
 
 }

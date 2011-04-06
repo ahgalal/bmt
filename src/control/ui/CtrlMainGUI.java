@@ -1,5 +1,7 @@
 package control.ui;
 
+import java.util.ArrayList;
+
 import modules.ModulesManager;
 import modules.experiment.ExperimentModule;
 import modules.rearing.RearingModule;
@@ -15,7 +17,6 @@ import utils.PManager.ProgramState;
 import utils.StatusManager.StatusSeverity;
 import utils.video.filters.CommonFilterConfigs;
 import utils.video.filters.FilterConfigs;
-import utils.video.filters.rearingdetection.RearingDetector;
 import utils.video.filters.recorder.VideoRecorder;
 import utils.video.filters.screendrawer.ScreenDrawerConfigs;
 import utils.video.filters.subtractionfilter.SubtractorFilter;
@@ -133,34 +134,58 @@ public class CtrlMainGUI extends ControllerUI
 							switch (pm.state)
 							{
 							case IDLE:
-								ui.btnNotRearingEnable(false);
-								ui.btnRearingNowEnable(false);
-								ui.btnStartRecordEnable(false);
-								ui.btnStopRecordEnable(false);
+								if (ui.rearing_det_gui != null)
+								{
+									ui.rearing_det_gui.btnNotRearingEnable(false);
+									ui.rearing_det_gui.btnRearingNowEnable(false);
+								}
+								if (ui.vid_rec_gui != null)
+								{
+									ui.vid_rec_gui.btnStartRecordEnable(false);
+									ui.vid_rec_gui.btnStopRecordEnable(false);
+								}
 								ui.btnStartTrackingEnable(true);
 								ui.btnStopTrackingEnable(false);
 								break;
 							case RECORDING:
-								ui.btnNotRearingEnable(true);
-								ui.btnRearingNowEnable(true);
-								ui.btnStartRecordEnable(false);
-								ui.btnStopRecordEnable(true);
+								if (ui.rearing_det_gui != null)
+								{
+									ui.rearing_det_gui.btnNotRearingEnable(true);
+									ui.rearing_det_gui.btnRearingNowEnable(true);
+								}
+								if (ui.vid_rec_gui != null)
+								{
+									ui.vid_rec_gui.btnStartRecordEnable(false);
+									ui.vid_rec_gui.btnStopRecordEnable(true);
+								}
 								ui.btnStartTrackingEnable(false);
 								ui.btnStopTrackingEnable(true);
 								break;
 							case STREAMING:
-								ui.btnNotRearingEnable(false);
-								ui.btnRearingNowEnable(false);
-								ui.btnStartRecordEnable(false);
-								ui.btnStopRecordEnable(false);
+								if (ui.rearing_det_gui != null)
+								{
+									ui.rearing_det_gui.btnNotRearingEnable(false);
+									ui.rearing_det_gui.btnRearingNowEnable(false);
+								}
+								if (ui.vid_rec_gui != null)
+								{
+									ui.vid_rec_gui.btnStartRecordEnable(false);
+									ui.vid_rec_gui.btnStopRecordEnable(false);
+								}
 								ui.btnStartTrackingEnable(true);
 								ui.btnStopTrackingEnable(false);
 								break;
 							case TRACKING:
-								ui.btnNotRearingEnable(true);
-								ui.btnRearingNowEnable(true);
-								ui.btnStartRecordEnable(true);
-								ui.btnStopRecordEnable(false);
+								if (ui.rearing_det_gui != null)
+								{
+									ui.rearing_det_gui.btnNotRearingEnable(true);
+									ui.rearing_det_gui.btnRearingNowEnable(true);
+								}
+								if (ui.vid_rec_gui != null)
+								{
+									ui.vid_rec_gui.btnStartRecordEnable(true);
+									ui.vid_rec_gui.btnStopRecordEnable(false);
+								}
 								ui.btnStartTrackingEnable(false);
 								ui.btnStopTrackingEnable(true);
 								break;
@@ -488,39 +513,6 @@ public class CtrlMainGUI extends ControllerUI
 	}
 
 	/**
-	 * Handles the "Not Rearing" button click action.
-	 */
-	public void btnNotRearingAction()
-	{
-		rearingNow(false);
-	}
-
-	/**
-	 * Handles the "Rearing Now" button click action.
-	 */
-	public void btnRearingNowAction()
-	{
-		rearingNow(true);
-	}
-
-	/**
-	 * Notifies the VideoProcessor that the rat is (rearing/not rearing) in
-	 * reality, so that the VideoProcessor can start learning the rat's size
-	 * when (rearing/not rearing).
-	 * 
-	 * @param rearing
-	 *            is the rat rearing now?
-	 */
-	public void rearingNow(final boolean rearing)
-	{
-		if (pm.state == ProgramState.TRACKING)
-			((RearingDetector) pm.getVideoProcessor().getFilterManager().getFilterByName(
-					"RearingDetector")).rearingNow(rearing);
-		else
-			pm.status_mgr.setStatus("Tracking is not running!", StatusSeverity.ERROR);
-	}
-
-	/**
 	 * Handles all key events of the GUI.
 	 * 
 	 * @param key
@@ -564,6 +556,11 @@ public class CtrlMainGUI extends ControllerUI
 	public void mnutmHelpAboutAction()
 	{
 		ctrl_about_box.show(true);
+	}
+
+	public void loadFiltersGUI(final ArrayList<String> filters)
+	{
+		ui.loadFiltersGUI(filters);
 	}
 
 }

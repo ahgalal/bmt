@@ -38,7 +38,11 @@ public class SourceFilterConfigs extends FilterConfigs
 	@Override
 	public void mergeConfigs(final FilterConfigs configs)
 	{
-
+		final SourceFilterConfigs tmp_srcfilter_configs = (SourceFilterConfigs) configs;
+		if (tmp_srcfilter_configs.common_configs != null)
+			common_configs = tmp_srcfilter_configs.common_configs;
+		if(tmp_srcfilter_configs.fia!=null)
+			this.fia=tmp_srcfilter_configs.fia;
 	}
 
 	@Override

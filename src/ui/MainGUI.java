@@ -1,6 +1,7 @@
 package ui;
 
 import java.awt.Frame;
+import java.util.ArrayList;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.awt.SWT_AWT;
@@ -19,6 +20,8 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
 
+import utils.video.filters.rearingdetection.RearingDetectorGUI;
+import utils.video.filters.recorder.VideoRecorderGUI;
 import control.ui.ControllerUI;
 import control.ui.CtrlMainGUI;
 
@@ -60,10 +63,10 @@ public class MainGUI extends BaseUI
 	private Button btn_setbg = null;
 	private Button btn_stop_tracking = null;
 	private Label lbl_status = null;
-	private Button btn_start_record = null;
-	private Button btn_stop_record = null;
-	private Button btn_rearing_now = null;
-	private Button btn_not_rearing = null;
+	/*	private Button btn_start_record = null;
+		private Button btn_stop_record = null;*/
+	/*	private Button btn_rearing_now = null;
+		private Button btn_not_rearing = null;*/
 	private Button btn_sub_rearing = null;
 	private Button btn_add_rearing = null;
 	private Table tbl_data = null;
@@ -105,7 +108,6 @@ public class MainGUI extends BaseUI
 		cmpst_main.setLocation(new Point(8, 20));
 		cmpst_main.setSize(new Point(640, 480));
 		createMainAWTFrame();
-
 	}
 
 	/**
@@ -137,28 +139,28 @@ public class MainGUI extends BaseUI
 		btn_stop_tracking = new Button(grp_options, SWT.NONE);
 		btn_stop_tracking.setBounds(new Rectangle(278, 16, 123, 25));
 		btn_stop_tracking.setText("Stop Tracking");
-		btn_start_record = new Button(grp_options, SWT.NONE);
-		btn_start_record.setText("Start Recording");
-		btn_start_record.setSize(new Point(100, 25));
-		btn_start_record.setLocation(new Point(439, 16));
-		btn_start_record.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
-			@Override
-			public void widgetSelected(final org.eclipse.swt.events.SelectionEvent e)
-			{
-				controller.btnStartRecordAction();
-			}
-		});
-		btn_stop_record = new Button(grp_options, SWT.NONE);
-		btn_stop_record.setText("Stop Recording");
-		btn_stop_record.setSize(new Point(100, 25));
-		btn_stop_record.setLocation(new Point(549, 16));
-		btn_stop_record.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
-			@Override
-			public void widgetSelected(final org.eclipse.swt.events.SelectionEvent e)
-			{
-				controller.stoprecordAction();
-			}
-		});
+		/*		btn_start_record = new Button(grp_options, SWT.NONE);
+				btn_start_record.setText("Start Recording");
+				btn_start_record.setSize(new Point(100, 25));
+				btn_start_record.setLocation(new Point(439, 16));
+				btn_start_record.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
+					@Override
+					public void widgetSelected(final org.eclipse.swt.events.SelectionEvent e)
+					{
+						controller.btnStartRecordAction();
+					}
+				});
+				btn_stop_record = new Button(grp_options, SWT.NONE);
+				btn_stop_record.setText("Stop Recording");
+				btn_stop_record.setSize(new Point(100, 25));
+				btn_stop_record.setLocation(new Point(549, 16));
+				btn_stop_record.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
+					@Override
+					public void widgetSelected(final org.eclipse.swt.events.SelectionEvent e)
+					{
+						controller.stoprecordAction();
+					}
+				});*/
 		btn_stop_tracking.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
 			@Override
 			public void widgetSelected(final org.eclipse.swt.events.SelectionEvent e)
@@ -173,50 +175,6 @@ public class MainGUI extends BaseUI
 				controller.btnStartTrackingAction();
 			}
 		});
-	}
-
-	/**
-	 * Enables/disables the start recording button.
-	 * 
-	 * @param enable
-	 *            true/false
-	 */
-	public void btnStartRecordEnable(final boolean enable)
-	{
-		btn_start_record.setEnabled(enable);
-	}
-
-	/**
-	 * Enables/disables the stop recording button.
-	 * 
-	 * @param enable
-	 *            true/false
-	 */
-	public void btnStopRecordEnable(final boolean enable)
-	{
-		btn_stop_record.setEnabled(enable);
-	}
-
-	/**
-	 * Enables/disables the rearing now button.
-	 * 
-	 * @param enable
-	 *            true/false
-	 */
-	public void btnRearingNowEnable(final boolean enable)
-	{
-		btn_rearing_now.setEnabled(enable);
-	}
-
-	/**
-	 * Enables/disables the not rearing now button.
-	 * 
-	 * @param enable
-	 *            true/false
-	 */
-	public void btnNotRearingEnable(final boolean enable)
-	{
-		btn_not_rearing.setEnabled(enable);
 	}
 
 	/**
@@ -251,13 +209,7 @@ public class MainGUI extends BaseUI
 		grp_stats.setText("Variables:");
 		createCmpstSecondary();
 		grp_stats.setBounds(new Rectangle(678, 6, 301, 563));
-		btn_rearing_now = new Button(grp_stats, SWT.NONE);
-		btn_rearing_now.setText("Rearing NOW");
-		btn_rearing_now.setSize(new Point(100, 25));
-		btn_rearing_now.setLocation(new Point(188, 530));
-		btn_not_rearing = new Button(grp_stats, SWT.NONE);
-		btn_not_rearing.setBounds(new Rectangle(85, 530, 101, 25));
-		btn_not_rearing.setText("Not Rearing");
+
 		btn_sub_rearing = new Button(grp_stats, SWT.NONE);
 		btn_sub_rearing.setBounds(new Rectangle(44, 528, 28, 21));
 		btn_sub_rearing.setText("-");
@@ -289,20 +241,7 @@ public class MainGUI extends BaseUI
 				controller.btnAddRearingAction();
 			}
 		});
-		btn_not_rearing.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
-			@Override
-			public void widgetSelected(final org.eclipse.swt.events.SelectionEvent e)
-			{
-				controller.btnNotRearingAction();
-			}
-		});
-		btn_rearing_now.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
-			@Override
-			public void widgetSelected(final org.eclipse.swt.events.SelectionEvent e)
-			{
-				controller.btnRearingNowAction();
-			}
-		});
+
 	}
 
 	/**
@@ -626,25 +565,39 @@ public class MainGUI extends BaseUI
 				if (values[i] != null)
 					tbl_data.getItem(i).setText(1, values[i]);
 	}
+
 	/**
 	 * Enables/disables the start tracking button.
 	 * 
 	 * @param enable
 	 *            true/false
 	 */
-	public void btnStartTrackingEnable(boolean enable)
+	public void btnStartTrackingEnable(final boolean enable)
 	{
 		btn_start_tracking.setEnabled(enable);
 	}
+
 	/**
 	 * Enables/disables the start tracking button.
 	 * 
 	 * @param enable
 	 *            true/false
 	 */
-	public void btnStopTrackingEnable(boolean enable)
+	public void btnStopTrackingEnable(final boolean enable)
 	{
 		btn_stop_tracking.setEnabled(enable);
+	}
+
+	public VideoRecorderGUI vid_rec_gui;
+	public RearingDetectorGUI rearing_det_gui;
+
+	public void loadFiltersGUI(final ArrayList<String> filters)
+	{
+		if (filters.contains("Recorder"))
+			vid_rec_gui = new VideoRecorderGUI(sShell, grp_options);
+		if (filters.contains("RearingDetector"))
+			rearing_det_gui = new RearingDetectorGUI(grp_stats);
+
 	}
 
 }

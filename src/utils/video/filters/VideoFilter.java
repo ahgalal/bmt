@@ -28,13 +28,9 @@ public abstract class VideoFilter
 	 *            output Link from the filter
 	 */
 	public VideoFilter(
-			final String name,
-			final FilterConfigs configs,
-			final Link link_in,
-			final Link link_out)
+			final String name,Link link_in,Link link_out)
 	{
 		this.name = name;
-		this.configs = configs;
 		this.link_in = link_in;
 		this.link_out = link_out;
 	}
@@ -115,7 +111,11 @@ public abstract class VideoFilter
 	 * 
 	 * @return true: success, false: failure
 	 */
-	public abstract boolean initialize();
+	public boolean configure(final FilterConfigs configs)
+	{
+		this.configs = configs;
+		return true;
+	}
 
 	/**
 	 * Gets the Filter configurations object.

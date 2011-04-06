@@ -17,12 +17,6 @@ import utils.video.filters.VideoFilter;
  */
 public class ScreenDrawer extends VideoFilter
 {
-
-	private final BufferedImage buf_img_main, buf_img_sec;
-	private final int[] data_main_screen, data_sec_screen;
-	private final ScreenDrawerConfigs scrn_drwr_cnfgs;
-	private final Link link_in2;
-
 	/**
 	 * Initializes the filter.
 	 * 
@@ -39,12 +33,24 @@ public class ScreenDrawer extends VideoFilter
 	 */
 	public ScreenDrawer(
 			final String name,
-			final FilterConfigs configs,
-			final Link link_in,
+			final Link linkIn,
 			final Link link_in2,
-			final Link link_out)
+			final Link linkOut)
 	{
-		super(name, configs, link_in, link_out);
+		super(name, linkIn, linkOut);
+		this.link_in2 = link_in2;
+	}
+
+	private BufferedImage buf_img_main;
+	private BufferedImage buf_img_sec;
+	private int[] data_main_screen;
+	private int[] data_sec_screen;
+	private ScreenDrawerConfigs scrn_drwr_cnfgs;
+	private final Link link_in2;
+
+	@Override
+	public boolean configure(final FilterConfigs configs)
+	{
 		scrn_drwr_cnfgs = (ScreenDrawerConfigs) configs;
 
 		buf_img_main = new BufferedImage(
@@ -58,7 +64,7 @@ public class ScreenDrawer extends VideoFilter
 				scrn_drwr_cnfgs.common_configs.height,
 				BufferedImage.TYPE_INT_RGB);
 		data_sec_screen = ((DataBufferInt) buf_img_sec.getRaster().getDataBuffer()).getData();
-		this.link_in2 = link_in2;
+		return super.configure(configs);
 	}
 
 	@Override
@@ -184,9 +190,4 @@ public class ScreenDrawer extends VideoFilter
 					link_in2.getData().length);
 	}
 
-	@Override
-	public boolean initialize()
-	{
-		return true;
-	}
 }

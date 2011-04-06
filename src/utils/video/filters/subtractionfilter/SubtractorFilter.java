@@ -16,10 +16,6 @@ import utils.video.filters.VideoFilter;
  */
 public class SubtractorFilter extends VideoFilter
 {
-	private final FrameIntArray bg_image_gray;
-	private final SubtractionConfigs subtraction_configs;
-	private int[] local_data;
-
 	/**
 	 * Initializes the filter.
 	 * 
@@ -32,16 +28,26 @@ public class SubtractorFilter extends VideoFilter
 	 * @param link_out
 	 *            output Link from the filter
 	 */
-	public SubtractorFilter(
-			final String name,
-			final FilterConfigs configs,
-			final Link link_in,
-			final Link link_out)
+	public SubtractorFilter(String name, Link linkIn, Link linkOut)
 	{
-		super(name, configs, link_in, link_out);
+		super(name, linkIn, linkOut);
+		bg_image_gray = new FrameIntArray();
+	}
+
+	private FrameIntArray bg_image_gray;
+	private SubtractionConfigs subtraction_configs;
+	private int[] local_data;
+
+
+
+	@Override
+	public boolean configure(
+			final FilterConfigs configs)
+	{
 		this.subtraction_configs = (SubtractionConfigs) configs;
 		local_data = new int[configs.common_configs.width * configs.common_configs.height];
-		bg_image_gray = new FrameIntArray();
+		
+		return super.configure(configs);
 	}
 
 	/**
@@ -123,12 +129,6 @@ public class SubtractorFilter extends VideoFilter
 				link_out.setData(local_data);
 			}
 		}
-	}
-
-	@Override
-	public boolean initialize()
-	{
-		return true;
 	}
 
 }

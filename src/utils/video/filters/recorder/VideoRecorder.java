@@ -17,11 +17,6 @@ import utils.video.filters.VideoFilter;
  */
 public class VideoRecorder extends VideoFilter
 {
-
-	private final PManager pm;
-	private StreamToAVI avi_saver;
-	private final RecorderConfigs recorder_configs;
-
 	/**
 	 * Initializes the filter.
 	 * 
@@ -34,15 +29,23 @@ public class VideoRecorder extends VideoFilter
 	 * @param link_out
 	 *            output Link from the filter
 	 */
-	public VideoRecorder(
-			final String name,
-			final FilterConfigs configs,
-			final Link link_in,
-			final Link link_out)
+	public VideoRecorder(String name, Link linkIn, Link linkOut)
 	{
-		super(name, configs, link_in, link_out);
-		recorder_configs = (RecorderConfigs) configs;
+		super(name, linkIn, linkOut);
 		pm = PManager.getDefault();
+	}
+
+	private final PManager pm;
+	private StreamToAVI avi_saver;
+	private RecorderConfigs recorder_configs;
+
+
+
+	@Override
+	public boolean configure(FilterConfigs configs)
+	{
+		recorder_configs = (RecorderConfigs) configs;
+		return super.configure(configs);
 	}
 
 	/**
@@ -130,11 +133,5 @@ public class VideoRecorder extends VideoFilter
 			th_stop_recording.start();
 			return true;
 		}
-	}
-
-	@Override
-	public boolean initialize()
-	{
-		return true;
 	}
 }
