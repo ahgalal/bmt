@@ -83,7 +83,7 @@ public class RatInfoForm extends BaseUI
 			@Override
 			public void widgetSelected(final org.eclipse.swt.events.SelectionEvent e)
 			{
-				sShell.setVisible(false);
+				controller.cancelAction();
 			}
 		});
 	}

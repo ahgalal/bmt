@@ -4,7 +4,14 @@ import modules.Cargo;
 import modules.Module;
 import modules.ModuleConfigs;
 import modules.ModulesManager;
+
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.MessageBox;
+import org.eclipse.swt.widgets.Shell;
+
 import utils.PManager;
+import utils.StatusManager.StatusSeverity;
 import utils.video.filters.Data;
 
 /**
@@ -45,7 +52,8 @@ public class ExperimentModule extends Module
 	@Override
 	public void deInitialize()
 	{
-		saveRatInfo();
+		if (isExperimentPresent())
+			saveRatInfo();
 	}
 
 	@Override
@@ -190,10 +198,17 @@ public class ExperimentModule extends Module
 	/**
 	 * Saves the rat's info to the experiment object.
 	 */
-	public void saveRatInfo()
+	public boolean saveRatInfo()
 	{
 		if (exp.getExpParametersList() == null)
 			exp.setParametersList(ModulesManager.getDefault().getCodeNames());
+		else if (getNumberOfExpParams() != ModulesManager.getDefault().getCodeNames().length)
+		{
+			PManager.getDefault().status_mgr.setStatus(
+					"Experiment file loaded has some modules which are not active in this session, can't save",
+					StatusSeverity.ERROR);
+			return false;
+		}
 		final String[] params_list = exp.getExpParametersList();
 		final String[] data = ModulesManager.getDefault().getFileData();
 		final String[] code_names = ModulesManager.getDefault().getCodeNames();
@@ -214,6 +229,7 @@ public class ExperimentModule extends Module
 		if (!override_rat)
 			exp.getGroupByName(curr_grp_name).addRat(rat_tmp);
 		writeToTXTFile(exp_file_name);
+		return true;
 	}
 
 	/**
@@ -356,6 +372,109 @@ public class ExperimentModule extends Module
 	{
 		// TODO Auto-generated method stub
 
+	}
+
+	public int getNumberOfExpParams()
+	{
+		return exp.getExpParametersList().length;
+	}
+
+	private boolean rat_frm_is_shown = false;
+	private boolean msgbox_pending = true;
+	private boolean force_ready = false;
+
+	@Override
+	public boolean amIReady(final Shell shell)
+	{
+		rat_frm_is_shown = false;
+		msgbox_pending = true;
+		force_ready = false;
+		if (isExperimentPresent())
+		{
+			if (getNumberOfExpParams() != ModulesManager.getDefault()
+					.getNumberOfFileParameters())
+			{
+				Display.getDefault().asyncExec(new Runnable() {
+
+					@Override
+					public void run()
+					{
+						final MessageBox mbox = new MessageBox(
+								shell,
+								SWT.ICON_QUESTION
+										| SWT.YES
+										| SWT.NO);
+						mbox.setMessage("Experiment loaded has some Modules" +
+								" which are not active now, you can't save the" +
+								" experiment when done!, Continue?");
+						mbox.setText("Continue?");
+						if (mbox.open() == SWT.YES)
+						{
+							PManager.getDefault().frm_rat.show(true);
+							rat_frm_is_shown = true;
+							msgbox_pending = false;
+						}
+						else
+							msgbox_pending = false;
+					}
+				});
+			} else
+			{
+				PManager.getDefault().frm_rat.show(true);
+				rat_frm_is_shown = true;
+				msgbox_pending = false;
+			}
+
+		} else
+		{
+			Display.getDefault().asyncExec(new Runnable() {
+				@Override
+				public void run()
+				{
+					final MessageBox mbox = new MessageBox(
+							shell,
+							SWT.ICON_QUESTION
+									| SWT.YES
+									| SWT.NO);
+					mbox.setMessage("No experiment is loaded!, Continue?");
+					mbox.setText("Continue?");
+					if (mbox.open() == SWT.YES)
+						force_ready = true;
+					else
+						force_ready = false;
+					msgbox_pending = false;
+				}
+			});
+		}
+		while (msgbox_pending)
+			try
+			{
+				Thread.sleep(200);
+			} catch (final InterruptedException e)
+			{
+				e.printStackTrace();
+			}
+		if (force_ready)
+			return true;
+		return waitForRatFrm();
+	}
+
+	private boolean waitForRatFrm()
+	{
+		while (rat_frm_is_shown
+					&& (!PManager.getDefault().frm_rat.isValidRatEntered()
+					&& !PManager.getDefault().frm_rat.isCancelled()))
+			try
+			{
+				Thread.sleep(200);
+			} catch (final InterruptedException e)
+			{
+				e.printStackTrace();
+			}
+		if (PManager.getDefault().frm_rat.isValidRatEntered())
+			return true;
+		else
+			return false;
 	}
 
 }

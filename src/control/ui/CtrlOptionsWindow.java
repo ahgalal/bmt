@@ -39,9 +39,8 @@ public class CtrlOptionsWindow extends ControllerUI
 	public boolean setVars(final String[] strs)
 	{
 		hyst = Integer.parseInt(strs[0]);
-		subtraction_thresh = Integer.parseInt(strs[1]);
-		rearing_thresh = Integer.parseInt(strs[2]);
-		// strs[3].substring(0, 0).toUpperCase();
+		rearing_thresh = Integer.parseInt(strs[1]);
+		subtraction_thresh = Integer.parseInt(strs[2]);
 		enable_auto_rearing = Boolean.valueOf(strs[3].substring(0, 0).toUpperCase());
 		return true;
 	}

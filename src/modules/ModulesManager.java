@@ -2,6 +2,8 @@ package modules;
 
 import java.util.ArrayList;
 
+import org.eclipse.swt.widgets.Shell;
+
 import modules.experiment.ExperimentModule;
 import modules.experiment.ExperimentModuleConfigs;
 import modules.rearing.RearingModule;
@@ -10,6 +12,8 @@ import modules.session.SessionModule;
 import modules.session.SessionModuleConfigs;
 import modules.zones.ZonesModule;
 import modules.zones.ZonesModuleConfigs;
+import utils.PManager;
+import utils.StatusManager.StatusSeverity;
 import utils.video.filters.Data;
 
 /**
@@ -19,7 +23,6 @@ import utils.video.filters.Data;
  */
 public class ModulesManager
 {
-
 	private static ModulesManager me;
 	private final ArrayList<Data> data_objects;
 	private final ArrayList<Module> modules;
@@ -238,6 +241,23 @@ public class ModulesManager
 	{
 		return file_names_array;
 	}
+	
+	public int getNumberOfFileParameters()
+	{
+		constructCargoArray();
+		return file_names_array.length;
+	}
+	
+	public boolean areModulesReady(Shell shell)
+	{
+		for(Module mo:modules)
+			if(!mo.amIReady(shell))
+			{
+				PManager.log.print(mo.getName() + " cancelled Tracking!", this,StatusSeverity.ERROR);
+				return false;
+			}
+		return true;
+	}
 
 	/**
 	 * Builds the Cargo array based on the number of instantiated modules.
@@ -379,6 +399,14 @@ public class ModulesManager
 				-1,
 				width,
 				height) });
+	}
+
+	public ArrayList<String> getModulesNames()
+	{
+		final ArrayList<String> tmp_arr = new ArrayList<String>();
+		for (final Module m : modules)
+			tmp_arr.add(m.getName());
+		return tmp_arr;
 	}
 
 }

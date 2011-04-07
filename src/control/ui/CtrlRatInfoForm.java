@@ -4,6 +4,7 @@ import modules.ModulesManager;
 import modules.experiment.ExperimentModule;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.MessageBox;
 
 import ui.RatInfoForm;
@@ -20,6 +21,8 @@ public class CtrlRatInfoForm extends ControllerUI
 	private int rat_num;
 	private String grp_name;
 	private final RatInfoForm ui;
+	private boolean iamready;
+	private boolean cancelled;
 
 	/**
 	 * Initializes class attributes (RatInfoForm ,InfoController and PManager).
@@ -49,13 +52,22 @@ public class CtrlRatInfoForm extends ControllerUI
 		final String[] grps = ((ExperimentModule) ModulesManager.getDefault()
 				.getModuleByName("Experiment Module")).getGroupsNames();
 		final String[] params = new String[grps.length + 1];
-
+		iamready = false;
+		cancelled = false;
 		params[0] = "";
 		for (int i = 0; i < grps.length; i++)
 			params[i + 1] = grps[i];
-		ui.clearForm();
-		ui.loadData(params);
-		ui.show(visibility);
+		Display.getDefault().syncExec(new Runnable() {
+
+			@Override
+			public void run()
+			{
+				ui.clearForm();
+				ui.loadData(params);
+				ui.show(visibility);
+			}
+		});
+
 	}
 
 	/**
@@ -63,7 +75,11 @@ public class CtrlRatInfoForm extends ControllerUI
 	 */
 	public void btnOkAction()
 	{
-		checkAndSubmitData();
+		if (checkAndSubmitData())
+		{
+			iamready = true;
+			ui.show(false);
+		}
 	}
 
 	/**
@@ -72,7 +88,7 @@ public class CtrlRatInfoForm extends ControllerUI
 	 * error message is displayed; if all data are correct, we start tracking
 	 * activity.
 	 */
-	public void checkAndSubmitData()
+	public boolean checkAndSubmitData()
 	{
 		try
 		{
@@ -83,10 +99,9 @@ public class CtrlRatInfoForm extends ControllerUI
 					grp_name);
 			if (tmp_confirmation == 0)
 			{
-				ModulesManager.getDefault().initialize();
 				((ExperimentModule) ModulesManager.getDefault().getModuleByName(
 						"Experiment Module")).setCurrentRatAndGroup(rat_num, grp_name);
-				startTracking();
+				return true;
 			} else if (tmp_confirmation == 1)
 			{ // Rat already exists
 				final MessageBox msg = new MessageBox(ui.getShell(), SWT.ICON_QUESTION
@@ -97,10 +112,9 @@ public class CtrlRatInfoForm extends ControllerUI
 				final int res = msg.open();
 				if (res == SWT.YES)
 				{
-					ModulesManager.getDefault().initialize();
 					((ExperimentModule) ModulesManager.getDefault().getModuleByName(
 							"Experiment Module")).setCurrentRatAndGroup(rat_num, grp_name);
-					startTracking();
+					return true;
 				}
 			} else if (tmp_confirmation == -1) // Group not found
 				pm.status_mgr.setStatus("Please select a group.", StatusSeverity.ERROR);
@@ -110,16 +124,23 @@ public class CtrlRatInfoForm extends ControllerUI
 					"Please enter a valid Rat number.",
 					StatusSeverity.ERROR);
 		}
-
+		return false;
 	}
 
-	/**
-	 * Hides the window and starts the Tracking activity.
-	 */
-	private void startTracking()
+	public boolean isValidRatEntered()
 	{
-		PManager.main_gui.startTracking();
-		show(false);
+		return iamready;
+	}
+
+	public void cancelAction()
+	{
+		cancelled = true;
+		ui.show(false);
+	}
+
+	public boolean isCancelled()
+	{
+		return cancelled;
 	}
 
 }

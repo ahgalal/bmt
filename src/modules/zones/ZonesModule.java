@@ -7,6 +7,8 @@ import gfx_panel.Shape;
 import java.awt.Point;
 import java.util.ArrayList;
 
+import org.eclipse.swt.widgets.Shell;
+
 import modules.Cargo;
 import modules.Module;
 import modules.ModuleConfigs;
@@ -556,6 +558,14 @@ public class ZonesModule extends Module
 	public void saveZonesToFile(final String fileName)
 	{
 		zones.saveZonesToFile(fileName);
+	}
+
+	@Override
+	public boolean amIReady(Shell shell)
+	{
+		if(PManager.getDefault()!=null)
+			return true;
+		return false;
 	}
 
 }

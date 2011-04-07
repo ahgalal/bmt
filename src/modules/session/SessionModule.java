@@ -1,5 +1,7 @@
 package modules.session;
 
+import org.eclipse.swt.widgets.Shell;
+
 import modules.Cargo;
 import modules.Module;
 import modules.ModuleConfigs;
@@ -151,6 +153,12 @@ public class SessionModule extends Module
 	public void deRegisterDataObject(final Data data)
 	{
 
+	}
+
+	@Override
+	public boolean amIReady(Shell shell)
+	{
+		return true;
 	}
 
 }

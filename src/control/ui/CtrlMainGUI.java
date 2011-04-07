@@ -4,11 +4,10 @@ import java.util.ArrayList;
 
 import modules.ModulesManager;
 import modules.experiment.ExperimentModule;
-import modules.rearing.RearingModule;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.FileDialog;
+import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
 
 import ui.MainGUI;
@@ -17,7 +16,6 @@ import utils.PManager.ProgramState;
 import utils.StatusManager.StatusSeverity;
 import utils.video.filters.CommonFilterConfigs;
 import utils.video.filters.FilterConfigs;
-import utils.video.filters.recorder.VideoRecorder;
 import utils.video.filters.screendrawer.ScreenDrawerConfigs;
 import utils.video.filters.subtractionfilter.SubtractorFilter;
 
@@ -50,6 +48,8 @@ public class CtrlMainGUI extends ControllerUI
 
 		pm.status_mgr.initialize(ui.getStatusLabel());
 		ctrl_about_box = new CtrlAbout();
+
+		ui.loadModulesGUI(ModulesManager.getDefault().getModulesNames());
 	}
 
 	/**
@@ -85,6 +85,7 @@ public class CtrlMainGUI extends ControllerUI
 	{
 		if (pm.state == ProgramState.STREAMING)
 		{
+			ModulesManager.getDefault().initialize();
 			clearForm();
 			stop_tracking = false;
 			if (th_update_gui == null)
@@ -121,19 +122,21 @@ public class CtrlMainGUI extends ControllerUI
 					{
 						if (!ui.getShell().isDisposed())
 						{
-							if (!local_exp_module.isExperimentPresent())
+							if (local_exp_module != null)
 							{
-								ui.editExpMenuItemEnable(false);
-								ui.exportExpToExcelMenuItemEnable(false);
+								if (!local_exp_module.isExperimentPresent())
+							{
+								ui.experiment_module_gui.editExpMenuItemEnable(false);
+								ui.experiment_module_gui.exportExpToExcelMenuItemEnable(false);
 							} else
 							{
-								ui.editExpMenuItemEnable(true);
-								ui.exportExpToExcelMenuItemEnable(true);
+								ui.experiment_module_gui.editExpMenuItemEnable(true);
+								ui.experiment_module_gui.exportExpToExcelMenuItemEnable(true);
 							}
-
-							switch (pm.state)
-							{
-							case IDLE:
+						}
+						switch (pm.state)
+						{
+						case IDLE:
 								if (ui.rearing_det_gui != null)
 								{
 									ui.rearing_det_gui.btnNotRearingEnable(false);
@@ -234,7 +237,9 @@ public class CtrlMainGUI extends ControllerUI
 					@Override
 					public void run()
 					{
-						ui.fillDataTable(null, ModulesManager.getDefault().getGUIData());
+						if (!ui.getShell().isDisposed())
+							ui.fillDataTable(null, ModulesManager.getDefault()
+									.getGUIData());
 					}
 				});
 			}
@@ -350,68 +355,11 @@ public class CtrlMainGUI extends ControllerUI
 	}
 
 	/**
-	 * Handles the "Zone editor" menu item click action.
-	 */
-	public void mnutmEditOpenZoneEditorAction()
-	{
-		pm.drw_zns.show(true);
-	}
-
-	/**
 	 * Handles the "Edit options" menu item click action.
 	 */
 	public void mnutmEditOptionsAction()
 	{
 		pm.options_window.show(true);
-	}
-
-	/**
-	 * Handles the "Edit Experiment" menu item click action.
-	 */
-	public void mnuitmEditExpAction()
-	{
-		pm.frm_exp.show(true);
-	}
-
-	/**
-	 * Shows the new ExperimentForm and unloads the previous experiment.
-	 */
-	public void mnutmExperimentNewExpAction()
-	{
-		pm.frm_exp.clearForm();
-		pm.frm_grps.clearForm();
-		PManager.main_gui.clearForm();
-		pm.frm_exp.show(true);
-		((ExperimentModule) ModulesManager.getDefault().getModuleByName(
-				"Experiment Module")).unloadExperiment();
-	}
-
-	/**
-	 * Loads an experiment from file: Shows Open Dialog box, Unloads the
-	 * previous experiment and loads the new experiment from the selected file.
-	 * 
-	 * @param sShell
-	 *            parent shell for the open dialogbox
-	 */
-	public void mnutmExperimentLoadexpAction(final Shell sShell)
-	{
-		final FileDialog fileDialog = new FileDialog(sShell, SWT.OPEN);
-		final String file_name = fileDialog.open();
-		if (file_name != null)
-		{
-			pm.frm_exp.clearForm();
-			pm.frm_grps.clearForm();
-			clearForm();
-			((ExperimentModule) ModulesManager.getDefault().getModuleByName(
-					"Experiment Module")).unloadExperiment();
-			((ExperimentModule) ModulesManager.getDefault().getModuleByName(
-					"Experiment Module")).loadInfoFromTXTFile(file_name);
-			((ExperimentModule) ModulesManager.getDefault().getModuleByName(
-					"Experiment Module")).setExpFileName(file_name);
-			pm.status_mgr.setStatus(
-					"Experiment Loaded Successfully!",
-					StatusSeverity.WARNING);
-		}
 	}
 
 	/**
@@ -433,24 +381,9 @@ public class CtrlMainGUI extends ControllerUI
 		ui.closeWindow();
 	}
 
-	/**
-	 * Starts video recording.
-	 */
 	public void btnStartRecordAction()
 	{
 		pm.getVideoProcessor().getFilterManager().enableFilter("Recorder", true);
-	}
-
-	/**
-	 * Stops video recording, and asks for a location to save the video file.
-	 */
-	public void stoprecordAction()
-	{
-		pm.getVideoProcessor().getFilterManager().enableFilter("Recorder", false);
-		final FileDialog fileDialog = new FileDialog(ui.getShell(), SWT.SAVE);
-		final String file_name = fileDialog.open();
-		((VideoRecorder) pm.getVideoProcessor().getFilterManager().getFilterByName(
-				"Recorder")).saveVideoFile(file_name);
 	}
 
 	/**
@@ -462,10 +395,9 @@ public class CtrlMainGUI extends ControllerUI
 	{
 		if (pm.state == ProgramState.TRACKING | pm.state == ProgramState.RECORDING)
 		{
-
 			ModulesManager.getDefault().runModules(false);
 			if (pm.state == ProgramState.RECORDING)
-				stoprecordAction();
+				ui.vid_rec_gui.stoprecordAction();
 
 			pm.getVideoProcessor().stopProcessing();
 			stop_tracking = true;
@@ -480,15 +412,63 @@ public class CtrlMainGUI extends ControllerUI
 	 */
 	public void btnStartTrackingAction()
 	{
-		if (pm.state == ProgramState.STREAMING
-				&& pm.getVideoProcessor().isBgSet()
-				&& ((ExperimentModule) ModulesManager.getDefault().getModuleByName(
-						"Experiment Module")).isExperimentPresent())
-			pm.frm_rat.show(true);
-		else
-			pm.status_mgr.setStatus(
-					"Please make sure the camera is running, you have set the background and you have selected an experiment to work on.",
-					StatusSeverity.ERROR);
+		final Thread th_start_gui_procedures = new Thread(new Runnable() {
+
+			@Override
+			public void run()
+			{
+				if (pm.state == ProgramState.STREAMING
+						&& pm.getVideoProcessor().isBgSet())
+				{
+					if (ModulesManager.getDefault().areModulesReady(ui.getShell()))
+					{
+						final ExperimentModule tmp_exp_module = (ExperimentModule) ModulesManager.getDefault()
+								.getModuleByName(
+										"Experiment Module");
+						if (tmp_exp_module != null)
+						{
+							startTracking();
+						} else
+						{
+							final MessageBox mbox = new MessageBox(
+									ui.getShell(),
+									SWT.ICON_QUESTION
+											| SWT.YES
+											| SWT.NO);
+							mbox.setMessage("No experiment module found! continue?");
+							mbox.setText("Continue?");
+							final int res = mbox.open();
+							if (res == SWT.YES)
+							{
+								startTracking();
+							}
+						}
+					} else
+						Display.getDefault().asyncExec(new Runnable() {
+
+							@Override
+							public void run()
+							{
+								pm.status_mgr.setStatus(
+										"Some Modules have problems.",
+										StatusSeverity.ERROR);
+							}
+						});
+
+				} else
+					Display.getDefault().asyncExec(new Runnable() {
+
+						@Override
+						public void run()
+						{
+							pm.status_mgr.setStatus(
+									"Please make sure the camera is running, you have set the background.",
+									StatusSeverity.ERROR);
+						}
+					});
+			}
+		});
+		th_start_gui_procedures.start();
 	}
 
 	/**
@@ -497,19 +477,6 @@ public class CtrlMainGUI extends ControllerUI
 	public void clearForm()
 	{
 		ui.clearForm();
-	}
-
-	/**
-	 * Shows a save file dialog to save the exported Excel data to that file.
-	 */
-	public void mnutmExperimentExportToExcelAction()
-	{
-		final FileDialog fileDialog = new FileDialog(ui.getShell(), SWT.SAVE);
-		fileDialog.setFilterExtensions(new String[] { "*.xlsx" });
-		final String file_name = fileDialog.open();
-		if (file_name != null)
-			((ExperimentModule) ModulesManager.getDefault().getModuleByName(
-					"Experiment Module")).writeToExcelFile(file_name);
 	}
 
 	/**
@@ -531,26 +498,6 @@ public class CtrlMainGUI extends ControllerUI
 	}
 
 	/**
-	 * Handles the "Add Rearing" button click action.
-	 */
-	public void btnAddRearingAction()
-	{
-		if (pm.state == ProgramState.TRACKING | pm.state == ProgramState.RECORDING)
-			((RearingModule) ModulesManager.getDefault()
-					.getModuleByName("Rearing Module")).incrementRearingCounter();
-	}
-
-	/**
-	 * Handles the "Subtract Rearing" button click action.
-	 */
-	public void btnSubRearingAction()
-	{
-		if (pm.state == ProgramState.TRACKING | pm.state == ProgramState.RECORDING)
-			((RearingModule) ModulesManager.getDefault()
-					.getModuleByName("Rearing Module")).decrementRearingCounter();
-	}
-
-	/**
 	 * Handles the "About" menu item click action.
 	 */
 	public void mnutmHelpAboutAction()
@@ -561,6 +508,11 @@ public class CtrlMainGUI extends ControllerUI
 	public void loadFiltersGUI(final ArrayList<String> filters)
 	{
 		ui.loadFiltersGUI(filters);
+	}
+
+	public void loadModulesGUI(final ArrayList<String> modules)
+	{
+		ui.loadModulesGUI(modules);
 	}
 
 }

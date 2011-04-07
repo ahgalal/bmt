@@ -297,17 +297,17 @@ public class FilterManager
 		addFilter(rearing_det);
 		addFilter(rat_finder);
 		addFilter(screen_drawer);
-		
+
 		PManager.main_gui.loadFiltersGUI(getRegisteredFiltersNames());
 	}
-	
+
 	public ArrayList<String> getRegisteredFiltersNames()
 	{
-		ArrayList<String> str_names=new ArrayList<String>();
-		
-		for(VideoFilter vf: arr_filters)
+		final ArrayList<String> str_names = new ArrayList<String>();
+
+		for (final VideoFilter vf : arr_filters)
 			str_names.add(vf.getName());
-			
+
 		return str_names;
 	}
 

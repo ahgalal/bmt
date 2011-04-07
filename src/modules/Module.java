@@ -2,6 +2,8 @@ package modules;
 
 import java.util.Hashtable;
 
+import org.eclipse.swt.widgets.Shell;
+
 import utils.video.filters.Data;
 
 /**
@@ -126,4 +128,6 @@ public abstract class Module
 		this.name = name;
 		configs = config;
 	}
+	
+	public abstract boolean amIReady(Shell shell);
 }

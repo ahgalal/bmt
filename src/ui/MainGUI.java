@@ -3,6 +3,10 @@ package ui;
 import java.awt.Frame;
 import java.util.ArrayList;
 
+import modules.experiment.ExperimentModuleGUI;
+import modules.rearing.RearingModuleGUI;
+import modules.zones.ZonesModuleGUI;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.awt.SWT_AWT;
 import org.eclipse.swt.events.SelectionEvent;
@@ -11,6 +15,7 @@ import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Menu;
@@ -43,18 +48,16 @@ public class MainGUI extends BaseUI
 	private Menu menuBar = null;
 	private MenuItem mnu_file_item = null;
 	private MenuItem mnu_edit_item = null;
-	private MenuItem mnu_experiment_item = null;
+
 	private MenuItem mnu_camera_item = null;
 	private MenuItem mnu_help_item = null;
 	private Menu mnu_file = null;
 	private Menu mnu_edit = null;
-	private Menu mnu_experiment = null;
+
 	private Menu mnu_camera = null;
 	private Menu mnu_help = null;
 	private MenuItem mnutm_file_exit = null;
-	private MenuItem mnutm_experiment_loadexp = null;
-	private MenuItem mnutm_experiment_exporttoexcel = null;
-	private MenuItem mnuitm_edt_exp;
+
 	private MenuItem mnutm_camera_start = null;
 	private Button btn_start_tracking = null;
 	private Composite cmpst_secondary = null;
@@ -63,12 +66,6 @@ public class MainGUI extends BaseUI
 	private Button btn_setbg = null;
 	private Button btn_stop_tracking = null;
 	private Label lbl_status = null;
-	/*	private Button btn_start_record = null;
-		private Button btn_stop_record = null;*/
-	/*	private Button btn_rearing_now = null;
-		private Button btn_not_rearing = null;*/
-	private Button btn_sub_rearing = null;
-	private Button btn_add_rearing = null;
 	private Table tbl_data = null;
 
 	/**
@@ -83,7 +80,14 @@ public class MainGUI extends BaseUI
 	@Override
 	public void clearForm()
 	{
-		tbl_data.removeAll();
+		Display.getDefault().asyncExec(new Runnable() {
+			
+			@Override
+			public void run()
+			{
+				tbl_data.removeAll();				
+			}
+		});
 	}
 
 	/**
@@ -139,28 +143,6 @@ public class MainGUI extends BaseUI
 		btn_stop_tracking = new Button(grp_options, SWT.NONE);
 		btn_stop_tracking.setBounds(new Rectangle(278, 16, 123, 25));
 		btn_stop_tracking.setText("Stop Tracking");
-		/*		btn_start_record = new Button(grp_options, SWT.NONE);
-				btn_start_record.setText("Start Recording");
-				btn_start_record.setSize(new Point(100, 25));
-				btn_start_record.setLocation(new Point(439, 16));
-				btn_start_record.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
-					@Override
-					public void widgetSelected(final org.eclipse.swt.events.SelectionEvent e)
-					{
-						controller.btnStartRecordAction();
-					}
-				});
-				btn_stop_record = new Button(grp_options, SWT.NONE);
-				btn_stop_record.setText("Stop Recording");
-				btn_stop_record.setSize(new Point(100, 25));
-				btn_stop_record.setLocation(new Point(549, 16));
-				btn_stop_record.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
-					@Override
-					public void widgetSelected(final org.eclipse.swt.events.SelectionEvent e)
-					{
-						controller.stoprecordAction();
-					}
-				});*/
 		btn_stop_tracking.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
 			@Override
 			public void widgetSelected(final org.eclipse.swt.events.SelectionEvent e)
@@ -178,28 +160,6 @@ public class MainGUI extends BaseUI
 	}
 
 	/**
-	 * Enables/disables the edit experiment menu item.
-	 * 
-	 * @param enable
-	 *            true/false
-	 */
-	public void editExpMenuItemEnable(final boolean enable)
-	{
-		mnuitm_edt_exp.setEnabled(enable);
-	}
-
-	/**
-	 * Enables/disables the export experiment to excel menu item.
-	 * 
-	 * @param enable
-	 *            true/false
-	 */
-	public void exportExpToExcelMenuItemEnable(final boolean enable)
-	{
-		mnutm_experiment_exporttoexcel.setEnabled(enable);
-	}
-
-	/**
 	 * This method initializes grp_stats.
 	 */
 	private void createGrpStats()
@@ -210,20 +170,6 @@ public class MainGUI extends BaseUI
 		createCmpstSecondary();
 		grp_stats.setBounds(new Rectangle(678, 6, 301, 563));
 
-		btn_sub_rearing = new Button(grp_stats, SWT.NONE);
-		btn_sub_rearing.setBounds(new Rectangle(44, 528, 28, 21));
-		btn_sub_rearing.setText("-");
-		btn_sub_rearing.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
-			@Override
-			public void widgetSelected(final org.eclipse.swt.events.SelectionEvent e)
-			{
-				controller.btnSubRearingAction();
-			}
-		});
-		btn_add_rearing = new Button(grp_stats, SWT.NONE);
-		btn_add_rearing.setText("+");
-		btn_add_rearing.setSize(new Point(28, 21));
-		btn_add_rearing.setLocation(new Point(14, 528));
 		tbl_data = new Table(grp_stats, SWT.BORDER);
 		tbl_data.setHeaderVisible(true);
 		tbl_data.setLinesVisible(true);
@@ -234,13 +180,6 @@ public class MainGUI extends BaseUI
 		final TableColumn tableColumn1 = new TableColumn(tbl_data, SWT.NONE);
 		tableColumn1.setWidth(140);
 		tableColumn1.setText("Value");
-		btn_add_rearing.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
-			@Override
-			public void widgetSelected(final org.eclipse.swt.events.SelectionEvent e)
-			{
-				controller.btnAddRearingAction();
-			}
-		});
 
 	}
 
@@ -370,19 +309,7 @@ public class MainGUI extends BaseUI
 		mnu_edit_item.setText("Edit");
 		mnu_edit = new Menu(mnu_edit_item);
 		mnu_edit_item.setMenu(mnu_edit);
-		final MenuItem mnutm_edit_openzoneeditor = new MenuItem(mnu_edit, SWT.PUSH);
-		mnutm_edit_openzoneeditor.setText("Zone Editor ..");
-		mnutm_edit_openzoneeditor.addSelectionListener(new org.eclipse.swt.events.SelectionListener() {
-			public void widgetDefaultSelected(
-					final org.eclipse.swt.events.SelectionEvent e)
-			{
-			}
 
-			public void widgetSelected(final org.eclipse.swt.events.SelectionEvent e)
-			{
-				controller.mnutmEditOpenZoneEditorAction();
-			}
-		});
 
 		final MenuItem mnutm_edit_options = new MenuItem(mnu_edit, SWT.PUSH);
 		mnutm_edit_options.setText("Options ..");
@@ -395,67 +322,6 @@ public class MainGUI extends BaseUI
 			public void widgetSelected(final org.eclipse.swt.events.SelectionEvent e)
 			{
 				controller.mnutmEditOptionsAction();
-			}
-		});
-
-		mnu_experiment_item = new MenuItem(menuBar, SWT.CASCADE); // experiment
-		mnu_experiment_item.setText("Experiment");
-		mnu_experiment = new Menu(mnu_experiment_item);
-		mnu_experiment_item.setMenu(mnu_experiment);
-		final MenuItem mnutm_experiment_newexp = new MenuItem(mnu_experiment, SWT.PUSH);
-		mnutm_experiment_loadexp = new MenuItem(mnu_experiment, 0);
-		mnutm_experiment_loadexp.setText("Load Exp.");
-		mnutm_experiment_loadexp.setEnabled(true);
-		mnuitm_edt_exp = new MenuItem(mnu_experiment, SWT.PUSH);
-		mnutm_experiment_exporttoexcel = new MenuItem(mnu_experiment, 0);
-		mnutm_experiment_exporttoexcel.setText("Export to Excel");
-		mnutm_experiment_exporttoexcel.setEnabled(true);
-		mnutm_experiment_exporttoexcel.addSelectionListener(new org.eclipse.swt.events.SelectionListener() {
-			public void widgetSelected(final org.eclipse.swt.events.SelectionEvent e)
-			{
-				controller.mnutmExperimentExportToExcelAction();
-			}
-
-			public void widgetDefaultSelected(
-					final org.eclipse.swt.events.SelectionEvent e)
-			{
-			}
-		});
-		mnutm_experiment_newexp.setText("New Exp..");
-
-		mnuitm_edt_exp.setText("Edit Exp.");
-		mnuitm_edt_exp.addSelectionListener(new org.eclipse.swt.events.SelectionListener() {
-			public void widgetDefaultSelected(
-					final org.eclipse.swt.events.SelectionEvent e)
-			{
-			}
-
-			public void widgetSelected(final org.eclipse.swt.events.SelectionEvent e)
-			{
-				controller.mnuitmEditExpAction();
-			}
-		});
-		mnutm_experiment_newexp.addSelectionListener(new org.eclipse.swt.events.SelectionListener() {
-			public void widgetDefaultSelected(
-					final org.eclipse.swt.events.SelectionEvent e)
-			{
-			}
-
-			public void widgetSelected(final org.eclipse.swt.events.SelectionEvent e)
-			{
-				controller.mnutmExperimentNewExpAction();
-			}
-		});
-
-		mnutm_experiment_loadexp.addSelectionListener(new org.eclipse.swt.events.SelectionListener() {
-			@Override
-			public void widgetDefaultSelected(final SelectionEvent arg0)
-			{
-			}
-
-			public void widgetSelected(final org.eclipse.swt.events.SelectionEvent e)
-			{
-				controller.mnutmExperimentLoadexpAction(sShell);
 			}
 		});
 
@@ -597,6 +463,21 @@ public class MainGUI extends BaseUI
 			vid_rec_gui = new VideoRecorderGUI(sShell, grp_options);
 		if (filters.contains("RearingDetector"))
 			rearing_det_gui = new RearingDetectorGUI(grp_stats);
+
+	}
+
+	public RearingModuleGUI rearing_module_gui;
+	public ExperimentModuleGUI experiment_module_gui;
+	public ZonesModuleGUI zones_module_gui;
+
+	public void loadModulesGUI(final ArrayList<String> modules)
+	{
+		if (modules.contains("Rearing Module"))
+			rearing_module_gui = new RearingModuleGUI(grp_stats);
+		if (modules.contains("Experiment Module"))
+			experiment_module_gui = new ExperimentModuleGUI(menuBar, sShell);
+		if (modules.contains("Zones Module"))
+			zones_module_gui = new ZonesModuleGUI(mnu_edit);
 
 	}
 

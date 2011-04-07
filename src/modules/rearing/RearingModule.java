@@ -4,6 +4,9 @@ import modules.Cargo;
 import modules.Module;
 import modules.ModuleConfigs;
 import modules.experiment.Constants;
+
+import org.eclipse.swt.widgets.Shell;
+
 import utils.video.filters.Data;
 import utils.video.filters.rearingdetection.RearingData;
 
@@ -107,7 +110,6 @@ public class RearingModule extends Module
 	@Override
 	public void deInitialize()
 	{
-		// TODO Auto-generated method stub
 
 	}
 
@@ -115,7 +117,7 @@ public class RearingModule extends Module
 	public void initialize()
 	{
 		gui_cargo = new Cargo(new String[] { Constants.GUI_REARING_COUNTER });
-
+		rearing_ctr = 0;
 		file_cargo = new Cargo(new String[] { Constants.FILE_REARING_COUNTER });
 	}
 
@@ -127,6 +129,14 @@ public class RearingModule extends Module
 			rearing_data = null;
 			this.data[0] = null;
 		}
+	}
+
+	@Override
+	public boolean amIReady(final Shell shell)
+	{
+		if (rearing_data != null)
+			return true;
+		return false;
 	}
 
 }

@@ -46,10 +46,17 @@ public class VideoProcessor
 	 */
 	public VideoProcessor()
 	{
-		common_configs = new CommonFilterConfigs(0, 0, 0, 0, null, null);
+		common_configs = new CommonFilterConfigs(
+				640,
+				480,
+				30,
+				0,
+				null,
+				null);
 		video_processor_enabled = true;
 		ref_fia = new FrameIntArray();
 		filter_mgr = new FilterManager();
+		filter_mgr.configureFilters(common_configs, ref_fia);
 	}
 
 	/**
@@ -174,7 +181,7 @@ public class VideoProcessor
 		else if (common_configs.vid_library.equals("AGCamLib"))
 			v_in = new AGCamLibModule();
 
-		filter_mgr.configureFilters(common_configs,ref_fia);
+		filter_mgr.configureFilters(common_configs, ref_fia);
 
 		v_in.setFormat(common_configs.format);
 
@@ -205,7 +212,6 @@ public class VideoProcessor
 		filter_mgr.enableFilter("RatFinder", true);
 		filter_mgr.enableFilter("RearingDetector", true);
 		PManager.getDefault().state = ProgramState.TRACKING;
-		filter_mgr.submitDataObjects();
 	}
 
 	/**
@@ -222,6 +228,7 @@ public class VideoProcessor
 			final Thread th_main = new Thread(new RunnableProcessor());
 			th_main.start();
 			PManager.getDefault().state = ProgramState.STREAMING;
+			filter_mgr.submitDataObjects();
 		} catch (final Exception e)
 		{
 			e.printStackTrace();

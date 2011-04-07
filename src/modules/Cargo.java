@@ -114,7 +114,6 @@ public class Cargo
 	 */
 	public void setDataByTag(final String tag, final String data)
 	{
-
 		arr_data[getIndexByTag(tag)] = data;
 	}
 
