@@ -87,6 +87,8 @@ public class CtrlRatInfoForm extends ControllerUI
 	 * already exists, it asks for confirmation; if the Group name is not valid,
 	 * error message is displayed; if all data are correct, we start tracking
 	 * activity.
+	 * 
+	 * @return true: success
 	 */
 	public boolean checkAndSubmitData()
 	{
@@ -102,7 +104,8 @@ public class CtrlRatInfoForm extends ControllerUI
 				((ExperimentModule) ModulesManager.getDefault().getModuleByName(
 						"Experiment Module")).setCurrentRatAndGroup(rat_num, grp_name);
 				return true;
-			} else if (tmp_confirmation == 1)
+			}
+			else if (tmp_confirmation == 1)
 			{ // Rat already exists
 				final MessageBox msg = new MessageBox(ui.getShell(), SWT.ICON_QUESTION
 						| SWT.YES
@@ -116,7 +119,8 @@ public class CtrlRatInfoForm extends ControllerUI
 							"Experiment Module")).setCurrentRatAndGroup(rat_num, grp_name);
 					return true;
 				}
-			} else if (tmp_confirmation == -1) // Group not found
+			}
+			else if (tmp_confirmation == -1) // Group not found
 				pm.status_mgr.setStatus("Please select a group.", StatusSeverity.ERROR);
 		} catch (final NumberFormatException e1)
 		{
@@ -127,17 +131,31 @@ public class CtrlRatInfoForm extends ControllerUI
 		return false;
 	}
 
+	/**
+	 * Checks if a valid rat/group has been selected.
+	 * 
+	 * @return true: valid rat, false: invalid rat or user hasn't selected a rat
+	 */
 	public boolean isValidRatEntered()
 	{
 		return iamready;
 	}
 
+	/**
+	 * Action taken when the cancel button is pressed.
+	 */
 	public void cancelAction()
 	{
 		cancelled = true;
 		ui.show(false);
 	}
 
+	/**
+	 * Checks if the user has canceled the RatInfoForm.
+	 * 
+	 * @return true: user has canceled the form, false: user hasn't cancel the
+	 *         form
+	 */
 	public boolean isCancelled()
 	{
 		return cancelled;

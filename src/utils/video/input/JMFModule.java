@@ -69,12 +69,14 @@ public class JMFModule implements VidInputter
 				e.printStackTrace();
 				System.out.print("media locator!!!!!!!!!!!!?");
 			}
-		} else
+		}
+		else
 		{
 			if (devicelist.size() == 1) // Only 1 CAM
 			{
 				ml = ((CaptureDeviceInfo) devicelist.get(0)).getLocator();
-			} else
+			}
+			else
 			// More than 1 CAM
 			{
 				boolean breaker = false;
@@ -95,7 +97,7 @@ public class JMFModule implements VidInputter
 							break;
 						}
 					}
-					if (breaker == true)
+					if (breaker)
 						break;
 				}
 			}

@@ -2,8 +2,6 @@ package modules;
 
 import java.util.ArrayList;
 
-import org.eclipse.swt.widgets.Shell;
-
 import modules.experiment.ExperimentModule;
 import modules.experiment.ExperimentModuleConfigs;
 import modules.rearing.RearingModule;
@@ -12,6 +10,9 @@ import modules.session.SessionModule;
 import modules.session.SessionModuleConfigs;
 import modules.zones.ZonesModule;
 import modules.zones.ZonesModuleConfigs;
+
+import org.eclipse.swt.widgets.Shell;
+
 import utils.PManager;
 import utils.StatusManager.StatusSeverity;
 import utils.video.filters.Data;
@@ -54,7 +55,8 @@ public class ModulesManager
 			run_modules = true;
 			th_modules = new Thread(runnable_modules);
 			th_modules.start();
-		} else if (!run & run_modules)
+		}
+		else if (!run & run_modules)
 		{
 			run_modules = false;
 			try
@@ -241,19 +243,35 @@ public class ModulesManager
 	{
 		return file_names_array;
 	}
-	
+
+	/**
+	 * Gets the number of Experiment parameters to be stored in file.
+	 * 
+	 * @return integer representing the number of file parameters for the active
+	 *         experiment
+	 */
 	public int getNumberOfFileParameters()
 	{
 		constructCargoArray();
 		return file_names_array.length;
 	}
-	
-	public boolean areModulesReady(Shell shell)
+
+	/**
+	 * Checks if all the modules are ready to run/process data.
+	 * 
+	 * @param shell
+	 *            parent shell for displaying messageboxes
+	 * @return true: all are ready, false: some modules are not ready
+	 */
+	public boolean areModulesReady(final Shell shell)
 	{
-		for(Module mo:modules)
-			if(!mo.amIReady(shell))
+		for (final Module mo : modules)
+			if (!mo.amIReady(shell))
 			{
-				PManager.log.print(mo.getName() + " cancelled Tracking!", this,StatusSeverity.ERROR);
+				PManager.log.print(
+						mo.getName() + " cancelled Tracking!",
+						this,
+						StatusSeverity.ERROR);
 				return false;
 			}
 		return true;
@@ -401,6 +419,11 @@ public class ModulesManager
 				height) });
 	}
 
+	/**
+	 * Gets the names of active modules.
+	 * 
+	 * @return ArrayList containing the names of active modules
+	 */
 	public ArrayList<String> getModulesNames()
 	{
 		final ArrayList<String> tmp_arr = new ArrayList<String>();

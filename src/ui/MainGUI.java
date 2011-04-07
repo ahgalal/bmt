@@ -81,11 +81,11 @@ public class MainGUI extends BaseUI
 	public void clearForm()
 	{
 		Display.getDefault().asyncExec(new Runnable() {
-			
+
 			@Override
 			public void run()
 			{
-				tbl_data.removeAll();				
+				tbl_data.removeAll();
 			}
 		});
 	}
@@ -310,7 +310,6 @@ public class MainGUI extends BaseUI
 		mnu_edit = new Menu(mnu_edit_item);
 		mnu_edit_item.setMenu(mnu_edit);
 
-
 		final MenuItem mnutm_edit_options = new MenuItem(mnu_edit, SWT.PUSH);
 		mnutm_edit_options.setText("Options ..");
 		mnutm_edit_options.addSelectionListener(new org.eclipse.swt.events.SelectionListener() {
@@ -457,6 +456,12 @@ public class MainGUI extends BaseUI
 	public VideoRecorderGUI vid_rec_gui;
 	public RearingDetectorGUI rearing_det_gui;
 
+	/**
+	 * Loads GUI instances for the available video filters.
+	 * 
+	 * @param filters
+	 *            ArrayList of available filters
+	 */
 	public void loadFiltersGUI(final ArrayList<String> filters)
 	{
 		if (filters.contains("Recorder"))
@@ -470,6 +475,12 @@ public class MainGUI extends BaseUI
 	public ExperimentModuleGUI experiment_module_gui;
 	public ZonesModuleGUI zones_module_gui;
 
+	/**
+	 * Loads the GUI instances for the available modules.
+	 * 
+	 * @param modules
+	 *            ArrayList of available modules
+	 */
 	public void loadModulesGUI(final ArrayList<String> modules)
 	{
 		if (modules.contains("Rearing Module"))

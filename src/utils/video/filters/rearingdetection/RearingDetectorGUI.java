@@ -10,11 +10,16 @@ import utils.PManager;
 import utils.PManager.ProgramState;
 import utils.StatusManager.StatusSeverity;
 
+/**
+ * GUI class for the rearing detector filter.
+ * 
+ * @author Creative
+ */
 public class RearingDetectorGUI
 {
 	private Button btn_rearing_now = null;
 	private Button btn_not_rearing = null;
-	
+
 	/**
 	 * Enables/disables the rearing now button.
 	 * 
@@ -25,6 +30,7 @@ public class RearingDetectorGUI
 	{
 		btn_rearing_now.setEnabled(enable);
 	}
+
 	/**
 	 * Enables/disables the not rearing now button.
 	 * 
@@ -35,8 +41,14 @@ public class RearingDetectorGUI
 	{
 		btn_not_rearing.setEnabled(enable);
 	}
-	
-	public RearingDetectorGUI(Composite parent)
+
+	/**
+	 * Initializes/shows the GUI components.
+	 * 
+	 * @param parent
+	 *            parent composite that the components will be children of
+	 */
+	public RearingDetectorGUI(final Composite parent)
 	{
 		btn_rearing_now = new Button(parent, SWT.NONE);
 		btn_rearing_now.setText("Rearing NOW");
@@ -45,7 +57,7 @@ public class RearingDetectorGUI
 		btn_not_rearing = new Button(parent, SWT.NONE);
 		btn_not_rearing.setBounds(new Rectangle(85, 530, 101, 25));
 		btn_not_rearing.setText("Not Rearing");
-		
+
 		btn_not_rearing.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
 			@Override
 			public void widgetSelected(final org.eclipse.swt.events.SelectionEvent e)
@@ -61,7 +73,7 @@ public class RearingDetectorGUI
 			}
 		});
 	}
-	
+
 	/**
 	 * Notifies the VideoProcessor that the rat is (rearing/not rearing) in
 	 * reality, so that the VideoProcessor can start learning the rat's size
@@ -73,9 +85,14 @@ public class RearingDetectorGUI
 	public void rearingNow(final boolean rearing)
 	{
 		if (PManager.getDefault().state == ProgramState.TRACKING)
-			((RearingDetector) PManager.getDefault().getVideoProcessor().getFilterManager().getFilterByName(
-					"RearingDetector")).rearingNow(rearing);
+			((RearingDetector) PManager.getDefault()
+					.getVideoProcessor()
+					.getFilterManager()
+					.getFilterByName(
+							"RearingDetector")).rearingNow(rearing);
 		else
-			PManager.getDefault().status_mgr.setStatus("Tracking is not running!", StatusSeverity.ERROR);
+			PManager.getDefault().status_mgr.setStatus(
+					"Tracking is not running!",
+					StatusSeverity.ERROR);
 	}
 }

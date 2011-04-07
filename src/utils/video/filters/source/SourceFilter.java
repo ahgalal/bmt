@@ -17,22 +17,20 @@ public class SourceFilter extends VideoFilter
 	 * 
 	 * @param name
 	 *            filter's name
-	 * @param configs
-	 *            common configurations
+	 * @param linkIn
+	 *            input Link for the filter
 	 * @param linkOut
 	 *            output link that will distribute the data on other filters
 	 */
-	public SourceFilter(String name, Link linkIn, Link linkOut)
+	public SourceFilter(final String name, final Link linkIn, final Link linkOut)
 	{
 		super(name, linkIn, linkOut);
 	}
 
 	private SourceFilterConfigs source_configs;
 
-
-
 	@Override
-	public boolean configure(FilterConfigs configs)
+	public boolean configure(final FilterConfigs configs)
 	{
 		source_configs = (SourceFilterConfigs) configs;
 		return super.configure(configs);

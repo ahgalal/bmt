@@ -30,7 +30,8 @@ public class AGCamLibModule implements VidInputter
 			th_update_image.start();
 
 			return true;
-		} else
+		}
+		else
 		{
 			PManager.log.print("Error Starting the Webcam!", this, StatusSeverity.ERROR);
 			return false;

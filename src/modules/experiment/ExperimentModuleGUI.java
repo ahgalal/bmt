@@ -12,6 +12,11 @@ import org.eclipse.swt.widgets.Shell;
 import utils.PManager;
 import utils.StatusManager.StatusSeverity;
 
+/**
+ * GUI class for the Experiment Module.
+ * 
+ * @author Creative
+ */
 public class ExperimentModuleGUI
 {
 	private final Shell shell;
@@ -22,6 +27,14 @@ public class ExperimentModuleGUI
 	private final MenuItem mnuitm_edt_exp;
 	private final MenuItem mnutm_experiment_newexp;
 
+	/**
+	 * Initializes/shows the GUI components.
+	 * 
+	 * @param menuBar
+	 *            menubar of MainGUI
+	 * @param shell
+	 *            parent shell (MainGUI's shell)
+	 */
 	public ExperimentModuleGUI(final Menu menuBar, final Shell shell)
 	{
 		this.shell = shell;
@@ -148,7 +161,7 @@ public class ExperimentModuleGUI
 					StatusSeverity.WARNING);
 		}
 	}
-	
+
 	/**
 	 * Enables/disables the edit experiment menu item.
 	 * 
@@ -159,7 +172,7 @@ public class ExperimentModuleGUI
 	{
 		mnuitm_edt_exp.setEnabled(enable);
 	}
-	
+
 	/**
 	 * Enables/disables the export experiment to excel menu item.
 	 * 

@@ -22,14 +22,12 @@ public class VideoRecorder extends VideoFilter
 	 * 
 	 * @param name
 	 *            filter's name
-	 * @param configs
-	 *            filter's configurations
-	 * @param link_in
+	 * @param linkIn
 	 *            input Link for the filter
-	 * @param link_out
+	 * @param linkOut
 	 *            output Link from the filter
 	 */
-	public VideoRecorder(String name, Link linkIn, Link linkOut)
+	public VideoRecorder(final String name, final Link linkIn, final Link linkOut)
 	{
 		super(name, linkIn, linkOut);
 		pm = PManager.getDefault();
@@ -39,10 +37,8 @@ public class VideoRecorder extends VideoFilter
 	private StreamToAVI avi_saver;
 	private RecorderConfigs recorder_configs;
 
-
-
 	@Override
-	public boolean configure(FilterConfigs configs)
+	public boolean configure(final FilterConfigs configs)
 	{
 		recorder_configs = (RecorderConfigs) configs;
 		return super.configure(configs);
@@ -103,12 +99,14 @@ public class VideoRecorder extends VideoFilter
 				pm.state = ProgramState.RECORDING;
 				configs.enabled = true;
 				return true;
-			} else
+			}
+			else
 				pm.status_mgr.setStatus(
 						"Please start tracking first",
 						StatusSeverity.ERROR);
 			return false;
-		} else
+		}
+		else
 		{
 			final Thread th_stop_recording = new Thread(new Runnable() {
 				@Override

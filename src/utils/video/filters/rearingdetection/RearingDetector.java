@@ -16,14 +16,12 @@ public class RearingDetector extends VideoFilter
 	 * 
 	 * @param name
 	 *            filter's name
-	 * @param configs
-	 *            filter's configurations
-	 * @param link_in
+	 * @param linkIn
 	 *            input Link for the filter
-	 * @param link_out
+	 * @param linkOut
 	 *            output Link from the filter
 	 */
-	public RearingDetector(String name, Link linkIn, Link linkOut)
+	public RearingDetector(final String name, final Link linkIn, final Link linkOut)
 	{
 		super(name, linkIn, linkOut);
 		rearing_configs = (RearingFilterConfigs) configs;
@@ -36,20 +34,20 @@ public class RearingDetector extends VideoFilter
 	}
 
 	private RearingFilterConfigs rearing_configs;
+
 	@Override
-	public boolean configure(FilterConfigs configs)
+	public boolean configure(final FilterConfigs configs)
 	{
-		rearing_configs= (RearingFilterConfigs)configs;
+		rearing_configs = (RearingFilterConfigs) configs;
 		return super.configure(configs);
 	}
 
-	private RearingData rearing_data;
+	private final RearingData rearing_data;
 
 	private boolean rearing_now;
 	private int normal_rat_area;
 	private boolean is_rearing;
 	private int current_rat_area;
-
 
 	/**
 	 * Used to train the filter of the white area of the rat when
@@ -68,7 +66,8 @@ public class RearingDetector extends VideoFilter
 			System.out.print("Rearing threshold: "
 					+ rearing_configs.rearing_thresh
 					+ "\n");
-		} else
+		}
+		else
 		{
 			rearing_now = false;
 			final Thread th_rearing = new Thread(new NormalRatAreaThread());

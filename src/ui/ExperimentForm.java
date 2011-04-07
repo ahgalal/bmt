@@ -150,10 +150,10 @@ public class ExperimentForm extends BaseUI
 	@Override
 	public void loadData(final String[] strArray)
 	{
-		txt_name.setText(strArray[0]);// exp.getName()
-		txt_user.setText(strArray[1]);// exp.getUser()
-		txt_notes.setText(strArray[2]);// exp.getNotes()
-		lbl_current_date.setText(strArray[3]);// exp.getDate()
+		txt_name.setText(strArray[0]);
+		txt_user.setText(strArray[1]);
+		txt_notes.setText(strArray[2]);
+		lbl_current_date.setText(strArray[3]);
 	}
 
 	@Override

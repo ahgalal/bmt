@@ -192,6 +192,10 @@ public class FilterManager
 	/**
 	 * Initializes video filters, and applies their configurations.
 	 * 
+	 * @param common_configs
+	 *            common configurations
+	 * @param fia_src
+	 *            image data container from the video input library
 	 * @return true: success
 	 */
 	public boolean configureFilters(
@@ -265,6 +269,9 @@ public class FilterManager
 		return true;
 	}
 
+	/**
+	 * Connects the filters and adds them to the filters array.
+	 */
 	private void connectFilters()
 	{
 		final Point dims = new Point(0, 0);
@@ -301,6 +308,11 @@ public class FilterManager
 		PManager.main_gui.loadFiltersGUI(getRegisteredFiltersNames());
 	}
 
+	/**
+	 * Gets the registered filters names.
+	 * 
+	 * @return String array containing the names of registered filters
+	 */
 	public ArrayList<String> getRegisteredFiltersNames()
 	{
 		final ArrayList<String> str_names = new ArrayList<String>();

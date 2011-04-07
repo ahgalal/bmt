@@ -22,13 +22,11 @@ public class ScreenDrawer extends VideoFilter
 	 * 
 	 * @param name
 	 *            filter's name
-	 * @param configs
-	 *            filter's configurations
-	 * @param link_in
+	 * @param linkIn
 	 *            main input Link for the filter
 	 * @param link_in2
 	 *            secondary input Link for the filter
-	 * @param link_out
+	 * @param linkOut
 	 *            output Link from the filter
 	 */
 	public ScreenDrawer(
@@ -161,7 +159,8 @@ public class ScreenDrawer extends VideoFilter
 									scrn_drwr_cnfgs.common_configs.width,
 									scrn_drwr_cnfgs.common_configs.height,
 									null);
-					} else
+					}
+					else
 						PManager.log.print(
 								"got non-ready state from cam module! .. skipping frame",
 								this);

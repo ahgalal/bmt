@@ -63,7 +63,8 @@ public class TextEngine
 					final String tmp_notes = buf_rdr.readLine().substring(
 							Constants.h_exp_notes.length());
 					exp.setExperimentInfo(tmp_name, tmp_user, tmp_date, tmp_notes);
-				} else if (tmp_line.equals(Constants.h_grp))
+				}
+				else if (tmp_line.equals(Constants.h_grp))
 				{ // load grp. info
 					final int tmp_id = Integer.parseInt(buf_rdr.readLine().substring(
 							Constants.h_grp_id.length()));
@@ -82,7 +83,8 @@ public class TextEngine
 							Constants.h_grp_notes.length());
 					grp_tmp = new Group(tmp_id, tmp_name, tmp_notes);
 					exp.addGroup(grp_tmp);
-				} else if (tmp_line.equals(Constants.h_rat))
+				}
+				else if (tmp_line.equals(Constants.h_rat))
 				{
 					tmp_line = buf_rdr.readLine();
 					line_data = readLineData(tmp_line);
@@ -98,7 +100,8 @@ public class TextEngine
 									exp.getExpParametersList(),
 									line_data);
 							grp_tmp.addRat(tmp_rat);
-						} else
+						}
+						else
 							break;
 					}
 					group_rats_are_loaded = true;

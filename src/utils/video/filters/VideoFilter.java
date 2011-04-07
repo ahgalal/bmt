@@ -20,15 +20,13 @@ public abstract class VideoFilter
 	 * 
 	 * @param name
 	 *            filter's name
-	 * @param configs
-	 *            filter's configurations
 	 * @param link_in
 	 *            input Link for the filter
 	 * @param link_out
 	 *            output Link from the filter
 	 */
 	public VideoFilter(
-			final String name,Link link_in,Link link_out)
+			final String name, final Link link_in, final Link link_out)
 	{
 		this.name = name;
 		this.link_in = link_in;
@@ -109,6 +107,8 @@ public abstract class VideoFilter
 	/**
 	 * Optional initializations for the filter.
 	 * 
+	 * @param configs
+	 *            filter's configurations
 	 * @return true: success, false: failure
 	 */
 	public boolean configure(final FilterConfigs configs)

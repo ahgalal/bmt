@@ -21,24 +21,20 @@ public class SubtractorFilter extends VideoFilter
 	 * 
 	 * @param name
 	 *            filter's name
-	 * @param configs
-	 *            filter's configurations
-	 * @param link_in
+	 * @param linkIn
 	 *            input Link for the filter
-	 * @param link_out
+	 * @param linkOut
 	 *            output Link from the filter
 	 */
-	public SubtractorFilter(String name, Link linkIn, Link linkOut)
+	public SubtractorFilter(final String name, final Link linkIn, final Link linkOut)
 	{
 		super(name, linkIn, linkOut);
 		bg_image_gray = new FrameIntArray();
 	}
 
-	private FrameIntArray bg_image_gray;
+	private final FrameIntArray bg_image_gray;
 	private SubtractionConfigs subtraction_configs;
 	private int[] local_data;
-
-
 
 	@Override
 	public boolean configure(
@@ -46,7 +42,7 @@ public class SubtractorFilter extends VideoFilter
 	{
 		this.subtraction_configs = (SubtractionConfigs) configs;
 		local_data = new int[configs.common_configs.width * configs.common_configs.height];
-		
+
 		return super.configure(configs);
 	}
 

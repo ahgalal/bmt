@@ -310,7 +310,8 @@ public class GfxPanel
 
 					final Shape dragged_on_shape = getDraggedOnShape(x, y);
 					notifyTargettedDragOperation(shp_selected, dragged_on_shape);
-				} else
+				}
+				else
 				{
 					current_click_pos.x = e.getX();
 					current_click_pos.y = e.getY();
@@ -334,7 +335,8 @@ public class GfxPanel
 					drawing_now = true;
 					shp_to_draw = null;
 					shp_selected = null;
-				} else
+				}
+				else
 				{
 					shp_selected = getShapeByPosition(ini_x, ini_y);
 					if (shp_selected != null)

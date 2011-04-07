@@ -2,6 +2,11 @@ package utils.video.filters.RatFinder;
 
 import java.awt.Color;
 
+/**
+ * Cross marker for the Rat Finder filter.
+ * 
+ * @author Creative
+ */
 public class CrossMarker extends Marker
 {
 
@@ -10,6 +15,22 @@ public class CrossMarker extends Marker
 	private int actual_width, actual_height;
 	private int x1, x2, y1, y2;
 
+	/**
+	 * Initializes the marker.
+	 * 
+	 * @param width
+	 *            marker's width
+	 * @param height
+	 *            marker's height
+	 * @param thickness
+	 *            line thickness
+	 * @param color
+	 *            color
+	 * @param img_width
+	 *            image's width
+	 * @param img_height
+	 *            image's height
+	 */
 	public CrossMarker(
 			final int width,
 			final int height,
@@ -46,25 +67,36 @@ public class CrossMarker extends Marker
 	}
 
 	/**
-	 * Fills the specified rectangular area of the image with the specified color.
-	 * @param img image to fill the rectangle on.
-	 * @param x x co-ordinate of the rectangle
-	 * @param y y co-ordinate of the rectangle
-	 * @param width rectangle's width
-	 * @param height rectangle's height
+	 * Fills the specified rectangular area of the image with the specified
+	 * color.
+	 * 
+	 * @param img
+	 *            image to fill the rectangle on.
+	 * @param x
+	 *            x co-ordinate of the rectangle
+	 * @param y
+	 *            y co-ordinate of the rectangle
+	 * @param width
+	 *            rectangle's width
+	 * @param height
+	 *            rectangle's height
 	 */
 	private void fillRect(
-			final int img[],
+			final int[] img,
 			int x,
 			int y,
 			final int width,
 			final int height)
 	{
-		if(x<0) x=0;
-		if(x+width>img_width) x=img_width-width-1;
-		if(y<0) y=0;
-		if(y+height>img_height) y=img_height-height-1;
-		
+		if (x < 0)
+			x = 0;
+		if (x + width > img_width)
+			x = img_width - width - 1;
+		if (y < 0)
+			y = 0;
+		if (y + height > img_height)
+			y = img_height - height - 1;
+
 		for (int i = x; i < x + width; i++)
 		{
 			for (int j = y; j < y + height; j++)

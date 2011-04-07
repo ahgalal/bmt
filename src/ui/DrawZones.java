@@ -204,7 +204,7 @@ public class DrawZones extends BaseUI
 	public void show(final boolean visibility)
 	{
 		super.show(visibility);
-		if (visibility == true)
+		if (visibility)
 			gfx_panel.redrawAllShapes();
 	}
 
@@ -284,7 +284,8 @@ public class DrawZones extends BaseUI
 		{
 			tmp_ti.setText(1, zone_type);
 			tmp_ti.setText(2, zone_col);
-		} else
+		}
+		else
 			System.out.print("Tableitem is not found using index: " + zone_no);
 	}
 

@@ -139,7 +139,8 @@ public class Snapper
 										tmp_sh,
 										Direction.RIGHT,
 										dist_to_tmpshp_x));
-						} else if (edge_x + shp_w < tmp_x)
+						}
+						else if (edge_x + shp_w < tmp_x)
 						{
 							// shp is to the LEFT of tmp
 							dist_to_tmpshp_x = tmp_x - edge_x - shp_w;
@@ -149,7 +150,8 @@ public class Snapper
 										tmp_sh,
 										Direction.LEFT,
 										dist_to_tmpshp_x));
-						} else
+						}
+						else
 							/*
 							 * cursor is in the middle of tmp, we must set
 							 * snapped_x to disable moving shp
@@ -180,7 +182,8 @@ public class Snapper
 										tmp_sh,
 										Direction.DOWN,
 										dist_to_tmpshp_y));
-						} else if (edge_y + shp_h < tmp_y)
+						}
+						else if (edge_y + shp_h < tmp_y)
 						{
 							// shp is ONTOP of tmp
 							dist_to_tmpshp_y = tmp_y - edge_y - shp_h;
@@ -190,7 +193,8 @@ public class Snapper
 										tmp_sh,
 										Direction.UP,
 										dist_to_tmpshp_y));
-						} else
+						}
+						else
 							/*
 							 * cursor is in the middle of tmp, we must set
 							 * snapped_y to disable moving shp
@@ -269,7 +273,8 @@ public class Snapper
 						{
 							shp.setWidth(tmp_x - shp_x);
 							snp_results.snapped_x = true;
-						} else if (x - tmp_x - tmp_w < 10 & x - tmp_x - tmp_w >= 0)
+						}
+						else if (x - tmp_x - tmp_w < 10 & x - tmp_x - tmp_w >= 0)
 						{
 							shp.setX(tmp_x + tmp_w);
 							shp.setWidth(shp_w + shp_x - tmp_x - tmp_w);
@@ -285,7 +290,8 @@ public class Snapper
 						{
 							shp.setHeight(tmp_y - shp_y);
 							snp_results.snapped_y = true;
-						} else if (y - tmp_y - tmp_h < 10 & y - tmp_y - tmp_h >= 0)
+						}
+						else if (y - tmp_y - tmp_h < 10 & y - tmp_y - tmp_h >= 0)
 						{
 							shp.setY(tmp_y + tmp_h);
 							shp.setHeight(shp_h + shp_y - tmp_y - tmp_h);

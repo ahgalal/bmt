@@ -16,7 +16,7 @@ import org.eclipse.swt.graphics.RGB;
 public class OvalShape extends Shape
 {
 
-	private final double PI = 3.14159; // mathmatics constant
+	private static final double PI = 3.14159; // mathmatics constant
 	private int diameter_x; // position in X-axis
 	private int diameter_y; // postion in Y-axis
 

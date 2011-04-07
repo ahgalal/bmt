@@ -9,15 +9,28 @@ import org.eclipse.swt.widgets.Shell;
 
 import utils.PManager;
 
+/**
+ * GUI class for the video recorder filter.
+ * 
+ * @author Creative
+ */
 public class VideoRecorderGUI
 {
 	private Button btn_start_record = null;
 	private Button btn_stop_record = null;
-	private Shell shell;
+	private final Shell shell;
 
+	/**
+	 * Initializes/shows the GUI components.
+	 * 
+	 * @param shell
+	 *            parent shell of the components
+	 * @param parent
+	 *            parent composite that the components will be children of
+	 */
 	public VideoRecorderGUI(final Shell shell, final Composite parent)
 	{
-		this.shell=shell;
+		this.shell = shell;
 		btn_start_record = new Button(parent, SWT.NONE);
 		btn_start_record.setText("Start Recording");
 		btn_start_record.setSize(new Point(100, 25));
@@ -47,7 +60,7 @@ public class VideoRecorderGUI
 			@Override
 			public void widgetSelected(final org.eclipse.swt.events.SelectionEvent e)
 			{
-				stoprecordAction();
+				stopRecordAction();
 			}
 		});
 	}
@@ -74,9 +87,11 @@ public class VideoRecorderGUI
 		btn_stop_record.setEnabled(enable);
 	}
 
-	public void stoprecordAction()
+	/**
+	 * Stops recording frames, and saves the video file.
+	 */
+	public void stopRecordAction()
 	{
-
 		PManager.getDefault()
 				.getVideoProcessor()
 				.getFilterManager()

@@ -94,7 +94,8 @@ public class CtrlMainGUI extends ControllerUI
 
 			pm.getVideoProcessor().startProcessing();
 			ModulesManager.getDefault().runModules(true);
-		} else
+		}
+		else
 			pm.status_mgr.setStatus(
 					"Please start the camera first.",
 					StatusSeverity.ERROR);
@@ -128,7 +129,8 @@ public class CtrlMainGUI extends ControllerUI
 							{
 								ui.experiment_module_gui.editExpMenuItemEnable(false);
 								ui.experiment_module_gui.exportExpToExcelMenuItemEnable(false);
-							} else
+							}
+							else
 							{
 								ui.experiment_module_gui.editExpMenuItemEnable(true);
 								ui.experiment_module_gui.exportExpToExcelMenuItemEnable(true);
@@ -273,7 +275,8 @@ public class CtrlMainGUI extends ControllerUI
 			((SubtractorFilter) pm.getVideoProcessor()
 					.getFilterManager()
 					.getFilterByName("SubtractionFilter")).updateBG();
-		} else if (pm.state == ProgramState.TRACKING)
+		}
+		else if (pm.state == ProgramState.TRACKING)
 			pm.status_mgr.setStatus(
 					"Background can't be taken while tracking.",
 					StatusSeverity.ERROR);
@@ -300,7 +303,8 @@ public class CtrlMainGUI extends ControllerUI
 			pm.initializeVideoProcessor(commonConfigs);
 			configureScreenDrawerFilter("ScreenDrawer", commonConfigs, true);
 			pm.status_mgr.setStatus("Camera is Starting..", StatusSeverity.WARNING);
-		} else
+		}
+		else
 			pm.status_mgr.setStatus("Camera is already started.", StatusSeverity.ERROR);
 
 	}
@@ -340,7 +344,8 @@ public class CtrlMainGUI extends ControllerUI
 		{
 			pm.unloadVideoProcessor();
 			pm.status_mgr.setStatus("Camera is Stopped!", StatusSeverity.WARNING);
-		} else if (pm.state == ProgramState.TRACKING)
+		}
+		else if (pm.state == ProgramState.TRACKING)
 			pm.status_mgr.setStatus(
 					"Camera Cannot be stopped while Tracking is running.",
 					StatusSeverity.ERROR);
@@ -381,6 +386,9 @@ public class CtrlMainGUI extends ControllerUI
 		ui.closeWindow();
 	}
 
+	/**
+	 * Action taken when the user clicks on the Start Recording button.
+	 */
 	public void btnStartRecordAction()
 	{
 		pm.getVideoProcessor().getFilterManager().enableFilter("Recorder", true);
@@ -397,13 +405,14 @@ public class CtrlMainGUI extends ControllerUI
 		{
 			ModulesManager.getDefault().runModules(false);
 			if (pm.state == ProgramState.RECORDING)
-				ui.vid_rec_gui.stoprecordAction();
+				ui.vid_rec_gui.stopRecordAction();
 
 			pm.getVideoProcessor().stopProcessing();
 			stop_tracking = true;
 			// stats_controller.endSession();
 			th_update_gui = null;
-		} else
+		}
+		else
 			pm.status_mgr.setStatus("Tracking is not running.", StatusSeverity.ERROR);
 	}
 
@@ -428,7 +437,8 @@ public class CtrlMainGUI extends ControllerUI
 						if (tmp_exp_module != null)
 						{
 							startTracking();
-						} else
+						}
+						else
 						{
 							final MessageBox mbox = new MessageBox(
 									ui.getShell(),
@@ -443,7 +453,8 @@ public class CtrlMainGUI extends ControllerUI
 								startTracking();
 							}
 						}
-					} else
+					}
+					else
 						Display.getDefault().asyncExec(new Runnable() {
 
 							@Override
@@ -455,7 +466,8 @@ public class CtrlMainGUI extends ControllerUI
 							}
 						});
 
-				} else
+				}
+				else
 					Display.getDefault().asyncExec(new Runnable() {
 
 						@Override
@@ -505,11 +517,23 @@ public class CtrlMainGUI extends ControllerUI
 		ctrl_about_box.show(true);
 	}
 
+	/**
+	 * Loads GUI instances for the available video filters.
+	 * 
+	 * @param filters
+	 *            ArrayList of available filters
+	 */
 	public void loadFiltersGUI(final ArrayList<String> filters)
 	{
 		ui.loadFiltersGUI(filters);
 	}
 
+	/**
+	 * Loads the GUI instances for the available modules.
+	 * 
+	 * @param modules
+	 *            ArrayList of available modules
+	 */
 	public void loadModulesGUI(final ArrayList<String> modules)
 	{
 		ui.loadModulesGUI(modules);

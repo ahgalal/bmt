@@ -166,7 +166,8 @@ public class ZonesCollection
 				res_buf.append("Rectangle" + System.getProperty("line.separator"));
 				width_diameterx = String.valueOf(tmp_rect.getWidth());
 				height_diametery = String.valueOf(tmp_rect.getHeight());
-			} else if (tmp_shp instanceof OvalShape)
+			}
+			else if (tmp_shp instanceof OvalShape)
 			{
 				tmp_oval = (OvalShape) tmp_shp;
 				// res += "Oval" + System.getProperty("line.separator");
@@ -241,7 +242,8 @@ public class ZonesCollection
 			{
 				tmp_shp = new RectangleShape(x, y, w, h, c);
 				tmp_shp.setShapeNumber(zone_number);
-			} else if (shape_type.equals("Oval"))
+			}
+			else if (shape_type.equals("Oval"))
 			{
 				tmp_shp = new OvalShape(w, h, x, y, c);
 				tmp_shp.setShapeNumber(zone_number);

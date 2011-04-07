@@ -6,9 +6,20 @@ import org.eclipse.swt.widgets.MenuItem;
 
 import utils.PManager;
 
+/**
+ * GUI class for the ZonesModule.
+ * 
+ * @author Creative
+ */
 public class ZonesModuleGUI
 {
-	public ZonesModuleGUI(Menu mnu_edit)
+	/**
+	 * Initializes/shows the GUI components.
+	 * 
+	 * @param mnu_edit
+	 *            the Edit menu in MainGUI
+	 */
+	public ZonesModuleGUI(final Menu mnu_edit)
 	{
 		final MenuItem mnutm_edit_openzoneeditor = new MenuItem(mnu_edit, SWT.PUSH);
 		mnutm_edit_openzoneeditor.setText("Zone Editor ..");
@@ -24,7 +35,7 @@ public class ZonesModuleGUI
 		}
 		});
 	}
-	
+
 	/**
 	 * Handles the "Zone editor" menu item click action.
 	 */

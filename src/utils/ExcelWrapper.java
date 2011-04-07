@@ -59,13 +59,15 @@ public class ExcelWrapper
 				{
 					tmp_str = (String) data[i];
 					tmp_cell.setCellValue(tmp_str);
-				} else if (data[i] instanceof Float | data[i] instanceof Integer)
+				}
+				else if (data[i] instanceof Float | data[i] instanceof Integer)
 				{
 					tmp_float = (Float.valueOf(data[i].toString()));
 					tmp_cell.setCellValue(tmp_float);
 				}
 			}
-		} else if (sheet.getPhysicalNumberOfRows() == 0)
+		}
+		else if (sheet.getPhysicalNumberOfRows() == 0)
 			pm.status_mgr.setStatus("Excel sheet is Empty!", StatusSeverity.ERROR);
 		else
 			pm.status_mgr.setStatus("Row is not found!!", StatusSeverity.ERROR);

@@ -82,7 +82,8 @@ public class JMFGrabber implements Effect
 			final byte[] tempArray = new byte[newSize]; // re-alloc array
 			System.arraycopy(typedArray, 0, tempArray, 0, typedArray.length);
 			typedArray = tempArray;
-		} else
+		}
+		else
 		{
 			typedArray = new byte[newSize];
 		}
@@ -116,7 +117,8 @@ public class JMFGrabber implements Effect
 						ImageManipulator.byteRGB2IntRGB(da),
 						width,
 						height);
-			} else
+			}
+			else
 			{
 				fia.frame_data = ImageManipulator.flipImage(
 						curr_frame.getRGBIntArray(),

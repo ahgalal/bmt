@@ -19,14 +19,12 @@ public class RatFinder extends VideoFilter
 	 * 
 	 * @param name
 	 *            filter's name
-	 * @param configs
-	 *            filter's configurations
-	 * @param link_in
+	 * @param linkIn
 	 *            input Link for the filter
-	 * @param link_out
+	 * @param linkOut
 	 *            output Link from the filter
 	 */
-	public RatFinder(String name, Link linkIn, Link linkOut)
+	public RatFinder(final String name, final Link linkIn, final Link linkOut)
 	{
 		super(name, linkIn, linkOut);
 		rat_finder_data = new RatFinderData("Rat Finder Data");
@@ -36,12 +34,12 @@ public class RatFinder extends VideoFilter
 
 	private int tmp_max;
 	private RatFinderFilterConfigs ratfinder_configs;
-	private RatFinderData rat_finder_data;
+	private final RatFinderData rat_finder_data;
 
 	int[] hori_sum;
 	int[] vert_sum;
 
-	private Point center_point;
+	private final Point center_point;
 	private int[] local_data;
 	private Marker marker;
 
@@ -64,8 +62,6 @@ public class RatFinder extends VideoFilter
 			e.printStackTrace();
 		}
 	}
-
-
 
 	/**
 	 * Updates the center point (ie: finds the location of the moving object).
@@ -140,7 +136,7 @@ public class RatFinder extends VideoFilter
 				configs.common_configs.height);
 
 		// super's stuff:
-		
+
 		local_data = new int[configs.common_configs.width * configs.common_configs.height];
 		this.link_out.setData(local_data);
 		return super.configure(configs);

@@ -1,11 +1,12 @@
 package modules.session;
 
-import org.eclipse.swt.widgets.Shell;
-
 import modules.Cargo;
 import modules.Module;
 import modules.ModuleConfigs;
 import modules.experiment.Constants;
+
+import org.eclipse.swt.widgets.Shell;
+
 import utils.video.filters.Data;
 
 /**
@@ -156,7 +157,7 @@ public class SessionModule extends Module
 	}
 
 	@Override
-	public boolean amIReady(Shell shell)
+	public boolean amIReady(final Shell shell)
 	{
 		return true;
 	}

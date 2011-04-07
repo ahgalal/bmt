@@ -7,13 +7,14 @@ import gfx_panel.Shape;
 import java.awt.Point;
 import java.util.ArrayList;
 
-import org.eclipse.swt.widgets.Shell;
-
 import modules.Cargo;
 import modules.Module;
 import modules.ModuleConfigs;
 import modules.experiment.Constants;
 import modules.zones.Zone.ZoneType;
+
+import org.eclipse.swt.widgets.Shell;
+
 import utils.PManager;
 import utils.StatusManager.StatusSeverity;
 import utils.video.filters.Data;
@@ -131,7 +132,8 @@ public class ZonesModule extends Module
 										* zones_configs.width] = (byte) tmp_zone_number;
 						}
 				}
-			} else if (tmp_shp instanceof OvalShape)
+			}
+			else if (tmp_shp instanceof OvalShape)
 			{
 				tmp_oval = (OvalShape) tmp_shp;
 				final int rx = tmp_oval.getWidth() / 2, ry = tmp_oval.getHeight() / 2, x_ov = tmp_oval.getX()
@@ -228,17 +230,18 @@ public class ZonesModule extends Module
 	{
 		if (zones.getNumberOfZones() != -1)
 		{
-			if (current_zone_num != -1 & zones.getZoneByNumber(current_zone_num) != null)
+			if (current_zone_num != -1 && zones.getZoneByNumber(current_zone_num) != null)
 				if (zones.getZoneByNumber(current_zone_num).getZoneType() == ZoneType.CENTRAL_ZONE
-						& central_flag == false)
+						& !central_flag)
 				{
 					central_start_tmp = System.currentTimeMillis();
 					central_flag = true;
-				} else if (zones.getZoneByNumber(current_zone_num).getZoneType() == ZoneType.CENTRAL_ZONE
-						&& central_flag == true)
+				}
+				else if (zones.getZoneByNumber(current_zone_num).getZoneType() == ZoneType.CENTRAL_ZONE
+						&& central_flag)
 					central_zone_time_tmp = ((System.currentTimeMillis() - central_start_tmp) / 1000);
 				else if (zones.getZoneByNumber(current_zone_num).getZoneType() != ZoneType.CENTRAL_ZONE
-						&& central_flag == true)
+						&& central_flag)
 				{
 					central_zone_time += central_zone_time_tmp;
 					central_flag = false;
@@ -561,9 +564,9 @@ public class ZonesModule extends Module
 	}
 
 	@Override
-	public boolean amIReady(Shell shell)
+	public boolean amIReady(final Shell shell)
 	{
-		if(PManager.getDefault()!=null)
+		if (PManager.getDefault() != null)
 			return true;
 		return false;
 	}

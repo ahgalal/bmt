@@ -170,7 +170,8 @@ public class ExperimentModule extends Module
 		{
 			final Group gp = new Group(grp_id, name, notes);
 			exp.addGroup(gp);
-		} else
+		}
+		else
 		// group is already existing ... edit it..
 		{
 			tmp_grp.setName(name);
@@ -197,6 +198,8 @@ public class ExperimentModule extends Module
 
 	/**
 	 * Saves the rat's info to the experiment object.
+	 * 
+	 * @return true: success
 	 */
 	public boolean saveRatInfo()
 	{
@@ -318,7 +321,8 @@ public class ExperimentModule extends Module
 				return 0;
 			}
 			return 1;
-		} else
+		}
+		else
 			return -1;
 	}
 
@@ -339,7 +343,8 @@ public class ExperimentModule extends Module
 			curr_rat_number = rat_num;
 			curr_grp_name = grp_name;
 			return 0;
-		} else
+		}
+		else
 			return -1;
 	}
 
@@ -374,6 +379,11 @@ public class ExperimentModule extends Module
 
 	}
 
+	/**
+	 * Gets the number of Experiment's parameters.
+	 * 
+	 * @return integer representing the number of experiment's parameters
+	 */
 	public int getNumberOfExpParams()
 	{
 		return exp.getExpParametersList().length;
@@ -418,14 +428,16 @@ public class ExperimentModule extends Module
 							msgbox_pending = false;
 					}
 				});
-			} else
+			}
+			else
 			{
 				PManager.getDefault().frm_rat.show(true);
 				rat_frm_is_shown = true;
 				msgbox_pending = false;
 			}
 
-		} else
+		}
+		else
 		{
 			Display.getDefault().asyncExec(new Runnable() {
 				@Override
@@ -459,6 +471,11 @@ public class ExperimentModule extends Module
 		return waitForRatFrm();
 	}
 
+	/**
+	 * Waits till user takes action in the RatInfoForm.
+	 * 
+	 * @return true: a valid rat is entered, false: cancel is pressed
+	 */
 	private boolean waitForRatFrm()
 	{
 		while (rat_frm_is_shown

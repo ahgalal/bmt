@@ -128,6 +128,14 @@ public abstract class Module
 		this.name = name;
 		configs = config;
 	}
-	
+
+	/**
+	 * Checks if the module is ready to run/process data.
+	 * 
+	 * @param shell
+	 *            parent shell, used to display messageboxes on the screen
+	 * @return true: ready, false: not ready(something is missing or
+	 *         misconfiguration)
+	 */
 	public abstract boolean amIReady(Shell shell);
 }

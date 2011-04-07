@@ -2,7 +2,6 @@ package modules.experiment;
 
 import java.util.ArrayList;
 
-
 /**
  * Handles all the experiments info.
  * 
