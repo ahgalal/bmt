@@ -4,6 +4,7 @@ import java.awt.Point;
 import java.util.ArrayList;
 
 import modules.ModulesManager;
+import modules.zones.ShapeController;
 import utils.PManager;
 import utils.StatusManager.StatusSeverity;
 import utils.video.FrameIntArray;
@@ -20,7 +21,6 @@ import utils.video.filters.source.SourceFilter;
 import utils.video.filters.source.SourceFilterConfigs;
 import utils.video.filters.subtractionfilter.SubtractionConfigs;
 import utils.video.filters.subtractionfilter.SubtractorFilter;
-import control.ShapeController;
 
 /**
  * Manager of all filters, to enable, disable filters.

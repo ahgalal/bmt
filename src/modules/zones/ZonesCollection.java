@@ -19,7 +19,6 @@ import modules.zones.Zone.ZoneType;
 import org.eclipse.swt.graphics.RGB;
 
 import utils.PManager;
-import control.ShapeController;
 
 /**
  * Collection of zones, with the facilities to add, remove and get zones in an

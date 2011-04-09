@@ -3,6 +3,7 @@ package control.ui;
 import java.awt.Point;
 
 import modules.ModulesManager;
+import modules.zones.ShapeController;
 import modules.zones.ZonesModule;
 
 import org.eclipse.swt.SWT;
@@ -11,7 +12,6 @@ import org.eclipse.swt.widgets.Shell;
 
 import ui.DrawZones;
 import utils.PManager;
-import control.ShapeController;
 
 /**
  * Controller of the DrawZones GUI window.

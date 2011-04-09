@@ -3,12 +3,12 @@ package utils;
 import gfx_panel.GfxPanel;
 import modules.ModulesManager;
 import modules.experiment.ExcelEngine;
+import modules.zones.ShapeController;
 
 import org.eclipse.swt.widgets.Display;
 
 import utils.video.VideoManager;
 import utils.video.filters.CommonFilterConfigs;
-import control.ShapeController;
 import control.ui.CtrlAbout;
 import control.ui.CtrlCamOptions;
 import control.ui.CtrlDrawZones;

@@ -2,11 +2,12 @@ package utils.video.filters.screendrawer;
 
 import java.awt.Graphics;
 
+import modules.zones.ShapeCollection;
+
 import utils.PManager;
 import utils.StatusManager.StatusSeverity;
 import utils.video.filters.CommonFilterConfigs;
 import utils.video.filters.FilterConfigs;
-import control.ShapeCollection;
 
 /**
  * Configurations for the ScreenDrawer filter.

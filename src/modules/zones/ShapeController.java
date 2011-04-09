@@ -1,4 +1,4 @@
-package control;
+package modules.zones;
 
 import gfx_panel.GfxPanel;
 import gfx_panel.GfxPanelNotifiee;
@@ -9,7 +9,6 @@ import java.awt.Point;
 import java.util.ArrayList;
 
 import modules.ModulesManager;
-import modules.zones.ZonesModule;
 
 import org.eclipse.swt.widgets.Display;
 

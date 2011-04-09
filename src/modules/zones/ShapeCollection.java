@@ -1,4 +1,4 @@
-package control;
+package modules.zones;
 
 import java.awt.Graphics;
 

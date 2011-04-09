@@ -19,7 +19,6 @@ import utils.PManager;
 import utils.StatusManager.StatusSeverity;
 import utils.video.filters.Data;
 import utils.video.filters.RatFinder.RatFinderData;
-import control.ShapeController;
 
 /**
  * Manages zones counters (entrance counters, central time, etc..).
