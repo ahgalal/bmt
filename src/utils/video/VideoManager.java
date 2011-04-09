@@ -18,7 +18,7 @@ import utils.video.input.VidInputter;
  * 
  * @author Creative
  */
-public class VideoProcessor
+public class VideoManager
 {
 	private int[] bg_image_rgb;
 	private boolean bg_is_set;
@@ -44,7 +44,7 @@ public class VideoProcessor
 	/**
 	 * Initialization.
 	 */
-	public VideoProcessor()
+	public VideoManager()
 	{
 		common_configs = new CommonFilterConfigs(
 				640,

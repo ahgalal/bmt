@@ -6,7 +6,7 @@ import modules.experiment.ExcelEngine;
 
 import org.eclipse.swt.widgets.Display;
 
-import utils.video.VideoProcessor;
+import utils.video.VideoManager;
 import utils.video.filters.CommonFilterConfigs;
 import control.ShapeController;
 import control.ui.CtrlAbout;
@@ -92,7 +92,7 @@ public class PManager
 	 * MainGUI.
 	 */
 	public StatusManager status_mgr;
-	private final VideoProcessor vp;
+	private final VideoManager vp;
 	/**
 	 * About Dialog box instance, displays credits of this software.
 	 */
@@ -147,7 +147,7 @@ public class PManager
 		main_gui = new CtrlMainGUI();
 		main_gui.show(true);
 
-		vp = new VideoProcessor();
+		vp = new VideoManager();
 	}
 
 	/**
@@ -155,7 +155,7 @@ public class PManager
 	 * 
 	 * @return VideoProcessor instance
 	 */
-	public VideoProcessor getVideoProcessor()
+	public VideoManager getVideoProcessor()
 	{
 		return vp;
 	}
