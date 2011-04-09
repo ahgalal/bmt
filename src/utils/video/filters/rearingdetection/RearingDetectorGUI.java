@@ -76,8 +76,8 @@ public class RearingDetectorGUI
 	}
 
 	/**
-	 * Notifies the VideoProcessor that the rat is (rearing/not rearing) in
-	 * reality, so that the VideoProcessor can start learning the rat's size
+	 * Notifies the VideoManager that the rat is (rearing/not rearing) in
+	 * reality, so that the VideoManager can start learning the rat's size
 	 * when (rearing/not rearing).
 	 * 
 	 * @param rearing
@@ -87,7 +87,7 @@ public class RearingDetectorGUI
 	{
 		if (PManager.getDefault().state == ProgramState.TRACKING)
 			((RearingDetector) PManager.getDefault()
-					.getVideoProcessor()
+					.getVideoManager()
 					.getFilterManager()
 					.getFilterByName(
 							"RearingDetector")).rearingNow(rearing);

@@ -46,12 +46,12 @@ public class CtrlOptionsWindow extends ControllerUI
 	}
 
 	/**
-	 * Updates StatsController and VideoProcessor with the new values entered by
+	 * Updates StatsController and VideoManager with the new values entered by
 	 * the user. note1: changing the scale of Subtraction Threshold is updated
 	 * immediately, but other options (rearing & hyst.) are updated when OK is
 	 * pressed. note2: to achieve "note1", the GUI sends '-1' as a value for
 	 * (rearing & hyst.) so that their receivers (StatsController &
-	 * VideoProcessor) ignore this update, and the values of(rearing & hyst.)
+	 * VideoManager) ignore this update, and the values of(rearing & hyst.)
 	 * are kept unchanged.
 	 * 
 	 * @param show_window
@@ -77,7 +77,7 @@ public class CtrlOptionsWindow extends ControllerUI
 			filters_configs[0] = subtraction_configs;
 			filters_configs[1] = rearing_configs;
 
-			pm.getVideoProcessor().updateFiltersConfigs(filters_configs);
+			pm.getVideoManager().updateFiltersConfigs(filters_configs);
 			final ZonesModuleConfigs zones_configs = new ZonesModuleConfigs(
 					"Zones Module",
 					hyst, -1, -1);
@@ -85,7 +85,7 @@ public class CtrlOptionsWindow extends ControllerUI
 			ModulesManager.getDefault().updateModuleConfigs(
 					new ModuleConfigs[] { zones_configs });
 
-			pm.getVideoProcessor().getFilterManager().enableFilter(
+			pm.getVideoManager().getFilterManager().enableFilter(
 					RearingDetector.class,
 					enable_auto_rearing);
 			show(show_window);

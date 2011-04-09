@@ -82,7 +82,7 @@ public class JMyronModule implements VidInputter
 	{
 		/**
 		 *Empty ... JMyron encapsulates the video format .. and returns an RGB
-		 * integer array to the VideoProcessor .. just like OpenCV!
+		 * integer array to the VideoManager .. just like OpenCV!
 		 */
 	}
 

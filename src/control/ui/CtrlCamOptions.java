@@ -55,11 +55,11 @@ public class CtrlCamOptions extends ControllerUI
 	}
 
 	/**
-	 * Unloads VideoProcessor and then Initializes it.
+	 * Unloads VideoManager and then Initializes it.
 	 */
 	public void unloadAndLoadLibProcedures()
 	{
-		pm.unloadVideoProcessor();
+		pm.unloadVideoManager();
 		final CommonFilterConfigs common_configs = new CommonFilterConfigs(
 				width,
 				height,
@@ -67,7 +67,7 @@ public class CtrlCamOptions extends ControllerUI
 				cam_num,
 				library,
 				format);
-		pm.initializeVideoProcessor(common_configs);
+		pm.initializeVideoManager(common_configs);
 		PManager.main_gui.configureScreenDrawerFilter("ScreenDrawer", null, true);
 		ModulesManager.getDefault().updateModuleConfigs(
 				new ModuleConfigs[] { new ZonesModuleConfigs(
@@ -86,7 +86,7 @@ public class CtrlCamOptions extends ControllerUI
 	public void btnJmyronSettingsAction()
 	{
 		unloadAndLoadLibProcedures();
-		pm.getVideoProcessor().displayMoreSettings();
+		pm.getVideoManager().displayMoreSettings();
 	}
 
 	@Override

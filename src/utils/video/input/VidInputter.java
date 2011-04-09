@@ -3,7 +3,7 @@ package utils.video.input;
 import utils.video.FrameIntArray;
 
 /**
- * Interface for Video libraries to communicate with the VideoProcessor.
+ * Interface for Video libraries to communicate with the VideoManager.
  * 
  * @author Creative
  */

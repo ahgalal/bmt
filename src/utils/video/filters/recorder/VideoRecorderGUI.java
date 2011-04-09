@@ -43,7 +43,7 @@ public class VideoRecorderGUI
 			public void widgetSelected(final org.eclipse.swt.events.SelectionEvent e)
 			{
 				PManager.getDefault()
-						.getVideoProcessor()
+						.getVideoManager()
 						.getFilterManager()
 						.enableFilter("Recorder", true);
 			}
@@ -93,13 +93,13 @@ public class VideoRecorderGUI
 	public void stopRecordAction()
 	{
 		PManager.getDefault()
-				.getVideoProcessor()
+				.getVideoManager()
 				.getFilterManager()
 				.enableFilter("Recorder", false);
 		final FileDialog fileDialog = new FileDialog(shell, SWT.SAVE);
 		final String file_name = fileDialog.open();
 		((VideoRecorder) PManager.getDefault()
-				.getVideoProcessor()
+				.getVideoManager()
 				.getFilterManager()
 				.getFilterByName(
 						"Recorder")).saveVideoFile(file_name);

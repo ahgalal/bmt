@@ -79,7 +79,7 @@ public class CtrlMainGUI extends ControllerUI
 
 	/**
 	 * Starts Tracking: starts StartsController session , the thread
-	 * "runnableUpdateGUI" and the VideoProcessor Processing session.
+	 * "runnableUpdateGUI" and the VideoManager Processing session.
 	 */
 	public void startTracking()
 	{
@@ -92,7 +92,7 @@ public class CtrlMainGUI extends ControllerUI
 				th_update_gui = new Thread(new RunnableUpdateGUI());
 			th_update_gui.start();
 
-			pm.getVideoProcessor().startProcessing();
+			pm.getVideoManager().startProcessing();
 			ModulesManager.getDefault().runModules(true);
 		}
 		else
@@ -264,15 +264,15 @@ public class CtrlMainGUI extends ControllerUI
 	}
 
 	/**
-	 * Sets the background of DrawZones window and the VideoProcessor to the
+	 * Sets the background of DrawZones window and the VideoManager to the
 	 * current cam. image at that instant.
 	 */
 	public void btnSetbgAction()
 	{
 		if (pm.state == ProgramState.STREAMING)
 		{
-			pm.drw_zns.setBackground(pm.getVideoProcessor().updateRGBBackground());
-			((SubtractorFilter) pm.getVideoProcessor()
+			pm.drw_zns.setBackground(pm.getVideoManager().updateRGBBackground());
+			((SubtractorFilter) pm.getVideoManager()
 					.getFilterManager()
 					.getFilterByName("SubtractionFilter")).updateBG();
 		}
@@ -287,7 +287,7 @@ public class CtrlMainGUI extends ControllerUI
 	}
 
 	/**
-	 * Starts the Streaming process, by initializing the VideoProcessor.
+	 * Starts the Streaming process, by initializing the VideoManager.
 	 */
 	public void mnutmCameraStartAction()
 	{
@@ -300,7 +300,7 @@ public class CtrlMainGUI extends ControllerUI
 					0,
 					"AGCamLib",
 					null);
-			pm.initializeVideoProcessor(commonConfigs);
+			pm.initializeVideoManager(commonConfigs);
 			configureScreenDrawerFilter("ScreenDrawer", commonConfigs, true);
 			pm.status_mgr.setStatus("Camera is Starting..", StatusSeverity.WARNING);
 		}
@@ -325,7 +325,7 @@ public class CtrlMainGUI extends ControllerUI
 			final CommonFilterConfigs configs,
 			final boolean enable_sec_screen)
 	{
-		pm.getVideoProcessor().updateFiltersConfigs(
+		pm.getVideoManager().updateFiltersConfigs(
 				new FilterConfigs[] { new ScreenDrawerConfigs(
 						name,
 						ui.getAwtVideoMain().getGraphics(),
@@ -336,13 +336,13 @@ public class CtrlMainGUI extends ControllerUI
 	}
 
 	/**
-	 * Stops the camrea stream, by unloading the VideoProcessor.
+	 * Stops the camrea stream, by unloading the VideoManager.
 	 */
 	public void mnuitmStopCameraAction()
 	{
 		if (pm.state == ProgramState.STREAMING)
 		{
-			pm.unloadVideoProcessor();
+			pm.unloadVideoManager();
 			pm.status_mgr.setStatus("Camera is Stopped!", StatusSeverity.WARNING);
 		}
 		else if (pm.state == ProgramState.TRACKING)
@@ -374,7 +374,7 @@ public class CtrlMainGUI extends ControllerUI
 	{
 		stop_tracking = true;
 		if (pm.state != ProgramState.RECORDING)
-			pm.unloadVideoProcessor();
+			pm.unloadVideoManager();
 		ui_is_opened = false;
 		try
 		{
@@ -391,7 +391,7 @@ public class CtrlMainGUI extends ControllerUI
 	 */
 	public void btnStartRecordAction()
 	{
-		pm.getVideoProcessor().getFilterManager().enableFilter("Recorder", true);
+		pm.getVideoManager().getFilterManager().enableFilter("Recorder", true);
 	}
 
 	/**
@@ -407,7 +407,7 @@ public class CtrlMainGUI extends ControllerUI
 			if (pm.state == ProgramState.RECORDING)
 				ui.vid_rec_gui.stopRecordAction();
 
-			pm.getVideoProcessor().stopProcessing();
+			pm.getVideoManager().stopProcessing();
 			stop_tracking = true;
 			// stats_controller.endSession();
 			th_update_gui = null;
@@ -427,7 +427,7 @@ public class CtrlMainGUI extends ControllerUI
 			public void run()
 			{
 				if (pm.state == ProgramState.STREAMING
-						&& pm.getVideoProcessor().isBgSet())
+						&& pm.getVideoManager().isBgSet())
 				{
 					if (ModulesManager.getDefault().areModulesReady(ui.getShell()))
 					{

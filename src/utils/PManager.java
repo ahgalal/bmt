@@ -151,11 +151,11 @@ public class PManager
 	}
 
 	/**
-	 * Gets the VideoProcessor instance.
+	 * Gets the VideoManager instance.
 	 * 
-	 * @return VideoProcessor instance
+	 * @return VideoManager instance
 	 */
-	public VideoManager getVideoProcessor()
+	public VideoManager getVideoManager()
 	{
 		return vp;
 	}
@@ -166,7 +166,7 @@ public class PManager
 	 * @param common_configs
 	 *            CommonFilterConfigs object needed by most filters
 	 */
-	public void initializeVideoProcessor(final CommonFilterConfigs common_configs)
+	public void initializeVideoManager(final CommonFilterConfigs common_configs)
 	{
 		ModulesManager.getDefault().setWidthandHeight(
 				common_configs.width,
@@ -190,7 +190,7 @@ public class PManager
 	/**
 	 * Unloads the Video Processor, used when switching video libraries..
 	 */
-	public void unloadVideoProcessor()
+	public void unloadVideoManager()
 	{
 		if (vp != null & state != ProgramState.IDLE)
 			vp.unloadLibrary();

@@ -101,7 +101,7 @@ public class AGCamLibModule implements VidInputter
 	{
 		/**
 		 * Empty ... AGCamLib encapsulates the video format .. and returns an
-		 * RGB integer array to the VideoProcessor .. just like OpenCV!
+		 * RGB integer array to the VideoManager .. just like OpenCV!
 		 */
 	}
 
