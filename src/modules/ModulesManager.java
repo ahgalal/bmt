@@ -25,10 +25,12 @@ import utils.video.filters.Data;
 public class ModulesManager
 {
 	private static ModulesManager me;
-	private final ArrayList<Data> data_objects;
+	private final ArrayList<Data> filters_data;
 	private final ArrayList<Module> modules;
 	private Cargo[] gui_cargos;
 	private Cargo[] file_cargos;
+
+	private final ArrayList<Data> modules_data;
 
 	private boolean run_modules;
 	private RunnableModulesThread runnable_modules;
@@ -91,7 +93,8 @@ public class ModulesManager
 	public ModulesManager()
 	{
 		me = this;
-		data_objects = new ArrayList<Data>();
+		filters_data = new ArrayList<Data>();
+		modules_data = new ArrayList<Data>();
 		modules = new ArrayList<Module>();
 
 		// ////////////////////////////////
@@ -131,6 +134,13 @@ public class ModulesManager
 		modules.add(rearing_module);
 		modules.add(zones_module);
 		modules.add(session_module);
+
+		for (final Module mo : modules)
+			modules_data.add(mo.getModuleData());
+
+		for (final Module mo : modules)
+			for (final Data data : modules_data)
+				mo.registerModuleDataObject(data);
 	}
 
 	/**
@@ -138,7 +148,7 @@ public class ModulesManager
 	 */
 	public void initialize()
 	{
-		data_objects.clear();
+		filters_data.clear();
 		for (final Module mo : modules)
 			mo.initialize();
 
@@ -154,11 +164,11 @@ public class ModulesManager
 	 * @param data
 	 *            incoming data object from a video filter
 	 */
-	public void addDataObject(final Data data)
+	public void addFilterDataObject(final Data data)
 	{
-		data_objects.add(data);
+		filters_data.add(data);
 		for (final Module module : modules)
-			module.registerDataObject(data);
+			module.registerFilterDataObject(data);
 	}
 
 	/**
@@ -170,7 +180,7 @@ public class ModulesManager
 	 */
 	public void removeDataObject(final Data data)
 	{
-		data_objects.remove(data);
+		filters_data.remove(data);
 		for (final Module mo : modules)
 			mo.deRegisterDataObject(data);
 	}

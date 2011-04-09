@@ -30,18 +30,13 @@ public class ZonesModule extends Module
 {
 	private final ShapeController shape_controller;
 	private byte[] zone_map;
-	private final ZonesCollection zones;
-	private int current_zone_num;
 	private long central_start_tmp;
-	private boolean central_flag;
 	private int updated_zone_number;
-	private int all_entrance, central_entrance;
 	private long central_zone_time_tmp;
-	private int central_zone_time;
 	private Point current_position;
 	private final Point old_position;
-	private long total_distance;
-	private float scale;
+	private final ZonesModuleData zones_module_data;
+
 	private final ArrayList<Point> arr_path; // This array will hold the
 	// positions of
 	// the object through the whole
@@ -62,13 +57,15 @@ public class ZonesModule extends Module
 	public ZonesModule(final String name, final ZonesModuleConfigs configs)
 	{
 		super(name, configs);
+		zones_module_data = new ZonesModuleData("Zones Module Data");
+		this.data = zones_module_data;
 		old_position = new Point();
 		zones_configs = configs;
 
-		data = new Data[1];
-		scale = 10;
+		filters_data = new Data[1];
+		zones_module_data.scale = 10;
 		arr_path = new ArrayList<Point>();
-		zones = new ZonesCollection();
+		zones_module_data.zones = new ZonesCollection();
 		shape_controller = ShapeController.getDefault();
 		initialize();
 	}
@@ -112,9 +109,10 @@ public class ZonesModule extends Module
 		int tmp_zone_number;
 		zone_map = new byte[zones_configs.width * zones_configs.height];
 		initializeZoneMap(-1);
-		for (int i = 0; i < zones.getNumberOfZones(); i++)
+		for (int i = 0; i < zones_module_data.zones.getNumberOfZones(); i++)
 		{
-			tmp_zone_number = zones.getZoneByNumber(i).getZoneNumber();
+			tmp_zone_number = zones_module_data.zones.getZoneByNumber(i)
+					.getZoneNumber();
 			final Shape tmp_shp = shape_controller.getShapeByNumber(tmp_zone_number);
 
 			if (tmp_shp instanceof RectangleShape)
@@ -176,7 +174,8 @@ public class ZonesModule extends Module
 	 */
 	private void zoneHysteresis()
 	{
-		if (current_zone_num != updated_zone_number & updated_zone_number != -1)
+		if (zones_module_data.current_zone_num != updated_zone_number
+				& updated_zone_number != -1)
 		{
 			int zone_up_left = 0, zone_up_right = 0, zone_down_left = 0, zone_down_right = 0;
 			try
@@ -200,10 +199,14 @@ public class ZonesModule extends Module
 						this,
 						StatusSeverity.ERROR);
 			}
-			if (zone_up_left != current_zone_num
-					& zone_up_right != current_zone_num
-					& zone_down_left != current_zone_num
-					& zone_down_right != current_zone_num) // we are in a new
+			if (zone_up_left != zones_module_data.current_zone_num
+					& zone_up_right != zones_module_data.current_zone_num
+					& zone_down_left != zones_module_data.current_zone_num
+					& zone_down_right != zones_module_data.current_zone_num) // we
+			// are
+			// in
+			// a
+			// new
 			// zone :)
 			{
 				updateZoneCounters();
@@ -216,11 +219,12 @@ public class ZonesModule extends Module
 	 */
 	private void updateZoneCounters()
 	{
-		current_zone_num = updated_zone_number;
-		all_entrance++;
-		if (zones.getZoneByNumber(current_zone_num) != null)
-			if (zones.getZoneByNumber(current_zone_num).getZoneType() == ZoneType.CENTRAL_ZONE)
-				central_entrance++;
+		zones_module_data.current_zone_num = updated_zone_number;
+		zones_module_data.all_entrance++;
+		if (zones_module_data.zones.getZoneByNumber(zones_module_data.current_zone_num) != null)
+			if (zones_module_data.zones.getZoneByNumber(
+					zones_module_data.current_zone_num).getZoneType() == ZoneType.CENTRAL_ZONE)
+				zones_module_data.central_entrance++;
 	}
 
 	/**
@@ -228,23 +232,27 @@ public class ZonesModule extends Module
 	 */
 	private void updateCentralZoneTime()
 	{
-		if (zones.getNumberOfZones() != -1)
+		if (zones_module_data.zones.getNumberOfZones() != -1)
 		{
-			if (current_zone_num != -1 && zones.getZoneByNumber(current_zone_num) != null)
-				if (zones.getZoneByNumber(current_zone_num).getZoneType() == ZoneType.CENTRAL_ZONE
-						& !central_flag)
+			if (zones_module_data.current_zone_num != -1
+					&& zones_module_data.zones.getZoneByNumber(zones_module_data.current_zone_num) != null)
+				if (zones_module_data.zones.getZoneByNumber(
+						zones_module_data.current_zone_num).getZoneType() == ZoneType.CENTRAL_ZONE
+						& !zones_module_data.central_flag)
 				{
 					central_start_tmp = System.currentTimeMillis();
-					central_flag = true;
+					zones_module_data.central_flag = true;
 				}
-				else if (zones.getZoneByNumber(current_zone_num).getZoneType() == ZoneType.CENTRAL_ZONE
-						&& central_flag)
+				else if (zones_module_data.zones.getZoneByNumber(
+						zones_module_data.current_zone_num).getZoneType() == ZoneType.CENTRAL_ZONE
+						&& zones_module_data.central_flag)
 					central_zone_time_tmp = ((System.currentTimeMillis() - central_start_tmp) / 1000);
-				else if (zones.getZoneByNumber(current_zone_num).getZoneType() != ZoneType.CENTRAL_ZONE
-						&& central_flag)
+				else if (zones_module_data.zones.getZoneByNumber(
+						zones_module_data.current_zone_num).getZoneType() != ZoneType.CENTRAL_ZONE
+						&& zones_module_data.central_flag)
 				{
-					central_zone_time += central_zone_time_tmp;
-					central_flag = false;
+					zones_module_data.central_zone_time += central_zone_time_tmp;
+					zones_module_data.central_flag = false;
 				}
 		}
 	}
@@ -258,7 +266,7 @@ public class ZonesModule extends Module
 	 */
 	public void updateZoneDataInGUI(final int zonenumber)
 	{
-		final Zone z = zones.getZoneByNumber(zonenumber);
+		final Zone z = zones_module_data.zones.getZoneByNumber(zonenumber);
 		PManager.getDefault().drw_zns.editZoneDataInTable(
 				zonenumber,
 				Shape.color2String(shape_controller.getShapeByNumber(zonenumber)
@@ -272,7 +280,7 @@ public class ZonesModule extends Module
 	public void addAllZonesToGUI()
 	{
 		int zonenumber;
-		for (final Zone z : zones.getAllZones())
+		for (final Zone z : zones_module_data.zones.getAllZones())
 		{
 			if (z != null)
 			{
@@ -296,7 +304,7 @@ public class ZonesModule extends Module
 	 */
 	public void addZone(final int zone_number, final ZoneType type)
 	{
-		zones.addZone(zone_number, type);
+		zones_module_data.zones.addZone(zone_number, type);
 		updateZoneMap();
 	}
 
@@ -319,7 +327,7 @@ public class ZonesModule extends Module
 	 */
 	public int getAllEntrance()
 	{
-		return all_entrance;
+		return zones_module_data.all_entrance;
 	}
 
 	/**
@@ -329,7 +337,7 @@ public class ZonesModule extends Module
 	 */
 	public int getCentralEntrance()
 	{
-		return central_entrance;
+		return zones_module_data.central_entrance;
 	}
 
 	/**
@@ -339,17 +347,17 @@ public class ZonesModule extends Module
 	 */
 	public int getCurrentZoneNumber()
 	{
-		return current_zone_num;
+		return zones_module_data.current_zone_num;
 	}
 
 	/**
-	 * Gets totoal time spent in the central zones.
+	 * Gets totoal time spent in the central zones_module_data.zones.
 	 * 
 	 * @return total time spent in the central zones
 	 */
 	public float getCentralTime()
 	{
-		return central_zone_time;
+		return zones_module_data.central_zone_time;
 	}
 
 	/**
@@ -371,15 +379,15 @@ public class ZonesModule extends Module
 	@Override
 	public void initialize()
 	{
-		current_zone_num = -1;
+		zones_module_data.current_zone_num = -1;
 		central_start_tmp = 0;
-		central_flag = false;
-		central_zone_time = 0;
+		zones_module_data.central_flag = false;
+		zones_module_data.central_zone_time = 0;
 		updated_zone_number = -1;
-		all_entrance = 0;
-		central_entrance = 0;
+		zones_module_data.all_entrance = 0;
+		zones_module_data.central_entrance = 0;
 		central_zone_time_tmp = 0;
-		total_distance = 0;
+		zones_module_data.total_distance = 0;
 
 		arr_path.clear();
 
@@ -420,17 +428,19 @@ public class ZonesModule extends Module
 	{
 		gui_cargo.setDataByTag(
 				Constants.GUI_CURRENT_ZONE,
-				Integer.toString(current_zone_num));
-		gui_cargo.setDataByTag(Constants.GUI_ALL_ENTRANCE, Integer.toString(all_entrance));
+				Integer.toString(zones_module_data.current_zone_num));
+		gui_cargo.setDataByTag(
+				Constants.GUI_ALL_ENTRANCE,
+				Integer.toString(zones_module_data.all_entrance));
 		gui_cargo.setDataByTag(
 				Constants.GUI_CENTRAL_ENTRANCE,
-				Integer.toString(central_entrance));
+				Integer.toString(zones_module_data.central_entrance));
 		gui_cargo.setDataByTag(
 				Constants.GUI_CENTRAL_TIME,
-				Integer.toString(central_zone_time));
+				Integer.toString(zones_module_data.central_zone_time));
 		gui_cargo.setDataByTag(
 				Constants.GUI_TOTAL_DISTANCE,
-				Long.toString(total_distance));
+				Long.toString(zones_module_data.total_distance));
 	}
 
 	@Override
@@ -438,16 +448,16 @@ public class ZonesModule extends Module
 	{
 		file_cargo.setDataByTag(
 				Constants.FILE_ALL_ENTRANCE,
-				Integer.toString(all_entrance));
+				Integer.toString(zones_module_data.all_entrance));
 		file_cargo.setDataByTag(
 				Constants.FILE_CENTRAL_ENTRANCE,
-				Integer.toString(central_entrance));
+				Integer.toString(zones_module_data.central_entrance));
 		file_cargo.setDataByTag(
 				Constants.FILE_CENTRAL_TIME,
-				Integer.toString(central_zone_time));
+				Integer.toString(zones_module_data.central_zone_time));
 		file_cargo.setDataByTag(
 				Constants.FILE_TOTAL_DISTANCE,
-				Long.toString(total_distance));
+				Long.toString(zones_module_data.total_distance));
 	}
 
 	@Override
@@ -458,12 +468,12 @@ public class ZonesModule extends Module
 	}
 
 	@Override
-	public void registerDataObject(final Data data)
+	public void registerFilterDataObject(final Data data)
 	{
 		if (data instanceof RatFinderData)
 		{
 			rat_finder_data = (RatFinderData) data;
-			this.data[0] = rat_finder_data;
+			this.filters_data[0] = rat_finder_data;
 			current_position = rat_finder_data.getCenterPoint();
 		}
 	}
@@ -481,7 +491,7 @@ public class ZonesModule extends Module
 	 */
 	public long getTotalDistance()
 	{
-		return total_distance;
+		return zones_module_data.total_distance;
 	}
 
 	/**
@@ -491,7 +501,8 @@ public class ZonesModule extends Module
 	private void updateTotalDistance()
 	{
 		if (old_position != null)
-			total_distance += current_position.distance(old_position) / scale;
+			zones_module_data.total_distance += current_position.distance(old_position)
+					/ zones_module_data.scale;
 	}
 
 	/**
@@ -513,7 +524,7 @@ public class ZonesModule extends Module
 		// on the field)
 
 		final double cmResult = screen_distance / real_distance;
-		scale = (float) cmResult;
+		zones_module_data.scale = (float) cmResult;
 	}
 
 	@Override
@@ -522,7 +533,7 @@ public class ZonesModule extends Module
 		if (rat_finder_data == data)
 		{
 			rat_finder_data = null;
-			this.data[0] = null;
+			this.filters_data[0] = null;
 			current_position = null;
 		}
 	}
@@ -535,7 +546,7 @@ public class ZonesModule extends Module
 	 */
 	public void deleteZone(final int zoneNumber)
 	{
-		zones.deleteZone(zoneNumber);
+		zones_module_data.zones.deleteZone(zoneNumber);
 		updateZoneMap();
 		PManager.getDefault().drw_zns.clearTable();
 		addAllZonesToGUI();
@@ -549,7 +560,7 @@ public class ZonesModule extends Module
 	 */
 	public void loadZonesFromFile(final String fileName)
 	{
-		zones.loadZonesFromFile(fileName);
+		zones_module_data.zones.loadZonesFromFile(fileName);
 	}
 
 	/**
@@ -560,7 +571,7 @@ public class ZonesModule extends Module
 	 */
 	public void saveZonesToFile(final String fileName)
 	{
-		zones.saveZonesToFile(fileName);
+		zones_module_data.zones.saveZonesToFile(fileName);
 	}
 
 	@Override
@@ -569,6 +580,12 @@ public class ZonesModule extends Module
 		if (PManager.getDefault() != null)
 			return true;
 		return false;
+	}
+
+	@Override
+	public void registerModuleDataObject(final Data data)
+	{
+		// TODO Auto-generated method stub
 	}
 
 }

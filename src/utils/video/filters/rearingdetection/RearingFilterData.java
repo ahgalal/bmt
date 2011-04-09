@@ -7,7 +7,7 @@ import utils.video.filters.FilterData;
  * 
  * @author Creative
  */
-public class RearingData extends FilterData
+public class RearingFilterData extends FilterData
 {
 	/**
 	 * Initialized data.
@@ -15,7 +15,7 @@ public class RearingData extends FilterData
 	 * @param name
 	 *            name of the data object
 	 */
-	public RearingData(final String name)
+	public RearingFilterData(final String name)
 	{
 		super(name);
 	}

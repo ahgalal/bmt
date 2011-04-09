@@ -22,10 +22,7 @@ import utils.video.filters.Data;
 public class ExperimentModule extends Module
 {
 
-	private int curr_rat_number;
-	private String curr_grp_name;
-	private final Experiment exp;
-	private String exp_file_name;
+	private final ExperimentModuleData exp_module_data;
 
 	private final TextEngine text_engine;
 	private final ExcelEngine excel_engine;
@@ -42,7 +39,9 @@ public class ExperimentModule extends Module
 	public ExperimentModule(final String name, final ModuleConfigs config)
 	{
 		super(name, config);
-		exp = new Experiment();
+		exp_module_data = new ExperimentModuleData("Experiment Module Data");
+		this.data = exp_module_data;
+		exp_module_data.exp = new Experiment();
 		text_engine = new TextEngine();
 		excel_engine = new ExcelEngine();
 
@@ -65,11 +64,11 @@ public class ExperimentModule extends Module
 	@Override
 	public void updateGUICargoData()
 	{
-		gui_cargo.setDataByTag(Constants.GUI_EXP_NAME, exp.getName());
-		gui_cargo.setDataByTag(Constants.GUI_GROUP_NAME, curr_grp_name);
+		gui_cargo.setDataByTag(Constants.GUI_EXP_NAME, exp_module_data.exp.getName());
+		gui_cargo.setDataByTag(Constants.GUI_GROUP_NAME, exp_module_data.curr_grp_name);
 		gui_cargo.setDataByTag(
 				Constants.GUI_RAT_NUMBER,
-				Integer.toString(curr_rat_number));
+				Integer.toString(exp_module_data.curr_rat_number));
 	}
 
 	@Override
@@ -77,8 +76,8 @@ public class ExperimentModule extends Module
 	{
 		file_cargo.setDataByTag(
 				Constants.FILE_RAT_NUMBER,
-				Integer.toString(curr_rat_number));
-		file_cargo.setDataByTag(Constants.FILE_GROUP_NAME, curr_grp_name);
+				Integer.toString(exp_module_data.curr_rat_number));
+		file_cargo.setDataByTag(Constants.FILE_GROUP_NAME, exp_module_data.curr_grp_name);
 
 	}
 
@@ -90,7 +89,7 @@ public class ExperimentModule extends Module
 	}
 
 	@Override
-	public void registerDataObject(final Data data)
+	public void registerFilterDataObject(final Data data)
 	{
 		// TODO Auto-generated method stub
 
@@ -104,7 +103,7 @@ public class ExperimentModule extends Module
 	 */
 	public void setExpFileName(final String f_name)
 	{
-		exp_file_name = f_name;
+		exp_module_data.exp_file_name = f_name;
 	}
 
 	/**
@@ -124,7 +123,7 @@ public class ExperimentModule extends Module
 	 */
 	public boolean isThereAnyGroups()
 	{
-		return (exp.getNoGroups() != 0);
+		return (exp_module_data.exp.getNoGroups() != 0);
 	}
 
 	/**
@@ -145,7 +144,7 @@ public class ExperimentModule extends Module
 			final String date,
 			final String notes)
 	{
-		exp.setExperimentInfo(name, user, date, notes);
+		exp_module_data.exp.setExperimentInfo(name, user, date, notes);
 		exp_is_set = true;
 	}
 
@@ -165,11 +164,11 @@ public class ExperimentModule extends Module
 			final String name,
 			final String notes)
 	{
-		final Group tmp_grp = exp.getGroupByID(grp_id);
+		final Group tmp_grp = exp_module_data.exp.getGroupByID(grp_id);
 		if (tmp_grp == null)
 		{
 			final Group gp = new Group(grp_id, name, notes);
-			exp.addGroup(gp);
+			exp_module_data.exp.addGroup(gp);
 		}
 		else
 		// group is already existing ... edit it..
@@ -203,8 +202,9 @@ public class ExperimentModule extends Module
 	 */
 	public boolean saveRatInfo()
 	{
-		if (exp.getExpParametersList() == null)
-			exp.setParametersList(ModulesManager.getDefault().getCodeNames());
+		if (exp_module_data.exp.getExpParametersList() == null)
+			exp_module_data.exp.setParametersList(ModulesManager.getDefault()
+					.getCodeNames());
 		else if (getNumberOfExpParams() != ModulesManager.getDefault().getCodeNames().length)
 		{
 			PManager.getDefault().status_mgr.setStatus(
@@ -212,11 +212,12 @@ public class ExperimentModule extends Module
 					StatusSeverity.ERROR);
 			return false;
 		}
-		final String[] params_list = exp.getExpParametersList();
+		final String[] params_list = exp_module_data.exp.getExpParametersList();
 		final String[] data = ModulesManager.getDefault().getFileData();
 		final String[] code_names = ModulesManager.getDefault().getCodeNames();
 		boolean override_rat = false;
-		Rat rat_tmp = exp.getGroupByName(curr_grp_name).getRatByNumber(curr_rat_number);
+		Rat rat_tmp = exp_module_data.exp.getGroupByName(exp_module_data.curr_grp_name)
+				.getRatByNumber(exp_module_data.curr_rat_number);
 		if (rat_tmp == null)
 			rat_tmp = new Rat(params_list);
 		else
@@ -230,8 +231,9 @@ public class ExperimentModule extends Module
 		}
 
 		if (!override_rat)
-			exp.getGroupByName(curr_grp_name).addRat(rat_tmp);
-		writeToTXTFile(exp_file_name);
+			exp_module_data.exp.getGroupByName(exp_module_data.curr_grp_name).addRat(
+					rat_tmp);
+		writeToTXTFile(exp_module_data.exp_file_name);
 		return true;
 	}
 
@@ -243,7 +245,7 @@ public class ExperimentModule extends Module
 	 */
 	public void writeToTXTFile(final String FilePath)
 	{
-		text_engine.writeExpInfoToTXTFile(FilePath, exp);
+		text_engine.writeExpInfoToTXTFile(FilePath, exp_module_data.exp);
 	}
 
 	/**
@@ -254,9 +256,9 @@ public class ExperimentModule extends Module
 	 */
 	public void loadInfoFromTXTFile(final String file_name)
 	{
-		if (text_engine.readExpInfoFromTXTFile(file_name, exp))
+		if (text_engine.readExpInfoFromTXTFile(file_name, exp_module_data.exp))
 		{
-			PManager.getDefault().frm_exp.fillForm(exp);
+			PManager.getDefault().frm_exp.fillForm(exp_module_data.exp);
 			updateGroupGUIData();
 			exp_is_set = true;
 		}
@@ -267,8 +269,8 @@ public class ExperimentModule extends Module
 	 */
 	public void updateGroupGUIData()
 	{
-		final Grp2GUI[] arr_grps = new Grp2GUI[exp.getNoGroups()];
-		exp.getGroups().toArray(arr_grps);
+		final Grp2GUI[] arr_grps = new Grp2GUI[exp_module_data.exp.getNoGroups()];
+		exp_module_data.exp.getGroups().toArray(arr_grps);
 		PManager.getDefault().frm_grps.clearForm();
 		PManager.getDefault().frm_grps.loadDataToForm(arr_grps);
 	}
@@ -281,7 +283,7 @@ public class ExperimentModule extends Module
 	 */
 	public void writeToExcelFile(final String FilePath)
 	{
-		excel_engine.writeExpInfoToExcelFile(FilePath, exp);
+		excel_engine.writeExpInfoToExcelFile(FilePath, exp_module_data.exp);
 	}
 
 	/**
@@ -291,9 +293,9 @@ public class ExperimentModule extends Module
 	 */
 	public String[] getGroupsNames()
 	{
-		final String[] res = new String[exp.getGroups().size()];
+		final String[] res = new String[exp_module_data.exp.getGroups().size()];
 		int i = 0;
-		for (final Grp2GUI grp : exp.getGroups())
+		for (final Grp2GUI grp : exp_module_data.exp.getGroups())
 		{
 			res[i] = grp.getName();
 			i++;
@@ -313,7 +315,7 @@ public class ExperimentModule extends Module
 	 */
 	public int validateRatAndGroup(final int rat_num, final String grp_name)
 	{
-		final Group tmp_grp = exp.getGroupByName(grp_name);
+		final Group tmp_grp = exp_module_data.exp.getGroupByName(grp_name);
 		if (tmp_grp != null)
 		{ // Group exists
 			if (tmp_grp.getRatByNumber(rat_num) == null)
@@ -330,18 +332,18 @@ public class ExperimentModule extends Module
 	 * Sets the active group and rat number.
 	 * 
 	 * @param rat_num
-	 *            rat number to be active and save exp. info to
+	 *            rat number to be active and save exp_module_data.exp. info to
 	 * @param grp_name
 	 *            group name to be active and save the active rat to
 	 * @return 0: success, -1: group doesn't exist
 	 */
 	public int setCurrentRatAndGroup(final int rat_num, final String grp_name)
 	{
-		final Group tmp_grp = exp.getGroupByName(grp_name);
+		final Group tmp_grp = exp_module_data.exp.getGroupByName(grp_name);
 		if (tmp_grp != null)
 		{ // Group exists
-			curr_rat_number = rat_num;
-			curr_grp_name = grp_name;
+			exp_module_data.curr_rat_number = rat_num;
+			exp_module_data.curr_grp_name = grp_name;
 			return 0;
 		}
 		else
@@ -353,7 +355,7 @@ public class ExperimentModule extends Module
 	 */
 	public void unloadExperiment()
 	{
-		exp.clearExperimentData();
+		exp_module_data.exp.clearExperimentData();
 		excel_engine.reset();
 		exp_is_set = false;
 	}
@@ -386,7 +388,7 @@ public class ExperimentModule extends Module
 	 */
 	public int getNumberOfExpParams()
 	{
-		return exp.getExpParametersList().length;
+		return exp_module_data.exp.getExpParametersList().length;
 	}
 
 	private boolean rat_frm_is_shown = false;
@@ -492,6 +494,13 @@ public class ExperimentModule extends Module
 			return true;
 		else
 			return false;
+	}
+
+	@Override
+	public void registerModuleDataObject(final Data data)
+	{
+		// TODO Auto-generated method stub
+
 	}
 
 }

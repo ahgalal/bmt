@@ -25,7 +25,7 @@ public class RearingDetector extends VideoFilter
 	{
 		super(name, linkIn, linkOut);
 		rearing_configs = (RearingFilterConfigs) configs;
-		rearing_data = new RearingData("Rearing Data");
+		rearing_data = new RearingFilterData("Rearing Data");
 
 		// super's stuff:
 		filter_data = rearing_data;
@@ -42,7 +42,7 @@ public class RearingDetector extends VideoFilter
 		return super.configure(configs);
 	}
 
-	private final RearingData rearing_data;
+	private final RearingFilterData rearing_data;
 
 	private boolean rearing_now;
 	private int normal_rat_area;

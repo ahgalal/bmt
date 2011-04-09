@@ -18,7 +18,9 @@ public abstract class Module
 	protected ModuleConfigs configs;
 	protected String name;
 
-	protected Data[] data;
+	protected Data[] filters_data;
+	protected Data[] modules_data;
+	protected Data data;
 
 	/**
 	 * Gets the data cargo to be sent to GUI.
@@ -105,7 +107,14 @@ public abstract class Module
 	 * @param data
 	 *            data object of a video filer
 	 */
-	public abstract void registerDataObject(Data data);
+	public abstract void registerFilterDataObject(Data data);
+
+	/**
+	 * Registers a data object of another module with this module.
+	 * 
+	 * @param data
+	 */
+	public abstract void registerModuleDataObject(Data data);
 
 	/**
 	 * Unregisters a data object of a video filter from the module.
@@ -138,4 +147,14 @@ public abstract class Module
 	 *         misconfiguration)
 	 */
 	public abstract boolean amIReady(Shell shell);
+
+	/**
+	 * Gets the Module data.
+	 * 
+	 * @return Data object containing the data of this module
+	 */
+	public Data getModuleData()
+	{
+		return data;
+	}
 }

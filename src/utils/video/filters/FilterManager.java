@@ -186,7 +186,7 @@ public class FilterManager
 	{
 		for (final VideoFilter v : arr_filters)
 			if (v.getFilterData() != null)
-				ModulesManager.getDefault().addDataObject(v.getFilterData());
+				ModulesManager.getDefault().addFilterDataObject(v.getFilterData());
 	}
 
 	/**

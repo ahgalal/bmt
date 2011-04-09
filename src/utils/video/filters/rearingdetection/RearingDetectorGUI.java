@@ -15,6 +15,7 @@ import utils.StatusManager.StatusSeverity;
  * 
  * @author Creative
  */
+
 public class RearingDetectorGUI
 {
 	private Button btn_rearing_now = null;

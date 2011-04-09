@@ -8,7 +8,7 @@ import modules.experiment.Constants;
 import org.eclipse.swt.widgets.Shell;
 
 import utils.video.filters.Data;
-import utils.video.filters.rearingdetection.RearingData;
+import utils.video.filters.rearingdetection.RearingFilterData;
 
 /**
  * Rearing module, keeps record of number of rearings of the rat.
@@ -17,9 +17,9 @@ import utils.video.filters.rearingdetection.RearingData;
  */
 public class RearingModule extends Module
 {
-	private int rearing_ctr;
+	private final RearingModuleData rearing_module_data;
 	private boolean is_rearing;
-	private RearingData rearing_data;
+	private RearingFilterData rearing_filter_data;
 	private final RearingModuleConfigs rearing_configs;
 
 	/**
@@ -33,8 +33,9 @@ public class RearingModule extends Module
 	public RearingModule(final String name, final RearingModuleConfigs configs)
 	{
 		super(name, configs);
-
-		data = new Data[1];
+		rearing_module_data = new RearingModuleData("Rearing Module Data");
+		this.data = rearing_module_data;
+		filters_data = new Data[1];
 		rearing_configs = configs;
 		initialize();
 	}
@@ -45,7 +46,7 @@ public class RearingModule extends Module
 	 */
 	public void incrementRearingCounter()
 	{
-		rearing_ctr++;
+		rearing_module_data.rearing_ctr++;
 	}
 
 	/**
@@ -54,7 +55,7 @@ public class RearingModule extends Module
 	 */
 	public void decrementRearingCounter()
 	{
-		rearing_ctr--;
+		rearing_module_data.rearing_ctr--;
 	}
 
 	/**
@@ -64,7 +65,7 @@ public class RearingModule extends Module
 	 */
 	public int getRearingCounter()
 	{
-		return rearing_ctr;
+		return rearing_module_data.rearing_ctr;
 	}
 
 	@Override
@@ -72,7 +73,7 @@ public class RearingModule extends Module
 	{
 		gui_cargo.setDataByTag(
 				Constants.GUI_REARING_COUNTER,
-				Integer.toString(rearing_ctr));
+				Integer.toString(rearing_module_data.rearing_ctr));
 	}
 
 	@Override
@@ -80,25 +81,25 @@ public class RearingModule extends Module
 	{
 		file_cargo.setDataByTag(
 				Constants.FILE_REARING_COUNTER,
-				Integer.toString(rearing_ctr));
+				Integer.toString(rearing_module_data.rearing_ctr));
 	}
 
 	@Override
-	public void registerDataObject(final Data data)
+	public void registerFilterDataObject(final Data data)
 	{
-		if (data instanceof RearingData)
+		if (data instanceof RearingFilterData)
 		{
-			rearing_data = (RearingData) data;
-			this.data[0] = rearing_data;
+			rearing_filter_data = (RearingFilterData) data;
+			this.filters_data[0] = rearing_filter_data;
 		}
 	}
 
 	@Override
 	public void process()
 	{
-		if (!is_rearing & rearing_data.isRearing()) // it is rearing
-			rearing_ctr++;
-		is_rearing = rearing_data.isRearing();
+		if (!is_rearing & rearing_filter_data.isRearing()) // it is rearing
+			rearing_module_data.rearing_ctr++;
+		is_rearing = rearing_filter_data.isRearing();
 	}
 
 	@Override
@@ -117,26 +118,32 @@ public class RearingModule extends Module
 	public void initialize()
 	{
 		gui_cargo = new Cargo(new String[] { Constants.GUI_REARING_COUNTER });
-		rearing_ctr = 0;
+		rearing_module_data.rearing_ctr = 0;
 		file_cargo = new Cargo(new String[] { Constants.FILE_REARING_COUNTER });
 	}
 
 	@Override
 	public void deRegisterDataObject(final Data data)
 	{
-		if (rearing_data == data)
+		if (rearing_filter_data == data)
 		{
-			rearing_data = null;
-			this.data[0] = null;
+			rearing_filter_data = null;
 		}
+		this.filters_data[0] = null;
 	}
 
 	@Override
 	public boolean amIReady(final Shell shell)
 	{
-		if (rearing_data != null)
+		if (rearing_filter_data != null)
 			return true;
 		return false;
+	}
+
+	@Override
+	public void registerModuleDataObject(final Data data)
+	{
+		// TODO Auto-generated method stub
 	}
 
 }

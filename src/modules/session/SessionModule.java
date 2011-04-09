@@ -16,9 +16,7 @@ import utils.video.filters.Data;
  */
 public class SessionModule extends Module
 {
-	private long session_start_time;
-	private long session_end_time;
-	private boolean session_is_running;
+	private final SessionModuleData session_module_data;
 
 	private final SessionModuleConfigs session_configs;
 
@@ -33,6 +31,8 @@ public class SessionModule extends Module
 	public SessionModule(final String name, final ModuleConfigs config)
 	{
 		super(name, config);
+		session_module_data = new SessionModuleData("Session Module Data");
+		this.data = session_module_data;
 		session_configs = (SessionModuleConfigs) config;
 
 		initialize();
@@ -41,10 +41,10 @@ public class SessionModule extends Module
 	@Override
 	public void process()
 	{
-		if (!session_is_running)
+		if (!session_module_data.session_is_running)
 		{
 			startSession();
-			session_is_running = true;
+			session_module_data.session_is_running = true;
 		}
 	}
 
@@ -71,7 +71,7 @@ public class SessionModule extends Module
 	}
 
 	@Override
-	public void registerDataObject(final Data data)
+	public void registerFilterDataObject(final Data data)
 	{
 		// we don't need any data from any filter here!
 	}
@@ -81,7 +81,7 @@ public class SessionModule extends Module
 	 */
 	private void startSessionTime()
 	{
-		session_start_time = System.currentTimeMillis();
+		session_module_data.session_start_time = System.currentTimeMillis();
 	}
 
 	/**
@@ -89,7 +89,7 @@ public class SessionModule extends Module
 	 */
 	private void stopSessionTimer()
 	{
-		session_end_time = System.currentTimeMillis();
+		session_module_data.session_end_time = System.currentTimeMillis();
 	}
 
 	/**
@@ -99,7 +99,7 @@ public class SessionModule extends Module
 	 */
 	public long getTotalSessionTime()
 	{
-		final long totalTime = (session_end_time - session_start_time) / (1000);
+		final long totalTime = (session_module_data.session_end_time - session_module_data.session_start_time) / (1000);
 		return totalTime;
 	}
 
@@ -110,15 +110,15 @@ public class SessionModule extends Module
 	 */
 	private float getSessionTimeTillNow()
 	{
-		final long time = (System.currentTimeMillis() - session_start_time) / (1000);
+		final long time = (System.currentTimeMillis() - session_module_data.session_start_time) / (1000);
 		return time;
 	}
 
 	@Override
 	public void initialize()
 	{
-		session_start_time = 0;
-		session_end_time = 0;
+		session_module_data.session_start_time = 0;
+		session_module_data.session_end_time = 0;
 
 		gui_cargo = new Cargo(new String[] { Constants.GUI_SESSION_TIME });
 
@@ -147,7 +147,7 @@ public class SessionModule extends Module
 	public void deInitialize()
 	{
 		endSession();
-		session_is_running = false;
+		session_module_data.session_is_running = false;
 	}
 
 	@Override
@@ -160,6 +160,12 @@ public class SessionModule extends Module
 	public boolean amIReady(final Shell shell)
 	{
 		return true;
+	}
+
+	@Override
+	public void registerModuleDataObject(final Data data)
+	{
+		// TODO Auto-generated method stub
 	}
 
 }
