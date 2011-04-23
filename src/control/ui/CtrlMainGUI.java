@@ -445,7 +445,7 @@ public class CtrlMainGUI extends ControllerUI
 									SWT.ICON_QUESTION
 											| SWT.YES
 											| SWT.NO);
-							mbox.setMessage("No experiment module found! continue?");
+							mbox.setMessage("No experiment module is found! continue?");
 							mbox.setText("Continue?");
 							final int res = mbox.open();
 							if (res == SWT.YES)

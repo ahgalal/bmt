@@ -28,6 +28,8 @@ public class ExperimentModule extends Module
 	private final ExcelEngine excel_engine;
 	private boolean exp_is_set;
 
+	// private ExperimentModuleConfigs exp_module_configs;
+
 	/**
 	 * Initializes the Experiment module.
 	 * 
@@ -39,6 +41,7 @@ public class ExperimentModule extends Module
 	public ExperimentModule(final String name, final ModuleConfigs config)
 	{
 		super(name, config);
+		// exp_module_configs=(ExperimentModuleConfigs) config;
 		exp_module_data = new ExperimentModuleData("Experiment Module Data");
 		this.data = exp_module_data;
 		exp_module_data.exp = new Experiment();
