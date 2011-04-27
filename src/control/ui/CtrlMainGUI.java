@@ -126,19 +126,19 @@ public class CtrlMainGUI extends ControllerUI
 							if (local_exp_module != null)
 							{
 								if (!local_exp_module.isExperimentPresent())
-							{
-								ui.experiment_module_gui.editExpMenuItemEnable(false);
-								ui.experiment_module_gui.exportExpToExcelMenuItemEnable(false);
+								{
+									ui.experiment_module_gui.editExpMenuItemEnable(false);
+									ui.experiment_module_gui.exportExpToExcelMenuItemEnable(false);
+								}
+								else
+								{
+									ui.experiment_module_gui.editExpMenuItemEnable(true);
+									ui.experiment_module_gui.exportExpToExcelMenuItemEnable(true);
+								}
 							}
-							else
+							switch (pm.state)
 							{
-								ui.experiment_module_gui.editExpMenuItemEnable(true);
-								ui.experiment_module_gui.exportExpToExcelMenuItemEnable(true);
-							}
-						}
-						switch (pm.state)
-						{
-						case IDLE:
+							case IDLE:
 								if (ui.rearing_det_gui != null)
 								{
 									ui.rearing_det_gui.btnNotRearingEnable(false);
@@ -440,18 +440,24 @@ public class CtrlMainGUI extends ControllerUI
 						}
 						else
 						{
-							final MessageBox mbox = new MessageBox(
-									ui.getShell(),
-									SWT.ICON_QUESTION
-											| SWT.YES
-											| SWT.NO);
-							mbox.setMessage("No experiment module is found! continue?");
-							mbox.setText("Continue?");
-							final int res = mbox.open();
-							if (res == SWT.YES)
-							{
-								startTracking();
-							}
+							Display.getDefault().asyncExec(new Runnable() {
+								@Override
+								public void run()
+								{
+									final MessageBox mbox = new MessageBox(
+											ui.getShell(),
+											SWT.ICON_QUESTION
+													| SWT.YES
+													| SWT.NO);
+									mbox.setMessage("No experiment module is found! continue?");
+									mbox.setText("Continue?");
+									final int res = mbox.open();
+									if (res == SWT.YES)
+									{
+										startTracking();
+									}
+								}
+							});
 						}
 					}
 					else
