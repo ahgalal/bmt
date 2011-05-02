@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="lib" path="libs/POI/commons-logging-1.1.jar"/>
+	<classpathentry kind="lib" path="libs/POI/dom4j-1.6.1.jar"/>
+	<classpathentry kind="lib" path="libs/POI/junit-3.8.1.jar"/>
+	<classpathentry kind="lib" path="libs/POI/log4j-1.2.13.jar"/>
+	<classpathentry kind="lib" path="libs/POI/poi-3.7-20101029.jar"/>
+	<classpathentry kind="lib" path="libs/POI/poi-ooxml-3.7-20101029.jar"/>
+	<classpathentry kind="lib" path="libs/POI/poi-ooxml-schemas-3.7-20101029.jar"/>
+	<classpathentry kind="lib" path="libs/POI/poi-scratchpad-3.7-20101029.jar"/>
+	<classpathentry kind="lib" path="libs/POI/xmlbeans-2.3.0.jar"/>
+	<classpathentry kind="lib" path="libs/OpenCV/OpenCV.jar">
+		<attributes>
+			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="BMT/libs/OpenCV"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="libs/JMyron/JMyron.jar">
+		<attributes>
+			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="BMT/libs/JMyron"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="con" path="SWT_CONTAINER"/>
+	<classpathentry kind="lib" path="libs/JAGCamLib/JAGCamLib.jar">
+		<attributes>
+			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="BMT/libs/JAGCamLib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="libs/LibAVI/LibAVI.jar"/>
+	<classpathentry kind="lib" path="C:/Program Files/JMF2.1.1e/lib/custom.jar"/>
+	<classpathentry kind="lib" path="C:/Program Files/JMF2.1.1e/lib/jmf.jar"/>
+	<classpathentry kind="lib" path="C:/Program Files/JMF2.1.1e/lib/mediaplayer.jar"/>
+	<classpathentry kind="lib" path="C:/Program Files/JMF2.1.1e/lib/multiplayer.jar"/>
+	<classpathentry kind="lib" path="C:/Program Files/JMF2.1.1e/lib/sound.jar"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>
