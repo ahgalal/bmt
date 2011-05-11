@@ -148,6 +148,7 @@ public class ModulesManager
 	 */
 	public void initialize()
 	{
+		//TODO: CALLED at an incorrect timing ?? (inside "start_trackiing")
 		filters_data.clear();
 		for (final Module mo : modules)
 			mo.initialize();
@@ -251,6 +252,7 @@ public class ModulesManager
 	 */
 	public String[] getCodeNames()
 	{
+		constructCargoArray();
 		return file_names_array;
 	}
 

@@ -117,7 +117,10 @@ public class Group implements Grp2GUI
 		for (final Rat rat : arr_rats)
 			str_buf.append(rat.getValueByParameterName(Constants.FILE_RAT_NUMBER)
 					+ ", ");
-		return str_buf.substring(0, str_buf.length() - 2);
+		if (str_buf.length() > 0)
+			return str_buf.substring(0, str_buf.length() - 2);
+		else
+			return "";
 	}
 
 	/*
@@ -190,14 +193,17 @@ public class Group implements Grp2GUI
 				+ getNotes()
 				+ System.getProperty("line.separator"));
 		str_ret_buf.append("" + System.getProperty("line.separator"));
-		str_ret_buf.append(Constants.h_rat + System.getProperty("line.separator"));
-		final StringBuffer tags_buf = new StringBuffer();
-		for (final String s : parameters_list)
-			tags_buf.append(s + '\t'); // TODO:tab after the last item ??!!
-		str_ret_buf.append(tags_buf.toString() + System.getProperty("line.separator"));
+		if(getNoRats()>0)
+		{
+			str_ret_buf.append(Constants.h_rat + System.getProperty("line.separator"));
+			final StringBuffer tags_buf = new StringBuffer();
+			for (final String s : parameters_list)
+				tags_buf.append(s + '\t'); // TODO:tab after the last item ??!!
+			str_ret_buf.append(tags_buf.toString() + System.getProperty("line.separator"));
 
-		for (final Rat rat_tmp : getAllRats())
-			str_ret_buf.append(rat_tmp.rat2String());
+			for (final Rat rat_tmp : getAllRats())
+				str_ret_buf.append(rat_tmp.rat2String());
+		}
 		return str_ret_buf.toString();
 	}
 

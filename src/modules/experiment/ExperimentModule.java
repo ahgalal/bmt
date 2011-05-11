@@ -406,6 +406,11 @@ public class ExperimentModule extends Module
 		force_ready = false;
 		if (isExperimentPresent())
 		{
+			// if we had an empty experiment (no parameters), we assign the
+			// set of parameters from the module manager to the exp.
+			if(getNumberOfExpParams()==0)
+				exp_module_data.exp.setParametersList(ModulesManager.getDefault()
+					.getCodeNames());
 			if (getNumberOfExpParams() != ModulesManager.getDefault()
 					.getNumberOfFileParameters())
 			{

@@ -54,6 +54,7 @@ public class Experiment implements Exp2GUI
 	public Experiment()
 	{
 		groups = new ArrayList<Group>();
+		exp_params=new String[0];
 	}
 
 	/**
