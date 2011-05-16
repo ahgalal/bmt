@@ -410,6 +410,7 @@ public class ZonesModule extends Module
 				Constants.FILE_TOTAL_DISTANCE });
 
 		zone_map = new byte[zones_configs.width * zones_configs.height];
+		updateZoneMap();
 	}
 
 	@Override
