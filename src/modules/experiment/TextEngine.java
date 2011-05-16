@@ -62,6 +62,10 @@ public class TextEngine
 							Constants.h_exp_date.length());
 					final String tmp_notes = buf_rdr.readLine().substring(
 							Constants.h_exp_notes.length());
+					//TODO: Minor Bug: if the notes or any string of the above is 
+					// 		multi-line, the second line and all next lines will not be
+					//		loaded!!
+					//		as a fix: think of Object Serialization/Deserialization.
 					exp.setExperimentInfo(tmp_name, tmp_user, tmp_date, tmp_notes);
 				}
 				else if (tmp_line.equals(Constants.h_grp))

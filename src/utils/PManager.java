@@ -168,9 +168,6 @@ public class PManager
 	 */
 	public void initializeVideoManager(final CommonFilterConfigs common_configs)
 	{
-		ModulesManager.getDefault().setWidthandHeight(
-				common_configs.width,
-				common_configs.height);
 		if (vp.initialize(common_configs))
 			vp.startStreaming();
 	}

@@ -300,6 +300,9 @@ public class CtrlMainGUI extends ControllerUI
 					0,
 					"AGCamLib",
 					null);
+			ModulesManager.getDefault().setWidthandHeight(
+					commonConfigs.width,
+					commonConfigs.height);
 			pm.initializeVideoManager(commonConfigs);
 			configureScreenDrawerFilter("ScreenDrawer", commonConfigs, true);
 			pm.status_mgr.setStatus("Camera is Starting..", StatusSeverity.WARNING);

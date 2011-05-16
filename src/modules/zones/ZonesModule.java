@@ -67,6 +67,12 @@ public class ZonesModule extends Module
 		zones_module_data.zones = new ZonesCollection();
 		shape_controller = ShapeController.getDefault();
 		initialize();
+		
+		
+		// TODO: IMPORTANT update the wisth & height of the zone_mape when the user changes them.
+		// We can make a GLOBAL_CONFIGs object that is accessible everywhere, and
+		// modules/filters can REGISTER to it to get NOTIFIED when a value changes,
+		// so they can run THEIR update routines.
 	}
 
 	/**

@@ -134,7 +134,9 @@ public class ModulesManager
 		modules.add(rearing_module);
 		modules.add(zones_module);
 		modules.add(session_module);
-
+		
+		setWidthandHeight(640, 480);
+		
 		for (final Module mo : modules)
 			modules_data.add(mo.getModuleData());
 
