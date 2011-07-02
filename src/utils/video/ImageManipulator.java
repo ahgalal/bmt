@@ -161,6 +161,27 @@ public class ImageManipulator
 		}
 		return iarr;
 	}
+	
+	/**
+	 * Converts a byte[] BGR image to int[] RGB image.
+	 * 
+	 * @param byte_arr
+	 *            input byte[] BGR image
+	 * @return integer array RGB image
+	 */
+	public static int[] byteBGR2IntRGB(final byte[] byte_arr)
+	{
+		final int[] iarr = new int[byte_arr.length / 3];
+		int r, g, b;
+		for (int i = 0; i < byte_arr.length; i += 3)
+		{
+			r = byte_arr[i + 2] & 255;
+			g = byte_arr[i + 1] & 255;
+			b = byte_arr[i] & 255;
+			iarr[i / 3] = r | (g << 8) | (b << 16);
+		}
+		return iarr;
+	}
 
 	/**
 	 * Converts single dimensional byte array image to a two dimensional byte

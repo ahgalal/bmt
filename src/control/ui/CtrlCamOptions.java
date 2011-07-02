@@ -5,6 +5,7 @@ import modules.ModulesManager;
 import modules.zones.ZonesModuleConfigs;
 import ui.CamOptions;
 import utils.PManager;
+import utils.video.VideoManager;
 import utils.video.filters.CommonFilterConfigs;
 
 /**
@@ -93,6 +94,7 @@ public class CtrlCamOptions extends ControllerUI
 	public void show(final boolean visibility)
 	{
 		ui.show(visibility);
+		((CamOptions)ui).setVidLibs(pm.getVideoManager().getAvailableVidLibs());
 	}
 
 	@Override

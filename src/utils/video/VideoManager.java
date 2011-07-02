@@ -11,6 +11,7 @@ import utils.video.input.AGCamLibModule;
 import utils.video.input.JMFModule;
 import utils.video.input.JMyronModule;
 import utils.video.input.OpenCVModule;
+import utils.video.input.V4L2Module;
 import utils.video.input.VidInputter;
 
 /**
@@ -94,7 +95,7 @@ public class VideoManager
 					{
 						e.printStackTrace();
 					}
-					PManager.log.print("Device is not ready yet!", this);
+					//PManager.log.print("Device is not ready yet!", this);
 				}
 				if (v_in.getStatus() == 1)
 					for (final VideoFilter v : filter_mgr.getFilters())
@@ -161,6 +162,39 @@ public class VideoManager
 		common_configs.validate();
 	}
 
+	private String getOS()
+	{
+		String os = System.getProperty("os.name");
+		System.out.print("OS: " + os + "\n");
+		if(os.indexOf("Linux")!=-1)
+			return "Linux";
+		else if(os.indexOf("Windows")!=-1)
+			return "Windows";
+		
+		System.out.print("Unknown OS\n");
+		return null;
+	}
+
+	public String getDefaultVideoLibrary()
+	{
+		String os =getOS();
+		if(os.equals("Linux"))
+			return "V4L2";
+		else if(os.equals("Windows"))
+			return "AGCamLib";
+		return os;
+	}
+
+	public String[] getAvailableVidLibs()
+	{
+		String os = getOS();
+		if(os.equals("Linux"))
+			return new String[]{"V4L2","OpenCV"};
+		else if(os.equals("Windows"))
+			return new String[]{"AGCamLib","JMF","OpenCV","JMyron"};
+		return null;
+	}
+
 	/**
 	 * Initialization of the video library and vifeo filters.
 	 * 
@@ -172,14 +206,20 @@ public class VideoManager
 	{
 		updateCommonConfigs(ip_common_configs);
 
-		if (common_configs.vid_library.equals("JMF"))
+		String vid_lib = common_configs.vid_library;
+		if (vid_lib.equals("default"))
+			vid_lib = getDefaultVideoLibrary();
+
+		if (vid_lib.equals("JMF"))
 			v_in = new JMFModule();
-		else if (common_configs.vid_library.equals("JMyron"))
+		else if (vid_lib.equals("JMyron"))
 			v_in = new JMyronModule();
-		else if (common_configs.vid_library.equals("OpenCV"))
+		else if (vid_lib.equals("OpenCV"))
 			v_in = new OpenCVModule();
-		else if (common_configs.vid_library.equals("AGCamLib"))
+		else if (vid_lib.equals("AGCamLib"))
 			v_in = new AGCamLibModule();
+		else if (vid_lib.equals("V4L2"))
+			v_in = new V4L2Module();
 
 		filter_mgr.configureFilters(common_configs, ref_fia);
 

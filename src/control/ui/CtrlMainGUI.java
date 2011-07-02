@@ -298,7 +298,7 @@ public class CtrlMainGUI extends ControllerUI
 					480,
 					30,
 					0,
-					"AGCamLib",
+					"default",
 					null);
 			ModulesManager.getDefault().setWidthandHeight(
 					commonConfigs.width,

@@ -198,8 +198,8 @@ public class CamOptions extends BaseUI
 	private void createCmboCamLib()
 	{
 		cmbo_cam_lib = new Combo(sShell, SWT.READ_ONLY);
-		cmbo_cam_lib.setText("JMF");
 		cmbo_cam_lib.setBounds(new Rectangle(184, 14, 116, 23));
+		
 		cmbo_cam_lib.add("AGCamLib");
 		cmbo_cam_lib.add("JMF");
 		cmbo_cam_lib.add("OpenCV");
@@ -290,6 +290,14 @@ public class CamOptions extends BaseUI
 		{
 			System.out.print("Error in number of argument of GUI!\n");
 		}
+	}
+	
+	public void setVidLibs(String[] libs)
+	{
+		cmbo_cam_lib.removeAll();
+		for(String lib:libs)
+			cmbo_cam_lib.add(lib);
+		cmbo_cam_lib.setText(libs[0]);
 	}
 
 	@Override
