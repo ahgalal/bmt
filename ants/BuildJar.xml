@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- ====================================================================== 
+     Jul 3, 2011 11:22:07 PM                                                        
+
+     BMT    
+     Behavioral Monitoring Tool
+                   
+     Creative                                                                
+     ====================================================================== -->
+<project name="BMT" default="buildall">
+	<description>
+            Build and Release the BMT project
+    </description>
+
+	<property name="jarfile" value="../output/release/BMT.jar" />
+	<property name="mani" value="../mani" />
+	<property name="jmf_libs" value="'C:/Program Files/JMF2.1.1e/lib/custom.jar' 'C:/Program Files/JMF2.1.1e/lib/jmf.jar' 'C:/Program Files/JMF2.1.1e/lib/mediaplayer.jar' 'C:/Program Files/JMF2.1.1e/lib/multiplayer.jar' 'C:/Program Files/JMF2.1.1e/lib/sound.jar'" />
+	<property name="jmf_home_lib" value="C:/Program Files/JMF2.1.1e/lib" />
+	<property name="swt_lib" value="libs/SWT/org.eclipse.swt.win32.win32.x86_3.5.2.v3557f.jar" />
+	<property name="misc_libs" value="libs/POI/commons-logging-1.1.jar libs/POI/dom4j-1.6.1.jar libs/POI/junit-3.8.1.jar libs/POI/log4j-1.2.13.jar libs/POI/poi-3.7-20101029.jar libs/POI/poi-ooxml-3.7-20101029.jar libs/POI/poi-ooxml-schemas-3.7-20101029.jar libs/POI/poi-scratchpad-3.7-20101029.jar libs/POI/xmlbeans-2.3.0.jar libs/OpenCV/OpenCV.jar libs/JMyron/JMyron.jar libs/JAGCamLib/JAGCamLib.jar libs/LibAVI/LibAVI.jar" />
+	<property name="output_dir" value="../output/" />
+	<property name="release_dir" value="../output/release" />
+	<property name="archives_dir" value="../output/archives" />
+	<property name="libs_dir" value="${release_dir}/libs" />
+
+
+
+	<!-- ================================= 
+          target: buildall              
+         ================================= -->
+	<target name="buildall" depends="clean,prepare,copy_libs,copy_bin_libs,build_jar">
+
+
+	</target>
+	
+	<!-- ================================= 
+          target: release              
+         ================================= -->
+    <target name="release" depends="buildall,zip_all">
+        
+    </target>
+
+	<!-- - - - - - - - - - - - - - - - - - 
+          target: prepare              
+         - - - - - - - - - - - - - - - - - -->
+	<target name="prepare">
+		<mkdir dir="../output" />
+		<mkdir dir="../output/release" />
+		<mkdir dir="../output/release/libs" />
+	</target>
+
+	<!-- - - - - - - - - - - - - - - - - - 
+          target: copy_libs                      
+         - - - - - - - - - - - - - - - - - -->
+	<target name="copy_libs">
+		<copy flatten="true" todir="${libs_dir}">
+			<fileset dir="../libs">
+				<include name="**/*.jar" />
+			</fileset>
+			<fileset dir="${jmf_home_lib}">
+				<include name="**/*.jar" />
+			</fileset>
+		</copy>
+	</target>
+
+	<!-- - - - - - - - - - - - - - - - - - 
+          target: copy_bin_libs                      
+         - - - - - - - - - - - - - - - - - -->
+	<target name="copy_bin_libs">
+		<copy flatten="true" todir="${release_dir}">
+			<fileset dir="../libs">
+				<include name="**/*.dll" />
+				<include name="**/*.so" />
+				<include name="**/*.jnilib" />
+			</fileset>
+		</copy>
+	</target>
+
+	<!-- - - - - - - - - - - - - - - - - - 
+          target: build_jar                      
+         - - - - - - - - - - - - - - - - - -->
+	<target name="build_jar">
+		<manifestclasspath property="jar.classpath" jarfile="${jarfile}">
+			<classpath>
+				<fileset dir="${libs_dir}">
+					<include name="**/*.jar" />
+				</fileset>
+			</classpath>
+		</manifestclasspath>
+
+		<delete file="${jarfile}" />
+		<jar destfile="${jarfile}">
+			<manifest>
+				<attribute name="Main-Class" value="utils.PManager" />
+				<attribute name="Class-Path" value=". ${jar.classpath}" />
+			</manifest>
+			<fileset dir="../bin" />
+		</jar>
+	</target>
+
+	<!-- - - - - - - - - - - - - - - - - - 
+          target: zip_all                      
+         - - - - - - - - - - - - - - - - - -->
+    <target name="zip_all" depends="zip_libs,zip_pkg">
+            
+    </target>
+	
+	<!-- - - - - - - - - - - - - - - - - - 
+          target: zip_libs                      
+         - - - - - - - - - - - - - - - - - -->
+	<target name="zip_libs">
+		<mkdir dir="${archives_dir}"/>
+		<zip destfile="${archives_dir}/libs.zip" basedir="${libs_dir}"/>
+	</target>
+	
+	<!-- - - - - - - - - - - - - - - - - - 
+          target: zip_pkg                      
+         - - - - - - - - - - - - - - - - - -->
+    <target name="zip_pkg">
+    	<zip destfile="${archives_dir}/BMT.zip" basedir="${release_dir}"/>
+    </target>
+	
+	<!-- - - - - - - - - - - - - - - - - - 
+          target: clean                      
+         - - - - - - - - - - - - - - - - - -->
+    <target name="clean">
+            <delete dir="${output_dir}"/>
+    </target>
+
+</project>
