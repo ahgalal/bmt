@@ -23,8 +23,6 @@
 	<property name="archives_dir" value="../output/archives" />
 	<property name="libs_dir" value="${release_dir}/libs" />
 
-
-
 	<!-- ================================= 
           target: buildall              
          ================================= -->
@@ -32,13 +30,13 @@
 
 
 	</target>
-	
+
 	<!-- ================================= 
           target: release              
          ================================= -->
-    <target name="release" depends="buildall,zip_all">
-        
-    </target>
+	<target name="release" depends="buildall,zip_all">
+
+	</target>
 
 	<!-- - - - - - - - - - - - - - - - - - 
           target: prepare              
@@ -101,30 +99,51 @@
 	<!-- - - - - - - - - - - - - - - - - - 
           target: zip_all                      
          - - - - - - - - - - - - - - - - - -->
-    <target name="zip_all" depends="zip_libs,zip_pkg">
-            
-    </target>
-	
+	<target name="zip_all" depends="zip_libs,zip_pkg,zip_src,zip_src_all">
+	</target>
+
 	<!-- - - - - - - - - - - - - - - - - - 
           target: zip_libs                      
          - - - - - - - - - - - - - - - - - -->
 	<target name="zip_libs">
-		<mkdir dir="${archives_dir}"/>
-		<zip destfile="${archives_dir}/libs.zip" basedir="${libs_dir}"/>
+		<mkdir dir="${archives_dir}" />
+		<zip destfile="${archives_dir}/libs.zip" basedir="${libs_dir}" />
 	</target>
-	
+
 	<!-- - - - - - - - - - - - - - - - - - 
           target: zip_pkg                      
          - - - - - - - - - - - - - - - - - -->
-    <target name="zip_pkg">
-    	<zip destfile="${archives_dir}/BMT.zip" basedir="${release_dir}"/>
-    </target>
-	
+	<target name="zip_pkg">
+		<zip destfile="${archives_dir}/BMT.zip" basedir="${release_dir}" />
+	</target>
+
 	<!-- - - - - - - - - - - - - - - - - - 
           target: clean                      
          - - - - - - - - - - - - - - - - - -->
-    <target name="clean">
-            <delete dir="${output_dir}"/>
-    </target>
+	<target name="clean">
+		<delete dir="${output_dir}" />
+	</target>
+
+	<!-- - - - - - - - - - - - - - - - - - 
+          target: zip_src                      
+         - - - - - - - - - - - - - - - - - -->
+	<target name="zip_src">
+		<zip destfile="${archives_dir}/src_no_libs.zip" basedir="../src" />
+	</target>
+
+	<!-- - - - - - - - - - - - - - - - - - 
+          target: zip_src_all                      
+         - - - - - - - - - - - - - - - - - -->
+	<target name="zip_src_all">
+		<zip destfile="${archives_dir}/src_all.zip" >
+			<fileset dir="../">
+				<include name="src/**"/>
+				<include name="libs/**"/>
+			</fileset>
+			<fileset dir="../">
+				<include name=".*"/>
+			</fileset>
+		</zip>
+	</target>
 
 </project>
