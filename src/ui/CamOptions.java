@@ -56,7 +56,7 @@ public class CamOptions extends BaseUI
 	private void createShell()
 	{
 		// pm=PManager.getDefault();
-		sShell = new Shell(SWT.APPLICATION_MODAL | SWT.ON_TOP | SWT.TITLE);
+		sShell = new Shell(SWT.DIALOG_TRIM | SWT.SYSTEM_MODAL);
 		sShell.setText("Camera Options");
 		sShell.setLayout(null);
 		sShell.setSize(new Point(318, 239));

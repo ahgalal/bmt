@@ -44,7 +44,7 @@ public class About extends BaseUI
 	 */
 	private void createSShell()
 	{
-		sShell = new Shell(SWT.APPLICATION_MODAL | SWT.ON_TOP | SWT.TITLE);
+		sShell = new Shell(SWT.TITLE | SWT.APPLICATION_MODAL);
 		sShell.setLayout(null);
 		sShell.setText("About");
 		sShell.setMaximized(false);
