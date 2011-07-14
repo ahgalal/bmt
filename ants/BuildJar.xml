@@ -7,33 +7,26 @@
                    
      Creative                                                                
      ====================================================================== -->
-<project name="BMT" default="buildall">
+<project name="BMT" default="release">
 	<description>
             Build and Release the BMT project
     </description>
 
-<!-- <condition property="linuxOS">
-		<os family="linux" />
-	</condition>
-
-	<condition property="windowsOS">
-		<os family="windows" />
-	</condition>
--->
-
-	<property name="jarfile" value="../output/release/BMT.jar" />
-	<property name="mani" value="../mani" />
+	<property name="bmt_version" value="0.2"/>
+	<property name="libs_version" value="0.2"/>
+	<property name="bin_libs_version" value="0.2"/>
+	<property name="jarfile" value="../output/release/BMT_v${bmt_version}.jar" />
 	<property name="jmf_libs" value="'C:/Program Files/JMF2.1.1e/lib/custom.jar' 'C:/Program Files/JMF2.1.1e/lib/jmf.jar' 'C:/Program Files/JMF2.1.1e/lib/mediaplayer.jar' 'C:/Program Files/JMF2.1.1e/lib/multiplayer.jar' 'C:/Program Files/JMF2.1.1e/lib/sound.jar'" />
 	<condition property="jmf_home_lib" value="C:/Program Files/JMF2.1.1e/lib" else="">
 		<os family="windows" />
 	</condition>
 	<property name="jmf_home_lib" value="C:/Program Files/JMF2.1.1e/lib" />
-	<property name="swt_lib" value="libs/SWT/org.eclipse.swt.win32.win32.x86_3.5.2.v3557f.jar" />
-	<property name="misc_libs" value="libs/POI/commons-logging-1.1.jar libs/POI/dom4j-1.6.1.jar libs/POI/junit-3.8.1.jar libs/POI/log4j-1.2.13.jar libs/POI/poi-3.7-20101029.jar libs/POI/poi-ooxml-3.7-20101029.jar libs/POI/poi-ooxml-schemas-3.7-20101029.jar libs/POI/poi-scratchpad-3.7-20101029.jar libs/POI/xmlbeans-2.3.0.jar libs/OpenCV/OpenCV.jar libs/JMyron/JMyron.jar libs/JAGCamLib/JAGCamLib.jar libs/LibAVI/LibAVI.jar" />
 	<property name="output_dir" value="../output/" />
 	<property name="release_dir" value="../output/release" />
-	<property name="archives_dir" value="../output/archives" />
+	<property name="uploads_dir" value="../output/uploads" />
 	<property name="libs_dir" value="${release_dir}/libs" />
+
+
 
 	<!-- ================================= 
           target: buildall              
@@ -59,32 +52,43 @@
 		<mkdir dir="../output/release/libs" />
 	</target>
 
+	<fileset id="libs" dir="../libs">
+		<include name="**/*.jar" />
+	</fileset>
+	<fileset id="jmf_libs" dir="${jmf_home_lib}">
+		<include name="**/*.jar" />
+	</fileset>
+	
 	<!-- - - - - - - - - - - - - - - - - - 
           target: copy_libs                      
          - - - - - - - - - - - - - - - - - -->
 	<target name="copy_libs">
 		<copy flatten="true" todir="${libs_dir}">
-			<fileset dir="../libs">
-				<include name="**/*.jar" />
-			</fileset>
-			<fileset dir="${jmf_home_lib}">
-				<include name="**/*.jar" />
-			</fileset>
+			<fileset refid="libs"/>
+			<fileset refid="jmf_libs"/>
 		</copy>
 	</target>
+
+	<fileset id="bin_libs" dir="../libs">
+		<include name="**/*.dll" />
+		<include name="**/*.so" />
+		<include name="**/*.jnilib" />
+	</fileset>
 
 	<!-- - - - - - - - - - - - - - - - - - 
           target: copy_bin_libs                      
          - - - - - - - - - - - - - - - - - -->
 	<target name="copy_bin_libs">
 		<copy flatten="true" todir="${release_dir}">
-			<fileset dir="../libs">
-				<include name="**/*.dll" />
-				<include name="**/*.so" />
-				<include name="**/*.jnilib" />
-			</fileset>
+			<fileset refid="bin_libs"/>
 		</copy>
 	</target>
+	
+	<fileset id="bin_libs_flat" dir="${release_dir}">
+		<include name="**/*.dll" />
+		<include name="**/*.so" />
+		<include name="**/*.jnilib" />
+	</fileset>
 
 	<!-- - - - - - - - - - - - - - - - - - 
           target: build_jar                      
@@ -106,27 +110,43 @@
 			</manifest>
 			<fileset dir="../bin" />
 		</jar>
+		
+		<copy file="${jarfile}" todir="${uploads_dir}"/>
 	</target>
 
 	<!-- - - - - - - - - - - - - - - - - - 
           target: zip_all                      
          - - - - - - - - - - - - - - - - - -->
-	<target name="zip_all" depends="zip_libs,zip_pkg,zip_src,zip_src_all">
+	<target name="zip_all" depends="zip_libs,zip_bin_libs,zip_pkg,zip_src">
 	</target>
 
 	<!-- - - - - - - - - - - - - - - - - - 
           target: zip_libs                      
          - - - - - - - - - - - - - - - - - -->
 	<target name="zip_libs">
-		<mkdir dir="${archives_dir}" />
-		<zip destfile="${archives_dir}/libs.zip" basedir="${libs_dir}" />
+		<mkdir dir="${uploads_dir}" />
+		<zip destfile="${uploads_dir}/libs_v${libs_version}.zip" basedir="${libs_dir}/../" includes="libs/**"/>
+	</target>
+	
+	<!-- - - - - - - - - - - - - - - - - - 
+          target: zip_bin_libs                      
+         - - - - - - - - - - - - - - - - - -->
+	<target name="zip_bin_libs">
+		<mkdir dir="${uploads_dir}" />
+		<zip destfile="${uploads_dir}/link_libs_v${bin_libs_version}.zip" filesonly="true" >
+			<fileset refid="bin_libs_flat"/>
+			</zip>
 	</target>
 
 	<!-- - - - - - - - - - - - - - - - - - 
           target: zip_pkg                      
          - - - - - - - - - - - - - - - - - -->
 	<target name="zip_pkg">
-		<zip destfile="${archives_dir}/BMT.zip" basedir="${release_dir}" />
+		<zip destfile="${uploads_dir}/BMT_v${bmt_version}.zip" basedir="${release_dir}">
+			<fileset dir="../">
+				<include name="src/**"/>
+			</fileset>
+		</zip>
 	</target>
 
 	<!-- - - - - - - - - - - - - - - - - - 
@@ -140,14 +160,14 @@
           target: zip_src                      
          - - - - - - - - - - - - - - - - - -->
 	<target name="zip_src">
-		<zip destfile="${archives_dir}/src_no_libs.zip" basedir="../src" />
+		<zip destfile="${uploads_dir}/src_v${bmt_version}.zip" basedir="../" includes="src/**"/>
 	</target>
 
 	<!-- - - - - - - - - - - - - - - - - - 
           target: zip_src_all                      
          - - - - - - - - - - - - - - - - - -->
 	<target name="zip_src_all">
-		<zip destfile="${archives_dir}/src_all.zip">
+		<zip destfile="${uploads_dir}/src_all.zip">
 			<fileset dir="../">
 				<include name="src/**" />
 				<include name="libs/**" />
