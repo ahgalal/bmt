@@ -33,15 +33,15 @@ public class RatFinder extends VideoFilter
 	}
 
 	private int tmp_max;
-	private RatFinderFilterConfigs ratfinder_configs;
-	private final RatFinderData rat_finder_data;
+	protected RatFinderFilterConfigs ratfinder_configs;
+	protected final RatFinderData rat_finder_data;
 
 	int[] hori_sum;
 	int[] vert_sum;
 
-	private final Point center_point;
-	private int[] local_data;
-	private Marker marker;
+	protected final Point center_point;
+	protected int[] out_data;
+	protected Marker marker;
 
 	/**
 	 * Draws a cross at the center of the moving object.
@@ -49,13 +49,13 @@ public class RatFinder extends VideoFilter
 	 * @param binary_image
 	 *            image to draw the cross on
 	 */
-	private void drawMarkerOnImg(final int[] binary_image)
+	protected void drawMarkerOnImg(final int[] binary_image)
 	{
-		System.arraycopy(binary_image, 0, local_data, 0, binary_image.length);
+		System.arraycopy(binary_image, 0, out_data, 0, binary_image.length);
 
 		try
 		{
-			marker.draw(local_data, center_point.x, center_point.y);
+			marker.draw(out_data, center_point.x, center_point.y);
 		} catch (final Exception e)
 		{
 			System.err.print("Error in marker");
@@ -69,7 +69,7 @@ public class RatFinder extends VideoFilter
 	 * @param binary_image
 	 *            input image
 	 */
-	private void updateCentroid(final int[] binary_image)
+	protected void updateCentroid(final int[] binary_image)
 	{
 		tmp_max = 0;
 
@@ -125,8 +125,7 @@ public class RatFinder extends VideoFilter
 	{
 		ratfinder_configs = (RatFinderFilterConfigs) configs;
 
-		hori_sum = new int[ratfinder_configs.common_configs.height];
-		vert_sum = new int[ratfinder_configs.common_configs.width];
+
 		marker = new CrossMarker(
 				50,
 				50,
@@ -137,9 +136,16 @@ public class RatFinder extends VideoFilter
 
 		// super's stuff:
 
-		local_data = new int[configs.common_configs.width * configs.common_configs.height];
-		this.link_out.setData(local_data);
+		out_data = new int[configs.common_configs.width * configs.common_configs.height];
+		this.link_out.setData(out_data);
+		specialConfiguration(ratfinder_configs);
 		return super.configure(configs);
+	}
+	
+	protected void specialConfiguration(final FilterConfigs configs)
+	{
+		hori_sum = new int[ratfinder_configs.common_configs.height];
+		vert_sum = new int[ratfinder_configs.common_configs.width];
 	}
 
 }
