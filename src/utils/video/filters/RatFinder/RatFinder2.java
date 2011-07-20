@@ -24,7 +24,7 @@ public class RatFinder2 extends RatFinder
 		}
 	}
 
-	int border_color=Color.GREEN.getRGB();
+	int border_color=Color.RED.getRGB();
 	int botash_found=0;
 	protected ArrayList<Point> coveredGrid;
 	public RatFinder2(String name, Link linkIn, Link linkOut)
@@ -62,6 +62,7 @@ public class RatFinder2 extends RatFinder
 					}
 			}
 		System.out.print(botash_found + "\n");
+		botash_found=0;
 	}
 
 	protected int contourEdge(int[] img,int x_start,int y_start,int width,int height)
@@ -78,9 +79,22 @@ public class RatFinder2 extends RatFinder
 			int x1,y1,x2,y2;
 			x1 = (int) (Math.cos(0.785 * j)*1.5);
 			y1 = (int) (Math.sin(0.785 * j)*-1.5);
-			x2 = (int) (Math.cos(0.785 * (j-1)%8)*1.5);
-			y2 = (int) (Math.sin(0.785 * (j-1)%8)*-1.5);
+			x2 = (int) (Math.cos(0.785 * (j-1+8)%8)*1.5);
+			y2 = (int) (Math.sin(0.785 * (j-1+8)%8)*-1.5);
 
+			if(x_start+x1 < 0 ||
+					x_start+x1 >= width ||
+					y_start+y1 < 0 ||
+					y_start+y1 >= height
+					||
+					x_start+x2 < 0 ||
+					x_start+x2 >= width ||
+					y_start+y2 < 0 ||
+					y_start+y2 >= height)
+			{
+				continue;
+			}
+			
 			if(img[x_start+x2+width*(y2+y_start)]==0xFFFFFF &&
 					img[x_start+x1+width*(y1+y_start)]==0)
 			{
@@ -124,287 +138,59 @@ public class RatFinder2 extends RatFinder
 			////////////////////////////////////////////////////
 
 
+			/*
+			 * Selecting the next pivot point
+			 */
+			
 			int trials=0;
 			for(int i=(start_i)%8; i!=(start_i+1)%8;i=(i-1+8)%8)
 			{
 				trials++;
-
-				// trapped on left side
-				if(pivot_x==0) 
+				x = (int) (Math.cos(0.785 * i)*1.5);
+				y = (int) (Math.sin(0.785 * i)*-1.5);
+				
+				if(pivot_x+x < 0 ||
+						pivot_x+x >= width ||
+						pivot_y+y < 0 ||
+						pivot_y+y >= height)
 				{
-					// trapped on origin 
-					if(pivot_y==0) 
-					{
-						// go to the right pixel
-						if(img[pivot_x+1]== 0xFFFFFF) 
-						{
-							x=1;
-							y=0;
-						}
-						// go to the bottom pixel
-						else if(img[pivot_x+1*width]== 0xFFFFFF) 
-						{
-							x=0;
-							y=+1;
-						}
-						// go to the right-bottom pixel
-						else if(img[pivot_x+1 + 1*width]== 0xFFFFFF) 
-						{
-							x=+1;
-							y=+1;
-						}
-						pivot_x_old=pivot_x;
-						pivot_y_old=pivot_y;
-						img[pivot_x+x+width*(y+pivot_y)] = border_color; // border
-						pivot_x+=x;
-						pivot_y+=y;
-						break;
-					}// end trapped on origin
-					//trapped on bottom-left
-					else if(pivot_y==height-1)
-					{
-						// go to the right pixel
-						if(img[pivot_x+1 + pivot_y*width]== 0xFFFFFF) 
-						{
-							x=1;
-							y=0;
-						}
-						// go to the upper pixel
-						else if(img[pivot_x + (pivot_y-1)*width]== 0xFFFFFF) 
-						{
-							x=0;
-							y=-1;
-						}
-						// go to the upper-right pixel
-						else if(img[pivot_x+1 + (pivot_y+1)*width]== 0xFFFFFF) 
-						{
-							x=+1;
-							y=-1;
-						}
-						pivot_x_old=pivot_x;
-						pivot_y_old=pivot_y;
-						img[pivot_x+x+width*(y+pivot_y)] = border_color; // border
-						pivot_x+=x;
-						pivot_y+=y;
-						break;
-					}//end trapped on bottom-left
-					// trapped on the left side (general place)
-					else
-					{
-						// go to the bottom pixel
-						if(img[pivot_x + (pivot_y+1)*width]== 0xFFFFFF) 
-						{
-							x=0;
-							y=+1;
-						}
-						// go to the upper pixel
-						else if(img[pivot_x + (pivot_y-1)*width]== 0xFFFFFF) 
-						{
-							x=0;
-							y=-1;
-						}
-						pivot_x_old=pivot_x;
-						pivot_y_old=pivot_y;
-						img[pivot_x+x+width*(y+pivot_y)] = border_color; // border
-						pivot_x+=x;
-						pivot_y+=y;
-						break;
-					}// end trapped on the left side
-				}// end trapped on the left side
-
-				// trapped on right side
-				else if(pivot_x==width -1) 
+					continue;
+				}
+				else if(img[pivot_x+x+width*(y+pivot_y)]==0xFFFFFF ||
+						(pivot_x+x == x_start && pivot_y+y == y_start))
 				{
-					// trapped on top-right 
-					if(pivot_y==0) 
-					{
-						// go to the left pixel
-						if(img[pivot_x-1]== 0xFFFFFF) 
-						{
-							x=-1;
-							y=0;
-						}
-						// go to the bottom pixel
-						else if(img[pivot_x+1*width]== 0xFFFFFF) 
-						{
-							x=0;
-							y=+1;
-						}
-						// go to the left-bottom pixel
-						else if(img[pivot_x-1 + 1*width]== 0xFFFFFF) 
-						{
-							x=-1;
-							y=+1;
-						}
-						pivot_x_old=pivot_x;
-						pivot_y_old=pivot_y;
-						img[pivot_x+x+width*(y+pivot_y)] = border_color; // border
-						pivot_x+=x;
-						pivot_y+=y;
-						break;
-					}// end trapped on top-right
-					//trapped on bottom-right
-					else if(pivot_y==height-1)
-					{
-						// go to the left pixel
-						if(img[pivot_x-1 + pivot_y*width]== 0xFFFFFF) 
-						{
-							x=-1;
-							y=0;
-						}
-						// go to the upper pixel
-						else if(img[pivot_x + (pivot_y-1)*width]== 0xFFFFFF) 
-						{
-							x=0;
-							y=-1;
-						}
-						// go to the upper-left pixel
-						else if(img[pivot_x-1 + (pivot_y+1)*width]== 0xFFFFFF) 
-						{
-							x=-1;
-							y=-1;
-						}
-						pivot_x_old=pivot_x;
-						pivot_y_old=pivot_y;
-						img[pivot_x+x+width*(y+pivot_y)] = border_color; // border
-						pivot_x+=x;
-						pivot_y+=y;
-						break;
-					}//end trapped on bottom-right
-					// trapped on the right side (general place)
-					else
-					{
-						// go to the bottom pixel
-						if(img[pivot_x + (pivot_y+1)*width]== 0xFFFFFF) 
-						{
-							x=0;
-							y=+1;
-						}
-						// go to the upper pixel
-						else if(img[pivot_x + (pivot_y-1)*width]== 0xFFFFFF) 
-						{
-							x=0;
-							y=-1;
-						}
-						pivot_x_old=pivot_x;
-						pivot_y_old=pivot_y;
-						img[pivot_x+x+width*(y+pivot_y)] = border_color; // border
-						pivot_x+=x;
-						pivot_y+=y;
-						break;
-					}// end trapped on the right side
-				}// end trapped on the right side
-				// trapped on a general place on the x-axis
-				else 
-				{
-					// trapped on top general point
-					if(pivot_y==0) 
-					{
-						// go to the left pixel
-						if(img[pivot_x-1]== 0xFFFFFF) 
-						{
-							x=-1;
-							y=0;
-						}
-						// go to the right pixel
-						else if(img[pivot_x+1]== 0xFFFFFF) 
-						{
-							x=0;
-							y=+1;
-						}
-						// go to the left-bottom pixel
-						else if(img[pivot_x-1 + 1*width]== 0xFFFFFF) 
-						{
-							x=-1;
-							y=+1;
-						}
-						// go to the right-bottom pixel
-						else if(img[pivot_x+1 + 1*width]== 0xFFFFFF) 
-						{
-							x=+1;
-							y=+1;
-						}
-						pivot_x_old=pivot_x;
-						pivot_y_old=pivot_y;
-						img[pivot_x+x+width*(y+pivot_y)] = border_color; // border
-						pivot_x+=x;
-						pivot_y+=y;
-						break;
-					}// end trapped on top general point
-					// trapped on bottom general point
-					else if(pivot_y==height-1) 
-					{
-						// go to the left pixel
-						if(img[pivot_x-1 + pivot_y*width]== 0xFFFFFF) 
-						{
-							x=-1;
-							y=0;
-						}
-						// go to the right pixel
-						else if(img[pivot_x+1 + pivot_y*width]== 0xFFFFFF) 
-						{
-							x=+1;
-							y=0;
-						}
-						// go to the left-top pixel
-						else if(img[pivot_x-1 + (pivot_y-1)*width]== 0xFFFFFF) 
-						{
-							x=-1;
-							y=-1;
-						}
-						// go to the right-top pixel
-						else if(img[pivot_x+1 + (pivot_y-1)*width]== 0xFFFFFF) 
-						{
-							x=+1;
-							y=-1;
-						}
-						// go to the top pixel
-						else if(img[pivot_x + (pivot_y-1)*width]== 0xFFFFFF) 
-						{
-							x=0;
-							y=-1;
-						}
-						pivot_x_old=pivot_x;
-						pivot_y_old=pivot_y;
-						img[pivot_x+x+width*(y+pivot_y)] = border_color; // border
-						pivot_x+=x;
-						pivot_y+=y;
-						break;
-					}// end trapped on bottom general point
-					// not trapped
-					else if(img[pivot_x+x+width*(y+pivot_y)]==0xFFFFFF ||
-							(pivot_x+x == x_start && pivot_y+y == y_start))
-					{
-						x = (int) (Math.cos(0.785 * i)*1.5);
-						y = (int) (Math.sin(0.785 * i)*-1.5);
-						pivot_x_old=pivot_x;
-						pivot_y_old=pivot_y;
-						img[pivot_x+x+width*(y+pivot_y)] = border_color; // border
-						pivot_x+=x;
-						pivot_y+=y;
-						break;
-					}// end not trapped
-				}// end trapped on x general point
 
+					pivot_x_old=pivot_x;
+					pivot_y_old=pivot_y;
+					img[pivot_x+x+width*(y+pivot_y)] = border_color; // border
+					pivot_x+=x;
+					pivot_y+=y;
+					break;
+				}
 			}
 			if (trials == 7)
 			{
-				break;
+				return 0;
+				//break;
 			}
 		}
-		boolean abc=false;
-		if(abc)
-		{
-			writeImageToFile(img, width, height);
-		}
-
-
 		return 0;
+	}
+	
+	
+
+	/* (non-Javadoc)
+	 * @see utils.video.filters.RatFinder.RatFinder#drawMarkerOnImg(int[])
+	 */
+	@Override
+	protected void drawMarkerOnImg(int[] binaryImage)
+	{
+		// TODO Auto-generated method stub
+		//super.drawMarkerOnImg(binaryImage);
 	}
 
 	public void writeImageToFile(int[] img,int width,int height)
 	{
-
 		File f = new File("C:\\img");
 		try
 		{
