@@ -9,6 +9,7 @@ import utils.PManager;
 import utils.StatusManager.StatusSeverity;
 import utils.video.FrameIntArray;
 import utils.video.filters.RatFinder.RatFinder;
+import utils.video.filters.RatFinder.RatFinder2;
 import utils.video.filters.RatFinder.RatFinderData;
 import utils.video.filters.RatFinder.RatFinderFilterConfigs;
 import utils.video.filters.rearingdetection.RearingDetector;
@@ -282,6 +283,8 @@ public class FilterManager
 
 		rat_finder = new RatFinder(
 				"RatFinder", grey_link, marker_link);
+/*		rat_finder = new RatFinder2(
+				"RatFinder", grey_link, marker_link);*/
 
 		rearing_det = new RearingDetector(
 				"RearingDetector", grey_link, null);

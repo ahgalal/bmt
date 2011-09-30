@@ -13,6 +13,7 @@ import utils.video.input.JMyronModule;
 import utils.video.input.OpenCVModule;
 import utils.video.input.V4L2Module;
 import utils.video.input.VidInputter;
+import utils.video.input.VideoFileModule;
 
 /**
  * Main Video Manager, manages all video operations.
@@ -220,6 +221,8 @@ public class VideoManager
 			v_in = new AGCamLibModule();
 		else if (vid_lib.equals("V4L2"))
 			v_in = new V4L2Module();
+		else if (vid_lib.equals("VideoFile"))
+			v_in = new VideoFileModule("C:\\vid.avi");
 
 		filter_mgr.configureFilters(common_configs, ref_fia);
 

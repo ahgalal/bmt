@@ -299,6 +299,7 @@ public class CtrlMainGUI extends ControllerUI
 					30,
 					0,
 					"default",
+					//"VideoFile",
 					null);
 			ModulesManager.getDefault().setWidthandHeight(
 					commonConfigs.width,

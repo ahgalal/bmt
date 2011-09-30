@@ -1,0 +1,146 @@
+/**
+ * 
+ */
+package utils.video.input;
+
+import java.awt.Point;
+
+import jagvidlib.JAGVidLib;
+import utils.video.FrameIntArray;
+
+/**
+ * @author Creative
+ *
+ */
+public class VideoFileModule implements VidInputter
+{
+	private boolean stop_stream;
+	private FrameIntArray fia;
+	private int status;
+	int[] data;
+
+	private JAGVidLib vidLib;
+
+	private class RunnableAGCamLib implements Runnable
+	{
+		@Override
+		public void run()
+		{
+			Point dims = vidLib.getVideoDimensions();
+			fia.frame_data = new int[dims.x*dims.y];
+			try
+			{
+				Thread.sleep(1000);
+			} catch (InterruptedException e1)
+			{
+				e1.printStackTrace();
+			}
+			vidLib.play();
+			while (!stop_stream)
+			{
+				//movie.play();
+				try
+				{
+					Thread.sleep(30);
+				} catch (final InterruptedException e)
+				{
+					e.printStackTrace();
+				}
+				//long l1 = System.currentTimeMillis();
+				//data= ImageManipulator.byteRGB2IntRGB(((DataBufferByte)movie.getImage().getRaster().getDataBuffer()).getData());
+				fia.frame_data= vidLib.getCurrentFrameInt();
+				//long l2 = System.currentTimeMillis();
+				status = 1;
+				//System.out.println(l2-l1 + "\n");
+			}
+		}
+
+	}
+	/**
+	 * 
+	 */
+	public VideoFileModule(String file)
+	{
+		vidLib = new JAGVidLib();
+		vidLib.initialize(file);
+	}
+
+	/* (non-Javadoc)
+	 * @see utils.video.input.VidInputter#displayMoreSettings()
+	 */
+	@Override
+	public int displayMoreSettings()
+	{
+		return 0;
+	}
+
+	/* (non-Javadoc)
+	 * @see utils.video.input.VidInputter#getName()
+	 */
+	@Override
+	public String getName()
+	{
+		return "VideoFileReader";
+	}
+
+	/* (non-Javadoc)
+	 * @see utils.video.input.VidInputter#getNumCams()
+	 */
+	@Override
+	public int getNumCams()
+	{
+		return 0;
+	}
+
+	/* (non-Javadoc)
+	 * @see utils.video.input.VidInputter#getStatus()
+	 */
+	@Override
+	public int getStatus()
+	{
+		return status;
+	}
+	private Thread th_update_image;
+	/* (non-Javadoc)
+	 * @see utils.video.input.VidInputter#initialize(utils.video.FrameIntArray, int, int, int)
+	 */
+	@Override
+	public boolean initialize(FrameIntArray frameData, int width, int height, int camIndex)
+	{
+		fia = frameData;
+		return true;
+	}
+
+	/* (non-Javadoc)
+	 * @see utils.video.input.VidInputter#setFormat(java.lang.String)
+	 */
+	@Override
+	public void setFormat(String format)
+	{
+
+	}
+
+	/* (non-Javadoc)
+	 * @see utils.video.input.VidInputter#startStream()
+	 */
+	@Override
+	public boolean startStream()
+	{
+
+		th_update_image = new Thread(new RunnableAGCamLib());
+		th_update_image.start();
+		stop_stream=false;
+		return true;
+	}
+
+	/* (non-Javadoc)
+	 * @see utils.video.input.VidInputter#stopModule()
+	 */
+	@Override
+	public void stopModule()
+	{
+		stop_stream=true;
+		vidLib.stop();
+	}
+
+}
