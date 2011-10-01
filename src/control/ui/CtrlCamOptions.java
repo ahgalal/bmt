@@ -83,7 +83,7 @@ public class CtrlCamOptions extends ControllerUI
 	 */
 	public void unloadAndLoadLibProcedures()
 	{
-		pm.unloadVideoManager();
+		pm.stopStreaming();
 		final CommonFilterConfigs common_configs = new CommonFilterConfigs(
 				width,
 				height,
@@ -92,6 +92,7 @@ public class CtrlCamOptions extends ControllerUI
 				library,
 				format);
 		pm.initializeVideoManager(common_configs);
+		pm.startStreaming();
 		PManager.main_gui.configureScreenDrawerFilter("ScreenDrawer", null, true);
 		ModulesManager.getDefault().updateModuleConfigs(
 				new ModuleConfigs[] { new ZonesModuleConfigs(

@@ -30,6 +30,7 @@ import modules.experiment.ExperimentModule;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
 
@@ -41,6 +42,7 @@ import utils.video.filters.CommonFilterConfigs;
 import utils.video.filters.FilterConfigs;
 import utils.video.filters.screendrawer.ScreenDrawerConfigs;
 import utils.video.filters.subtractionfilter.SubtractorFilter;
+import utils.video.input.VideoFileModule;
 
 /**
  * Controller of the MainGUI window.
@@ -322,7 +324,6 @@ public class CtrlMainGUI extends ControllerUI
 					30,
 					0,
 					"default",
-					//"VideoFile",
 					null);
 			ModulesManager.getDefault().setWidthandHeight(
 					commonConfigs.width,
@@ -363,13 +364,13 @@ public class CtrlMainGUI extends ControllerUI
 	}
 
 	/**
-	 * Stops the camrea stream, by unloading the VideoManager.
+	 * Stops the camera stream, by unloading the VideoManager.
 	 */
 	public void mnuitmStopCameraAction()
 	{
 		if (pm.state == ProgramState.STREAMING)
 		{
-			pm.unloadVideoManager();
+			pm.stopStreaming();
 			pm.status_mgr.setStatus("Camera is Stopped!", StatusSeverity.WARNING);
 		}
 		else if (pm.state == ProgramState.TRACKING)
@@ -401,7 +402,7 @@ public class CtrlMainGUI extends ControllerUI
 	{
 		stop_tracking = true;
 		if (pm.state != ProgramState.RECORDING)
-			pm.unloadVideoManager();
+			pm.stopStreaming();
 		ui_is_opened = false;
 		try
 		{
@@ -572,4 +573,46 @@ public class CtrlMainGUI extends ControllerUI
 		ui.loadModulesGUI(modules);
 	}
 
+	public void setVideoFileMode()
+	{
+		final FileDialog fileDialog = new FileDialog(ui.getShell(), SWT.OPEN);
+		final String file_name = fileDialog.open();
+		if (file_name != null)
+		{
+			if (pm.state == ProgramState.IDLE)
+			{
+				final CommonFilterConfigs commonConfigs = new CommonFilterConfigs(
+						640,
+						480,
+						30,
+						0,
+						"VideoFile",
+						null);
+				ModulesManager.getDefault().setWidthandHeight(
+						commonConfigs.width,
+						commonConfigs.height);
+				pm.initializeVideoManager(commonConfigs);
+				((VideoFileModule)pm.getVideoManager().getVidInputter()).setVideoFile(file_name);
+
+				configureScreenDrawerFilter("ScreenDrawer", commonConfigs, true);
+				pm.status_mgr.setStatus("Camera is Starting..", StatusSeverity.WARNING);
+			}
+			else
+				pm.status_mgr.setStatus("Camera is already started.", StatusSeverity.ERROR);
+		}
+	}
+
+	public void startStreming()
+	{
+		if(ui.getSelectedInputMode().equals("CAM"))
+			mnutmCameraStartAction();
+		//else if(ui.getSelectedInputMode().equals("VIDEOFILE"))
+			//setVideoFileMode();
+		pm.startStreaming();
+	}
+
+	public void stopStreaming()
+	{
+		pm.stopStreaming();
+	}
 }
