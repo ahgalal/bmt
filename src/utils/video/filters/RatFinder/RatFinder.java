@@ -26,6 +26,7 @@ package utils.video.filters.RatFinder;
 import java.awt.Color;
 import java.awt.Point;
 
+import utils.PManager.ProgramState;
 import utils.video.filters.FilterConfigs;
 import utils.video.filters.Link;
 import utils.video.filters.VideoFilter;
@@ -169,6 +170,13 @@ public class RatFinder extends VideoFilter
 	{
 		hori_sum = new int[ratfinder_configs.common_configs.height];
 		vert_sum = new int[ratfinder_configs.common_configs.width];
+	}
+
+	@Override
+	public void updateProgramState(ProgramState state)
+	{
+		// TODO Auto-generated method stub
+		
 	}
 
 }

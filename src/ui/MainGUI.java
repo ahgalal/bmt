@@ -48,6 +48,8 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
 
+import utils.PManager;
+import utils.video.filters.PluggedGUI;
 import utils.video.filters.rearingdetection.RearingDetectorGUI;
 import utils.video.filters.recorder.VideoRecorderGUI;
 import control.ui.ControllerUI;
@@ -56,6 +58,11 @@ import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.widgets.ExpandBar;
 import org.eclipse.swt.widgets.ExpandItem;
 import org.eclipse.wb.swt.SWTResourceManager;
+import org.eclipse.swt.widgets.CoolBar;
+import org.eclipse.swt.widgets.CoolItem;
+import org.eclipse.swt.layout.FillLayout;
+import org.eclipse.swt.layout.RowLayout;
+import org.eclipse.swt.layout.GridData;
 
 /**
  * Main window of the Rat Monitoring Tool, it has links to all program portions.
@@ -98,7 +105,7 @@ public class MainGUI extends BaseUI
 	private Button btn_stop_tracking = null;
 	private Label lbl_status = null;
 	private Table tbl_data = null;
-
+	private CoolBar coolBar;
 	/**
 	 * Creates GUI components, and links this Shell with the parent Shell.
 	 */
@@ -106,8 +113,10 @@ public class MainGUI extends BaseUI
 	{
 		createSShell();
 		super.sShell = this.sShell;
-		
-		
+
+
+
+
 	}
 
 	@Override
@@ -121,6 +130,31 @@ public class MainGUI extends BaseUI
 				tbl_data.removeAll();
 			}
 		});
+	}
+
+	private void createCoolBar()
+	{
+		coolBar = new CoolBar(sShell, SWT.FLAT);
+
+
+		CoolItem coolItem = new CoolItem(coolBar, SWT.NONE);
+
+		Composite composite = new Composite(coolBar, SWT.NONE);
+		coolItem.setControl(composite);
+		composite.setLayout(new FillLayout(SWT.HORIZONTAL));
+		Button btnAbc2 = new Button(composite, SWT.NONE);
+		btnAbc2.setText("abc2");
+
+		Button btnAbc = new Button(composite, SWT.NONE);
+		btnAbc.setText("abc");
+
+		Button btnAbc3 = new Button(composite, SWT.NONE);
+		btnAbc3.setText("abc3");
+
+		coolItem.setSize(100, 30);
+
+		coolBar.setBounds(5, 5, 300, 30);
+		coolBar.setLocked(true);
 	}
 
 	/**
@@ -163,10 +197,6 @@ public class MainGUI extends BaseUI
 	 */
 	private void createGrpOptions()
 	{
-		grp_options = new Group(sShell, SWT.NONE);
-		grp_options.setLayout(null);
-		grp_options.setText("Options:");
-		grp_options.setBounds(new Rectangle(7, 520, 665, 48));
 	}
 
 	/**
@@ -178,7 +208,7 @@ public class MainGUI extends BaseUI
 		grp_stats.setLayout(null);
 		grp_stats.setText("Variables:");
 		createCmpstSecondary();
-		grp_stats.setBounds(new Rectangle(678, 6, 301, 563));
+		grp_stats.setBounds(new Rectangle(678, 61, 301, 563));
 
 		tbl_data = new Table(grp_stats, SWT.BORDER);
 		tbl_data.setHeaderVisible(true);
@@ -199,20 +229,20 @@ public class MainGUI extends BaseUI
 		Group grpOptions = new Group(sShell, SWT.NONE);
 		grpOptions.setText("Controls");
 		grpOptions.setBounds(985, 5, 159, 563);
-		
+
 		expandBar = new ExpandBar(grpOptions, SWT.NONE);
 		expandBar.setBackground(SWTResourceManager.getColor(SWT.COLOR_WIDGET_BACKGROUND));
 		expandBar.setBounds(10, 21, 139, 532);
-		
+
 		ExpandItem xpndtmTracking = new ExpandItem(expandBar, SWT.NONE);
 		xpndtmTracking.setExpanded(true);
 		xpndtmTracking.setText("Tracking");
-		
+
 		cmpstTracking = new Composite(expandBar, SWT.NONE);
 		xpndtmTracking.setControl(cmpstTracking);
-		
-		
-		
+
+
+
 		btn_start_tracking = new Button(cmpstTracking, SWT.NONE);
 		btn_start_tracking.setBounds(new Rectangle(10, 35, 109, 25));
 		btn_start_tracking.setText("Start Tracking");
@@ -223,7 +253,7 @@ public class MainGUI extends BaseUI
 				controller.btnStartTrackingAction();
 			}
 		});
-		
+
 		btn_stop_tracking = new Button(cmpstTracking, SWT.NONE);
 		btn_stop_tracking.setBounds(new Rectangle(10, 61, 109, 25));
 		btn_stop_tracking.setText("Stop Tracking");
@@ -234,7 +264,7 @@ public class MainGUI extends BaseUI
 				controller.btnStopTrackingAction();
 			}
 		});
-		
+
 		btn_setbg = new Button(cmpstTracking, SWT.NONE);
 		btn_setbg.setBounds(new Rectangle(10, 10, 109, 25));
 		btn_setbg.setText("Set Background");
@@ -245,16 +275,16 @@ public class MainGUI extends BaseUI
 				controller.btnSetbgAction();
 			}
 		});
-		
+
 		xpndtmTracking.setHeight(xpndtmTracking.getControl().computeSize(SWT.DEFAULT, SWT.DEFAULT).y+10);
-		
+
 		ExpandItem xpndtmStreaming = new ExpandItem(expandBar, SWT.NONE);
 		xpndtmStreaming.setExpanded(true);
 		xpndtmStreaming.setText("Streaming");
-		
+
 		cmpstStreaming = new Composite(expandBar, SWT.NONE);
 		xpndtmStreaming.setControl(cmpstStreaming);
-		
+
 		Button btnStartStream = new Button(cmpstStreaming, SWT.NONE);
 		btnStartStream.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -264,7 +294,7 @@ public class MainGUI extends BaseUI
 		});
 		btnStartStream.setBounds(10, 10, 109, 25);
 		btnStartStream.setText("Start Stream");
-		
+
 		Button btnStopStream = new Button(cmpstStreaming, SWT.NONE);
 		btnStopStream.setBounds(10, 37, 109, 25);
 		btnStopStream.addSelectionListener(new SelectionAdapter() {
@@ -274,9 +304,9 @@ public class MainGUI extends BaseUI
 			}
 		});
 		btnStopStream.setText("Stop Stream");
-		
+
 		xpndtmStreaming.setHeight(xpndtmStreaming.getControl().computeSize(SWT.DEFAULT, SWT.DEFAULT).y+10);
-		
+
 	}
 
 	/**
@@ -288,7 +318,7 @@ public class MainGUI extends BaseUI
 		grp_video.setLayout(null);
 		grp_video.setText("Video:");
 
-		grp_video.setBounds(new Rectangle(7, 5, 665, 510));
+		grp_video.setBounds(new Rectangle(10, 61, 665, 510));
 		createCmpstMain();
 	}
 
@@ -320,6 +350,7 @@ public class MainGUI extends BaseUI
 		sShell = new Shell(SWT.APPLICATION_MODAL | SWT.DIALOG_TRIM);
 		sShell.setText("Behavioral Monitoring Tool");
 		createExpandBar();
+		createCoolBar();
 		createGrpVideo();
 		createGrpOptions();
 		createGrpStats();
@@ -374,7 +405,7 @@ public class MainGUI extends BaseUI
 			}
 		});
 		mntmVideoFile.setText("Video File ..");
-		
+
 		MenuItem mntmVidOptions = new MenuItem(mnu_video, SWT.NONE);
 		mntmVidOptions.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -402,6 +433,15 @@ public class MainGUI extends BaseUI
 			}
 		});
 
+
+		sShell.addShellListener(new org.eclipse.swt.events.ShellAdapter() {
+			@Override
+			public void shellClosed(final org.eclipse.swt.events.ShellEvent e)
+			{
+				controller.closeProgram();
+			}
+		});
+
 		mnu_help_item = new MenuItem(menuBar, SWT.CASCADE); // help
 		mnu_help_item.setText("Help");
 		mnu_help = new Menu(mnu_help_item);
@@ -420,13 +460,9 @@ public class MainGUI extends BaseUI
 			{
 			}
 		});
-		sShell.addShellListener(new org.eclipse.swt.events.ShellAdapter() {
-			@Override
-			public void shellClosed(final org.eclipse.swt.events.ShellEvent e)
-			{
-				controller.closeProgram();
-			}
-		});
+
+
+
 		clearForm();
 	}
 
@@ -531,44 +567,22 @@ public class MainGUI extends BaseUI
 		btn_stop_tracking.setEnabled(enable);
 	}
 
-	public VideoRecorderGUI vid_rec_gui;
-	public RearingDetectorGUI rearing_det_gui;
-
 	/**
 	 * Loads GUI instances for the available video filters.
 	 * 
-	 * @param filters
-	 *            ArrayList of available filters
+	 * @param filtersGUI
+	 *            ArrayList of available filters' gui
 	 */
-	public void loadFiltersGUI(final ArrayList<String> filters)
+	public void loadPluggedGUI(final PluggedGUI[] pGUIs)
 	{
-		if (filters.contains("Recorder"))
-			vid_rec_gui = new VideoRecorderGUI(sShell,expandBar/*, grp_options*/);
-		if (filters.contains("RearingDetector"))
-			rearing_det_gui = new RearingDetectorGUI(sShell,expandBar);
-
+		for(PluggedGUI pgui:pGUIs)
+			pgui.initialize(sShell, expandBar,menuBar,coolBar);
+		
+		coolBar.layout();
+		//coolBar.setLocked(true);
+		
 	}
 
-	public RearingModuleGUI rearing_module_gui;
-	public ExperimentModuleGUI experiment_module_gui;
-	public ZonesModuleGUI zones_module_gui;
-
-	/**
-	 * Loads the GUI instances for the available modules.
-	 * 
-	 * @param modules
-	 *            ArrayList of available modules
-	 */
-	public void loadModulesGUI(final ArrayList<String> modules)
-	{
-		if (modules.contains("Rearing Module"))
-			rearing_module_gui = new RearingModuleGUI(grp_stats);
-		if (modules.contains("Experiment Module"))
-			experiment_module_gui = new ExperimentModuleGUI(menuBar, sShell);
-		if (modules.contains("Zones Module"))
-			zones_module_gui = new ZonesModuleGUI(mnu_edit);
-	}
-	
 	public String getSelectedInputMode()
 	{
 		if(mntmCameraSubMenu.getSelection())

@@ -23,6 +23,7 @@
 
 package utils.video.filters.rearingdetection;
 
+import utils.PManager.ProgramState;
 import utils.video.filters.FilterConfigs;
 import utils.video.filters.Link;
 import utils.video.filters.VideoFilter;
@@ -52,7 +53,7 @@ public class RearingDetector extends VideoFilter
 
 		// super's stuff:
 		filter_data = rearing_data;
-
+		gui = new RearingDetectorGUI();
 		rearing_data.setRearing(false);
 	}
 
@@ -163,6 +164,13 @@ public class RearingDetector extends VideoFilter
 			}
 		}
 		rearing_data.setRearing(is_rearing);
+	}
+
+	@Override
+	public void updateProgramState(ProgramState state)
+	{
+		// TODO Auto-generated method stub
+		
 	}
 
 }

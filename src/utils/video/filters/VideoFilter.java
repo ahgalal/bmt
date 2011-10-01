@@ -26,18 +26,22 @@
  */
 package utils.video.filters;
 
+import utils.StateListener;
+import utils.video.filters.recorder.VideoRecorderGUI;
+
 /**
  * Parent of all Video utilities & filters.
  * 
  * @author Creative
  */
-public abstract class VideoFilter
+public abstract class VideoFilter implements StateListener
 {
 	protected String name;
 	protected FilterData filter_data;
 	protected FilterConfigs configs;
 	protected Link link_in, link_out;
-
+	protected PluggedGUI gui;
+	
 	/**
 	 * Initializes the filter.
 	 * 
@@ -148,6 +152,11 @@ public abstract class VideoFilter
 	public FilterConfigs getConfigurations()
 	{
 		return configs;
+	}
+	
+	public PluggedGUI getGUI()
+	{
+		return gui;
 	}
 
 }

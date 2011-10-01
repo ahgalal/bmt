@@ -24,6 +24,9 @@
 package utils;
 
 import gfx_panel.GfxPanel;
+
+import java.util.ArrayList;
+
 import modules.ModulesManager;
 import modules.experiment.ExcelEngine;
 import modules.zones.ShapeController;
@@ -50,6 +53,7 @@ import control.ui.CtrlRatInfoForm;
 public class PManager
 {
 
+	private ArrayList<StateListener> arrStateListsners= new ArrayList<StateListener>();
 	/**
 	 * Defines program states.
 	 * 
@@ -62,7 +66,7 @@ public class PManager
 		 * screen, TRACKING: tracking the object: STREAMING + TRACKING,
 		 * RECORDING: recording video: STREAMING + TRACKING + RECORDING.
 		 */
-		IDLE, RECORDING, STREAMING, TRACKING;
+		LAUNCHING,IDLE, RECORDING, STREAMING, TRACKING;
 	}
 
 	private static PManager default_me;
@@ -167,11 +171,37 @@ public class PManager
 		cam_options = new CtrlCamOptions();
 		options_window = new CtrlOptionsWindow();
 		log = new Logger();
-		new ModulesManager();
+
 		main_gui = new CtrlMainGUI();
+		new ModulesManager();
+		addStateListener(main_gui);
 		main_gui.show(true);
 
 		vp = new VideoManager();
+
+		// State watcher, when state changes, it notified all StateListsners
+		Thread thStateChangedNotifier = new Thread(new Runnable() {
+			ProgramState old_state=ProgramState.LAUNCHING;
+			@Override
+			public void run()
+			{
+				while(main_gui.isUIOpened())
+				{
+					if(old_state!=state)
+					{
+						notifyStateListeners();
+						old_state = state;
+					}
+					try{
+						Thread.sleep(30);
+					} catch (InterruptedException e)
+					{
+						e.printStackTrace();
+					}
+				}
+			}
+		});
+		thStateChangedNotifier.start();
 	}
 
 	/**
@@ -225,6 +255,50 @@ public class PManager
 			vp.unloadLibrary();
 		else
 			status_mgr.setStatus("incorrect state, unable to unload video library", StatusSeverity.ERROR);
+	}
+
+	public void addStateListener(StateListener sListener)
+	{
+		arrStateListsners.add(sListener);
+	}
+	public void removeStateListener(StateListener sListener)
+	{
+		arrStateListsners.remove(sListener);
+	}
+
+	private void notifyStateListeners()
+	{
+		for(StateListener sl: arrStateListsners)
+			sl.updateProgramState(state);
+	}
+
+	public boolean startTracking()
+	{
+		if (state == ProgramState.STREAMING)
+		{
+			ModulesManager.getDefault().initialize();
+			vp.startProcessing();
+			ModulesManager.getDefault().runModules(true);
+			return true;
+		}
+		else
+		{
+			status_mgr.setStatus(
+					"Please start the camera first.",
+					StatusSeverity.ERROR);
+			return false;
+		}
+	}
+
+	public void stopTracking()
+	{
+		if (state == ProgramState.TRACKING |state == ProgramState.RECORDING)
+		{
+			ModulesManager.getDefault().runModules(false);
+			vp.stopProcessing();
+		}
+		else
+			status_mgr.setStatus("Tracking is not running.", StatusSeverity.ERROR);		
 	}
 
 }

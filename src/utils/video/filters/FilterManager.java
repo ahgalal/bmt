@@ -331,7 +331,9 @@ public class FilterManager
 		addFilter(rat_finder);
 		addFilter(screen_drawer);
 
-		PManager.main_gui.loadFiltersGUI(getRegisteredFiltersNames());
+		PManager.main_gui.loadPluggedGUI(getFiltersGUI());
+		for(PluggedGUI fgui: getFiltersGUI())
+			PManager.getDefault().addStateListener(fgui);
 	}
 
 	/**
@@ -347,6 +349,29 @@ public class FilterManager
 			str_names.add(vf.getName());
 
 		return str_names;
+	}
+	
+	public PluggedGUI[] getFiltersGUI()
+	{
+		int validGUIsNumber=0;
+		for(VideoFilter vf: arr_filters)
+		{
+			if(vf.getGUI()!=null)
+			{
+				validGUIsNumber++;
+			}
+		}
+		PluggedGUI[] arr = new PluggedGUI[validGUIsNumber];
+		int i=0;
+		for(VideoFilter vf: arr_filters)
+		{
+			if(vf.getGUI()!=null)
+			{
+				arr[i]=vf.getGUI();
+				i++;
+			}
+		}
+		return arr;
 	}
 
 }

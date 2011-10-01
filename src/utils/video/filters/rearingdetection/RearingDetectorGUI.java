@@ -28,14 +28,16 @@ import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.CoolBar;
 import org.eclipse.swt.widgets.ExpandBar;
 import org.eclipse.swt.widgets.ExpandItem;
+import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Shell;
 
 import utils.PManager;
 import utils.PManager.ProgramState;
 import utils.StatusManager.StatusSeverity;
-import utils.video.filters.FilterGUI;
+import utils.video.filters.PluggedGUI;
 
 /**
  * GUI class for the rearing detector filter.
@@ -43,7 +45,7 @@ import utils.video.filters.FilterGUI;
  * @author Creative
  */
 
-public class RearingDetectorGUI extends FilterGUI
+public class RearingDetectorGUI extends PluggedGUI
 {
 	private Button btn_rearing_now = null;
 	private Button btn_not_rearing = null;
@@ -71,24 +73,39 @@ public class RearingDetectorGUI extends FilterGUI
 	}
 
 	/**
-	 * Initializes/shows the GUI components.
+	 * Notifies the VideoManager that the rat is (rearing/not rearing) in
+	 * reality, so that the VideoManager can start learning the rat's size
+	 * when (rearing/not rearing).
 	 * 
-	 * @param parent
-	 *            parent composite that the components will be children of
+	 * @param rearing
+	 *            is the rat rearing now?
 	 */
-	public RearingDetectorGUI(Shell shell, ExpandBar expandBar)
+	public void rearingNow(final boolean rearing)
 	{
-		super(shell,expandBar);
-		
+		if (PManager.getDefault().state == ProgramState.TRACKING)
+			((RearingDetector) PManager.getDefault()
+					.getVideoManager()
+					.getFilterManager()
+					.getFilterByName(
+					"RearingDetector")).rearingNow(rearing);
+		else
+			PManager.getDefault().status_mgr.setStatus(
+					"Tracking is not running!",
+					StatusSeverity.ERROR);
+	}
+
+	@Override
+	public void initialize(Shell shell, ExpandBar expandBar, Menu menuBar,CoolBar coolBar)
+	{
 		ExpandItem xpndtmRearing = new ExpandItem(expandBar, SWT.NONE);
 		xpndtmRearing.setExpanded(true);
 		xpndtmRearing.setText("Rearing Detector");
-		
+
 		Composite cmpstRearing = new Composite(expandBar, SWT.NONE);
 		xpndtmRearing.setControl(cmpstRearing);
-		
-		
-		
+
+
+
 		btn_rearing_now = new Button(cmpstRearing, SWT.NONE);
 		btn_rearing_now.setText("Rearing NOW");
 		btn_rearing_now.setSize(new Point(100, 25));
@@ -114,25 +131,24 @@ public class RearingDetectorGUI extends FilterGUI
 		xpndtmRearing.setHeight(xpndtmRearing.getControl().computeSize(SWT.DEFAULT, SWT.DEFAULT).y+10);
 	}
 
-	/**
-	 * Notifies the VideoManager that the rat is (rearing/not rearing) in
-	 * reality, so that the VideoManager can start learning the rat's size
-	 * when (rearing/not rearing).
-	 * 
-	 * @param rearing
-	 *            is the rat rearing now?
-	 */
-	public void rearingNow(final boolean rearing)
+	@Override
+	public void inIdleState()
 	{
-		if (PManager.getDefault().state == ProgramState.TRACKING)
-			((RearingDetector) PManager.getDefault()
-					.getVideoManager()
-					.getFilterManager()
-					.getFilterByName(
-							"RearingDetector")).rearingNow(rearing);
-		else
-			PManager.getDefault().status_mgr.setStatus(
-					"Tracking is not running!",
-					StatusSeverity.ERROR);
+		btn_not_rearing.setEnabled(false);
+		btn_rearing_now.setEnabled(false);
+	}
+
+	@Override
+	public void inStreamingState()
+	{
+		btn_not_rearing.setEnabled(false);
+		btn_rearing_now.setEnabled(false);
+	}
+
+	@Override
+	public void inTrackingState()
+	{
+		btn_not_rearing.setEnabled(true);
+		btn_rearing_now.setEnabled(true);
 	}
 }

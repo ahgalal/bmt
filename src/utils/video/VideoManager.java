@@ -93,6 +93,7 @@ public class VideoManager
 	 */
 	private class RunnableProcessor implements Runnable
 	{
+		private int counter=0;
 		@Override
 		public void run()
 		{
@@ -107,7 +108,8 @@ public class VideoManager
 
 			while (video_processor_enabled)
 			{
-				while (v_in.getStatus() != 1)
+				counter=0;
+				while (v_in!=null && v_in.getStatus() != 1 && counter<5)
 				{
 					try
 					{
@@ -116,6 +118,7 @@ public class VideoManager
 								"Device is not Ready!",
 								this,
 								StatusSeverity.ERROR);
+						counter++;
 					} catch (final InterruptedException e)
 					{
 						e.printStackTrace();
@@ -131,6 +134,10 @@ public class VideoManager
 					Thread.sleep(1000 / common_configs.frame_rate);
 				} catch (final InterruptedException e)
 				{
+				}
+				if(counter==5)
+				{
+					unloadLibrary();
 				}
 			}
 			// ////////////////////////////////
