@@ -36,10 +36,12 @@ import org.eclipse.swt.widgets.Shell;
 
 import ui.MainGUI;
 import utils.PManager;
+import utils.StateListener;
 import utils.PManager.ProgramState;
 import utils.StatusManager.StatusSeverity;
 import utils.video.filters.CommonFilterConfigs;
 import utils.video.filters.FilterConfigs;
+import utils.video.filters.PluggedGUI;
 import utils.video.filters.screendrawer.ScreenDrawerConfigs;
 import utils.video.filters.subtractionfilter.SubtractorFilter;
 import utils.video.input.VideoFileModule;
@@ -49,15 +51,24 @@ import utils.video.input.VideoFileModule;
  * 
  * @author Creative
  */
-public class CtrlMainGUI extends ControllerUI
+public class CtrlMainGUI extends ControllerUI implements StateListener
 {
 	private final MainGUI ui;
 	private final PManager pm; // @jve:decl-index=0:
-	private boolean stop_tracking = false;
 	private Thread th_update_gui; // @jve:decl-index=0:
 	private final Shell ui_shell;
 	private boolean ui_is_opened;
 	private final CtrlAbout ctrl_about_box;
+
+
+
+	/**
+	 * @return the ui_is_opened
+	 */
+	public boolean isUIOpened()
+	{
+		return ui_is_opened;
+	}
 
 	/**
 	 * Initializes class attributes (MainGUI,StatsController, PManager and
@@ -74,7 +85,7 @@ public class CtrlMainGUI extends ControllerUI
 		pm.status_mgr.initialize(ui.getStatusLabel());
 		ctrl_about_box = new CtrlAbout();
 
-		ui.loadModulesGUI(ModulesManager.getDefault().getModulesNames());
+		//ui.loadModulesGUI(ModulesManager.getDefault().getModulesNames());
 	}
 
 	/**
@@ -108,22 +119,13 @@ public class CtrlMainGUI extends ControllerUI
 	 */
 	public void startTracking()
 	{
-		if (pm.state == ProgramState.STREAMING)
+		if(pm.startTracking())
 		{
-			ModulesManager.getDefault().initialize();
 			clearForm();
-			stop_tracking = false;
 			if (th_update_gui == null)
 				th_update_gui = new Thread(new RunnableUpdateGUI());
 			th_update_gui.start();
-
-			pm.getVideoManager().startProcessing();
-			ModulesManager.getDefault().runModules(true);
 		}
-		else
-			pm.status_mgr.setStatus(
-					"Please start the camera first.",
-					StatusSeverity.ERROR);
 	}
 
 	/**
@@ -138,7 +140,7 @@ public class CtrlMainGUI extends ControllerUI
 		public void run()
 		{
 			final ExperimentModule local_exp_module = (ExperimentModule) ModulesManager.getDefault()
-					.getModuleByName("Experiment Module");
+			.getModuleByName("Experiment Module");
 
 			while (ui_is_opened)
 			{
@@ -150,7 +152,7 @@ public class CtrlMainGUI extends ControllerUI
 						{
 							if (local_exp_module != null)
 							{
-								if (!local_exp_module.isExperimentPresent())
+/*								if (!local_exp_module.isExperimentPresent())
 								{
 									ui.experiment_module_gui.editExpMenuItemEnable(false);
 									ui.experiment_module_gui.exportExpToExcelMenuItemEnable(false);
@@ -159,66 +161,7 @@ public class CtrlMainGUI extends ControllerUI
 								{
 									ui.experiment_module_gui.editExpMenuItemEnable(true);
 									ui.experiment_module_gui.exportExpToExcelMenuItemEnable(true);
-								}
-							}
-							switch (pm.state)
-							{
-							case IDLE:
-								if (ui.rearing_det_gui != null)
-								{
-									ui.rearing_det_gui.btnNotRearingEnable(false);
-									ui.rearing_det_gui.btnRearingNowEnable(false);
-								}
-								if (ui.vid_rec_gui != null)
-								{
-									ui.vid_rec_gui.btnStartRecordEnable(false);
-									ui.vid_rec_gui.btnStopRecordEnable(false);
-								}
-								ui.btnStartTrackingEnable(true);
-								ui.btnStopTrackingEnable(false);
-								break;
-							case RECORDING:
-								if (ui.rearing_det_gui != null)
-								{
-									ui.rearing_det_gui.btnNotRearingEnable(true);
-									ui.rearing_det_gui.btnRearingNowEnable(true);
-								}
-								if (ui.vid_rec_gui != null)
-								{
-									ui.vid_rec_gui.btnStartRecordEnable(false);
-									ui.vid_rec_gui.btnStopRecordEnable(true);
-								}
-								ui.btnStartTrackingEnable(false);
-								ui.btnStopTrackingEnable(true);
-								break;
-							case STREAMING:
-								if (ui.rearing_det_gui != null)
-								{
-									ui.rearing_det_gui.btnNotRearingEnable(false);
-									ui.rearing_det_gui.btnRearingNowEnable(false);
-								}
-								if (ui.vid_rec_gui != null)
-								{
-									ui.vid_rec_gui.btnStartRecordEnable(false);
-									ui.vid_rec_gui.btnStopRecordEnable(false);
-								}
-								ui.btnStartTrackingEnable(true);
-								ui.btnStopTrackingEnable(false);
-								break;
-							case TRACKING:
-								if (ui.rearing_det_gui != null)
-								{
-									ui.rearing_det_gui.btnNotRearingEnable(true);
-									ui.rearing_det_gui.btnRearingNowEnable(true);
-								}
-								if (ui.vid_rec_gui != null)
-								{
-									ui.vid_rec_gui.btnStartRecordEnable(true);
-									ui.vid_rec_gui.btnStopRecordEnable(false);
-								}
-								ui.btnStartTrackingEnable(false);
-								ui.btnStopTrackingEnable(true);
-								break;
+								}*/
 							}
 						}
 					}
@@ -250,7 +193,7 @@ public class CtrlMainGUI extends ControllerUI
 		public void run()
 		{
 			setTableNamesColumn();
-			while (!stop_tracking)
+			while (pm.state==ProgramState.TRACKING)
 			{
 				try
 				{
@@ -363,21 +306,6 @@ public class CtrlMainGUI extends ControllerUI
 						pm.shape_controller) });
 	}
 
-	/**
-	 * Stops the camera stream, by unloading the VideoManager.
-	 */
-	public void mnuitmStopCameraAction()
-	{
-		if (pm.state == ProgramState.STREAMING)
-		{
-			pm.stopStreaming();
-			pm.status_mgr.setStatus("Camera is Stopped!", StatusSeverity.WARNING);
-		}
-		else if (pm.state == ProgramState.TRACKING)
-			pm.status_mgr.setStatus(
-					"Camera Cannot be stopped while Tracking is running.",
-					StatusSeverity.ERROR);
-	}
 
 	/**
 	 * Handles the camera options menu item click action.
@@ -400,7 +328,6 @@ public class CtrlMainGUI extends ControllerUI
 	 */
 	public void closeProgram()
 	{
-		stop_tracking = true;
 		if (pm.state != ProgramState.RECORDING)
 			pm.stopStreaming();
 		ui_is_opened = false;
@@ -415,33 +342,15 @@ public class CtrlMainGUI extends ControllerUI
 	}
 
 	/**
-	 * Action taken when the user clicks on the Start Recording button.
-	 */
-	public void btnStartRecordAction()
-	{
-		pm.getVideoManager().getFilterManager().enableFilter("Recorder", true);
-	}
-
-	/**
 	 * Stops Tracking: Ends the session of StatsController and saves the rat
 	 * information to file(through the InfoController). if Recording,it stops
 	 * and saves the video file.
 	 */
 	public void btnStopTrackingAction()
 	{
-		if (pm.state == ProgramState.TRACKING | pm.state == ProgramState.RECORDING)
-		{
-			ModulesManager.getDefault().runModules(false);
-			if (pm.state == ProgramState.RECORDING)
-				ui.vid_rec_gui.stopRecordAction();
+		th_update_gui = null;
+		pm.stopTracking();
 
-			pm.getVideoManager().stopProcessing();
-			stop_tracking = true;
-			// stats_controller.endSession();
-			th_update_gui = null;
-		}
-		else
-			pm.status_mgr.setStatus("Tracking is not running.", StatusSeverity.ERROR);
 	}
 
 	/**
@@ -460,8 +369,8 @@ public class CtrlMainGUI extends ControllerUI
 					if (ModulesManager.getDefault().areModulesReady(ui.getShell()))
 					{
 						final ExperimentModule tmp_exp_module = (ExperimentModule) ModulesManager.getDefault()
-								.getModuleByName(
-										"Experiment Module");
+						.getModuleByName(
+								"Experiment Module");
 						if (tmp_exp_module != null)
 						{
 							startTracking();
@@ -475,8 +384,8 @@ public class CtrlMainGUI extends ControllerUI
 									final MessageBox mbox = new MessageBox(
 											ui.getShell(),
 											SWT.ICON_QUESTION
-													| SWT.YES
-													| SWT.NO);
+											| SWT.YES
+											| SWT.NO);
 									mbox.setMessage("No experiment module is found! continue?");
 									mbox.setText("Continue?");
 									final int res = mbox.open();
@@ -557,20 +466,11 @@ public class CtrlMainGUI extends ControllerUI
 	 * @param filters
 	 *            ArrayList of available filters
 	 */
-	public void loadFiltersGUI(final ArrayList<String> filters)
+	public void loadPluggedGUI(final PluggedGUI[] pGUI)
 	{
-		ui.loadFiltersGUI(filters);
-	}
-
-	/**
-	 * Loads the GUI instances for the available modules.
-	 * 
-	 * @param modules
-	 *            ArrayList of available modules
-	 */
-	public void loadModulesGUI(final ArrayList<String> modules)
-	{
-		ui.loadModulesGUI(modules);
+		ui.loadPluggedGUI(pGUI);
+		for(PluggedGUI pgui: pGUI)
+			pm.addStateListener(pgui);
 	}
 
 	public void setVideoFileMode()
@@ -607,12 +507,52 @@ public class CtrlMainGUI extends ControllerUI
 		if(ui.getSelectedInputMode().equals("CAM"))
 			mnutmCameraStartAction();
 		//else if(ui.getSelectedInputMode().equals("VIDEOFILE"))
-			//setVideoFileMode();
+		//setVideoFileMode();
 		pm.startStreaming();
 	}
 
 	public void stopStreaming()
 	{
-		pm.stopStreaming();
+		if (pm.state == ProgramState.STREAMING)
+		{
+			pm.stopStreaming();
+			pm.status_mgr.setStatus("Streaming is Stopped!", StatusSeverity.WARNING);
+		}
+		else if (pm.state == ProgramState.TRACKING)
+			pm.status_mgr.setStatus(
+					"Streaming Cannot be stopped while Tracking is running.",
+					StatusSeverity.ERROR);
+	}
+
+	@Override
+	public void updateProgramState(final ProgramState state)
+	{
+		Display.getDefault().asyncExec(new Runnable() {
+
+			@Override
+			public void run()
+			{
+				switch (state)
+				{
+				case IDLE:
+					ui.btnStartTrackingEnable(true);
+					ui.btnStopTrackingEnable(false);
+					break;
+				case RECORDING:
+					ui.btnStartTrackingEnable(false);
+					ui.btnStopTrackingEnable(true);
+					break;
+				case STREAMING:
+					ui.btnStartTrackingEnable(true);
+					ui.btnStopTrackingEnable(false);
+					break;
+				case TRACKING:
+					ui.btnStartTrackingEnable(false);
+					ui.btnStopTrackingEnable(true);
+					break;
+				}				
+			}
+		});
+
 	}
 }
