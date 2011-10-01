@@ -24,17 +24,21 @@
 package modules.zones;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.widgets.CoolBar;
+import org.eclipse.swt.widgets.ExpandBar;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
+import org.eclipse.swt.widgets.Shell;
 
 import utils.PManager;
+import utils.video.filters.PluggedGUI;
 
 /**
  * GUI class for the ZonesModule.
  * 
  * @author Creative
  */
-public class ZonesModuleGUI
+public class ZonesModuleGUI extends PluggedGUI
 {
 	/**
 	 * Initializes/shows the GUI components.
@@ -42,22 +46,10 @@ public class ZonesModuleGUI
 	 * @param mnu_edit
 	 *            the Edit menu in MainGUI
 	 */
-	public ZonesModuleGUI(final Menu mnu_edit)
+	/*	public ZonesModuleGUI()
 	{
-		final MenuItem mnutm_edit_openzoneeditor = new MenuItem(mnu_edit, SWT.PUSH);
-		mnutm_edit_openzoneeditor.setText("Zone Editor ..");
-		mnutm_edit_openzoneeditor.addSelectionListener(new org.eclipse.swt.events.SelectionListener() {
-			public void widgetDefaultSelected(
-					final org.eclipse.swt.events.SelectionEvent e)
-		{
-		}
 
-			public void widgetSelected(final org.eclipse.swt.events.SelectionEvent e)
-		{
-			mnutmEditOpenZoneEditorAction();
-		}
-		});
-	}
+	}*/
 
 	/**
 	 * Handles the "Zone editor" menu item click action.
@@ -65,5 +57,48 @@ public class ZonesModuleGUI
 	public void mnutmEditOpenZoneEditorAction()
 	{
 		PManager.getDefault().drw_zns.show(true);
+	}
+
+	@Override
+	public void initialize(Shell shell, ExpandBar expandBar, Menu menuBar,CoolBar coolBar)
+	{
+		Menu mnu_edit = null;
+		for(MenuItem miOut: menuBar.getItems())
+			if(miOut.getText().equals("Edit"))
+				mnu_edit = miOut.getMenu();
+		final MenuItem mnutm_edit_openzoneeditor = new MenuItem(mnu_edit, SWT.PUSH);
+		mnutm_edit_openzoneeditor.setText("Zone Editor ..");
+		mnutm_edit_openzoneeditor.addSelectionListener(new org.eclipse.swt.events.SelectionListener() {
+			public void widgetDefaultSelected(
+					final org.eclipse.swt.events.SelectionEvent e)
+			{
+			}
+
+			public void widgetSelected(final org.eclipse.swt.events.SelectionEvent e)
+			{
+				mnutmEditOpenZoneEditorAction();
+			}
+		});		
+	}
+
+	@Override
+	public void inIdleState()
+	{
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void inStreamingState()
+	{
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void inTrackingState()
+	{
+		// TODO Auto-generated method stub
+
 	}
 }

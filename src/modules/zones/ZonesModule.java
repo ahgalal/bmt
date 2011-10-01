@@ -90,7 +90,7 @@ public class ZonesModule extends Module
 		zones_module_data.zones = new ZonesCollection();
 		shape_controller = ShapeController.getDefault();
 		initialize();
-		
+		gui=new ZonesModuleGUI();
 		
 		// TODO: IMPORTANT update the wisth & height of the zone_mape when the user changes them.
 		// We can make a GLOBAL_CONFIGs object that is accessible everywhere, and
