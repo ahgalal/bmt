@@ -34,6 +34,7 @@ import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
 
 import utils.PManager;
+import utils.PManager.ProgramState;
 import utils.StatusManager.StatusSeverity;
 import utils.video.filters.Data;
 
@@ -65,6 +66,7 @@ public class ExperimentModule extends Module
 	{
 		super(name, config);
 		// exp_module_configs=(ExperimentModuleConfigs) config;
+		gui = new ExperimentModuleGUI();
 		exp_module_data = new ExperimentModuleData("Experiment Module Data");
 		this.data = exp_module_data;
 		exp_module_data.exp = new Experiment();
@@ -172,6 +174,7 @@ public class ExperimentModule extends Module
 	{
 		exp_module_data.exp.setExperimentInfo(name, user, date, notes);
 		exp_is_set = true;
+		((ExperimentModuleGUI)gui).setExperimantLoaded(true);
 	}
 
 	/**
@@ -287,6 +290,7 @@ public class ExperimentModule extends Module
 			PManager.getDefault().frm_exp.fillForm(exp_module_data.exp);
 			updateGroupGUIData();
 			exp_is_set = true;
+			((ExperimentModuleGUI)gui).setExperimantLoaded(true);
 		}
 	}
 
@@ -384,6 +388,7 @@ public class ExperimentModule extends Module
 		exp_module_data.exp.clearExperimentData();
 		excel_engine.reset();
 		exp_is_set = false;
+		((ExperimentModuleGUI)gui).setExperimantLoaded(false);
 	}
 
 	@Override
@@ -533,5 +538,6 @@ public class ExperimentModule extends Module
 		// TODO Auto-generated method stub
 
 	}
+
 
 }

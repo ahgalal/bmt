@@ -27,6 +27,12 @@ import modules.ModulesManager;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.layout.FillLayout;
+import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.CoolBar;
+import org.eclipse.swt.widgets.CoolItem;
+import org.eclipse.swt.widgets.ExpandBar;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
@@ -34,21 +40,22 @@ import org.eclipse.swt.widgets.Shell;
 
 import utils.PManager;
 import utils.StatusManager.StatusSeverity;
+import utils.video.filters.PluggedGUI;
 
 /**
  * GUI class for the Experiment Module.
  * 
  * @author Creative
  */
-public class ExperimentModuleGUI
+public class ExperimentModuleGUI extends PluggedGUI
 {
-	private final Shell shell;
+	private Shell shell;
 	private MenuItem mnu_experiment_item = null;
 	private Menu mnu_experiment = null;
 	private MenuItem mnutm_experiment_loadexp = null;
 	private MenuItem mnutm_experiment_exporttoexcel = null;
-	private final MenuItem mnuitm_edt_exp;
-	private final MenuItem mnutm_experiment_newexp;
+	private MenuItem mnuitm_edt_exp;
+	private MenuItem mnutm_experiment_newexp;
 
 	/**
 	 * Initializes/shows the GUI components.
@@ -58,70 +65,8 @@ public class ExperimentModuleGUI
 	 * @param shell
 	 *            parent shell (MainGUI's shell)
 	 */
-	public ExperimentModuleGUI(final Menu menuBar, final Shell shell)
-	{
-		this.shell = shell;
-		mnu_experiment_item = new MenuItem(menuBar, SWT.CASCADE); // experiment
-		mnu_experiment_item.setText("Experiment");
-		mnu_experiment = new Menu(mnu_experiment_item);
-		mnu_experiment_item.setMenu(mnu_experiment);
-		mnutm_experiment_newexp = new MenuItem(mnu_experiment, SWT.PUSH);
-		mnutm_experiment_loadexp = new MenuItem(mnu_experiment, 0);
-		mnutm_experiment_loadexp.setText("Load Exp.");
-		mnutm_experiment_loadexp.setEnabled(true);
-		mnuitm_edt_exp = new MenuItem(mnu_experiment, SWT.PUSH);
-		mnutm_experiment_exporttoexcel = new MenuItem(mnu_experiment, 0);
-		mnutm_experiment_exporttoexcel.setText("Export to Excel");
-		mnutm_experiment_exporttoexcel.setEnabled(true);
-		mnutm_experiment_exporttoexcel.addSelectionListener(new org.eclipse.swt.events.SelectionListener() {
-			public void widgetSelected(final org.eclipse.swt.events.SelectionEvent e)
-			{
-				mnutmExperimentExportToExcelAction();
-			}
-
-			public void widgetDefaultSelected(
-					final org.eclipse.swt.events.SelectionEvent e)
-			{
-			}
-		});
-		mnutm_experiment_newexp.setText("New Exp..");
-
-		mnuitm_edt_exp.setText("Edit Exp.");
-		mnuitm_edt_exp.addSelectionListener(new org.eclipse.swt.events.SelectionListener() {
-			public void widgetDefaultSelected(
-					final org.eclipse.swt.events.SelectionEvent e)
-			{
-			}
-
-			public void widgetSelected(final org.eclipse.swt.events.SelectionEvent e)
-			{
-				mnuitmEditExpAction();
-			}
-		});
-		mnutm_experiment_newexp.addSelectionListener(new org.eclipse.swt.events.SelectionListener() {
-			public void widgetDefaultSelected(
-					final org.eclipse.swt.events.SelectionEvent e)
-			{
-			}
-
-			public void widgetSelected(final org.eclipse.swt.events.SelectionEvent e)
-			{
-				mnutmExperimentNewExpAction();
-			}
-		});
-
-		mnutm_experiment_loadexp.addSelectionListener(new org.eclipse.swt.events.SelectionListener() {
-			@Override
-			public void widgetDefaultSelected(final SelectionEvent arg0)
-			{
-			}
-
-			public void widgetSelected(final org.eclipse.swt.events.SelectionEvent e)
-			{
-				mnutmExperimentLoadexpAction(shell);
-			}
-		});
-	}
+/*	public ExperimentModuleGUI( Shell shell)
+	{}*/
 
 	/**
 	 * Shows a save file dialog to save the exported Excel data to that file.
@@ -185,25 +130,119 @@ public class ExperimentModuleGUI
 		}
 	}
 
-	/**
-	 * Enables/disables the edit experiment menu item.
-	 * 
-	 * @param enable
-	 *            true/false
-	 */
-	public void editExpMenuItemEnable(final boolean enable)
+	@Override
+	public void inIdleState()
 	{
-		mnuitm_edt_exp.setEnabled(enable);
+		// TODO Auto-generated method stub
+		
 	}
 
-	/**
-	 * Enables/disables the export experiment to excel menu item.
-	 * 
-	 * @param enable
-	 *            true/false
-	 */
-	public void exportExpToExcelMenuItemEnable(final boolean enable)
+	@Override
+	public void inStreamingState()
 	{
-		mnutm_experiment_exporttoexcel.setEnabled(enable);
+		// TODO Auto-generated method stub
+		
 	}
+
+	@Override
+	public void inTrackingState()
+	{
+		// TODO Auto-generated method stub
+		
+	}
+	
+	@Override
+	public void initialize(final Shell shell, ExpandBar expandBar,final Menu menuBar,final CoolBar coolBar)
+	{
+		this.shell = shell;
+		
+		CoolItem coolItem = new CoolItem(coolBar, SWT.NONE);
+		
+		Composite composite = new Composite(coolBar, SWT.NONE);
+		coolItem.setControl(composite);
+		composite.setLayout(new FillLayout(SWT.HORIZONTAL));
+		
+		Button btnNewExp = new Button(composite, SWT.NONE);
+		btnNewExp.setText("New Experiment");
+		composite.setBounds(0, 0, 40, 32);
+		coolItem.setSize(composite.getSize().x, composite.getSize().y);
+		
+		
+		mnu_experiment_item = new MenuItem(menuBar, SWT.CASCADE); // experiment
+		mnu_experiment_item.setText("Experiment");
+		mnu_experiment = new Menu(mnu_experiment_item);
+		mnu_experiment_item.setMenu(mnu_experiment);
+		mnutm_experiment_newexp = new MenuItem(mnu_experiment, SWT.PUSH);
+		mnutm_experiment_loadexp = new MenuItem(mnu_experiment, 0);
+		mnutm_experiment_loadexp.setText("Load Exp.");
+		mnutm_experiment_loadexp.setEnabled(true);
+		mnuitm_edt_exp = new MenuItem(mnu_experiment, SWT.PUSH);
+		mnuitm_edt_exp.setEnabled(false);
+		mnutm_experiment_exporttoexcel = new MenuItem(mnu_experiment, 0);
+		mnutm_experiment_exporttoexcel.setText("Export to Excel");
+		mnutm_experiment_exporttoexcel.setEnabled(false);
+		mnutm_experiment_exporttoexcel.addSelectionListener(new org.eclipse.swt.events.SelectionListener() {
+			public void widgetSelected(final org.eclipse.swt.events.SelectionEvent e)
+			{
+				mnutmExperimentExportToExcelAction();
+			}
+
+			public void widgetDefaultSelected(
+					final org.eclipse.swt.events.SelectionEvent e)
+			{
+			}
+		});
+		mnutm_experiment_newexp.setText("New Exp..");
+
+		mnuitm_edt_exp.setText("Edit Exp.");
+		mnuitm_edt_exp.addSelectionListener(new org.eclipse.swt.events.SelectionListener() {
+			public void widgetDefaultSelected(
+					final org.eclipse.swt.events.SelectionEvent e)
+			{
+			}
+
+			public void widgetSelected(final org.eclipse.swt.events.SelectionEvent e)
+			{
+				mnuitmEditExpAction();
+			}
+		});
+		mnutm_experiment_newexp.addSelectionListener(new org.eclipse.swt.events.SelectionListener() {
+			public void widgetDefaultSelected(
+					final org.eclipse.swt.events.SelectionEvent e)
+			{
+			}
+
+			public void widgetSelected(final org.eclipse.swt.events.SelectionEvent e)
+			{
+				mnutmExperimentNewExpAction();
+			}
+		});
+
+		mnutm_experiment_loadexp.addSelectionListener(new org.eclipse.swt.events.SelectionListener() {
+			@Override
+			public void widgetDefaultSelected(final SelectionEvent arg0)
+			{
+			}
+
+			public void widgetSelected(final org.eclipse.swt.events.SelectionEvent e)
+			{
+				mnutmExperimentLoadexpAction(shell);
+			}
+		});
+	}
+	
+	public void setExperimantLoaded(boolean loaded)
+	{
+		if(loaded)
+		{
+			mnuitm_edt_exp.setEnabled(true);
+			mnutm_experiment_exporttoexcel.setEnabled(true);
+		}
+		else
+		{
+			mnuitm_edt_exp.setEnabled(false);
+			mnutm_experiment_exporttoexcel.setEnabled(false);
+		}
+	}
+	
 }
