@@ -23,6 +23,7 @@
 
 package utils.video.filters.source;
 
+import utils.PManager.ProgramState;
 import utils.video.filters.FilterConfigs;
 import utils.video.filters.Link;
 import utils.video.filters.VideoFilter;
@@ -63,6 +64,13 @@ public class SourceFilter extends VideoFilter
 	public void process()
 	{
 		link_out.setData(source_configs.fia.frame_data);
+	}
+
+	@Override
+	public void updateProgramState(ProgramState state)
+	{
+		// TODO Auto-generated method stub
+		
 	}
 
 }

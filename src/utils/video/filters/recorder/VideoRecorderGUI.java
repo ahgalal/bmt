@@ -27,23 +27,27 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.CoolBar;
 import org.eclipse.swt.widgets.ExpandBar;
 import org.eclipse.swt.widgets.ExpandItem;
 import org.eclipse.swt.widgets.FileDialog;
+import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Shell;
 
 import utils.PManager;
+import utils.PManager.ProgramState;
+import utils.video.filters.PluggedGUI;
 
 /**
  * GUI class for the video recorder filter.
  * 
  * @author Creative
  */
-public class VideoRecorderGUI
+public class VideoRecorderGUI extends PluggedGUI
 {
+
 	private Button btn_start_record = null;
 	private Button btn_stop_record = null;
-	private final Shell shell;
 
 	/**
 	 * Initializes/shows the GUI components.
@@ -53,8 +57,9 @@ public class VideoRecorderGUI
 	 * @param parent
 	 *            parent composite that the components will be children of
 	 */
-	public VideoRecorderGUI(final Shell shell,final ExpandBar expandBar/*, final Composite parent*/)
+	public void initialize(final Shell shell,final ExpandBar expandBar, Menu menuBar,CoolBar coolBar)
 	{
+		//super(shell, expandBar);
 		this.shell = shell;
 		ExpandItem xpndtmRecorder = new ExpandItem(expandBar, SWT.NONE);
 		xpndtmRecorder.setExpanded(true);
@@ -98,27 +103,6 @@ public class VideoRecorderGUI
 		xpndtmRecorder.setHeight(xpndtmRecorder.getControl().computeSize(SWT.DEFAULT, SWT.DEFAULT).y+10);
 	}
 
-	/**
-	 * Enables/disables the start recording button.
-	 * 
-	 * @param enable
-	 *            true/false
-	 */
-	public void btnStartRecordEnable(final boolean enable)
-	{
-		btn_start_record.setEnabled(enable);
-	}
-
-	/**
-	 * Enables/disables the stop recording button.
-	 * 
-	 * @param enable
-	 *            true/false
-	 */
-	public void btnStopRecordEnable(final boolean enable)
-	{
-		btn_stop_record.setEnabled(enable);
-	}
 
 	/**
 	 * Stops recording frames, and saves the video file.
@@ -138,4 +122,33 @@ public class VideoRecorderGUI
 						"Recorder")).saveVideoFile(file_name);
 
 	}
+
+	@Override
+	public void inIdleState()
+	{
+		btn_start_record.setEnabled(false);
+		btn_stop_record.setEnabled(false);
+	}
+
+	@Override
+	public void inStreamingState()
+	{
+		btn_start_record.setEnabled(false);
+		btn_stop_record.setEnabled(false);
+		
+		if(programState== ProgramState.TRACKING) // was tracking then stopped
+			stopRecordAction();
+	}
+
+	@Override
+	public void inTrackingState()
+	{
+		btn_start_record.setEnabled(true);
+		btn_stop_record.setEnabled(false);		
+	}
+	
+	
+
+	
+	
 }

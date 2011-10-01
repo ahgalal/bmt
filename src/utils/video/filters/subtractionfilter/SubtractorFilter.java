@@ -24,6 +24,7 @@
 package utils.video.filters.subtractionfilter;
 
 import utils.PManager;
+import utils.PManager.ProgramState;
 import utils.StatusManager.StatusSeverity;
 import utils.video.FrameIntArray;
 import utils.video.ImageManipulator;
@@ -148,6 +149,13 @@ public class SubtractorFilter extends VideoFilter
 				link_out.setData(local_data);
 			}
 		}
+	}
+
+	@Override
+	public void updateProgramState(ProgramState state)
+	{
+		// TODO Auto-generated method stub
+		
 	}
 
 }

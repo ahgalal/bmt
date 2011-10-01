@@ -72,7 +72,10 @@ public class VideoFileModule implements VidInputter
 				//long l1 = System.currentTimeMillis();
 				fia.frame_data= vidLib.getCurrentFrameInt();
 				//long l2 = System.currentTimeMillis();
-				status = 1;
+				if(fia.frame_data!=null)
+					status = 1;
+				else
+					status=0;
 				//System.out.println(l2-l1 + "\n");
 			}
 		}

@@ -30,6 +30,7 @@ import utils.PManager;
 import utils.PManager.ProgramState;
 import utils.StatusManager.StatusSeverity;
 import utils.video.filters.FilterConfigs;
+import utils.video.filters.PluggedGUI;
 import utils.video.filters.Link;
 import utils.video.filters.VideoFilter;
 
@@ -53,6 +54,7 @@ public class VideoRecorder extends VideoFilter
 	public VideoRecorder(final String name, final Link linkIn, final Link linkOut)
 	{
 		super(name, linkIn, linkOut);
+		gui = new VideoRecorderGUI();
 		pm = PManager.getDefault();
 	}
 
@@ -155,4 +157,12 @@ public class VideoRecorder extends VideoFilter
 			return true;
 		}
 	}
+
+	@Override
+	public void updateProgramState(ProgramState state)
+	{
+		// TODO Auto-generated method stub
+		
+	}
+
 }

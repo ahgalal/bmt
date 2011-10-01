@@ -28,6 +28,7 @@ import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferInt;
 
 import utils.PManager;
+import utils.PManager.ProgramState;
 import utils.StatusManager.StatusSeverity;
 import utils.video.filters.FilterConfigs;
 import utils.video.filters.Link;
@@ -87,13 +88,13 @@ public class ScreenDrawer extends VideoFilter
 		data_sec_screen = ((DataBufferInt) buf_img_sec.getRaster().getDataBuffer()).getData();
 		return super.configure(configs);
 	}
-
+	private Thread th_drawer;
 	@Override
 	public boolean enable(final boolean enable)
 	{
 		if (enable)
 		{
-			final Thread th_drawer = new Thread(new RunnableDrawer());
+			th_drawer = new Thread(new RunnableDrawer());
 			th_drawer.start();
 		}
 		return super.enable(enable);
@@ -113,7 +114,7 @@ public class ScreenDrawer extends VideoFilter
 			while (scrn_drwr_cnfgs.ref_gfx_sec_screen == null
 					|| scrn_drwr_cnfgs.ref_gfx_sec_screen == null)
 				try
-				{
+			{
 					Thread.sleep(100);
 					wait_count++;
 					if (wait_count == 10)
@@ -121,10 +122,10 @@ public class ScreenDrawer extends VideoFilter
 								"Drawing Screen is NULL!",
 								this,
 								StatusSeverity.ERROR);
-				} catch (final InterruptedException e2)
-				{
-					e2.printStackTrace();
-				}
+			} catch (final InterruptedException e2)
+			{
+				e2.printStackTrace();
+			}
 
 			try
 			{
@@ -173,15 +174,15 @@ public class ScreenDrawer extends VideoFilter
 											289,
 											214,
 											Image.SCALE_DEFAULT),
-									0,
-									0,
-									scrn_drwr_cnfgs.common_configs.width,
-									scrn_drwr_cnfgs.common_configs.height,
-									0,
-									0,
-									scrn_drwr_cnfgs.common_configs.width,
-									scrn_drwr_cnfgs.common_configs.height,
-									null);
+											0,
+											0,
+											scrn_drwr_cnfgs.common_configs.width,
+											scrn_drwr_cnfgs.common_configs.height,
+											0,
+											0,
+											scrn_drwr_cnfgs.common_configs.width,
+											scrn_drwr_cnfgs.common_configs.height,
+											null);
 					}
 					else
 						PManager.log.print(
@@ -210,6 +211,13 @@ public class ScreenDrawer extends VideoFilter
 					data_sec_screen,
 					0,
 					link_in2.getData().length);
+	}
+
+	@Override
+	public void updateProgramState(ProgramState state)
+	{
+		// TODO Auto-generated method stub
+		
 	}
 
 }
