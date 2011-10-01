@@ -39,6 +39,8 @@ import org.eclipse.swt.widgets.Shell;
 import utils.PManager;
 import utils.StatusManager.StatusSeverity;
 import utils.video.filters.Data;
+import utils.video.filters.PluggedGUI;
+import utils.video.filters.VideoFilter;
 
 /**
  * Manager for all modules.
@@ -166,8 +168,33 @@ public class ModulesManager
 		for (final Module mo : modules)
 			for (final Data data : modules_data)
 				mo.registerModuleDataObject(data);
+		
+		PManager.main_gui.loadPluggedGUI(getModulesGUI());
 	}
 
+	public PluggedGUI[] getModulesGUI()
+	{
+		int validGUIsNumber=0;
+		for(Module module: modules)
+		{
+			if(module.getGUI()!=null)
+			{
+				validGUIsNumber++;
+			}
+		}
+		PluggedGUI[] arr = new PluggedGUI[validGUIsNumber];
+		int i=0;
+		for(Module module: modules)
+		{
+			if(module.getGUI()!=null)
+			{
+				arr[i]=module.getGUI();
+				i++;
+			}
+		}
+		return arr;
+	}
+	
 	/**
 	 * Initializes modules.
 	 */

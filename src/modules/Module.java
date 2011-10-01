@@ -27,14 +27,17 @@ import java.util.Hashtable;
 
 import org.eclipse.swt.widgets.Shell;
 
+import utils.StateListener;
+import utils.PManager.ProgramState;
 import utils.video.filters.Data;
+import utils.video.filters.PluggedGUI;
 
 /**
  * Parent of all modules classes.
  * 
  * @author Creative
  */
-public abstract class Module
+public abstract class Module //implements StateListener
 {
 	protected Cargo gui_cargo;
 	protected Cargo file_cargo;
@@ -44,6 +47,7 @@ public abstract class Module
 	protected Data[] filters_data;
 	protected Data[] modules_data;
 	protected Data data;
+	protected PluggedGUI gui;
 
 	/**
 	 * Gets the data cargo to be sent to GUI.
@@ -179,5 +183,10 @@ public abstract class Module
 	public Data getModuleData()
 	{
 		return data;
+	}
+	
+	public PluggedGUI getGUI()
+	{
+		return gui;
 	}
 }
