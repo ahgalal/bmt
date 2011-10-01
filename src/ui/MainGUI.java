@@ -24,21 +24,22 @@
 package ui;
 
 import java.awt.Frame;
-import java.util.ArrayList;
-
-import modules.experiment.ExperimentModuleGUI;
-import modules.rearing.RearingModuleGUI;
-import modules.zones.ZonesModuleGUI;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.awt.SWT_AWT;
+import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
+import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.CoolBar;
+import org.eclipse.swt.widgets.CoolItem;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.ExpandBar;
+import org.eclipse.swt.widgets.ExpandItem;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Menu;
@@ -47,22 +48,11 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
+import org.eclipse.wb.swt.SWTResourceManager;
 
-import utils.PManager;
 import utils.video.filters.PluggedGUI;
-import utils.video.filters.rearingdetection.RearingDetectorGUI;
-import utils.video.filters.recorder.VideoRecorderGUI;
 import control.ui.ControllerUI;
 import control.ui.CtrlMainGUI;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.widgets.ExpandBar;
-import org.eclipse.swt.widgets.ExpandItem;
-import org.eclipse.wb.swt.SWTResourceManager;
-import org.eclipse.swt.widgets.CoolBar;
-import org.eclipse.swt.widgets.CoolItem;
-import org.eclipse.swt.layout.FillLayout;
-import org.eclipse.swt.layout.RowLayout;
-import org.eclipse.swt.layout.GridData;
 
 /**
  * Main window of the Rat Monitoring Tool, it has links to all program portions.
