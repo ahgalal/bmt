@@ -27,6 +27,8 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.ExpandBar;
+import org.eclipse.swt.widgets.ExpandItem;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Shell;
 
@@ -51,13 +53,20 @@ public class VideoRecorderGUI
 	 * @param parent
 	 *            parent composite that the components will be children of
 	 */
-	public VideoRecorderGUI(final Shell shell, final Composite parent)
+	public VideoRecorderGUI(final Shell shell,final ExpandBar expandBar/*, final Composite parent*/)
 	{
 		this.shell = shell;
-		btn_start_record = new Button(parent, SWT.NONE);
+		ExpandItem xpndtmRecorder = new ExpandItem(expandBar, SWT.NONE);
+		xpndtmRecorder.setExpanded(true);
+		xpndtmRecorder.setText("Recording");
+		
+		Composite cmpstRecording = new Composite(expandBar, SWT.NONE);
+		xpndtmRecorder.setControl(cmpstRecording);
+		
+		btn_start_record = new Button(cmpstRecording, SWT.NONE);
 		btn_start_record.setText("Start Recording");
 		btn_start_record.setSize(new Point(100, 25));
-		btn_start_record.setLocation(new Point(439, 16));
+		btn_start_record.setLocation(new Point(10, 10));
 		btn_start_record.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
 			/**
 			 * Starts video recording.
@@ -71,10 +80,10 @@ public class VideoRecorderGUI
 						.enableFilter("Recorder", true);
 			}
 		});
-		btn_stop_record = new Button(parent, SWT.NONE);
+		btn_stop_record = new Button(cmpstRecording, SWT.NONE);
 		btn_stop_record.setText("Stop Recording");
 		btn_stop_record.setSize(new Point(100, 25));
-		btn_stop_record.setLocation(new Point(549, 16));
+		btn_stop_record.setLocation(new Point(10, 35));
 		btn_stop_record.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
 			/**
 			 * Stops video recording, and asks for a location to save the video
@@ -86,6 +95,7 @@ public class VideoRecorderGUI
 				stopRecordAction();
 			}
 		});
+		xpndtmRecorder.setHeight(xpndtmRecorder.getControl().computeSize(SWT.DEFAULT, SWT.DEFAULT).y+10);
 	}
 
 	/**

@@ -52,6 +52,10 @@ import utils.video.filters.rearingdetection.RearingDetectorGUI;
 import utils.video.filters.recorder.VideoRecorderGUI;
 import control.ui.ControllerUI;
 import control.ui.CtrlMainGUI;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.widgets.ExpandBar;
+import org.eclipse.swt.widgets.ExpandItem;
+import org.eclipse.wb.swt.SWTResourceManager;
 
 /**
  * Main window of the Rat Monitoring Tool, it has links to all program portions.
@@ -62,7 +66,7 @@ public class MainGUI extends BaseUI
 {
 
 	private CtrlMainGUI controller;
-	private Shell sShell = null;
+	private Shell sShell;
 	private Group grp_video = null;
 	private Group grp_options = null;
 	private Group grp_stats = null;
@@ -71,6 +75,7 @@ public class MainGUI extends BaseUI
 	private Menu menuBar = null;
 	private MenuItem mnu_file_item = null;
 	private MenuItem mnu_edit_item = null;
+	private Composite cmpstTracking;
 
 	private MenuItem mnu_camera_item = null;
 	private MenuItem mnu_help_item = null;
@@ -78,6 +83,7 @@ public class MainGUI extends BaseUI
 	private Menu mnu_edit = null;
 
 	private Menu mnu_camera = null;
+	private Menu mnu_video;
 	private Menu mnu_help = null;
 	private MenuItem mnutm_file_exit = null;
 
@@ -85,6 +91,8 @@ public class MainGUI extends BaseUI
 	private Button btn_start_tracking = null;
 	private Composite cmpst_secondary = null;
 	private Frame awt_video_sec; // awt frame to display the processed image
+	private MenuItem mntmCameraSubMenu;
+	private MenuItem mntmVideoFile;
 	// data
 	private Button btn_setbg = null;
 	private Button btn_stop_tracking = null;
@@ -98,6 +106,8 @@ public class MainGUI extends BaseUI
 	{
 		createSShell();
 		super.sShell = this.sShell;
+		
+		
 	}
 
 	@Override
@@ -156,30 +166,7 @@ public class MainGUI extends BaseUI
 		grp_options = new Group(sShell, SWT.NONE);
 		grp_options.setLayout(null);
 		grp_options.setText("Options:");
-		grp_options.setBounds(new Rectangle(7, 520, 665, 51));
-		btn_setbg = new Button(grp_options, SWT.NONE);
-		btn_setbg.setBounds(new Rectangle(18, 16, 123, 25));
-		btn_setbg.setText("Set Background");
-		btn_start_tracking = new Button(grp_options, SWT.NONE);
-		btn_start_tracking.setBounds(new Rectangle(147, 16, 123, 25));
-		btn_start_tracking.setText("Start Tracking");
-		btn_stop_tracking = new Button(grp_options, SWT.NONE);
-		btn_stop_tracking.setBounds(new Rectangle(278, 16, 123, 25));
-		btn_stop_tracking.setText("Stop Tracking");
-		btn_stop_tracking.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
-			@Override
-			public void widgetSelected(final org.eclipse.swt.events.SelectionEvent e)
-			{
-				controller.btnStopTrackingAction();
-			}
-		});
-		btn_start_tracking.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
-			@Override
-			public void widgetSelected(final org.eclipse.swt.events.SelectionEvent e)
-			{
-				controller.btnStartTrackingAction();
-			}
-		});
+		grp_options.setBounds(new Rectangle(7, 520, 665, 48));
 	}
 
 	/**
@@ -204,6 +191,92 @@ public class MainGUI extends BaseUI
 		tableColumn1.setWidth(140);
 		tableColumn1.setText("Value");
 
+	}
+	private ExpandBar expandBar;
+	private Composite cmpstStreaming;
+	private void createExpandBar()
+	{
+		Group grpOptions = new Group(sShell, SWT.NONE);
+		grpOptions.setText("Controls");
+		grpOptions.setBounds(985, 5, 159, 563);
+		
+		expandBar = new ExpandBar(grpOptions, SWT.NONE);
+		expandBar.setBackground(SWTResourceManager.getColor(SWT.COLOR_WIDGET_BACKGROUND));
+		expandBar.setBounds(10, 21, 139, 532);
+		
+		ExpandItem xpndtmTracking = new ExpandItem(expandBar, SWT.NONE);
+		xpndtmTracking.setExpanded(true);
+		xpndtmTracking.setText("Tracking");
+		
+		cmpstTracking = new Composite(expandBar, SWT.NONE);
+		xpndtmTracking.setControl(cmpstTracking);
+		
+		
+		
+		btn_start_tracking = new Button(cmpstTracking, SWT.NONE);
+		btn_start_tracking.setBounds(new Rectangle(10, 35, 109, 25));
+		btn_start_tracking.setText("Start Tracking");
+		btn_start_tracking.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
+			@Override
+			public void widgetSelected(final org.eclipse.swt.events.SelectionEvent e)
+			{
+				controller.btnStartTrackingAction();
+			}
+		});
+		
+		btn_stop_tracking = new Button(cmpstTracking, SWT.NONE);
+		btn_stop_tracking.setBounds(new Rectangle(10, 61, 109, 25));
+		btn_stop_tracking.setText("Stop Tracking");
+		btn_stop_tracking.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
+			@Override
+			public void widgetSelected(final org.eclipse.swt.events.SelectionEvent e)
+			{
+				controller.btnStopTrackingAction();
+			}
+		});
+		
+		btn_setbg = new Button(cmpstTracking, SWT.NONE);
+		btn_setbg.setBounds(new Rectangle(10, 10, 109, 25));
+		btn_setbg.setText("Set Background");
+		btn_setbg.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
+			@Override
+			public void widgetSelected(final org.eclipse.swt.events.SelectionEvent e)
+			{
+				controller.btnSetbgAction();
+			}
+		});
+		
+		xpndtmTracking.setHeight(xpndtmTracking.getControl().computeSize(SWT.DEFAULT, SWT.DEFAULT).y+10);
+		
+		ExpandItem xpndtmStreaming = new ExpandItem(expandBar, SWT.NONE);
+		xpndtmStreaming.setExpanded(true);
+		xpndtmStreaming.setText("Streaming");
+		
+		cmpstStreaming = new Composite(expandBar, SWT.NONE);
+		xpndtmStreaming.setControl(cmpstStreaming);
+		
+		Button btnStartStream = new Button(cmpstStreaming, SWT.NONE);
+		btnStartStream.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				controller.startStreming();
+			}
+		});
+		btnStartStream.setBounds(10, 10, 109, 25);
+		btnStartStream.setText("Start Stream");
+		
+		Button btnStopStream = new Button(cmpstStreaming, SWT.NONE);
+		btnStopStream.setBounds(10, 37, 109, 25);
+		btnStopStream.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				controller.stopStreaming();
+			}
+		});
+		btnStopStream.setText("Stop Stream");
+		
+		xpndtmStreaming.setHeight(xpndtmStreaming.getControl().computeSize(SWT.DEFAULT, SWT.DEFAULT).y+10);
+		
 	}
 
 	/**
@@ -246,21 +319,15 @@ public class MainGUI extends BaseUI
 	{
 		sShell = new Shell(SWT.APPLICATION_MODAL | SWT.DIALOG_TRIM);
 		sShell.setText("Behavioral Monitoring Tool");
+		createExpandBar();
 		createGrpVideo();
 		createGrpOptions();
 		createGrpStats();
-		sShell.setSize(new Point(995, 649));
+		sShell.setSize(new Point(1160, 650));
 		sShell.setLayout(null);
 		lbl_status = new Label(getShell(), SWT.NONE);
-		lbl_status.setBounds(new Rectangle(7, 577, 656, 20));
+		lbl_status.setBounds(new Rectangle(10, 574, 656, 20));
 		lbl_status.setText("");
-		btn_setbg.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
-			@Override
-			public void widgetSelected(final org.eclipse.swt.events.SelectionEvent e)
-			{
-				controller.btnSetbgAction();
-			}
-		});
 
 		menuBar = new Menu(sShell, SWT.BAR);
 		sShell.setMenuBar(menuBar);
@@ -285,49 +352,37 @@ public class MainGUI extends BaseUI
 		});
 
 		mnu_camera_item = new MenuItem(menuBar, SWT.CASCADE); // camera
-		mnu_camera_item.setText("Camera");
-		mnu_camera = new Menu(mnu_camera_item);
-		mnu_camera_item.setMenu(mnu_camera);
-		mnutm_camera_start = new MenuItem(mnu_camera, 0);
-		mnutm_camera_start.setText("Start");
-		mnutm_camera_start.addSelectionListener(new org.eclipse.swt.events.SelectionListener() {
-			public void widgetDefaultSelected(
-					final org.eclipse.swt.events.SelectionEvent e)
-			{
-			}
+		mnu_camera_item.setText("Video");
+		mnu_video = new Menu(mnu_camera_item);
+		mnu_camera_item.setMenu(mnu_video);
 
-			public void widgetSelected(final org.eclipse.swt.events.SelectionEvent e)
-			{
-				controller.mnutmCameraStartAction();
+		mntmCameraSubMenu = new MenuItem(mnu_video, SWT.RADIO);
+		mntmCameraSubMenu.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
 			}
 		});
+		mntmCameraSubMenu.setText("Camera");
 
-		final MenuItem mnutm_camera_options = new MenuItem(mnu_camera, SWT.PUSH);
-		mnutm_camera_options.setText("Options ..");
-		final MenuItem mnuitm_stop_camera = new MenuItem(mnu_camera, SWT.PUSH);
-		mnuitm_stop_camera.setText("Stop");
-		mnuitm_stop_camera.addSelectionListener(new org.eclipse.swt.events.SelectionListener() {
-			public void widgetDefaultSelected(
-					final org.eclipse.swt.events.SelectionEvent e)
-			{
-			}
-
-			public void widgetSelected(final org.eclipse.swt.events.SelectionEvent e)
-			{
-				controller.mnuitmStopCameraAction();
+		mntmVideoFile= new MenuItem(mnu_video, SWT.RADIO);
+		mntmVideoFile.setSelection(true);
+		mntmVideoFile.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				if(e.widget==mntmVideoFile)
+					controller.setVideoFileMode();
 			}
 		});
-		mnutm_camera_options.addSelectionListener(new org.eclipse.swt.events.SelectionListener() {
-			public void widgetDefaultSelected(
-					final org.eclipse.swt.events.SelectionEvent e)
-			{
-			}
-
-			public void widgetSelected(final org.eclipse.swt.events.SelectionEvent e)
-			{
+		mntmVideoFile.setText("Video File ..");
+		
+		MenuItem mntmVidOptions = new MenuItem(mnu_video, SWT.NONE);
+		mntmVidOptions.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
 				controller.mnutmCameraOptionsAction();
 			}
 		});
+		mntmVidOptions.setText("Options ..");
 
 		mnu_edit_item.setText("Edit");
 		mnu_edit = new Menu(mnu_edit_item);
@@ -488,9 +543,9 @@ public class MainGUI extends BaseUI
 	public void loadFiltersGUI(final ArrayList<String> filters)
 	{
 		if (filters.contains("Recorder"))
-			vid_rec_gui = new VideoRecorderGUI(sShell, grp_options);
+			vid_rec_gui = new VideoRecorderGUI(sShell,expandBar/*, grp_options*/);
 		if (filters.contains("RearingDetector"))
-			rearing_det_gui = new RearingDetectorGUI(grp_stats);
+			rearing_det_gui = new RearingDetectorGUI(sShell,expandBar);
 
 	}
 
@@ -512,7 +567,14 @@ public class MainGUI extends BaseUI
 			experiment_module_gui = new ExperimentModuleGUI(menuBar, sShell);
 		if (modules.contains("Zones Module"))
 			zones_module_gui = new ZonesModuleGUI(mnu_edit);
-
 	}
-
+	
+	public String getSelectedInputMode()
+	{
+		if(mntmCameraSubMenu.getSelection())
+			return "CAM";
+		else if(mntmVideoFile.getSelection())
+			return "VIDEOFILE";
+		return null;
+	}
 }

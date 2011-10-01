@@ -30,6 +30,7 @@ import modules.zones.ShapeController;
 
 import org.eclipse.swt.widgets.Display;
 
+import utils.StatusManager.StatusSeverity;
 import utils.video.VideoManager;
 import utils.video.filters.CommonFilterConfigs;
 import control.ui.CtrlAbout;
@@ -191,8 +192,16 @@ public class PManager
 	 */
 	public void initializeVideoManager(final CommonFilterConfigs common_configs)
 	{
-		if (vp.initialize(common_configs))
+		/*if (*/vp.initialize(common_configs);/*)*/
+
+	}
+
+	public void startStreaming()
+	{
+		if(state==ProgramState.IDLE && vp.isInitialized())
 			vp.startStreaming();
+		else
+			status_mgr.setStatus("State is not idle, not able to start streaming", StatusSeverity.ERROR);
 	}
 
 	/**
@@ -210,10 +219,12 @@ public class PManager
 	/**
 	 * Unloads the Video Processor, used when switching video libraries..
 	 */
-	public void unloadVideoManager()
+	public void stopStreaming()
 	{
 		if (vp != null & state != ProgramState.IDLE)
 			vp.unloadLibrary();
+		else
+			status_mgr.setStatus("incorrect state, unable to unload video library", StatusSeverity.ERROR);
 	}
 
 }

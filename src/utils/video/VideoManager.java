@@ -55,6 +55,7 @@ public class VideoManager
 	private boolean video_processor_enabled;
 	private final FilterManager filter_mgr;
 	private final CommonFilterConfigs common_configs;
+	private boolean isInitialized;
 
 	/**
 	 * Gets the filter manager.
@@ -228,6 +229,7 @@ public class VideoManager
 	 */
 	public boolean initialize(final CommonFilterConfigs ip_common_configs)
 	{
+		isInitialized=true;
 		updateCommonConfigs(ip_common_configs);
 
 		String vid_lib = common_configs.vid_library;
@@ -245,7 +247,7 @@ public class VideoManager
 		else if (vid_lib.equals("V4L2"))
 			v_in = new V4L2Module();
 		else if (vid_lib.equals("VideoFile"))
-			v_in = new VideoFileModule("C:\\vid.avi");
+			v_in = new VideoFileModule();
 
 		filter_mgr.configureFilters(common_configs, ref_fia);
 
@@ -317,6 +319,7 @@ public class VideoManager
 	 */
 	public void unloadLibrary()
 	{
+		isInitialized=false;
 		video_processor_enabled = false;
 		try
 		{
@@ -344,6 +347,16 @@ public class VideoManager
 			f_cfg.common_configs = common_configs;
 			filter_mgr.applyConfigsToFilter(f_cfg);
 		}
+	}
+	
+	public VidInputter getVidInputter()
+	{
+		return v_in;
+	}
+
+	public boolean isInitialized()
+	{
+		return isInitialized;
 	}
 
 }

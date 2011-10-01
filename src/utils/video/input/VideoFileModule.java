@@ -41,6 +41,7 @@ public class VideoFileModule implements VidInputter
 	private FrameIntArray fia;
 	private int status;
 	int[] data;
+	private String fileName;
 
 	private JAGVidLib vidLib;
 
@@ -61,7 +62,6 @@ public class VideoFileModule implements VidInputter
 			vidLib.play();
 			while (!stop_stream)
 			{
-				//movie.play();
 				try
 				{
 					Thread.sleep(30);
@@ -70,7 +70,6 @@ public class VideoFileModule implements VidInputter
 					e.printStackTrace();
 				}
 				//long l1 = System.currentTimeMillis();
-				//data= ImageManipulator.byteRGB2IntRGB(((DataBufferByte)movie.getImage().getRaster().getDataBuffer()).getData());
 				fia.frame_data= vidLib.getCurrentFrameInt();
 				//long l2 = System.currentTimeMillis();
 				status = 1;
@@ -82,10 +81,9 @@ public class VideoFileModule implements VidInputter
 	/**
 	 * 
 	 */
-	public VideoFileModule(String file)
+	public VideoFileModule()
 	{
 		vidLib = new JAGVidLib();
-		vidLib.initialize(file);
 	}
 
 	/* (non-Javadoc)
@@ -149,7 +147,7 @@ public class VideoFileModule implements VidInputter
 	@Override
 	public boolean startStream()
 	{
-
+		vidLib.initialize(fileName);
 		th_update_image = new Thread(new RunnableAGCamLib());
 		th_update_image.start();
 		stop_stream=false;
@@ -164,6 +162,11 @@ public class VideoFileModule implements VidInputter
 	{
 		stop_stream=true;
 		vidLib.stop();
+	}
+	
+	public void setVideoFile(String file)
+	{
+		fileName=file;
 	}
 
 }

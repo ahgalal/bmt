@@ -28,10 +28,14 @@ import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.ExpandBar;
+import org.eclipse.swt.widgets.ExpandItem;
+import org.eclipse.swt.widgets.Shell;
 
 import utils.PManager;
 import utils.PManager.ProgramState;
 import utils.StatusManager.StatusSeverity;
+import utils.video.filters.FilterGUI;
 
 /**
  * GUI class for the rearing detector filter.
@@ -39,7 +43,7 @@ import utils.StatusManager.StatusSeverity;
  * @author Creative
  */
 
-public class RearingDetectorGUI
+public class RearingDetectorGUI extends FilterGUI
 {
 	private Button btn_rearing_now = null;
 	private Button btn_not_rearing = null;
@@ -72,14 +76,25 @@ public class RearingDetectorGUI
 	 * @param parent
 	 *            parent composite that the components will be children of
 	 */
-	public RearingDetectorGUI(final Composite parent)
+	public RearingDetectorGUI(Shell shell, ExpandBar expandBar)
 	{
-		btn_rearing_now = new Button(parent, SWT.NONE);
+		super(shell,expandBar);
+		
+		ExpandItem xpndtmRearing = new ExpandItem(expandBar, SWT.NONE);
+		xpndtmRearing.setExpanded(true);
+		xpndtmRearing.setText("Rearing Detector");
+		
+		Composite cmpstRearing = new Composite(expandBar, SWT.NONE);
+		xpndtmRearing.setControl(cmpstRearing);
+		
+		
+		
+		btn_rearing_now = new Button(cmpstRearing, SWT.NONE);
 		btn_rearing_now.setText("Rearing NOW");
 		btn_rearing_now.setSize(new Point(100, 25));
-		btn_rearing_now.setLocation(new Point(188, 530));
-		btn_not_rearing = new Button(parent, SWT.NONE);
-		btn_not_rearing.setBounds(new Rectangle(85, 530, 101, 25));
+		btn_rearing_now.setLocation(new Point(10, 10));
+		btn_not_rearing = new Button(cmpstRearing, SWT.NONE);
+		btn_not_rearing.setBounds(new Rectangle(10, 35, 101, 25));
 		btn_not_rearing.setText("Not Rearing");
 
 		btn_not_rearing.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
@@ -96,6 +111,7 @@ public class RearingDetectorGUI
 				rearingNow(true);
 			}
 		});
+		xpndtmRearing.setHeight(xpndtmRearing.getControl().computeSize(SWT.DEFAULT, SWT.DEFAULT).y+10);
 	}
 
 	/**
