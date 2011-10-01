@@ -61,6 +61,7 @@ public class RearingModule extends Module
 		filters_data = new Data[1];
 		rearing_configs = configs;
 		initialize();
+		gui= new RearingModuleGUI();
 	}
 
 	/**
