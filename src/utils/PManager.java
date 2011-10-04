@@ -231,7 +231,7 @@ public class PManager
 		if(state==ProgramState.IDLE && vp.isInitialized())
 			vp.startStreaming();
 		else
-			status_mgr.setStatus("State is not idle, not able to start streaming", StatusSeverity.ERROR);
+			status_mgr.setStatus("State is not idle or no video source selected, not able to start streaming", StatusSeverity.ERROR);
 	}
 
 	/**

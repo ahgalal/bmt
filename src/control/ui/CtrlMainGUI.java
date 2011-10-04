@@ -117,7 +117,7 @@ public class CtrlMainGUI extends ControllerUI implements StateListener
 	 * Starts Tracking: starts StartsController session , the thread
 	 * "runnableUpdateGUI" and the VideoManager Processing session.
 	 */
-	public void startTracking()
+	private void startTracking()
 	{
 		if(pm.startTracking())
 		{
@@ -346,7 +346,7 @@ public class CtrlMainGUI extends ControllerUI implements StateListener
 	 * information to file(through the InfoController). if Recording,it stops
 	 * and saves the video file.
 	 */
-	public void btnStopTrackingAction()
+	public void stopTrackingAction()
 	{
 		th_update_gui = null;
 		pm.stopTracking();
@@ -356,7 +356,7 @@ public class CtrlMainGUI extends ControllerUI implements StateListener
 	/**
 	 * Shows the rat information window to enter the next rat number & group.
 	 */
-	public void btnStartTrackingAction()
+	public void startTrackingAction()
 	{
 		final Thread th_start_gui_procedures = new Thread(new Runnable() {
 
@@ -502,7 +502,7 @@ public class CtrlMainGUI extends ControllerUI implements StateListener
 		}
 	}
 
-	public void startStreming()
+	public void startStreamingAction()
 	{
 		if(ui.getSelectedInputMode().equals("CAM"))
 			mnutmCameraStartAction();
@@ -511,7 +511,7 @@ public class CtrlMainGUI extends ControllerUI implements StateListener
 		pm.startStreaming();
 	}
 
-	public void stopStreaming()
+	public void stopStreamingAction()
 	{
 		if (pm.state == ProgramState.STREAMING)
 		{
@@ -537,6 +537,8 @@ public class CtrlMainGUI extends ControllerUI implements StateListener
 				case IDLE:
 					ui.btnStartTrackingEnable(true);
 					ui.btnStopTrackingEnable(false);
+					ui.btnStartStreamingEnable(true);
+					ui.btnStopStreamingEnable(false);
 					break;
 				case RECORDING:
 					ui.btnStartTrackingEnable(false);
@@ -545,10 +547,14 @@ public class CtrlMainGUI extends ControllerUI implements StateListener
 				case STREAMING:
 					ui.btnStartTrackingEnable(true);
 					ui.btnStopTrackingEnable(false);
+					ui.btnStartStreamingEnable(false);
+					ui.btnStopStreamingEnable(true);
 					break;
 				case TRACKING:
 					ui.btnStartTrackingEnable(false);
 					ui.btnStopTrackingEnable(true);
+					ui.btnStartStreamingEnable(false);
+					ui.btnStopStreamingEnable(false);
 					break;
 				}				
 			}

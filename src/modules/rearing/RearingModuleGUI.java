@@ -123,21 +123,21 @@ public class RearingModuleGUI extends PluggedGUI
 	@Override
 	public void inIdleState()
 	{
-		// TODO Auto-generated method stub
-
+		btn_add_rearing.setEnabled(false);
+		btn_sub_rearing.setEnabled(false);
 	}
 
 	@Override
 	public void inStreamingState()
 	{
-		// TODO Auto-generated method stub
-
+		btn_add_rearing.setEnabled(false);
+		btn_sub_rearing.setEnabled(false);
 	}
 
 	@Override
 	public void inTrackingState()
 	{
-		// TODO Auto-generated method stub
-
+		btn_add_rearing.setEnabled(true);
+		btn_sub_rearing.setEnabled(true);
 	}
 }

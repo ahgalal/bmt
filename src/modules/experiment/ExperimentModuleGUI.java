@@ -156,7 +156,7 @@ public class ExperimentModuleGUI extends PluggedGUI
 	{
 		this.shell = shell;
 		
-		CoolItem coolItem = new CoolItem(coolBar, SWT.NONE);
+/*		CoolItem coolItem = new CoolItem(coolBar, SWT.NONE);
 		
 		Composite composite = new Composite(coolBar, SWT.NONE);
 		coolItem.setControl(composite);
@@ -165,7 +165,7 @@ public class ExperimentModuleGUI extends PluggedGUI
 		Button btnNewExp = new Button(composite, SWT.NONE);
 		btnNewExp.setText("New Experiment");
 		composite.setBounds(0, 0, 40, 32);
-		coolItem.setSize(composite.getSize().x, composite.getSize().y);
+		coolItem.setSize(composite.getSize().x, composite.getSize().y);*/
 		
 		
 		mnu_experiment_item = new MenuItem(menuBar, SWT.CASCADE); // experiment

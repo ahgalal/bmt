@@ -86,7 +86,7 @@ public class VideoManager
 	}
 
 	/**
-	 * Runnable for grabing image from the input library and pass it to all
+	 * Runnable for grabbing image from the input library and pass it to all
 	 * filters.
 	 * 
 	 * @author Creative
