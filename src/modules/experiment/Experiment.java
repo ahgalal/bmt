@@ -25,7 +25,6 @@ package modules.experiment;
 
 import java.util.ArrayList;
 
-import modules.Exp2GUI;
 
 /**
  * Handles all the experiments info.

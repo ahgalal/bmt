@@ -21,7 +21,7 @@
  *   
  **************************************************************************/
 
-package modules;
+package modules.experiment;
 
 /**
  * Gives the GUI what it want to see of an Experiment Object.

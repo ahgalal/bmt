@@ -23,8 +23,8 @@
 
 package control.ui;
 
-import modules.Exp2GUI;
 import modules.ModulesManager;
+import modules.experiment.Exp2GUI;
 import modules.experiment.ExperimentModule;
 
 import org.eclipse.swt.SWT;
