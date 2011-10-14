@@ -1,24 +1,15 @@
 /***************************************************************************
- *  Copyright 2010,2011 by Ahmed Galal, Ahmed Mohammed Aly,
- *  Sarah Hamid and Mohammed Ahmed Ramadan
- *  contact: ceng.ahmedgalal@gmail.com
- *
- *  This file is part of Behavioral Monitoring Tool.
- *
- *  Behavioral Monitoring Tool is free software: you can redistribute it
- *  and/or modify it under the terms of the GNU General Public License as
- *  published by the Free Software Foundation, version 3 of the
- *  License.
- *
- *  Behavioral Monitoring Tool is distributed in the hope that it
- *  will be useful, but WITHOUT ANY WARRANTY; without even the implied
- *  warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- *  See the GNU General Public License for more details.
- *
- *  You should have received a copy of the GNU General Public License
- *  along with Behavioral Monitoring Tool.
- *  If not, see <http://www.gnu.org/licenses/>.
- *   
+ * Copyright 2010,2011 by Ahmed Galal, Ahmed Mohammed Aly, Sarah Hamid and
+ * Mohammed Ahmed Ramadan contact: ceng.ahmedgalal@gmail.com This file is part
+ * of Behavioral Monitoring Tool. Behavioral Monitoring Tool is free software:
+ * you can redistribute it and/or modify it under the terms of the GNU General
+ * Public License as published by the Free Software Foundation, version 3 of the
+ * License. Behavioral Monitoring Tool is distributed in the hope that it will
+ * be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General
+ * Public License for more details. You should have received a copy of the GNU
+ * General Public License along with Behavioral Monitoring Tool. If not, see
+ * <http://www.gnu.org/licenses/>.
  **************************************************************************/
 
 package utils.video.filters;
@@ -28,11 +19,11 @@ import java.util.ArrayList;
 
 import modules.ModulesManager;
 import modules.zones.ShapeController;
+import ui.PluggedGUI;
 import utils.PManager;
 import utils.StatusManager.StatusSeverity;
 import utils.video.FrameIntArray;
 import utils.video.filters.RatFinder.RatFinder;
-import utils.video.filters.RatFinder.RatFinder2;
 import utils.video.filters.RatFinder.RatFinderData;
 import utils.video.filters.RatFinder.RatFinderFilterConfigs;
 import utils.video.filters.rearingdetection.RearingDetector;
@@ -306,8 +297,8 @@ public class FilterManager
 
 		rat_finder = new RatFinder(
 				"RatFinder", grey_link, marker_link);
-/*		rat_finder = new RatFinder2(
-				"RatFinder", grey_link, marker_link);*/
+		/*		rat_finder = new RatFinder2(
+						"RatFinder", grey_link, marker_link);*/
 
 		rearing_det = new RearingDetector(
 				"RearingDetector", grey_link, null);
@@ -332,7 +323,7 @@ public class FilterManager
 		addFilter(screen_drawer);
 
 		PManager.main_gui.loadPluggedGUI(getFiltersGUI());
-		for(PluggedGUI fgui: getFiltersGUI())
+		for (final PluggedGUI fgui : getFiltersGUI())
 			PManager.getDefault().addStateListener(fgui);
 	}
 
@@ -350,24 +341,24 @@ public class FilterManager
 
 		return str_names;
 	}
-	
+
 	public PluggedGUI[] getFiltersGUI()
 	{
-		int validGUIsNumber=0;
-		for(VideoFilter vf: arr_filters)
+		int validGUIsNumber = 0;
+		for (final VideoFilter vf : arr_filters)
 		{
-			if(vf.getGUI()!=null)
+			if (vf.getGUI() != null)
 			{
 				validGUIsNumber++;
 			}
 		}
-		PluggedGUI[] arr = new PluggedGUI[validGUIsNumber];
-		int i=0;
-		for(VideoFilter vf: arr_filters)
+		final PluggedGUI[] arr = new PluggedGUI[validGUIsNumber];
+		int i = 0;
+		for (final VideoFilter vf : arr_filters)
 		{
-			if(vf.getGUI()!=null)
+			if (vf.getGUI() != null)
 			{
-				arr[i]=vf.getGUI();
+				arr[i] = vf.getGUI();
 				i++;
 			}
 		}

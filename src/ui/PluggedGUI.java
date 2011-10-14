@@ -1,4 +1,4 @@
-package utils.video.filters;
+package ui;
 
 import org.eclipse.swt.widgets.CoolBar;
 import org.eclipse.swt.widgets.Display;
@@ -14,10 +14,17 @@ public abstract class PluggedGUI implements StateListener
 {
 	protected Shell shell;
 	protected PManager.ProgramState programState;
-	public abstract void initialize(Shell shell,ExpandBar expandBar, Menu menuBar,CoolBar coolBar);
+
+	public abstract void initialize(
+			Shell shell,
+			ExpandBar expandBar,
+			Menu menuBar,
+			CoolBar coolBar);
+
+	@Override
 	public void updateProgramState(final ProgramState state)
 	{
-		if(state!=programState)
+		if (state != programState)
 		{
 			Display.getDefault().asyncExec(new Runnable() {
 
@@ -35,14 +42,17 @@ public abstract class PluggedGUI implements StateListener
 					case TRACKING:
 						inTrackingState();
 						break;
-					}				
+					}
 				}
 			});
 		}
-		programState=state;
+		programState = state;
 	}
+
 	public abstract void inIdleState();
+
 	public abstract void inStreamingState();
+
 	public abstract void inTrackingState();
 
 }

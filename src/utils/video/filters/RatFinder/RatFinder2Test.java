@@ -1,24 +1,15 @@
 /***************************************************************************
- *  Copyright 2010,2011 by Ahmed Galal, Ahmed Mohammed Aly,
- *  Sarah Hamid and Mohammed Ahmed Ramadan
- *  contact: ceng.ahmedgalal@gmail.com
- *
- *  This file is part of Behavioral Monitoring Tool.
- *
- *  Behavioral Monitoring Tool is free software: you can redistribute it
- *  and/or modify it under the terms of the GNU General Public License as
- *  published by the Free Software Foundation, version 3 of the
- *  License.
- *
- *  Behavioral Monitoring Tool is distributed in the hope that it
- *  will be useful, but WITHOUT ANY WARRANTY; without even the implied
- *  warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- *  See the GNU General Public License for more details.
- *
- *  You should have received a copy of the GNU General Public License
- *  along with Behavioral Monitoring Tool.
- *  If not, see <http://www.gnu.org/licenses/>.
- *   
+ * Copyright 2010,2011 by Ahmed Galal, Ahmed Mohammed Aly, Sarah Hamid and
+ * Mohammed Ahmed Ramadan contact: ceng.ahmedgalal@gmail.com This file is part
+ * of Behavioral Monitoring Tool. Behavioral Monitoring Tool is free software:
+ * you can redistribute it and/or modify it under the terms of the GNU General
+ * Public License as published by the Free Software Foundation, version 3 of the
+ * License. Behavioral Monitoring Tool is distributed in the hope that it will
+ * be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General
+ * Public License for more details. You should have received a copy of the GNU
+ * General Public License along with Behavioral Monitoring Tool. If not, see
+ * <http://www.gnu.org/licenses/>.
  **************************************************************************/
 
 /**
@@ -26,7 +17,7 @@
  */
 package utils.video.filters.RatFinder;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.fail;
 
 import java.awt.Point;
 
@@ -40,13 +31,13 @@ import utils.video.filters.Link;
 
 /**
  * @author Creative
- *
  */
 public class RatFinder2Test
 {
-	int width=10;
+	int width = 10;
 	RatFinder2 rf2;
 	int[] img;
+
 	/**
 	 * @throws java.lang.Exception
 	 */
@@ -69,27 +60,27 @@ public class RatFinder2Test
 	@Before
 	public void setUp() throws Exception
 	{
-		
-		img=new int[100];
-		
-		img[3+width*1]=255;
-		img[4+width*1]=255;
-		
-		img[2+width*2]=255;
-		img[3+width*2]=255;
-		img[4+width*2]=255;
-		img[5+width*2]=255;
-		
-		img[3+width*3]=255;
-		img[4+width*3]=255;
-		
-		Link lin,lout;
-		lin=new Link(new Point(10,10));
-		lout=new Link(new Point(10,10));
+
+		img = new int[100];
+
+		img[3 + width * 1] = 255;
+		img[4 + width * 1] = 255;
+
+		img[2 + width * 2] = 255;
+		img[3 + width * 2] = 255;
+		img[4 + width * 2] = 255;
+		img[5 + width * 2] = 255;
+
+		img[3 + width * 3] = 255;
+		img[4 + width * 3] = 255;
+
+		Link lin, lout;
+		lin = new Link(new Point(10, 10));
+		lout = new Link(new Point(10, 10));
 		rf2 = new RatFinder2("a", lin, lout);
-		
+
 		lin.setData(img);
-		
+
 	}
 
 	/**
@@ -101,7 +92,9 @@ public class RatFinder2Test
 	}
 
 	/**
-	 * Test method for {@link utils.video.filters.RatFinder.RatFinder2#contourEdge(int[], int, int, int, int)}.
+	 * Test method for
+	 * {@link utils.video.filters.RatFinder.RatFinder2#contourEdge(int[], int, int, int, int)}
+	 * .
 	 */
 	@Test
 	public final void testContourEdge()

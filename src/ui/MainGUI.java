@@ -1,30 +1,22 @@
 /***************************************************************************
- *  Copyright 2010,2011 by Ahmed Galal, Ahmed Mohammed Aly,
- *  Sarah Hamid and Mohammed Ahmed Ramadan
- *  contact: ceng.ahmedgalal@gmail.com
- *
- *  This file is part of Behavioral Monitoring Tool.
- *
- *  Behavioral Monitoring Tool is free software: you can redistribute it
- *  and/or modify it under the terms of the GNU General Public License as
- *  published by the Free Software Foundation, version 3 of the
- *  License.
- *
- *  Behavioral Monitoring Tool is distributed in the hope that it
- *  will be useful, but WITHOUT ANY WARRANTY; without even the implied
- *  warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- *  See the GNU General Public License for more details.
- *
- *  You should have received a copy of the GNU General Public License
- *  along with Behavioral Monitoring Tool.
- *  If not, see <http://www.gnu.org/licenses/>.
- *   
+ * Copyright 2010,2011 by Ahmed Galal, Ahmed Mohammed Aly, Sarah Hamid and
+ * Mohammed Ahmed Ramadan contact: ceng.ahmedgalal@gmail.com This file is part
+ * of Behavioral Monitoring Tool. Behavioral Monitoring Tool is free software:
+ * you can redistribute it and/or modify it under the terms of the GNU General
+ * Public License as published by the Free Software Foundation, version 3 of the
+ * License. Behavioral Monitoring Tool is distributed in the hope that it will
+ * be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General
+ * Public License for more details. You should have received a copy of the GNU
+ * General Public License along with Behavioral Monitoring Tool. If not, see
+ * <http://www.gnu.org/licenses/>.
  **************************************************************************/
 
 package ui;
 
 import java.awt.Frame;
 
+import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.awt.SWT_AWT;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -50,13 +42,8 @@ import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.wb.swt.SWTResourceManager;
 
-import utils.video.filters.PluggedGUI;
 import control.ui.ControllerUI;
 import control.ui.CtrlMainGUI;
-import org.eclipse.core.databinding.DataBindingContext;
-import org.eclipse.core.databinding.observable.value.IObservableValue;
-import org.eclipse.jface.databinding.swt.SWTObservables;
-import org.eclipse.core.databinding.beans.PojoObservables;
 
 /**
  * Main window of the Rat Monitoring Tool, it has links to all program portions.
@@ -70,7 +57,7 @@ public class MainGUI extends BaseUI
 	private CtrlMainGUI controller;
 	private Shell sShell;
 	private Group grp_video = null;
-	private Group grp_options = null;
+	private final Group grp_options = null;
 	private Group grp_stats = null;
 	private Composite cmpst_main = null;
 	private Frame awt_video_main; // awt frame to display main screen data
@@ -84,12 +71,12 @@ public class MainGUI extends BaseUI
 	private Menu mnu_file = null;
 	private Menu mnu_edit = null;
 
-	private Menu mnu_camera = null;
+	private final Menu mnu_camera = null;
 	private Menu mnuVideo;
 	private Menu mnu_help = null;
 	private MenuItem mnutm_file_exit = null;
 
-	private MenuItem mnutm_camera_start = null;
+	private final MenuItem mnutm_camera_start = null;
 	private Button btnStartTracking = null;
 	private Composite cmpst_secondary = null;
 	private Frame awt_video_sec; // awt frame to display the processed image
@@ -101,6 +88,7 @@ public class MainGUI extends BaseUI
 	private Label lbl_status = null;
 	private Table tbl_data = null;
 	private CoolBar coolBar;
+
 	/**
 	 * Creates GUI components, and links this Shell with the parent Shell.
 	 */
@@ -108,10 +96,6 @@ public class MainGUI extends BaseUI
 	{
 		createSShell();
 		super.sShell = this.sShell;
-
-
-
-
 	}
 
 	@Override
@@ -131,64 +115,62 @@ public class MainGUI extends BaseUI
 	{
 		coolBar = new CoolBar(sShell, SWT.FLAT);
 
-		//////////////////////////////////////////////
+		// ////////////////////////////////////////////
 		// Stream Control
-		CoolItem cItemStreamControl = new CoolItem(coolBar, SWT.NONE);
-		Composite cmpstStreamControl = new Composite(coolBar, SWT.NONE);
+		final CoolItem cItemStreamControl = new CoolItem(coolBar, SWT.NONE);
+		final Composite cmpstStreamControl = new Composite(coolBar, SWT.NONE);
 		cItemStreamControl.setControl(cmpstStreamControl);
 		cmpstStreamControl.setLayout(new FillLayout(SWT.HORIZONTAL));
-		Button btnStartStreaming = new Button(cmpstStreamControl, SWT.NONE);
+		final Button btnStartStreaming = new Button(cmpstStreamControl, SWT.NONE);
 		btnStartStreaming.setText("strt");
 		btnStartStreaming.addSelectionListener(new SelectionAdapter() {
 			@Override
-			public void widgetSelected(SelectionEvent e)
+			public void widgetSelected(final SelectionEvent e)
 			{
 				controller.startStreamingAction();
 			}
 		});
 
-		Button btnStopStreaming = new Button(cmpstStreamControl, SWT.NONE);
+		final Button btnStopStreaming = new Button(cmpstStreamControl, SWT.NONE);
 		btnStopStreaming.setText("stp");
 		btnStopStreaming.addSelectionListener(new SelectionAdapter() {
 			@Override
-			public void widgetSelected(SelectionEvent e)
+			public void widgetSelected(final SelectionEvent e)
 			{
 				controller.stopStreamingAction();
 			}
 		});
 		cItemStreamControl.setSize(100, 30);
-		
-		//////////////////////////////////////////////
+
+		// ////////////////////////////////////////////
 		// Tracking Control
-		CoolItem cItemTrackingControl = new CoolItem(coolBar, SWT.NONE);
-		Composite cmpstTrackingControl = new Composite(coolBar, SWT.NONE);
+		final CoolItem cItemTrackingControl = new CoolItem(coolBar, SWT.NONE);
+		final Composite cmpstTrackingControl = new Composite(coolBar, SWT.NONE);
 		cItemTrackingControl.setControl(cmpstTrackingControl);
 		cmpstTrackingControl.setLayout(new FillLayout(SWT.HORIZONTAL));
 
-		Button btnStartTracking = new Button(cmpstTrackingControl, SWT.NONE);
+		final Button btnStartTracking = new Button(cmpstTrackingControl, SWT.NONE);
 		btnStartTracking.setText("track");
 		btnStartTracking.addSelectionListener(new SelectionAdapter() {
 			@Override
-			public void widgetSelected(SelectionEvent e)
+			public void widgetSelected(final SelectionEvent e)
 			{
 				controller.startTrackingAction();
 			}
 		});
 
-		Button btnStopTracking = new Button(cmpstTrackingControl, SWT.NONE);
+		final Button btnStopTracking = new Button(cmpstTrackingControl, SWT.NONE);
 		btnStopTracking.setText("stp");
 		btnStopTracking.addSelectionListener(new SelectionAdapter() {
 			@Override
-			public void widgetSelected(SelectionEvent e)
+			public void widgetSelected(final SelectionEvent e)
 			{
 				controller.stopTrackingAction();
 			}
 		});
 		cItemTrackingControl.setSize(100, 30);
-		
-		
-		coolBar.setBounds(5, 5, 300, 30);
-		coolBar.setLocked(true);
+
+		// coolBar.setLocked(true);
 	}
 
 	/**
@@ -256,13 +238,15 @@ public class MainGUI extends BaseUI
 		tableColumn1.setText("Value");
 
 	}
+
 	private ExpandBar expandBar;
 	private Composite cmpstStreaming;
 	private Button btnStartStream;
 	private Button btnStopStream;
+
 	private void createExpandBar()
 	{
-		Group grpOptions = new Group(sShell, SWT.NONE);
+		final Group grpOptions = new Group(sShell, SWT.NONE);
 		grpOptions.setText("Controls");
 		grpOptions.setBounds(985, 5, 159, 563);
 
@@ -270,9 +254,9 @@ public class MainGUI extends BaseUI
 		expandBar.setBackground(SWTResourceManager.getColor(SWT.COLOR_WIDGET_BACKGROUND));
 		expandBar.setBounds(10, 21, 139, 532);
 
-		//////////////////////////////////////////////
+		// ////////////////////////////////////////////
 		// Stream Controls
-		ExpandItem xpndtmStreaming = new ExpandItem(expandBar, SWT.NONE);
+		final ExpandItem xpndtmStreaming = new ExpandItem(expandBar, SWT.NONE);
 		xpndtmStreaming.setExpanded(true);
 		xpndtmStreaming.setText("Streaming");
 
@@ -282,7 +266,8 @@ public class MainGUI extends BaseUI
 		btnStartStream = new Button(cmpstStreaming, SWT.NONE);
 		btnStartStream.addSelectionListener(new SelectionAdapter() {
 			@Override
-			public void widgetSelected(SelectionEvent e) {
+			public void widgetSelected(final SelectionEvent e)
+			{
 				controller.startStreamingAction();
 			}
 		});
@@ -293,18 +278,20 @@ public class MainGUI extends BaseUI
 		btnStopStream.setBounds(10, 37, 109, 25);
 		btnStopStream.addSelectionListener(new SelectionAdapter() {
 			@Override
-			public void widgetSelected(SelectionEvent e) {
+			public void widgetSelected(final SelectionEvent e)
+			{
 				controller.stopStreamingAction();
 			}
 		});
 		btnStopStream.setText("Stop Stream");
 
-		xpndtmStreaming.setHeight(xpndtmStreaming.getControl().computeSize(SWT.DEFAULT, SWT.DEFAULT).y+10);
+		xpndtmStreaming.setHeight(xpndtmStreaming.getControl().computeSize(
+				SWT.DEFAULT,
+				SWT.DEFAULT).y + 10);
 
-
-		//////////////////////////////////////////////
+		// ////////////////////////////////////////////
 		// Tracking Controls
-		ExpandItem xpndtmTracking = new ExpandItem(expandBar, SWT.NONE);
+		final ExpandItem xpndtmTracking = new ExpandItem(expandBar, SWT.NONE);
 		xpndtmTracking.setExpanded(true);
 		xpndtmTracking.setText("Tracking");
 
@@ -344,7 +331,9 @@ public class MainGUI extends BaseUI
 			}
 		});
 
-		xpndtmTracking.setHeight(xpndtmTracking.getControl().computeSize(SWT.DEFAULT, SWT.DEFAULT).y+10);
+		xpndtmTracking.setHeight(xpndtmTracking.getControl().computeSize(
+				SWT.DEFAULT,
+				SWT.DEFAULT).y + 10);
 
 	}
 
@@ -382,6 +371,7 @@ public class MainGUI extends BaseUI
 	}
 
 	private boolean radioSelection;
+
 	/**
 	 * This method initializes sShell.
 	 */
@@ -416,6 +406,7 @@ public class MainGUI extends BaseUI
 			{
 			}
 
+			@Override
 			public void widgetSelected(final org.eclipse.swt.events.SelectionEvent e)
 			{
 				controller.closeProgram();
@@ -427,40 +418,41 @@ public class MainGUI extends BaseUI
 		mnuVideo = new Menu(mnuVideoSource);
 		mnuVideoSource.setMenu(mnuVideo);
 
-		MenuItem mntmSource = new MenuItem(mnuVideo, SWT.CASCADE);
+		final MenuItem mntmSource = new MenuItem(mnuVideo, SWT.CASCADE);
 		mntmSource.setText("Source");
 
-		Menu menu = new Menu(mntmSource);
+		final Menu menu = new Menu(mntmSource);
 		mntmSource.setMenu(menu);
 		class MntmSourceRadioHandler extends SelectionAdapter
 		{
 			@Override
-			public void widgetSelected(SelectionEvent e) {
-				if(radioSelection==true)
+			public void widgetSelected(final SelectionEvent e)
+			{
+				if (radioSelection == true)
 				{
-					if(((MenuItem)e.widget).getText().equals("Video File .."))
+					if (((MenuItem) e.widget).getText().equals("Video File .."))
 						controller.setVideoFileMode();
-					radioSelection=false;
+					radioSelection = false;
 				}
 				else
-					radioSelection=true;
+					radioSelection = true;
 			}
 		}
-		
-		mntmVideoFile= new MenuItem(menu, SWT.RADIO);
+
+		mntmVideoFile = new MenuItem(menu, SWT.RADIO);
 		mntmVideoFile.setText("Video File ..");
 		mntmCameraSubMenu = new MenuItem(menu, SWT.RADIO);
 		mntmCameraSubMenu.setText("Camera");
 		mntmVideoFile.setSelection(true);
-		
+
 		mntmVideoFile.addSelectionListener(new MntmSourceRadioHandler());
 		mntmCameraSubMenu.addSelectionListener(new MntmSourceRadioHandler());
 
-
-		MenuItem mntmVidOptions = new MenuItem(mnuVideo, SWT.NONE);
+		final MenuItem mntmVidOptions = new MenuItem(mnuVideo, SWT.NONE);
 		mntmVidOptions.addSelectionListener(new SelectionAdapter() {
 			@Override
-			public void widgetSelected(SelectionEvent e) {
+			public void widgetSelected(final SelectionEvent e)
+			{
 				controller.mnutmCameraOptionsAction();
 			}
 		});
@@ -474,7 +466,7 @@ public class MainGUI extends BaseUI
 		mnutm_edit_options.setText("Options ..");
 		mnutm_edit_options.addSelectionListener(new SelectionAdapter() {
 			@Override
-			public void widgetSelected(SelectionEvent e)
+			public void widgetSelected(final SelectionEvent e)
 			{
 				controller.mnutmEditOptionsAction();
 			}
@@ -496,6 +488,7 @@ public class MainGUI extends BaseUI
 		mnutm_help_about.setText("About");
 		mnutm_help_about.setEnabled(true);
 		mnutm_help_about.addSelectionListener(new SelectionAdapter() {
+			@Override
 			public void widgetSelected(final org.eclipse.swt.events.SelectionEvent e)
 			{
 				controller.mnutmHelpAboutAction();
@@ -635,19 +628,20 @@ public class MainGUI extends BaseUI
 	 */
 	public void loadPluggedGUI(final PluggedGUI[] pGUIs)
 	{
-		for(PluggedGUI pgui:pGUIs)
-			pgui.initialize(sShell, expandBar,menuBar,coolBar);
+		for (final PluggedGUI pgui : pGUIs)
+			pgui.initialize(sShell, expandBar, menuBar, coolBar);
 
+		coolBar.setBounds(5, 5, 300, 30);
 		coolBar.layout();
-		//coolBar.setLocked(true);
-
+		coolBar.setLocked(true);
+		sShell.setActive();
 	}
 
 	public String getSelectedInputMode()
 	{
-		if(mntmCameraSubMenu.getSelection())
+		if (mntmCameraSubMenu.getSelection())
 			return "CAM";
-		else if(mntmVideoFile.getSelection())
+		else if (mntmVideoFile.getSelection())
 			return "VIDEOFILE";
 		return null;
 	}

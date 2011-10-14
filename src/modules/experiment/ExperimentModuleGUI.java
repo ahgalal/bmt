@@ -1,24 +1,15 @@
 /***************************************************************************
- *  Copyright 2010,2011 by Ahmed Galal, Ahmed Mohammed Aly,
- *  Sarah Hamid and Mohammed Ahmed Ramadan
- *  contact: ceng.ahmedgalal@gmail.com
- *
- *  This file is part of Behavioral Monitoring Tool.
- *
- *  Behavioral Monitoring Tool is free software: you can redistribute it
- *  and/or modify it under the terms of the GNU General Public License as
- *  published by the Free Software Foundation, version 3 of the
- *  License.
- *
- *  Behavioral Monitoring Tool is distributed in the hope that it
- *  will be useful, but WITHOUT ANY WARRANTY; without even the implied
- *  warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- *  See the GNU General Public License for more details.
- *
- *  You should have received a copy of the GNU General Public License
- *  along with Behavioral Monitoring Tool.
- *  If not, see <http://www.gnu.org/licenses/>.
- *   
+ * Copyright 2010,2011 by Ahmed Galal, Ahmed Mohammed Aly, Sarah Hamid and
+ * Mohammed Ahmed Ramadan contact: ceng.ahmedgalal@gmail.com This file is part
+ * of Behavioral Monitoring Tool. Behavioral Monitoring Tool is free software:
+ * you can redistribute it and/or modify it under the terms of the GNU General
+ * Public License as published by the Free Software Foundation, version 3 of the
+ * License. Behavioral Monitoring Tool is distributed in the hope that it will
+ * be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General
+ * Public License for more details. You should have received a copy of the GNU
+ * General Public License along with Behavioral Monitoring Tool. If not, see
+ * <http://www.gnu.org/licenses/>.
  **************************************************************************/
 
 package modules.experiment;
@@ -27,20 +18,16 @@ import modules.ModulesManager;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.layout.FillLayout;
-import org.eclipse.swt.widgets.Button;
-import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.CoolBar;
-import org.eclipse.swt.widgets.CoolItem;
 import org.eclipse.swt.widgets.ExpandBar;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Shell;
 
+import ui.PluggedGUI;
 import utils.PManager;
 import utils.StatusManager.StatusSeverity;
-import utils.video.filters.PluggedGUI;
 
 /**
  * GUI class for the Experiment Module.
@@ -65,8 +52,8 @@ public class ExperimentModuleGUI extends PluggedGUI
 	 * @param shell
 	 *            parent shell (MainGUI's shell)
 	 */
-/*	public ExperimentModuleGUI( Shell shell)
-	{}*/
+	/*	public ExperimentModuleGUI( Shell shell)
+		{}*/
 
 	/**
 	 * Shows a save file dialog to save the exported Excel data to that file.
@@ -134,40 +121,43 @@ public class ExperimentModuleGUI extends PluggedGUI
 	public void inIdleState()
 	{
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void inStreamingState()
 	{
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void inTrackingState()
 	{
 		// TODO Auto-generated method stub
-		
+
 	}
-	
+
 	@Override
-	public void initialize(final Shell shell, ExpandBar expandBar,final Menu menuBar,final CoolBar coolBar)
+	public void initialize(
+			final Shell shell,
+			final ExpandBar expandBar,
+			final Menu menuBar,
+			final CoolBar coolBar)
 	{
 		this.shell = shell;
-		
-/*		CoolItem coolItem = new CoolItem(coolBar, SWT.NONE);
-		
-		Composite composite = new Composite(coolBar, SWT.NONE);
-		coolItem.setControl(composite);
-		composite.setLayout(new FillLayout(SWT.HORIZONTAL));
-		
-		Button btnNewExp = new Button(composite, SWT.NONE);
-		btnNewExp.setText("New Experiment");
-		composite.setBounds(0, 0, 40, 32);
-		coolItem.setSize(composite.getSize().x, composite.getSize().y);*/
-		
-		
+
+		/*		CoolItem coolItem = new CoolItem(coolBar, SWT.NONE);
+				
+				Composite composite = new Composite(coolBar, SWT.NONE);
+				coolItem.setControl(composite);
+				composite.setLayout(new FillLayout(SWT.HORIZONTAL));
+				
+				Button btnNewExp = new Button(composite, SWT.NONE);
+				btnNewExp.setText("New Experiment");
+				composite.setBounds(0, 0, 40, 32);
+				coolItem.setSize(composite.getSize().x, composite.getSize().y);*/
+
 		mnu_experiment_item = new MenuItem(menuBar, SWT.CASCADE); // experiment
 		mnu_experiment_item.setText("Experiment");
 		mnu_experiment = new Menu(mnu_experiment_item);
@@ -182,11 +172,13 @@ public class ExperimentModuleGUI extends PluggedGUI
 		mnutm_experiment_exporttoexcel.setText("Export to Excel");
 		mnutm_experiment_exporttoexcel.setEnabled(false);
 		mnutm_experiment_exporttoexcel.addSelectionListener(new org.eclipse.swt.events.SelectionListener() {
+			@Override
 			public void widgetSelected(final org.eclipse.swt.events.SelectionEvent e)
 			{
 				mnutmExperimentExportToExcelAction();
 			}
 
+			@Override
 			public void widgetDefaultSelected(
 					final org.eclipse.swt.events.SelectionEvent e)
 			{
@@ -196,22 +188,26 @@ public class ExperimentModuleGUI extends PluggedGUI
 
 		mnuitm_edt_exp.setText("Edit Exp.");
 		mnuitm_edt_exp.addSelectionListener(new org.eclipse.swt.events.SelectionListener() {
+			@Override
 			public void widgetDefaultSelected(
 					final org.eclipse.swt.events.SelectionEvent e)
 			{
 			}
 
+			@Override
 			public void widgetSelected(final org.eclipse.swt.events.SelectionEvent e)
 			{
 				mnuitmEditExpAction();
 			}
 		});
 		mnutm_experiment_newexp.addSelectionListener(new org.eclipse.swt.events.SelectionListener() {
+			@Override
 			public void widgetDefaultSelected(
 					final org.eclipse.swt.events.SelectionEvent e)
 			{
 			}
 
+			@Override
 			public void widgetSelected(final org.eclipse.swt.events.SelectionEvent e)
 			{
 				mnutmExperimentNewExpAction();
@@ -224,16 +220,17 @@ public class ExperimentModuleGUI extends PluggedGUI
 			{
 			}
 
+			@Override
 			public void widgetSelected(final org.eclipse.swt.events.SelectionEvent e)
 			{
 				mnutmExperimentLoadexpAction(shell);
 			}
 		});
 	}
-	
-	public void setExperimantLoaded(boolean loaded)
+
+	public void setExperimantLoaded(final boolean loaded)
 	{
-		if(loaded)
+		if (loaded)
 		{
 			mnuitm_edt_exp.setEnabled(true);
 			mnutm_experiment_exporttoexcel.setEnabled(true);
@@ -244,5 +241,5 @@ public class ExperimentModuleGUI extends PluggedGUI
 			mnutm_experiment_exporttoexcel.setEnabled(false);
 		}
 	}
-	
+
 }

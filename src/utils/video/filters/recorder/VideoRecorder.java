@@ -1,24 +1,15 @@
 /***************************************************************************
- *  Copyright 2010,2011 by Ahmed Galal, Ahmed Mohammed Aly,
- *  Sarah Hamid and Mohammed Ahmed Ramadan
- *  contact: ceng.ahmedgalal@gmail.com
- *
- *  This file is part of Behavioral Monitoring Tool.
- *
- *  Behavioral Monitoring Tool is free software: you can redistribute it
- *  and/or modify it under the terms of the GNU General Public License as
- *  published by the Free Software Foundation, version 3 of the
- *  License.
- *
- *  Behavioral Monitoring Tool is distributed in the hope that it
- *  will be useful, but WITHOUT ANY WARRANTY; without even the implied
- *  warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- *  See the GNU General Public License for more details.
- *
- *  You should have received a copy of the GNU General Public License
- *  along with Behavioral Monitoring Tool.
- *  If not, see <http://www.gnu.org/licenses/>.
- *   
+ * Copyright 2010,2011 by Ahmed Galal, Ahmed Mohammed Aly, Sarah Hamid and
+ * Mohammed Ahmed Ramadan contact: ceng.ahmedgalal@gmail.com This file is part
+ * of Behavioral Monitoring Tool. Behavioral Monitoring Tool is free software:
+ * you can redistribute it and/or modify it under the terms of the GNU General
+ * Public License as published by the Free Software Foundation, version 3 of the
+ * License. Behavioral Monitoring Tool is distributed in the hope that it will
+ * be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General
+ * Public License for more details. You should have received a copy of the GNU
+ * General Public License along with Behavioral Monitoring Tool. If not, see
+ * <http://www.gnu.org/licenses/>.
  **************************************************************************/
 
 package utils.video.filters.recorder;
@@ -30,7 +21,6 @@ import utils.PManager;
 import utils.PManager.ProgramState;
 import utils.StatusManager.StatusSeverity;
 import utils.video.filters.FilterConfigs;
-import utils.video.filters.PluggedGUI;
 import utils.video.filters.Link;
 import utils.video.filters.VideoFilter;
 
@@ -61,6 +51,7 @@ public class VideoRecorder extends VideoFilter
 	private final PManager pm;
 	private StreamToAVI avi_saver;
 	private RecorderConfigs recorder_configs;
+	private boolean isRecording = false;
 
 	@Override
 	public boolean configure(final FilterConfigs configs)
@@ -121,7 +112,7 @@ public class VideoRecorder extends VideoFilter
 						10,
 						recorder_configs.common_configs.width,
 						recorder_configs.common_configs.height);
-				pm.state = ProgramState.RECORDING;
+				isRecording = true;
 				configs.enabled = true;
 				return true;
 			}
@@ -145,11 +136,11 @@ public class VideoRecorder extends VideoFilter
 					{
 						e.printStackTrace();
 					}
-					if (pm.state == ProgramState.RECORDING)
+					if (isRecording == true)
 					{
 						avi_saver.close();
 						avi_saver = null;
-						pm.state = ProgramState.TRACKING;
+						isRecording = false;
 					}
 				}
 			});
@@ -159,10 +150,10 @@ public class VideoRecorder extends VideoFilter
 	}
 
 	@Override
-	public void updateProgramState(ProgramState state)
+	public void updateProgramState(final ProgramState state)
 	{
 		// TODO Auto-generated method stub
-		
+
 	}
 
 }

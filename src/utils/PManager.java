@@ -1,24 +1,15 @@
 /***************************************************************************
- *  Copyright 2010,2011 by Ahmed Galal, Ahmed Mohammed Aly,
- *  Sarah Hamid and Mohammed Ahmed Ramadan
- *  contact: ceng.ahmedgalal@gmail.com
- *
- *  This file is part of Behavioral Monitoring Tool.
- *
- *  Behavioral Monitoring Tool is free software: you can redistribute it
- *  and/or modify it under the terms of the GNU General Public License as
- *  published by the Free Software Foundation, version 3 of the
- *  License.
- *
- *  Behavioral Monitoring Tool is distributed in the hope that it
- *  will be useful, but WITHOUT ANY WARRANTY; without even the implied
- *  warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- *  See the GNU General Public License for more details.
- *
- *  You should have received a copy of the GNU General Public License
- *  along with Behavioral Monitoring Tool.
- *  If not, see <http://www.gnu.org/licenses/>.
- *   
+ * Copyright 2010,2011 by Ahmed Galal, Ahmed Mohammed Aly, Sarah Hamid and
+ * Mohammed Ahmed Ramadan contact: ceng.ahmedgalal@gmail.com This file is part
+ * of Behavioral Monitoring Tool. Behavioral Monitoring Tool is free software:
+ * you can redistribute it and/or modify it under the terms of the GNU General
+ * Public License as published by the Free Software Foundation, version 3 of the
+ * License. Behavioral Monitoring Tool is distributed in the hope that it will
+ * be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General
+ * Public License for more details. You should have received a copy of the GNU
+ * General Public License along with Behavioral Monitoring Tool. If not, see
+ * <http://www.gnu.org/licenses/>.
  **************************************************************************/
 
 package utils;
@@ -53,7 +44,8 @@ import control.ui.CtrlRatInfoForm;
 public class PManager
 {
 
-	private ArrayList<StateListener> arrStateListsners= new ArrayList<StateListener>();
+	private final ArrayList<StateListener> arrStateListsners = new ArrayList<StateListener>();
+
 	/**
 	 * Defines program states.
 	 * 
@@ -66,7 +58,7 @@ public class PManager
 		 * screen, TRACKING: tracking the object: STREAMING + TRACKING,
 		 * RECORDING: recording video: STREAMING + TRACKING + RECORDING.
 		 */
-		LAUNCHING,IDLE, RECORDING, STREAMING, TRACKING;
+		LAUNCHING, IDLE, /*RECORDING,*/STREAMING, TRACKING;
 	}
 
 	private static PManager default_me;
@@ -180,21 +172,23 @@ public class PManager
 		vp = new VideoManager();
 
 		// State watcher, when state changes, it notified all StateListsners
-		Thread thStateChangedNotifier = new Thread(new Runnable() {
-			ProgramState old_state=ProgramState.LAUNCHING;
+		final Thread thStateChangedNotifier = new Thread(new Runnable() {
+			ProgramState old_state = ProgramState.LAUNCHING;
+
 			@Override
 			public void run()
 			{
-				while(main_gui.isUIOpened())
+				while (main_gui.isUIOpened())
 				{
-					if(old_state!=state)
+					if (old_state != state)
 					{
 						notifyStateListeners();
 						old_state = state;
 					}
-					try{
+					try
+					{
 						Thread.sleep(30);
-					} catch (InterruptedException e)
+					} catch (final InterruptedException e)
 					{
 						e.printStackTrace();
 					}
@@ -228,10 +222,12 @@ public class PManager
 
 	public void startStreaming()
 	{
-		if(state==ProgramState.IDLE && vp.isInitialized())
+		if (state == ProgramState.IDLE && vp.isInitialized())
 			vp.startStreaming();
 		else
-			status_mgr.setStatus("State is not idle or no video source selected, not able to start streaming", StatusSeverity.ERROR);
+			status_mgr.setStatus(
+					"State is not idle or no video source selected, not able to start streaming",
+					StatusSeverity.ERROR);
 	}
 
 	/**
@@ -254,21 +250,24 @@ public class PManager
 		if (vp != null & state != ProgramState.IDLE)
 			vp.unloadLibrary();
 		else
-			status_mgr.setStatus("incorrect state, unable to unload video library", StatusSeverity.ERROR);
+			status_mgr.setStatus(
+					"incorrect state, unable to unload video library",
+					StatusSeverity.ERROR);
 	}
 
-	public void addStateListener(StateListener sListener)
+	public void addStateListener(final StateListener sListener)
 	{
 		arrStateListsners.add(sListener);
 	}
-	public void removeStateListener(StateListener sListener)
+
+	public void removeStateListener(final StateListener sListener)
 	{
 		arrStateListsners.remove(sListener);
 	}
 
 	private void notifyStateListeners()
 	{
-		for(StateListener sl: arrStateListsners)
+		for (final StateListener sl : arrStateListsners)
 			sl.updateProgramState(state);
 	}
 
@@ -292,13 +291,13 @@ public class PManager
 
 	public void stopTracking()
 	{
-		if (state == ProgramState.TRACKING |state == ProgramState.RECORDING)
+		if (state == ProgramState.TRACKING /*|state == ProgramState.RECORDING*/)
 		{
 			ModulesManager.getDefault().runModules(false);
 			vp.stopProcessing();
 		}
 		else
-			status_mgr.setStatus("Tracking is not running.", StatusSeverity.ERROR);		
+			status_mgr.setStatus("Tracking is not running.", StatusSeverity.ERROR);
 	}
 
 }

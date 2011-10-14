@@ -1,24 +1,15 @@
 /***************************************************************************
- *  Copyright 2010,2011 by Ahmed Galal, Ahmed Mohammed Aly,
- *  Sarah Hamid and Mohammed Ahmed Ramadan
- *  contact: ceng.ahmedgalal@gmail.com
- *
- *  This file is part of Behavioral Monitoring Tool.
- *
- *  Behavioral Monitoring Tool is free software: you can redistribute it
- *  and/or modify it under the terms of the GNU General Public License as
- *  published by the Free Software Foundation, version 3 of the
- *  License.
- *
- *  Behavioral Monitoring Tool is distributed in the hope that it
- *  will be useful, but WITHOUT ANY WARRANTY; without even the implied
- *  warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- *  See the GNU General Public License for more details.
- *
- *  You should have received a copy of the GNU General Public License
- *  along with Behavioral Monitoring Tool.
- *  If not, see <http://www.gnu.org/licenses/>.
- *   
+ * Copyright 2010,2011 by Ahmed Galal, Ahmed Mohammed Aly, Sarah Hamid and
+ * Mohammed Ahmed Ramadan contact: ceng.ahmedgalal@gmail.com This file is part
+ * of Behavioral Monitoring Tool. Behavioral Monitoring Tool is free software:
+ * you can redistribute it and/or modify it under the terms of the GNU General
+ * Public License as published by the Free Software Foundation, version 3 of the
+ * License. Behavioral Monitoring Tool is distributed in the hope that it will
+ * be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General
+ * Public License for more details. You should have received a copy of the GNU
+ * General Public License along with Behavioral Monitoring Tool. If not, see
+ * <http://www.gnu.org/licenses/>.
  **************************************************************************/
 
 package modules.experiment;
@@ -34,7 +25,6 @@ import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
 
 import utils.PManager;
-import utils.PManager.ProgramState;
 import utils.StatusManager.StatusSeverity;
 import utils.video.filters.Data;
 
@@ -174,7 +164,7 @@ public class ExperimentModule extends Module
 	{
 		exp_module_data.exp.setExperimentInfo(name, user, date, notes);
 		exp_is_set = true;
-		((ExperimentModuleGUI)gui).setExperimantLoaded(true);
+		((ExperimentModuleGUI) gui).setExperimantLoaded(true);
 	}
 
 	/**
@@ -290,7 +280,7 @@ public class ExperimentModule extends Module
 			PManager.getDefault().frm_exp.fillForm(exp_module_data.exp);
 			updateGroupGUIData();
 			exp_is_set = true;
-			((ExperimentModuleGUI)gui).setExperimantLoaded(true);
+			((ExperimentModuleGUI) gui).setExperimantLoaded(true);
 		}
 	}
 
@@ -388,7 +378,7 @@ public class ExperimentModule extends Module
 		exp_module_data.exp.clearExperimentData();
 		excel_engine.reset();
 		exp_is_set = false;
-		((ExperimentModuleGUI)gui).setExperimantLoaded(false);
+		((ExperimentModuleGUI) gui).setExperimantLoaded(false);
 	}
 
 	@Override
@@ -436,9 +426,9 @@ public class ExperimentModule extends Module
 		{
 			// if we had an empty experiment (no parameters), we assign the
 			// set of parameters from the module manager to the exp.
-			if(getNumberOfExpParams()==0)
+			if (getNumberOfExpParams() == 0)
 				exp_module_data.exp.setParametersList(ModulesManager.getDefault()
-					.getCodeNames());
+						.getCodeNames());
 			if (getNumberOfExpParams() != ModulesManager.getDefault()
 					.getNumberOfFileParameters())
 			{
@@ -538,6 +528,5 @@ public class ExperimentModule extends Module
 		// TODO Auto-generated method stub
 
 	}
-
 
 }

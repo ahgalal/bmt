@@ -1,24 +1,15 @@
 /***************************************************************************
- *  Copyright 2010,2011 by Ahmed Galal, Ahmed Mohammed Aly,
- *  Sarah Hamid and Mohammed Ahmed Ramadan
- *  contact: ceng.ahmedgalal@gmail.com
- *
- *  This file is part of Behavioral Monitoring Tool.
- *
- *  Behavioral Monitoring Tool is free software: you can redistribute it
- *  and/or modify it under the terms of the GNU General Public License as
- *  published by the Free Software Foundation, version 3 of the
- *  License.
- *
- *  Behavioral Monitoring Tool is distributed in the hope that it
- *  will be useful, but WITHOUT ANY WARRANTY; without even the implied
- *  warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- *  See the GNU General Public License for more details.
- *
- *  You should have received a copy of the GNU General Public License
- *  along with Behavioral Monitoring Tool.
- *  If not, see <http://www.gnu.org/licenses/>.
- *   
+ * Copyright 2010,2011 by Ahmed Galal, Ahmed Mohammed Aly, Sarah Hamid and
+ * Mohammed Ahmed Ramadan contact: ceng.ahmedgalal@gmail.com This file is part
+ * of Behavioral Monitoring Tool. Behavioral Monitoring Tool is free software:
+ * you can redistribute it and/or modify it under the terms of the GNU General
+ * Public License as published by the Free Software Foundation, version 3 of the
+ * License. Behavioral Monitoring Tool is distributed in the hope that it will
+ * be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General
+ * Public License for more details. You should have received a copy of the GNU
+ * General Public License along with Behavioral Monitoring Tool. If not, see
+ * <http://www.gnu.org/licenses/>.
  **************************************************************************/
 
 package utils.video.filters.screendrawer;
@@ -88,7 +79,9 @@ public class ScreenDrawer extends VideoFilter
 		data_sec_screen = ((DataBufferInt) buf_img_sec.getRaster().getDataBuffer()).getData();
 		return super.configure(configs);
 	}
+
 	private Thread th_drawer;
+
 	@Override
 	public boolean enable(final boolean enable)
 	{
@@ -114,7 +107,7 @@ public class ScreenDrawer extends VideoFilter
 			while (scrn_drwr_cnfgs.ref_gfx_sec_screen == null
 					|| scrn_drwr_cnfgs.ref_gfx_sec_screen == null)
 				try
-			{
+				{
 					Thread.sleep(100);
 					wait_count++;
 					if (wait_count == 10)
@@ -122,10 +115,10 @@ public class ScreenDrawer extends VideoFilter
 								"Drawing Screen is NULL!",
 								this,
 								StatusSeverity.ERROR);
-			} catch (final InterruptedException e2)
-			{
-				e2.printStackTrace();
-			}
+				} catch (final InterruptedException e2)
+				{
+					e2.printStackTrace();
+				}
 
 			try
 			{
@@ -214,10 +207,10 @@ public class ScreenDrawer extends VideoFilter
 	}
 
 	@Override
-	public void updateProgramState(ProgramState state)
+	public void updateProgramState(final ProgramState state)
 	{
 		// TODO Auto-generated method stub
-		
+
 	}
 
 }

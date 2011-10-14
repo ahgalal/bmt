@@ -1,24 +1,15 @@
 /***************************************************************************
- *  Copyright 2010,2011 by Ahmed Galal, Ahmed Mohammed Aly,
- *  Sarah Hamid and Mohammed Ahmed Ramadan
- *  contact: ceng.ahmedgalal@gmail.com
- *
- *  This file is part of Behavioral Monitoring Tool.
- *
- *  Behavioral Monitoring Tool is free software: you can redistribute it
- *  and/or modify it under the terms of the GNU General Public License as
- *  published by the Free Software Foundation, version 3 of the
- *  License.
- *
- *  Behavioral Monitoring Tool is distributed in the hope that it
- *  will be useful, but WITHOUT ANY WARRANTY; without even the implied
- *  warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- *  See the GNU General Public License for more details.
- *
- *  You should have received a copy of the GNU General Public License
- *  along with Behavioral Monitoring Tool.
- *  If not, see <http://www.gnu.org/licenses/>.
- *   
+ * Copyright 2010,2011 by Ahmed Galal, Ahmed Mohammed Aly, Sarah Hamid and
+ * Mohammed Ahmed Ramadan contact: ceng.ahmedgalal@gmail.com This file is part
+ * of Behavioral Monitoring Tool. Behavioral Monitoring Tool is free software:
+ * you can redistribute it and/or modify it under the terms of the GNU General
+ * Public License as published by the Free Software Foundation, version 3 of the
+ * License. Behavioral Monitoring Tool is distributed in the hope that it will
+ * be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General
+ * Public License for more details. You should have received a copy of the GNU
+ * General Public License along with Behavioral Monitoring Tool. If not, see
+ * <http://www.gnu.org/licenses/>.
  **************************************************************************/
 
 package modules;
@@ -36,11 +27,10 @@ import modules.zones.ZonesModuleConfigs;
 
 import org.eclipse.swt.widgets.Shell;
 
+import ui.PluggedGUI;
 import utils.PManager;
 import utils.StatusManager.StatusSeverity;
 import utils.video.filters.Data;
-import utils.video.filters.PluggedGUI;
-import utils.video.filters.VideoFilter;
 
 /**
  * Manager for all modules.
@@ -159,48 +149,48 @@ public class ModulesManager
 		modules.add(rearing_module);
 		modules.add(zones_module);
 		modules.add(session_module);
-		
+
 		setWidthandHeight(640, 480);
-		
+
 		for (final Module mo : modules)
 			modules_data.add(mo.getModuleData());
 
 		for (final Module mo : modules)
 			for (final Data data : modules_data)
 				mo.registerModuleDataObject(data);
-		
+
 		PManager.main_gui.loadPluggedGUI(getModulesGUI());
 	}
 
 	public PluggedGUI[] getModulesGUI()
 	{
-		int validGUIsNumber=0;
-		for(Module module: modules)
+		int validGUIsNumber = 0;
+		for (final Module module : modules)
 		{
-			if(module.getGUI()!=null)
+			if (module.getGUI() != null)
 			{
 				validGUIsNumber++;
 			}
 		}
-		PluggedGUI[] arr = new PluggedGUI[validGUIsNumber];
-		int i=0;
-		for(Module module: modules)
+		final PluggedGUI[] arr = new PluggedGUI[validGUIsNumber];
+		int i = 0;
+		for (final Module module : modules)
 		{
-			if(module.getGUI()!=null)
+			if (module.getGUI() != null)
 			{
-				arr[i]=module.getGUI();
+				arr[i] = module.getGUI();
 				i++;
 			}
 		}
 		return arr;
 	}
-	
+
 	/**
 	 * Initializes modules.
 	 */
 	public void initialize()
 	{
-		//TODO: CALLED at an incorrect timing ?? (inside "start_trackiing")
+		// TODO: CALLED at an incorrect timing ?? (inside "start_trackiing")
 		filters_data.clear();
 		for (final Module mo : modules)
 			mo.initialize();

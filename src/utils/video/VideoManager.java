@@ -1,24 +1,15 @@
 /***************************************************************************
- *  Copyright 2010,2011 by Ahmed Galal, Ahmed Mohammed Aly,
- *  Sarah Hamid and Mohammed Ahmed Ramadan
- *  contact: ceng.ahmedgalal@gmail.com
- *
- *  This file is part of Behavioral Monitoring Tool.
- *
- *  Behavioral Monitoring Tool is free software: you can redistribute it
- *  and/or modify it under the terms of the GNU General Public License as
- *  published by the Free Software Foundation, version 3 of the
- *  License.
- *
- *  Behavioral Monitoring Tool is distributed in the hope that it
- *  will be useful, but WITHOUT ANY WARRANTY; without even the implied
- *  warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- *  See the GNU General Public License for more details.
- *
- *  You should have received a copy of the GNU General Public License
- *  along with Behavioral Monitoring Tool.
- *  If not, see <http://www.gnu.org/licenses/>.
- *   
+ * Copyright 2010,2011 by Ahmed Galal, Ahmed Mohammed Aly, Sarah Hamid and
+ * Mohammed Ahmed Ramadan contact: ceng.ahmedgalal@gmail.com This file is part
+ * of Behavioral Monitoring Tool. Behavioral Monitoring Tool is free software:
+ * you can redistribute it and/or modify it under the terms of the GNU General
+ * Public License as published by the Free Software Foundation, version 3 of the
+ * License. Behavioral Monitoring Tool is distributed in the hope that it will
+ * be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General
+ * Public License for more details. You should have received a copy of the GNU
+ * General Public License along with Behavioral Monitoring Tool. If not, see
+ * <http://www.gnu.org/licenses/>.
  **************************************************************************/
 
 package utils.video;
@@ -93,7 +84,8 @@ public class VideoManager
 	 */
 	private class RunnableProcessor implements Runnable
 	{
-		private int counter=0;
+		private int counter = 0;
+
 		@Override
 		public void run()
 		{
@@ -108,8 +100,8 @@ public class VideoManager
 
 			while (video_processor_enabled)
 			{
-				counter=0;
-				while (v_in!=null && v_in.getStatus() != 1 && counter<5)
+				counter = 0;
+				while (v_in != null && v_in.getStatus() != 1 && counter < 5)
 				{
 					try
 					{
@@ -123,7 +115,7 @@ public class VideoManager
 					{
 						e.printStackTrace();
 					}
-					//PManager.log.print("Device is not ready yet!", this);
+					// PManager.log.print("Device is not ready yet!", this);
 				}
 				if (v_in.getStatus() == 1)
 					for (final VideoFilter v : filter_mgr.getFilters())
@@ -135,7 +127,7 @@ public class VideoManager
 				} catch (final InterruptedException e)
 				{
 				}
-				if(counter==5)
+				if (counter == 5)
 				{
 					unloadLibrary();
 				}
@@ -196,34 +188,34 @@ public class VideoManager
 
 	private String getOS()
 	{
-		String os = System.getProperty("os.name");
+		final String os = System.getProperty("os.name");
 		System.out.print("OS: " + os + "\n");
-		if(os.indexOf("Linux")!=-1)
+		if (os.indexOf("Linux") != -1)
 			return "Linux";
-		else if(os.indexOf("Windows")!=-1)
+		else if (os.indexOf("Windows") != -1)
 			return "Windows";
-		
+
 		System.out.print("Unknown OS\n");
 		return null;
 	}
 
 	public String getDefaultVideoLibrary()
 	{
-		String os =getOS();
-		if(os.equals("Linux"))
+		final String os = getOS();
+		if (os.equals("Linux"))
 			return "V4L2";
-		else if(os.equals("Windows"))
+		else if (os.equals("Windows"))
 			return "AGCamLib";
 		return os;
 	}
 
 	public String[] getAvailableVidLibs()
 	{
-		String os = getOS();
-		if(os.equals("Linux"))
-			return new String[]{"V4L2","OpenCV"};
-		else if(os.equals("Windows"))
-			return new String[]{"AGCamLib","JMF","OpenCV","JMyron"};
+		final String os = getOS();
+		if (os.equals("Linux"))
+			return new String[] { "V4L2", "OpenCV" };
+		else if (os.equals("Windows"))
+			return new String[] { "AGCamLib", "JMF", "OpenCV", "JMyron" };
 		return null;
 	}
 
@@ -236,7 +228,7 @@ public class VideoManager
 	 */
 	public boolean initialize(final CommonFilterConfigs ip_common_configs)
 	{
-		isInitialized=true;
+		isInitialized = true;
 		updateCommonConfigs(ip_common_configs);
 
 		String vid_lib = common_configs.vid_library;
@@ -326,7 +318,7 @@ public class VideoManager
 	 */
 	public void unloadLibrary()
 	{
-		isInitialized=false;
+		isInitialized = false;
 		video_processor_enabled = false;
 		try
 		{
@@ -355,7 +347,7 @@ public class VideoManager
 			filter_mgr.applyConfigsToFilter(f_cfg);
 		}
 	}
-	
+
 	public VidInputter getVidInputter()
 	{
 		return v_in;

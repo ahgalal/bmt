@@ -1,24 +1,15 @@
 /***************************************************************************
- *  Copyright 2010,2011 by Ahmed Galal, Ahmed Mohammed Aly,
- *  Sarah Hamid and Mohammed Ahmed Ramadan
- *  contact: ceng.ahmedgalal@gmail.com
- *
- *  This file is part of Behavioral Monitoring Tool.
- *
- *  Behavioral Monitoring Tool is free software: you can redistribute it
- *  and/or modify it under the terms of the GNU General Public License as
- *  published by the Free Software Foundation, version 3 of the
- *  License.
- *
- *  Behavioral Monitoring Tool is distributed in the hope that it
- *  will be useful, but WITHOUT ANY WARRANTY; without even the implied
- *  warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- *  See the GNU General Public License for more details.
- *
- *  You should have received a copy of the GNU General Public License
- *  along with Behavioral Monitoring Tool.
- *  If not, see <http://www.gnu.org/licenses/>.
- *   
+ * Copyright 2010,2011 by Ahmed Galal, Ahmed Mohammed Aly, Sarah Hamid and
+ * Mohammed Ahmed Ramadan contact: ceng.ahmedgalal@gmail.com This file is part
+ * of Behavioral Monitoring Tool. Behavioral Monitoring Tool is free software:
+ * you can redistribute it and/or modify it under the terms of the GNU General
+ * Public License as published by the Free Software Foundation, version 3 of the
+ * License. Behavioral Monitoring Tool is distributed in the hope that it will
+ * be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General
+ * Public License for more details. You should have received a copy of the GNU
+ * General Public License along with Behavioral Monitoring Tool. If not, see
+ * <http://www.gnu.org/licenses/>.
  **************************************************************************/
 
 package utils.video.filters.rearingdetection;
@@ -34,10 +25,10 @@ import org.eclipse.swt.widgets.ExpandItem;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Shell;
 
+import ui.PluggedGUI;
 import utils.PManager;
 import utils.PManager.ProgramState;
 import utils.StatusManager.StatusSeverity;
-import utils.video.filters.PluggedGUI;
 
 /**
  * GUI class for the rearing detector filter.
@@ -74,8 +65,8 @@ public class RearingDetectorGUI extends PluggedGUI
 
 	/**
 	 * Notifies the VideoManager that the rat is (rearing/not rearing) in
-	 * reality, so that the VideoManager can start learning the rat's size
-	 * when (rearing/not rearing).
+	 * reality, so that the VideoManager can start learning the rat's size when
+	 * (rearing/not rearing).
 	 * 
 	 * @param rearing
 	 *            is the rat rearing now?
@@ -87,7 +78,7 @@ public class RearingDetectorGUI extends PluggedGUI
 					.getVideoManager()
 					.getFilterManager()
 					.getFilterByName(
-					"RearingDetector")).rearingNow(rearing);
+							"RearingDetector")).rearingNow(rearing);
 		else
 			PManager.getDefault().status_mgr.setStatus(
 					"Tracking is not running!",
@@ -95,16 +86,18 @@ public class RearingDetectorGUI extends PluggedGUI
 	}
 
 	@Override
-	public void initialize(Shell shell, ExpandBar expandBar, Menu menuBar,CoolBar coolBar)
+	public void initialize(
+			final Shell shell,
+			final ExpandBar expandBar,
+			final Menu menuBar,
+			final CoolBar coolBar)
 	{
-		ExpandItem xpndtmRearing = new ExpandItem(expandBar, SWT.NONE);
+		final ExpandItem xpndtmRearing = new ExpandItem(expandBar, SWT.NONE);
 		xpndtmRearing.setExpanded(true);
 		xpndtmRearing.setText("Rearing Detector");
 
-		Composite cmpstRearing = new Composite(expandBar, SWT.NONE);
+		final Composite cmpstRearing = new Composite(expandBar, SWT.NONE);
 		xpndtmRearing.setControl(cmpstRearing);
-
-
 
 		btn_rearing_now = new Button(cmpstRearing, SWT.NONE);
 		btn_rearing_now.setText("Rearing NOW");
@@ -128,7 +121,9 @@ public class RearingDetectorGUI extends PluggedGUI
 				rearingNow(true);
 			}
 		});
-		xpndtmRearing.setHeight(xpndtmRearing.getControl().computeSize(SWT.DEFAULT, SWT.DEFAULT).y+10);
+		xpndtmRearing.setHeight(xpndtmRearing.getControl().computeSize(
+				SWT.DEFAULT,
+				SWT.DEFAULT).y + 10);
 	}
 
 	@Override

@@ -1,24 +1,15 @@
 /***************************************************************************
- *  Copyright 2010,2011 by Ahmed Galal, Ahmed Mohammed Aly,
- *  Sarah Hamid and Mohammed Ahmed Ramadan
- *  contact: ceng.ahmedgalal@gmail.com
- *
- *  This file is part of Behavioral Monitoring Tool.
- *
- *  Behavioral Monitoring Tool is free software: you can redistribute it
- *  and/or modify it under the terms of the GNU General Public License as
- *  published by the Free Software Foundation, version 3 of the
- *  License.
- *
- *  Behavioral Monitoring Tool is distributed in the hope that it
- *  will be useful, but WITHOUT ANY WARRANTY; without even the implied
- *  warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- *  See the GNU General Public License for more details.
- *
- *  You should have received a copy of the GNU General Public License
- *  along with Behavioral Monitoring Tool.
- *  If not, see <http://www.gnu.org/licenses/>.
- *   
+ * Copyright 2010,2011 by Ahmed Galal, Ahmed Mohammed Aly, Sarah Hamid and
+ * Mohammed Ahmed Ramadan contact: ceng.ahmedgalal@gmail.com This file is part
+ * of Behavioral Monitoring Tool. Behavioral Monitoring Tool is free software:
+ * you can redistribute it and/or modify it under the terms of the GNU General
+ * Public License as published by the Free Software Foundation, version 3 of the
+ * License. Behavioral Monitoring Tool is distributed in the hope that it will
+ * be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General
+ * Public License for more details. You should have received a copy of the GNU
+ * General Public License along with Behavioral Monitoring Tool. If not, see
+ * <http://www.gnu.org/licenses/>.
  **************************************************************************/
 
 /**
@@ -26,14 +17,14 @@
  */
 package utils.video.input;
 
+import jagvidlib.JAGVidLib;
+
 import java.awt.Point;
 
-import jagvidlib.JAGVidLib;
 import utils.video.FrameIntArray;
 
 /**
  * @author Creative
- *
  */
 public class VideoFileModule implements VidInputter
 {
@@ -43,19 +34,19 @@ public class VideoFileModule implements VidInputter
 	int[] data;
 	private String fileName;
 
-	private JAGVidLib vidLib;
+	private final JAGVidLib vidLib;
 
 	private class RunnableAGCamLib implements Runnable
 	{
 		@Override
 		public void run()
 		{
-			Point dims = vidLib.getVideoDimensions();
-			fia.frame_data = new int[dims.x*dims.y];
+			final Point dims = vidLib.getVideoDimensions();
+			fia.frame_data = new int[dims.x * dims.y];
 			try
 			{
 				Thread.sleep(1000);
-			} catch (InterruptedException e1)
+			} catch (final InterruptedException e1)
 			{
 				e1.printStackTrace();
 			}
@@ -69,18 +60,19 @@ public class VideoFileModule implements VidInputter
 				{
 					e.printStackTrace();
 				}
-				//long l1 = System.currentTimeMillis();
-				fia.frame_data= vidLib.getCurrentFrameInt();
-				//long l2 = System.currentTimeMillis();
-				if(fia.frame_data!=null)
+				// long l1 = System.currentTimeMillis();
+				fia.frame_data = vidLib.getCurrentFrameInt();
+				// long l2 = System.currentTimeMillis();
+				if (fia.frame_data != null)
 					status = 1;
 				else
-					status=0;
-				//System.out.println(l2-l1 + "\n");
+					status = 0;
+				// System.out.println(l2-l1 + "\n");
 			}
 		}
 
 	}
+
 	/**
 	 * 
 	 */
@@ -124,12 +116,18 @@ public class VideoFileModule implements VidInputter
 	{
 		return status;
 	}
+
 	private Thread th_update_image;
+
 	/* (non-Javadoc)
 	 * @see utils.video.input.VidInputter#initialize(utils.video.FrameIntArray, int, int, int)
 	 */
 	@Override
-	public boolean initialize(FrameIntArray frameData, int width, int height, int camIndex)
+	public boolean initialize(
+			final FrameIntArray frameData,
+			final int width,
+			final int height,
+			final int camIndex)
 	{
 		fia = frameData;
 		return true;
@@ -139,7 +137,7 @@ public class VideoFileModule implements VidInputter
 	 * @see utils.video.input.VidInputter#setFormat(java.lang.String)
 	 */
 	@Override
-	public void setFormat(String format)
+	public void setFormat(final String format)
 	{
 
 	}
@@ -153,7 +151,7 @@ public class VideoFileModule implements VidInputter
 		vidLib.initialize(fileName);
 		th_update_image = new Thread(new RunnableAGCamLib());
 		th_update_image.start();
-		stop_stream=false;
+		stop_stream = false;
 		return true;
 	}
 
@@ -163,13 +161,13 @@ public class VideoFileModule implements VidInputter
 	@Override
 	public void stopModule()
 	{
-		stop_stream=true;
+		stop_stream = true;
 		vidLib.stop();
 	}
-	
-	public void setVideoFile(String file)
+
+	public void setVideoFile(final String file)
 	{
-		fileName=file;
+		fileName = file;
 	}
 
 }

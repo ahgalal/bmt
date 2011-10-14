@@ -1,29 +1,18 @@
 /***************************************************************************
- *  Copyright 2010,2011 by Ahmed Galal, Ahmed Mohammed Aly,
- *  Sarah Hamid and Mohammed Ahmed Ramadan
- *  contact: ceng.ahmedgalal@gmail.com
- *
- *  This file is part of Behavioral Monitoring Tool.
- *
- *  Behavioral Monitoring Tool is free software: you can redistribute it
- *  and/or modify it under the terms of the GNU General Public License as
- *  published by the Free Software Foundation, version 3 of the
- *  License.
- *
- *  Behavioral Monitoring Tool is distributed in the hope that it
- *  will be useful, but WITHOUT ANY WARRANTY; without even the implied
- *  warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- *  See the GNU General Public License for more details.
- *
- *  You should have received a copy of the GNU General Public License
- *  along with Behavioral Monitoring Tool.
- *  If not, see <http://www.gnu.org/licenses/>.
- *   
+ * Copyright 2010,2011 by Ahmed Galal, Ahmed Mohammed Aly, Sarah Hamid and
+ * Mohammed Ahmed Ramadan contact: ceng.ahmedgalal@gmail.com This file is part
+ * of Behavioral Monitoring Tool. Behavioral Monitoring Tool is free software:
+ * you can redistribute it and/or modify it under the terms of the GNU General
+ * Public License as published by the Free Software Foundation, version 3 of the
+ * License. Behavioral Monitoring Tool is distributed in the hope that it will
+ * be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General
+ * Public License for more details. You should have received a copy of the GNU
+ * General Public License along with Behavioral Monitoring Tool. If not, see
+ * <http://www.gnu.org/licenses/>.
  **************************************************************************/
 
 package control.ui;
-
-import java.util.ArrayList;
 
 import modules.ModulesManager;
 import modules.experiment.ExperimentModule;
@@ -35,13 +24,13 @@ import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
 
 import ui.MainGUI;
+import ui.PluggedGUI;
 import utils.PManager;
-import utils.StateListener;
 import utils.PManager.ProgramState;
+import utils.StateListener;
 import utils.StatusManager.StatusSeverity;
 import utils.video.filters.CommonFilterConfigs;
 import utils.video.filters.FilterConfigs;
-import utils.video.filters.PluggedGUI;
 import utils.video.filters.screendrawer.ScreenDrawerConfigs;
 import utils.video.filters.subtractionfilter.SubtractorFilter;
 import utils.video.input.VideoFileModule;
@@ -59,8 +48,6 @@ public class CtrlMainGUI extends ControllerUI implements StateListener
 	private final Shell ui_shell;
 	private boolean ui_is_opened;
 	private final CtrlAbout ctrl_about_box;
-
-
 
 	/**
 	 * @return the ui_is_opened
@@ -85,7 +72,7 @@ public class CtrlMainGUI extends ControllerUI implements StateListener
 		pm.status_mgr.initialize(ui.getStatusLabel());
 		ctrl_about_box = new CtrlAbout();
 
-		//ui.loadModulesGUI(ModulesManager.getDefault().getModulesNames());
+		// ui.loadModulesGUI(ModulesManager.getDefault().getModulesNames());
 	}
 
 	/**
@@ -119,7 +106,7 @@ public class CtrlMainGUI extends ControllerUI implements StateListener
 	 */
 	private void startTracking()
 	{
-		if(pm.startTracking())
+		if (pm.startTracking())
 		{
 			clearForm();
 			if (th_update_gui == null)
@@ -140,7 +127,7 @@ public class CtrlMainGUI extends ControllerUI implements StateListener
 		public void run()
 		{
 			final ExperimentModule local_exp_module = (ExperimentModule) ModulesManager.getDefault()
-			.getModuleByName("Experiment Module");
+					.getModuleByName("Experiment Module");
 
 			while (ui_is_opened)
 			{
@@ -152,16 +139,16 @@ public class CtrlMainGUI extends ControllerUI implements StateListener
 						{
 							if (local_exp_module != null)
 							{
-/*								if (!local_exp_module.isExperimentPresent())
-								{
-									ui.experiment_module_gui.editExpMenuItemEnable(false);
-									ui.experiment_module_gui.exportExpToExcelMenuItemEnable(false);
-								}
-								else
-								{
-									ui.experiment_module_gui.editExpMenuItemEnable(true);
-									ui.experiment_module_gui.exportExpToExcelMenuItemEnable(true);
-								}*/
+								/*								if (!local_exp_module.isExperimentPresent())
+																{
+																	ui.experiment_module_gui.editExpMenuItemEnable(false);
+																	ui.experiment_module_gui.exportExpToExcelMenuItemEnable(false);
+																}
+																else
+																{
+																	ui.experiment_module_gui.editExpMenuItemEnable(true);
+																	ui.experiment_module_gui.exportExpToExcelMenuItemEnable(true);
+																}*/
 							}
 						}
 					}
@@ -193,7 +180,7 @@ public class CtrlMainGUI extends ControllerUI implements StateListener
 		public void run()
 		{
 			setTableNamesColumn();
-			while (pm.state==ProgramState.TRACKING)
+			while (pm.state == ProgramState.TRACKING)
 			{
 				try
 				{
@@ -306,7 +293,6 @@ public class CtrlMainGUI extends ControllerUI implements StateListener
 						pm.shape_controller) });
 	}
 
-
 	/**
 	 * Handles the camera options menu item click action.
 	 */
@@ -328,8 +314,8 @@ public class CtrlMainGUI extends ControllerUI implements StateListener
 	 */
 	public void closeProgram()
 	{
-		if (pm.state != ProgramState.RECORDING)
-			pm.stopStreaming();
+		/*		if (pm.state != ProgramState.RECORDING)
+					pm.stopStreaming();*/
 		ui_is_opened = false;
 		try
 		{
@@ -369,8 +355,8 @@ public class CtrlMainGUI extends ControllerUI implements StateListener
 					if (ModulesManager.getDefault().areModulesReady(ui.getShell()))
 					{
 						final ExperimentModule tmp_exp_module = (ExperimentModule) ModulesManager.getDefault()
-						.getModuleByName(
-								"Experiment Module");
+								.getModuleByName(
+										"Experiment Module");
 						if (tmp_exp_module != null)
 						{
 							startTracking();
@@ -384,8 +370,8 @@ public class CtrlMainGUI extends ControllerUI implements StateListener
 									final MessageBox mbox = new MessageBox(
 											ui.getShell(),
 											SWT.ICON_QUESTION
-											| SWT.YES
-											| SWT.NO);
+													| SWT.YES
+													| SWT.NO);
 									mbox.setMessage("No experiment module is found! continue?");
 									mbox.setText("Continue?");
 									final int res = mbox.open();
@@ -469,7 +455,7 @@ public class CtrlMainGUI extends ControllerUI implements StateListener
 	public void loadPluggedGUI(final PluggedGUI[] pGUI)
 	{
 		ui.loadPluggedGUI(pGUI);
-		for(PluggedGUI pgui: pGUI)
+		for (final PluggedGUI pgui : pGUI)
 			pm.addStateListener(pgui);
 	}
 
@@ -492,22 +478,24 @@ public class CtrlMainGUI extends ControllerUI implements StateListener
 						commonConfigs.width,
 						commonConfigs.height);
 				pm.initializeVideoManager(commonConfigs);
-				((VideoFileModule)pm.getVideoManager().getVidInputter()).setVideoFile(file_name);
+				((VideoFileModule) pm.getVideoManager().getVidInputter()).setVideoFile(file_name);
 
 				configureScreenDrawerFilter("ScreenDrawer", commonConfigs, true);
 				pm.status_mgr.setStatus("Camera is Starting..", StatusSeverity.WARNING);
 			}
 			else
-				pm.status_mgr.setStatus("Camera is already started.", StatusSeverity.ERROR);
+				pm.status_mgr.setStatus(
+						"Camera is already started.",
+						StatusSeverity.ERROR);
 		}
 	}
 
 	public void startStreamingAction()
 	{
-		if(ui.getSelectedInputMode().equals("CAM"))
+		if (ui.getSelectedInputMode().equals("CAM"))
 			mnutmCameraStartAction();
-		//else if(ui.getSelectedInputMode().equals("VIDEOFILE"))
-		//setVideoFileMode();
+		// else if(ui.getSelectedInputMode().equals("VIDEOFILE"))
+		// setVideoFileMode();
 		pm.startStreaming();
 	}
 
@@ -540,10 +528,10 @@ public class CtrlMainGUI extends ControllerUI implements StateListener
 					ui.btnStartStreamingEnable(true);
 					ui.btnStopStreamingEnable(false);
 					break;
-				case RECORDING:
-					ui.btnStartTrackingEnable(false);
-					ui.btnStopTrackingEnable(true);
-					break;
+				/*				case RECORDING:
+									ui.btnStartTrackingEnable(false);
+									ui.btnStopTrackingEnable(true);
+									break;*/
 				case STREAMING:
 					ui.btnStartTrackingEnable(true);
 					ui.btnStopTrackingEnable(false);
@@ -556,7 +544,7 @@ public class CtrlMainGUI extends ControllerUI implements StateListener
 					ui.btnStartStreamingEnable(false);
 					ui.btnStopStreamingEnable(false);
 					break;
-				}				
+				}
 			}
 		});
 

@@ -1,24 +1,15 @@
 /***************************************************************************
- *  Copyright 2010,2011 by Ahmed Galal, Ahmed Mohammed Aly,
- *  Sarah Hamid and Mohammed Ahmed Ramadan
- *  contact: ceng.ahmedgalal@gmail.com
- *
- *  This file is part of Behavioral Monitoring Tool.
- *
- *  Behavioral Monitoring Tool is free software: you can redistribute it
- *  and/or modify it under the terms of the GNU General Public License as
- *  published by the Free Software Foundation, version 3 of the
- *  License.
- *
- *  Behavioral Monitoring Tool is distributed in the hope that it
- *  will be useful, but WITHOUT ANY WARRANTY; without even the implied
- *  warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- *  See the GNU General Public License for more details.
- *
- *  You should have received a copy of the GNU General Public License
- *  along with Behavioral Monitoring Tool.
- *  If not, see <http://www.gnu.org/licenses/>.
- *   
+ * Copyright 2010,2011 by Ahmed Galal, Ahmed Mohammed Aly, Sarah Hamid and
+ * Mohammed Ahmed Ramadan contact: ceng.ahmedgalal@gmail.com This file is part
+ * of Behavioral Monitoring Tool. Behavioral Monitoring Tool is free software:
+ * you can redistribute it and/or modify it under the terms of the GNU General
+ * Public License as published by the Free Software Foundation, version 3 of the
+ * License. Behavioral Monitoring Tool is distributed in the hope that it will
+ * be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General
+ * Public License for more details. You should have received a copy of the GNU
+ * General Public License along with Behavioral Monitoring Tool. If not, see
+ * <http://www.gnu.org/licenses/>.
  **************************************************************************/
 
 package modules.rearing;
@@ -36,9 +27,9 @@ import org.eclipse.swt.widgets.ExpandItem;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Shell;
 
+import ui.PluggedGUI;
 import utils.PManager;
 import utils.PManager.ProgramState;
-import utils.video.filters.PluggedGUI;
 
 /**
  * GUI class for the rearing module.
@@ -67,7 +58,7 @@ public class RearingModuleGUI extends PluggedGUI
 	public void btnSubRearingAction()
 	{
 		if (PManager.getDefault().state == ProgramState.TRACKING
-				|| PManager.getDefault().state == ProgramState.RECORDING)
+		/*|| PManager.getDefault().state == ProgramState.RECORDING*/)
 			((RearingModule) ModulesManager.getDefault()
 					.getModuleByName("Rearing Module")).decrementRearingCounter();
 	}
@@ -78,22 +69,25 @@ public class RearingModuleGUI extends PluggedGUI
 	public void btnAddRearingAction()
 	{
 		if (PManager.getDefault().state == ProgramState.TRACKING
-				|| PManager.getDefault().state == ProgramState.RECORDING)
+		/*|| PManager.getDefault().state == ProgramState.RECORDING*/)
 			((RearingModule) ModulesManager.getDefault()
 					.getModuleByName("Rearing Module")).incrementRearingCounter();
 	}
 
 	@Override
-	public void initialize(Shell shell, ExpandBar expandBar, Menu menuBar,CoolBar coolBar)
+	public void initialize(
+			final Shell shell,
+			final ExpandBar expandBar,
+			final Menu menuBar,
+			final CoolBar coolBar)
 	{
 
-		ExpandItem xpndtmManualRearing = new ExpandItem(expandBar, SWT.NONE);
+		final ExpandItem xpndtmManualRearing = new ExpandItem(expandBar, SWT.NONE);
 		xpndtmManualRearing.setExpanded(true);
 		xpndtmManualRearing.setText("Manual Rearing");
 
-		Composite cmpstManualRearing = new Composite(expandBar, SWT.NONE);
+		final Composite cmpstManualRearing = new Composite(expandBar, SWT.NONE);
 		xpndtmManualRearing.setControl(cmpstManualRearing);
-
 
 		btn_sub_rearing = new Button(cmpstManualRearing, SWT.NONE);
 		btn_sub_rearing.setBounds(new Rectangle(10, 10, 28, 21));
@@ -116,8 +110,10 @@ public class RearingModuleGUI extends PluggedGUI
 			{
 				btnAddRearingAction();
 			}
-		});		
-		xpndtmManualRearing.setHeight(xpndtmManualRearing.getControl().computeSize(SWT.DEFAULT, SWT.DEFAULT).y+10);
+		});
+		xpndtmManualRearing.setHeight(xpndtmManualRearing.getControl().computeSize(
+				SWT.DEFAULT,
+				SWT.DEFAULT).y + 10);
 	}
 
 	@Override
