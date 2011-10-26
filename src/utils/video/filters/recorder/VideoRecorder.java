@@ -68,9 +68,15 @@ public class VideoRecorder extends VideoFilter
 	 */
 	public void renameVideoFile(final String file_name)
 	{
-		final File tmp_file = new File("video.avi");
-		if (!tmp_file.renameTo(new File(file_name)))
+		try
+		{
+			final File tmp_file = new File("video.avi");
+			if (!tmp_file.renameTo(new File(file_name)))
+				throw new Exception();
+		} catch (Exception e)
+		{
 			PManager.log.print("Couldn't rename video file", this, StatusSeverity.ERROR);
+		}
 	}
 
 	/**

@@ -94,10 +94,11 @@ public class CtrlMainGUI extends ControllerUI implements StateListener
 	@Override
 	public void show(final boolean visibility)
 	{
+		//ui.getShell().open();
 		ui.show(visibility);
-		final Thread th_ui_state = new Thread(new RunnableKeepMainGUIStateUpdated());
+		///final Thread th_ui_state = new Thread(new RunnableKeepMainGUIStateUpdated());
 		ui_is_opened = true;
-		th_ui_state.start();
+		//th_ui_state.start();
 	}
 
 	/**
@@ -115,12 +116,12 @@ public class CtrlMainGUI extends ControllerUI implements StateListener
 		}
 	}
 
-	/**
+/*	*//**
 	 * Keeps MainGUI's controls in consistency with the current program state.
 	 * ex: which buttons should be enabled at each state.
 	 * 
 	 * @author Creative
-	 */
+	 *//*
 	private class RunnableKeepMainGUIStateUpdated implements Runnable
 	{
 		@Override
@@ -139,7 +140,7 @@ public class CtrlMainGUI extends ControllerUI implements StateListener
 						{
 							if (local_exp_module != null)
 							{
-								/*								if (!local_exp_module.isExperimentPresent())
+																if (!local_exp_module.isExperimentPresent())
 																{
 																	ui.experiment_module_gui.editExpMenuItemEnable(false);
 																	ui.experiment_module_gui.exportExpToExcelMenuItemEnable(false);
@@ -148,7 +149,7 @@ public class CtrlMainGUI extends ControllerUI implements StateListener
 																{
 																	ui.experiment_module_gui.editExpMenuItemEnable(true);
 																	ui.experiment_module_gui.exportExpToExcelMenuItemEnable(true);
-																}*/
+																}
 							}
 						}
 					}
@@ -162,7 +163,7 @@ public class CtrlMainGUI extends ControllerUI implements StateListener
 			}
 		}
 
-	}
+	}*/
 
 	/**
 	 * Updates the MainGUI with the latest counters' values got from
@@ -458,11 +459,12 @@ public class CtrlMainGUI extends ControllerUI implements StateListener
 		for (final PluggedGUI pgui : pGUI)
 			pm.addStateListener(pgui);
 	}
-
+	private String file_name ;
 	public void setVideoFileMode()
 	{
 		final FileDialog fileDialog = new FileDialog(ui.getShell(), SWT.OPEN);
-		final String file_name = fileDialog.open();
+		if(file_name==null)
+			file_name= fileDialog.open();
 		if (file_name != null)
 		{
 			if (pm.state == ProgramState.IDLE)
@@ -488,14 +490,15 @@ public class CtrlMainGUI extends ControllerUI implements StateListener
 						"Camera is already started.",
 						StatusSeverity.ERROR);
 		}
+		file_name=null;
 	}
 
 	public void startStreamingAction()
 	{
 		if (ui.getSelectedInputMode().equals("CAM"))
 			mnutmCameraStartAction();
-		// else if(ui.getSelectedInputMode().equals("VIDEOFILE"))
-		// setVideoFileMode();
+		 else if(ui.getSelectedInputMode().equals("VIDEOFILE"))
+		 setVideoFileMode();
 		pm.startStreaming();
 	}
 

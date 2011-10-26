@@ -16,7 +16,6 @@ package ui;
 
 import java.awt.Frame;
 
-import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.awt.SWT_AWT;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -52,8 +51,6 @@ import control.ui.CtrlMainGUI;
  */
 public class MainGUI extends BaseUI
 {
-	private DataBindingContext m_bindingContext;
-
 	private CtrlMainGUI controller;
 	private Shell sShell;
 	private Group grp_video = null;
@@ -224,7 +221,7 @@ public class MainGUI extends BaseUI
 		grp_stats.setLayout(null);
 		grp_stats.setText("Variables:");
 		createCmpstSecondary();
-		grp_stats.setBounds(new Rectangle(678, 61, 301, 563));
+		grp_stats.setBounds(new Rectangle(678, 5, 301, 563));
 
 		tbl_data = new Table(grp_stats, SWT.BORDER);
 		tbl_data.setHeaderVisible(true);
@@ -346,7 +343,7 @@ public class MainGUI extends BaseUI
 		grp_video.setLayout(null);
 		grp_video.setText("Video:");
 
-		grp_video.setBounds(new Rectangle(10, 61, 665, 510));
+		grp_video.setBounds(new Rectangle(10, 5, 665, 563));
 		createCmpstMain();
 	}
 
@@ -423,7 +420,7 @@ public class MainGUI extends BaseUI
 
 		final Menu menu = new Menu(mntmSource);
 		mntmSource.setMenu(menu);
-		class MntmSourceRadioHandler extends SelectionAdapter
+/*		class MntmSourceRadioHandler extends SelectionAdapter
 		{
 			@Override
 			public void widgetSelected(final SelectionEvent e)
@@ -437,7 +434,7 @@ public class MainGUI extends BaseUI
 				else
 					radioSelection = true;
 			}
-		}
+		}*/
 
 		mntmVideoFile = new MenuItem(menu, SWT.RADIO);
 		mntmVideoFile.setText("Video File ..");
@@ -445,8 +442,8 @@ public class MainGUI extends BaseUI
 		mntmCameraSubMenu.setText("Camera");
 		mntmVideoFile.setSelection(true);
 
-		mntmVideoFile.addSelectionListener(new MntmSourceRadioHandler());
-		mntmCameraSubMenu.addSelectionListener(new MntmSourceRadioHandler());
+/*		mntmVideoFile.addSelectionListener(new MntmSourceRadioHandler());
+		mntmCameraSubMenu.addSelectionListener(new MntmSourceRadioHandler());*/
 
 		final MenuItem mntmVidOptions = new MenuItem(mnuVideo, SWT.NONE);
 		mntmVidOptions.addSelectionListener(new SelectionAdapter() {
@@ -634,6 +631,7 @@ public class MainGUI extends BaseUI
 		coolBar.setBounds(5, 5, 300, 30);
 		coolBar.layout();
 		coolBar.setLocked(true);
+		coolBar.setVisible(false);
 		sShell.setActive();
 	}
 

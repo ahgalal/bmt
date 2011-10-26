@@ -128,6 +128,7 @@ public class PManager
 		return default_me;
 	}
 
+	public static boolean testingMode;
 	/**
 	 * @param args
 	 *            Main arguments
@@ -137,12 +138,14 @@ public class PManager
 		new PManager();
 		final Display display = Display.getDefault();
 
-		while (!main_gui.isShellDisposed())
-		{
-			if (!display.readAndDispatch())
-				display.sleep();
-		}
-		display.dispose();
+		if(!testingMode)
+			while (!main_gui.isShellDisposed())
+			{
+				if (!display.readAndDispatch())
+					display.sleep();
+			}
+
+		//display.dispose();
 	}
 
 	/**
@@ -167,6 +170,7 @@ public class PManager
 		main_gui = new CtrlMainGUI();
 		new ModulesManager();
 		addStateListener(main_gui);
+		
 		main_gui.show(true);
 
 		vp = new VideoManager();
