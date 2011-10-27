@@ -15,7 +15,7 @@
 /**
  * 
  */
-package utils.video.filters.RatFinder;
+package utils.video.filters.ratfinder;
 
 import static org.junit.Assert.fail;
 
@@ -93,7 +93,7 @@ public class RatFinder2Test
 
 	/**
 	 * Test method for
-	 * {@link utils.video.filters.RatFinder.RatFinder2#contourEdge(int[], int, int, int, int)}
+	 * {@link utils.video.filters.ratFinder.RatFinder2#contourEdge(int[], int, int, int, int)}
 	 * .
 	 */
 	@Test

@@ -12,7 +12,7 @@
  * <http://www.gnu.org/licenses/>.
  **************************************************************************/
 
-package utils.video.filters.RatFinder;
+package utils.video.filters.ratfinder;
 
 /**
  * Parent of all markers, a marker is an object drawn on an image.
