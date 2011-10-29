@@ -304,4 +304,14 @@ public class PManager
 			status_mgr.setStatus("Tracking is not running.", StatusSeverity.ERROR);
 	}
 
+	public void unloadGUI()
+	{
+		drw_zns.unloadGUI();
+		frm_exp.unloadGUI();
+		frm_grps.unloadGUI();
+		frm_rat.unloadGUI();
+		cam_options.unloadGUI();
+		options_window.unloadGUI();
+	}
+
 }

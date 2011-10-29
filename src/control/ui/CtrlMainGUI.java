@@ -116,7 +116,7 @@ public class CtrlMainGUI extends ControllerUI implements StateListener
 		}
 	}
 
-/*	*//**
+	/*	*//**
 	 * Keeps MainGUI's controls in consistency with the current program state.
 	 * ex: which buttons should be enabled at each state.
 	 * 
@@ -315,8 +315,10 @@ public class CtrlMainGUI extends ControllerUI implements StateListener
 	 */
 	public void closeProgram()
 	{
-		/*		if (pm.state != ProgramState.RECORDING)
-					pm.stopStreaming();*/
+		if(pm.state == ProgramState.TRACKING)
+			pm.stopTracking();
+		if (pm.state == ProgramState.STREAMING)
+			pm.stopStreaming();
 		ui_is_opened = false;
 		try
 		{
@@ -326,6 +328,8 @@ public class CtrlMainGUI extends ControllerUI implements StateListener
 			e.printStackTrace();
 		}
 		ui.closeWindow();
+		pm.unloadGUI();
+		//System.exit(0);
 	}
 
 	/**
@@ -356,8 +360,8 @@ public class CtrlMainGUI extends ControllerUI implements StateListener
 					if (ModulesManager.getDefault().areModulesReady(ui.getShell()))
 					{
 						final ExperimentModule tmp_exp_module = (ExperimentModule) ModulesManager.getDefault()
-								.getModuleByName(
-										"Experiment Module");
+						.getModuleByName(
+								"Experiment Module");
 						if (tmp_exp_module != null)
 						{
 							startTracking();
@@ -371,8 +375,8 @@ public class CtrlMainGUI extends ControllerUI implements StateListener
 									final MessageBox mbox = new MessageBox(
 											ui.getShell(),
 											SWT.ICON_QUESTION
-													| SWT.YES
-													| SWT.NO);
+											| SWT.YES
+											| SWT.NO);
 									mbox.setMessage("No experiment module is found! continue?");
 									mbox.setText("Continue?");
 									final int res = mbox.open();
@@ -459,7 +463,7 @@ public class CtrlMainGUI extends ControllerUI implements StateListener
 		for (final PluggedGUI pgui : pGUI)
 			pm.addStateListener(pgui);
 	}
-	private String file_name ;
+	private String file_name ="C:\\vid.avi";
 	public void setVideoFileMode()
 	{
 		final FileDialog fileDialog = new FileDialog(ui.getShell(), SWT.OPEN);
@@ -497,8 +501,8 @@ public class CtrlMainGUI extends ControllerUI implements StateListener
 	{
 		if (ui.getSelectedInputMode().equals("CAM"))
 			mnutmCameraStartAction();
-		 else if(ui.getSelectedInputMode().equals("VIDEOFILE"))
-		 setVideoFileMode();
+		else if(ui.getSelectedInputMode().equals("VIDEOFILE"))
+			setVideoFileMode();
 		pm.startStreaming();
 	}
 
@@ -526,30 +530,35 @@ public class CtrlMainGUI extends ControllerUI implements StateListener
 				switch (state)
 				{
 				case IDLE:
-					ui.btnStartTrackingEnable(true);
+					ui.btnStartTrackingEnable(false);
 					ui.btnStopTrackingEnable(false);
 					ui.btnStartStreamingEnable(true);
 					ui.btnStopStreamingEnable(false);
+					ui.btnSetBackgroundEnable(false);
 					break;
-				/*				case RECORDING:
-									ui.btnStartTrackingEnable(false);
-									ui.btnStopTrackingEnable(true);
-									break;*/
 				case STREAMING:
 					ui.btnStartTrackingEnable(true);
 					ui.btnStopTrackingEnable(false);
 					ui.btnStartStreamingEnable(false);
 					ui.btnStopStreamingEnable(true);
+					ui.btnSetBackgroundEnable(true);
 					break;
 				case TRACKING:
 					ui.btnStartTrackingEnable(false);
 					ui.btnStopTrackingEnable(true);
 					ui.btnStartStreamingEnable(false);
 					ui.btnStopStreamingEnable(false);
+					ui.btnSetBackgroundEnable(true);
 					break;
 				}
 			}
 		});
 
+	}
+
+	@Override
+	public void unloadGUI()
+	{
+		ui.unloadGUI();
 	}
 }

@@ -278,6 +278,7 @@ public class VideoManager
 		filter_mgr.enableFilter("SubtractionFilter", true);
 		filter_mgr.enableFilter("RatFinder", true);
 		filter_mgr.enableFilter("RearingDetector", true);
+		filter_mgr.enableFilter("Average Filter", true);
 		PManager.getDefault().state = ProgramState.TRACKING;
 	}
 
@@ -310,6 +311,7 @@ public class VideoManager
 		filter_mgr.enableFilter("SubtractionFilter", false);
 		filter_mgr.enableFilter("RearingDetector", false);
 		filter_mgr.enableFilter("RatFinder", false);
+		filter_mgr.enableFilter("Average Filter", false);
 		PManager.getDefault().state = ProgramState.STREAMING;
 	}
 

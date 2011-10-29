@@ -174,5 +174,9 @@ public class CtrlRatInfoForm extends ControllerUI
 	{
 		return cancelled;
 	}
-
+	@Override
+	public void unloadGUI()
+	{
+		ui.unloadGUI();
+	}
 }

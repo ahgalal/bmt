@@ -54,7 +54,6 @@ public class MainGUI extends BaseUI
 	private CtrlMainGUI controller;
 	private Shell sShell;
 	private Group grp_video = null;
-	private final Group grp_options = null;
 	private Group grp_stats = null;
 	private Composite cmpst_main = null;
 	private Frame awt_video_main; // awt frame to display main screen data
@@ -68,19 +67,17 @@ public class MainGUI extends BaseUI
 	private Menu mnu_file = null;
 	private Menu mnu_edit = null;
 
-	private final Menu mnu_camera = null;
 	private Menu mnuVideo;
 	private Menu mnu_help = null;
 	private MenuItem mnutm_file_exit = null;
 
-	private final MenuItem mnutm_camera_start = null;
 	private Button btnStartTracking = null;
 	private Composite cmpst_secondary = null;
 	private Frame awt_video_sec; // awt frame to display the processed image
 	private MenuItem mntmCameraSubMenu;
 	private MenuItem mntmVideoFile;
 	// data
-	private Button btn_setbg = null;
+	private Button btnSetBackground = null;
 	private Button btnStopTracking = null;
 	private Label lbl_status = null;
 	private Table tbl_data = null;
@@ -179,6 +176,10 @@ public class MainGUI extends BaseUI
 			getAwtVideoMain().dispose();
 		if (getAwtVideoSec() != null)
 			getAwtVideoSec().dispose();
+		cmpst_secondary.dispose();
+		cmpst_main.dispose();
+		coolBar.dispose();
+		expandBar.dispose();
 		sShell.dispose();
 	}
 
@@ -317,10 +318,10 @@ public class MainGUI extends BaseUI
 			}
 		});
 
-		btn_setbg = new Button(cmpstTracking, SWT.NONE);
-		btn_setbg.setBounds(new Rectangle(10, 10, 109, 25));
-		btn_setbg.setText("Set Background");
-		btn_setbg.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
+		btnSetBackground = new Button(cmpstTracking, SWT.NONE);
+		btnSetBackground.setBounds(new Rectangle(10, 10, 109, 25));
+		btnSetBackground.setText("Set Background");
+		btnSetBackground.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
 			@Override
 			public void widgetSelected(final org.eclipse.swt.events.SelectionEvent e)
 			{
@@ -366,8 +367,6 @@ public class MainGUI extends BaseUI
 		getAwtVideoSec().setVisible(true);
 		getAwtVideoSec().setSize(cmpst_secondary.getSize().x, cmpst_secondary.getSize().y);
 	}
-
-	private boolean radioSelection;
 
 	/**
 	 * This method initializes sShell.
@@ -603,7 +602,7 @@ public class MainGUI extends BaseUI
 	 */
 	public void btnStartStreamingEnable(final boolean enable)
 	{
-		btnStopStream.setEnabled(enable);
+		btnStartStream.setEnabled(enable);
 	}
 
 	/**
@@ -617,6 +616,17 @@ public class MainGUI extends BaseUI
 		btnStopStream.setEnabled(enable);
 	}
 
+	/**
+	 * Enables/disables the set background button.
+	 * 
+	 * @param enable
+	 *            true/false
+	 */
+	public void btnSetBackgroundEnable(final boolean enable)
+	{
+		btnSetBackground.setEnabled(enable);
+	}
+	
 	/**
 	 * Loads GUI instances for the available video filters.
 	 * 

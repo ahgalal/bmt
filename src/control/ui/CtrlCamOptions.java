@@ -122,4 +122,9 @@ public class CtrlCamOptions extends ControllerUI
 		this.cam_num = Integer.parseInt(strs[5]);
 		return true;
 	}
+	@Override
+	public void unloadGUI()
+	{
+		ui.unloadGUI();
+	}
 }

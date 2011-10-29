@@ -68,4 +68,10 @@ public abstract class BaseUI
 	 */
 	public abstract void clearForm();
 
+	public void unloadGUI()
+	{
+		if (sShell!=null)
+			sShell.dispose();
+	}
+
 }

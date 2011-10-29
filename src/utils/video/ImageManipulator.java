@@ -305,4 +305,29 @@ public class ImageManipulator
 		return bimg;
 	}
 
+	public static int addRGBInt(int img1, int img2)
+	{
+		byte r1,r2,g1,g2,b1,b2;
+		r1=(byte) (img1& 0x00FF0000);
+		r2=(byte) (img2& 0x00FF0000);
+		g1=(byte) (img1& 0x0000FF00);
+		g2=(byte) (img2& 0x0000FF00);
+		b1=(byte) (img1& 0x000000FF);
+		b2=(byte) (img2& 0x000000FF);
+		
+		int res= (r1+r2>0xFF? 0xFF:r1+r2) << 16 | (g1+g2>0xFF? 0xFF:g1+g2) << 8 | (b1+b2>0xFF? 0xFF:b1+b2) ;
+		return res;
+	}
+
+	public static int divideRGBByNumber(int img1, int number)
+	{
+		byte r1,g1,b1;
+		r1=(byte) (img1& 0x00FF0000);
+		g1=(byte) (img1& 0x0000FF00);
+		b1=(byte) (img1& 0x000000FF);
+		
+		int res= (r1/number) << 16 | (g1/number) << 8 | (b1/number) ;
+		return res;
+	}
+
 }

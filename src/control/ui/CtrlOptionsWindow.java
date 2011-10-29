@@ -123,5 +123,9 @@ public class CtrlOptionsWindow extends ControllerUI
 	{
 		ui.show(visibility);
 	}
-
+	@Override
+	public void unloadGUI()
+	{
+		ui.unloadGUI();
+	}
 }

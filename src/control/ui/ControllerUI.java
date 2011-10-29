@@ -43,5 +43,7 @@ public abstract class ControllerUI
 	 * @return true: success, false: failure
 	 */
 	public abstract boolean setVars(String[] strs);
+	
+	public abstract void unloadGUI();
 
 }

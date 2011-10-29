@@ -217,5 +217,9 @@ public class CtrlDrawZones extends ControllerUI
 	{
 		ShapeController.getDefault().setSettingScale(enable);
 	}
-
+	@Override
+	public void unloadGUI()
+	{
+		ui.unloadGUI();
+	}
 }

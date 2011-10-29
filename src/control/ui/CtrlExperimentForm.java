@@ -126,5 +126,9 @@ public class CtrlExperimentForm extends ControllerUI
 	{
 		ui.clearForm();
 	}
-
+	@Override
+	public void unloadGUI()
+	{
+		ui.unloadGUI();
+	}
 }

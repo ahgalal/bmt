@@ -23,6 +23,7 @@ import ui.PluggedGUI;
 import utils.PManager;
 import utils.StatusManager.StatusSeverity;
 import utils.video.FrameIntArray;
+import utils.video.filters.avg.AverageFilter;
 import utils.video.filters.ratfinder.RatFinder;
 import utils.video.filters.ratfinder.RatFinderData;
 import utils.video.filters.ratfinder.RatFinderFilterConfigs;
@@ -51,6 +52,7 @@ public class FilterManager
 	private VideoRecorder vid_rec;
 	private ScreenDrawer screen_drawer;
 	private SourceFilter source_filter;
+	private AverageFilter avgFilter;
 
 	/**
 	 * Initializes the filters' array.
@@ -269,6 +271,11 @@ public class FilterManager
 				common_configs,
 				fia_src);
 		source_filter.configure(source_configs);
+		
+		///////////////////////////////////////
+		// Average Filter
+		// TODO: create a config class for avg filter
+		avgFilter.configure(source_configs);
 
 		// ///////////////////////////////////
 		// check that configurations of all filters are valid
@@ -294,6 +301,7 @@ public class FilterManager
 		final Link src_rgb_link = new Link(dims);
 		final Link grey_link = new Link(dims);
 		final Link marker_link = new Link(dims);
+		final Link avg_link = new Link(dims);
 
 		rat_finder = new RatFinder(
 				"RatFinder", grey_link, marker_link);
@@ -306,13 +314,16 @@ public class FilterManager
 		vid_rec = new VideoRecorder("Recorder", src_rgb_link, null);
 
 		screen_drawer = new ScreenDrawer(
-				"ScreenDrawer", src_rgb_link, marker_link, null);
+				//"ScreenDrawer", /*src_rgb_link*/avg_link, /*marker_link*/ grey_link, null);
+				"ScreenDrawer", src_rgb_link/*avg_link*/, marker_link /*grey_link*/, null);
 
 		subtractor_filter = new SubtractorFilter(
 				"SubtractionFilter", src_rgb_link, grey_link);
 
 		source_filter = new SourceFilter("Source Filter", null, src_rgb_link);
 
+		avgFilter = new AverageFilter("Average Filter",grey_link, avg_link);
+		
 		// ////////////////////////////////////
 		// add filters to the filter manager
 		addFilter(source_filter);
@@ -321,6 +332,7 @@ public class FilterManager
 		addFilter(rearing_det);
 		addFilter(rat_finder);
 		addFilter(screen_drawer);
+		addFilter(avgFilter);
 
 		PManager.main_gui.loadPluggedGUI(getFiltersGUI());
 		for (final PluggedGUI fgui : getFiltersGUI())

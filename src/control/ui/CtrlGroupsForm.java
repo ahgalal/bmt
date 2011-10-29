@@ -109,5 +109,9 @@ public class CtrlGroupsForm extends ControllerUI
 	{
 		ui.clearForm();
 	}
-
+	@Override
+	public void unloadGUI()
+	{
+		ui.unloadGUI();
+	}
 }
