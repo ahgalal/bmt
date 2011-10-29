@@ -12,7 +12,7 @@
  * <http://www.gnu.org/licenses/>.
  **************************************************************************/
 
-package utils.video.filters.ratfinder;
+package utils.video.filters.RatFinder;
 
 import java.awt.Color;
 
@@ -25,7 +25,6 @@ public class CrossMarker extends Marker
 {
 
 	private final int width, height, thikness;
-	private final Color color;
 	private int actual_width, actual_height;
 	private int x1, x2, y1, y2;
 
@@ -53,11 +52,10 @@ public class CrossMarker extends Marker
 			final int img_width,
 			final int img_height)
 	{
-		super(img_width, img_height);
+		super(img_width, img_height,color);
 		this.width = width;
 		this.height = height;
 		this.thikness = thickness;
-		this.color = color;
 	}
 
 	@Override
@@ -78,46 +76,6 @@ public class CrossMarker extends Marker
 		// Vertical line
 		fillRect(img, x2, y2, thikness, actual_height);
 
-	}
-
-	/**
-	 * Fills the specified rectangular area of the image with the specified
-	 * color.
-	 * 
-	 * @param img
-	 *            image to fill the rectangle on.
-	 * @param x
-	 *            x co-ordinate of the rectangle
-	 * @param y
-	 *            y co-ordinate of the rectangle
-	 * @param width
-	 *            rectangle's width
-	 * @param height
-	 *            rectangle's height
-	 */
-	private void fillRect(
-			final int[] img,
-			int x,
-			int y,
-			final int width,
-			final int height)
-	{
-		if (x < 0)
-			x = 0;
-		if (x + width > img_width)
-			x = img_width - width - 1;
-		if (y < 0)
-			y = 0;
-		if (y + height > img_height)
-			y = img_height - height - 1;
-
-		for (int i = x; i < x + width; i++)
-		{
-			for (int j = y; j < y + height; j++)
-			{
-				img[i + j * img_width] = color.getRGB();
-			}
-		}
 	}
 
 }

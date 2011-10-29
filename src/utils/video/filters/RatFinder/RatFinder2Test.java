@@ -15,7 +15,7 @@
 /**
  * 
  */
-package utils.video.filters.ratfinder;
+package utils.video.filters.RatFinder;
 
 import static org.junit.Assert.fail;
 

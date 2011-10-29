@@ -12,7 +12,7 @@
  * <http://www.gnu.org/licenses/>.
  **************************************************************************/
 
-package utils.video.filters.ratfinder;
+package utils.video.filters.RatFinder;
 
 import java.awt.Color;
 import java.awt.Point;
@@ -48,6 +48,7 @@ public class RatFinder extends VideoFilter
 	}
 
 	private int tmp_max;
+	private final int searchSideLength = 100;
 	protected RatFinderFilterConfigs ratfinder_configs;
 	protected final RatFinderData rat_finder_data;
 
@@ -56,7 +57,7 @@ public class RatFinder extends VideoFilter
 
 	protected final Point center_point;
 	protected int[] out_data;
-	protected Marker marker;
+	protected Marker marker, marker2;
 
 	/**
 	 * Draws a cross at the center of the moving object.
@@ -71,6 +72,7 @@ public class RatFinder extends VideoFilter
 		try
 		{
 			marker.draw(out_data, center_point.x, center_point.y);
+			marker2.draw(out_data, center_point.x-searchSideLength/2, center_point.y-searchSideLength/2);
 		} catch (final Exception e)
 		{
 			System.err.print("Error in marker");
@@ -88,7 +90,19 @@ public class RatFinder extends VideoFilter
 	{
 		tmp_max = 0;
 
-		for (int y = 0; y < ratfinder_configs.common_configs.height; y++) // Horizontal
+		int y1, y2;
+		if (center_point.y == 0)
+		{
+			y1 = 0;
+			y2 = ratfinder_configs.common_configs.height;
+		}
+		else
+		{
+			y1 = (center_point.y - searchSideLength) < 0 ? 0 : center_point.y - 40;
+			y2 = (center_point.y + searchSideLength) > ratfinder_configs.common_configs.height ? ratfinder_configs.common_configs.height
+					: center_point.y + searchSideLength;
+		}
+		for (int y = y1; y < y2; y++) // Horizontal
 		// Sum
 		{
 			hori_sum[y] = 0;
@@ -104,7 +118,21 @@ public class RatFinder extends VideoFilter
 		}
 
 		tmp_max = 0;
-		for (int x = 0; x < ratfinder_configs.common_configs.width; x++) // Vertical
+
+		int x1, x2;
+		if (center_point.x == 0)
+		{
+			x1 = 0;
+			x2 = ratfinder_configs.common_configs.width;
+		}
+		else
+		{
+			x1 = (center_point.x - searchSideLength) < 0 ? 0 : center_point.x - 40;
+			x2 = (center_point.x + searchSideLength) > ratfinder_configs.common_configs.width ? ratfinder_configs.common_configs.width
+					: center_point.x + searchSideLength;
+		}
+
+		for (int x = x1; x < x2; x++) // Vertical
 		// Sum
 		{
 			vert_sum[x] = 0;
@@ -147,6 +175,14 @@ public class RatFinder extends VideoFilter
 				Color.RED,
 				configs.common_configs.width,
 				configs.common_configs.height);
+
+		marker2 = new RectangularMarker(
+				configs.common_configs.width,
+				configs.common_configs.height,
+				searchSideLength,
+				searchSideLength,
+				Color.RED
+				);
 
 		// super's stuff:
 

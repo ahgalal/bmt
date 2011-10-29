@@ -12,7 +12,7 @@
  * <http://www.gnu.org/licenses/>.
  **************************************************************************/
 
-package utils.video.filters.ratfinder;
+package utils.video.filters.RatFinder;
 
 import java.awt.Point;
 

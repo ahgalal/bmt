@@ -12,7 +12,7 @@
  * <http://www.gnu.org/licenses/>.
  **************************************************************************/
 
-package utils.video.filters.ratfinder;
+package utils.video.filters.RatFinder;
 
 import utils.PManager;
 import utils.StatusManager.StatusSeverity;
