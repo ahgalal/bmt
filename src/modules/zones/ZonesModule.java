@@ -32,7 +32,7 @@ import org.eclipse.swt.widgets.Shell;
 import utils.PManager;
 import utils.StatusManager.StatusSeverity;
 import utils.video.filters.Data;
-import utils.video.filters.ratfinder.RatFinderData;
+import utils.video.filters.RatFinder.RatFinderData;
 
 /**
  * Manages zones counters (entrance counters, central time, etc..).
