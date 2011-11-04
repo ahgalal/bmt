@@ -22,20 +22,17 @@ import JMyron.JMyron;
  * 
  * @author Creative
  */
-public class JMyronModule implements VidInputter
+public class JMyronModule extends VidInputter<VidSourceConfigs>
 {
 
 	private JMyron jmyron;
-	@SuppressWarnings("unused")
-	private int width, height, cam_index, status;
-	private FrameIntArray fia;
 	private Thread th_jmyron_update_image;
 	private boolean stop_stream;
 
 	@Override
 	public boolean startStream()
 	{
-		jmyron.start(width, height);
+		jmyron.start(configs.width, configs.height);
 
 		th_jmyron_update_image = new Thread(new RunnableJMyron());
 		th_jmyron_update_image.start();
@@ -72,23 +69,6 @@ public class JMyronModule implements VidInputter
 	public int getStatus()
 	{
 		return status;
-	}
-
-	@Override
-	public boolean initialize(
-			final FrameIntArray frameData,
-			final int width,
-			final int height,
-			final int camIndex)
-	{
-		if (jmyron == null)
-			jmyron = new JMyron();
-		this.width = width;
-		this.height = height;
-		fia = frameData;
-		this.cam_index = camIndex;
-
-		return true;
 	}
 
 	@Override
@@ -142,6 +122,19 @@ public class JMyronModule implements VidInputter
 	public String getName()
 	{
 		return "JMyron";
+	}
+
+	@Override
+	public boolean initialize(
+			final FrameIntArray frame_data,
+			final VidSourceConfigs configs)
+	{
+		this.configs=configs;
+		if (jmyron == null)
+			jmyron = new JMyron();
+		fia = frame_data;
+
+		return true;
 	}
 
 }

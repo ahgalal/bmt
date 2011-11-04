@@ -26,7 +26,7 @@ import utils.video.filters.CommonFilterConfigs;
  * 
  * @author Creative
  */
-public class CtrlCamOptions extends ControllerUI
+public class CtrlCamOptions extends ControllerUI<CamOptions>
 {
 	private String library = "JMF"; // @jve:decl-index=0:
 	// private String prev_library="";
@@ -34,7 +34,6 @@ public class CtrlCamOptions extends ControllerUI
 	private int width = 640, height = 480;
 	private int frame_rate = 30;
 	private int cam_num = 0;
-	private final CamOptions ui;
 
 	// private boolean lib_is_already_created;
 
@@ -81,7 +80,7 @@ public class CtrlCamOptions extends ControllerUI
 				cam_num,
 				library,
 				format);
-		pm.initializeVideoManager(common_configs);
+		pm.initializeVideoManager(common_configs,null);
 		pm.startStreaming();
 		PManager.main_gui.configureScreenDrawerFilter("ScreenDrawer", null, true);
 		ModulesManager.getDefault().updateModuleConfigs(
@@ -121,10 +120,5 @@ public class CtrlCamOptions extends ControllerUI
 		this.format = strs[4];
 		this.cam_num = Integer.parseInt(strs[5]);
 		return true;
-	}
-	@Override
-	public void unloadGUI()
-	{
-		ui.unloadGUI();
 	}
 }

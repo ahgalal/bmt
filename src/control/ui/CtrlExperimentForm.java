@@ -30,10 +30,9 @@ import utils.PManager;
  * 
  * @author Creative
  */
-public class CtrlExperimentForm extends ControllerUI
+public class CtrlExperimentForm extends ControllerUI<ExperimentForm>
 {
 	private String name, user, date, notes;
-	private final ExperimentForm ui;
 
 	@Override
 	public boolean setVars(final String[] strs)
@@ -125,10 +124,5 @@ public class CtrlExperimentForm extends ControllerUI
 	public void clearForm()
 	{
 		ui.clearForm();
-	}
-	@Override
-	public void unloadGUI()
-	{
-		ui.unloadGUI();
 	}
 }

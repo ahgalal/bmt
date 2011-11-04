@@ -21,6 +21,7 @@ import utils.PManager;
 import utils.PManager.ProgramState;
 import utils.StatusManager.StatusSeverity;
 import utils.video.filters.FilterConfigs;
+import utils.video.filters.FilterData;
 import utils.video.filters.Link;
 import utils.video.filters.VideoFilter;
 
@@ -29,7 +30,7 @@ import utils.video.filters.VideoFilter;
  * 
  * @author Creative
  */
-public class VideoRecorder extends VideoFilter
+public class VideoRecorder extends VideoFilter<RecorderConfigs,FilterData>
 {
 	/**
 	 * Initializes the filter.
@@ -50,13 +51,12 @@ public class VideoRecorder extends VideoFilter
 
 	private final PManager pm;
 	private StreamToAVI avi_saver;
-	private RecorderConfigs recorder_configs;
 	private boolean isRecording = false;
 
 	@Override
 	public boolean configure(final FilterConfigs configs)
 	{
-		recorder_configs = (RecorderConfigs) configs;
+		this.configs = (RecorderConfigs) configs;
 		return super.configure(configs);
 	}
 
@@ -116,8 +116,8 @@ public class VideoRecorder extends VideoFilter
 						"video.avi",
 						VideoFormat.JPG,
 						10,
-						recorder_configs.common_configs.width,
-						recorder_configs.common_configs.height);
+						configs.common_configs.width,
+						configs.common_configs.height);
 				isRecording = true;
 				configs.enabled = true;
 				return true;

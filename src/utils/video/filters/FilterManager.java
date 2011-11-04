@@ -24,6 +24,7 @@ import utils.PManager;
 import utils.StatusManager.StatusSeverity;
 import utils.video.FrameIntArray;
 import utils.video.filters.avg.AverageFilter;
+import utils.video.filters.movementmeter.MovementMeter;
 import utils.video.filters.ratfinder.RatFinder;
 import utils.video.filters.ratfinder.RatFinderData;
 import utils.video.filters.ratfinder.RatFinderFilterConfigs;
@@ -45,7 +46,7 @@ import utils.video.filters.subtractionfilter.SubtractorFilter;
  */
 public class FilterManager
 {
-	private final ArrayList<VideoFilter> arr_filters;
+	private final ArrayList<VideoFilter<?,?>> arr_filters;
 	private SubtractorFilter subtractor_filter;
 	private RatFinder rat_finder;
 	private RearingDetector rearing_det;
@@ -53,13 +54,14 @@ public class FilterManager
 	private ScreenDrawer screen_drawer;
 	private SourceFilter source_filter;
 	private AverageFilter avgFilter;
+	private MovementMeter movementMeter;
 
 	/**
 	 * Initializes the filters' array.
 	 */
 	public FilterManager()
 	{
-		arr_filters = new ArrayList<VideoFilter>();
+		arr_filters = new ArrayList<VideoFilter<?,?>>();
 		connectFilters();
 	}
 
@@ -70,9 +72,9 @@ public class FilterManager
 	 *            name of the filter to retrieve
 	 * @return VideoFilter having the name specified
 	 */
-	public VideoFilter getFilterByName(final String name)
+	public VideoFilter<?, ?> getFilterByName(final String name)
 	{
-		for (final VideoFilter vf : arr_filters)
+		for (final VideoFilter<?, ?> vf : arr_filters)
 			if (vf.getName().equals(name))
 				return vf;
 		return null;
@@ -88,7 +90,7 @@ public class FilterManager
 	 */
 	public void enableFilter(final String filter_name, final boolean enable)
 	{
-		final VideoFilter tmp = getFilterByName(filter_name);
+		final VideoFilter<?, ?> tmp = getFilterByName(filter_name);
 		if (tmp != null)
 			tmp.enable(enable);
 	}
@@ -101,9 +103,9 @@ public class FilterManager
 	 * @return VideoFilter having type specified (in case of many filters have
 	 *         the same type, first one found will be returned)
 	 */
-	private VideoFilter getFilterByType(final Class<?> type)
+	private VideoFilter<?, ?> getFilterByType(final Class<?> type)
 	{
-		for (final VideoFilter vf : arr_filters)
+		for (final VideoFilter<?, ?> vf : arr_filters)
 			if (vf.getClass() == type)
 				return vf;
 		return null;
@@ -119,7 +121,7 @@ public class FilterManager
 	 */
 	public void enableFilter(final Class<?> type, final boolean enable)
 	{
-		final VideoFilter tmp = getFilterByType(type);
+		final VideoFilter<?, ?> tmp = getFilterByType(type);
 		if (tmp != null)
 			tmp.enable(enable);
 	}
@@ -129,7 +131,7 @@ public class FilterManager
 	 * 
 	 * @return array of filters
 	 */
-	public ArrayList<VideoFilter> getFilters()
+	public ArrayList<VideoFilter<?,?>> getFilters()
 	{
 		return arr_filters;
 	}
@@ -140,7 +142,7 @@ public class FilterManager
 	 * @param filter
 	 *            filter to be added
 	 */
-	public void addFilter(final VideoFilter filter)
+	public void addFilter(final VideoFilter<?, ?> filter)
 	{
 		arr_filters.add(filter);
 	}
@@ -153,7 +155,7 @@ public class FilterManager
 	 */
 	public void removeFilter(final String filter_name)
 	{
-		final VideoFilter tmp = getFilterByName(filter_name);
+		final VideoFilter<?, ?> tmp = getFilterByName(filter_name);
 		if (tmp != null)
 			arr_filters.remove(tmp);
 	}
@@ -167,7 +169,7 @@ public class FilterManager
 	 */
 	public void removeFilter(final Class<?> type)
 	{
-		final VideoFilter tmp = getFilterByType(type);
+		final VideoFilter<?, ?> tmp = getFilterByType(type);
 		if (tmp != null)
 			arr_filters.remove(tmp);
 	}
@@ -181,7 +183,7 @@ public class FilterManager
 	 */
 	public void applyConfigsToFilter(final FilterConfigs cfgs)
 	{
-		final VideoFilter tmp_filter = getFilterByName(cfgs.getConfigurablename());
+		final VideoFilter<?, ?> tmp_filter = getFilterByName(cfgs.getConfigurablename());
 		if (tmp_filter != null)
 			tmp_filter.updateConfigs(cfgs);
 	}
@@ -191,7 +193,7 @@ public class FilterManager
 	 */
 	public void disableAll()
 	{
-		for (final VideoFilter vf : arr_filters)
+		for (final VideoFilter<?, ?> vf : arr_filters)
 			vf.enable(false);
 	}
 
@@ -201,7 +203,7 @@ public class FilterManager
 	 */
 	public void submitDataObjects()
 	{
-		for (final VideoFilter v : arr_filters)
+		for (final VideoFilter<?, ?> v : arr_filters)
 			if (v.getFilterData() != null)
 				ModulesManager.getDefault().addFilterDataObject(v.getFilterData());
 	}
@@ -276,10 +278,16 @@ public class FilterManager
 		// Average Filter
 		// TODO: create a config class for avg filter
 		avgFilter.configure(source_configs);
+		
+		
+		///////////////////////////////////////
+		// MovementMeter Filter
+		// TODO: create a config class for MovementMeter
+		movementMeter.configure(source_configs);
 
 		// ///////////////////////////////////
 		// check that configurations of all filters are valid
-		for (final VideoFilter vf : getFilters())
+		for (final VideoFilter<?, ?> vf : getFilters())
 			if (!vf.getConfigs().validate())
 			{
 				PManager.log.print(
@@ -302,6 +310,7 @@ public class FilterManager
 		final Link grey_link = new Link(dims);
 		final Link marker_link = new Link(dims);
 		final Link avg_link = new Link(dims);
+		final Link differential = new Link(dims);
 
 		rat_finder = new RatFinder(
 				"RatFinder", grey_link, marker_link);
@@ -315,7 +324,7 @@ public class FilterManager
 
 		screen_drawer = new ScreenDrawer(
 				//"ScreenDrawer", /*src_rgb_link*/avg_link, /*marker_link*/ grey_link, null);
-				"ScreenDrawer", src_rgb_link/*avg_link*/, marker_link /*grey_link*/, null);
+				"ScreenDrawer", differential/*src_rgb_link*//*avg_link*/, marker_link /*grey_link*/, null);
 
 		subtractor_filter = new SubtractorFilter(
 				"SubtractionFilter", src_rgb_link, grey_link);
@@ -323,6 +332,8 @@ public class FilterManager
 		source_filter = new SourceFilter("Source Filter", null, src_rgb_link);
 
 		avgFilter = new AverageFilter("Average Filter",grey_link, avg_link);
+		
+		movementMeter = new MovementMeter("Movement Meter", src_rgb_link, differential);
 		
 		// ////////////////////////////////////
 		// add filters to the filter manager
@@ -333,6 +344,7 @@ public class FilterManager
 		addFilter(rat_finder);
 		addFilter(screen_drawer);
 		addFilter(avgFilter);
+		addFilter(movementMeter);
 
 		PManager.main_gui.loadPluggedGUI(getFiltersGUI());
 		for (final PluggedGUI fgui : getFiltersGUI())
@@ -348,7 +360,7 @@ public class FilterManager
 	{
 		final ArrayList<String> str_names = new ArrayList<String>();
 
-		for (final VideoFilter vf : arr_filters)
+		for (final VideoFilter<?, ?> vf : arr_filters)
 			str_names.add(vf.getName());
 
 		return str_names;
@@ -357,7 +369,7 @@ public class FilterManager
 	public PluggedGUI[] getFiltersGUI()
 	{
 		int validGUIsNumber = 0;
-		for (final VideoFilter vf : arr_filters)
+		for (final VideoFilter<?, ?> vf : arr_filters)
 		{
 			if (vf.getGUI() != null)
 			{
@@ -366,7 +378,7 @@ public class FilterManager
 		}
 		final PluggedGUI[] arr = new PluggedGUI[validGUIsNumber];
 		int i = 0;
-		for (final VideoFilter vf : arr_filters)
+		for (final VideoFilter<?, ?> vf : arr_filters)
 		{
 			if (vf.getGUI() != null)
 			{

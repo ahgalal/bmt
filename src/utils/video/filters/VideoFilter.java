@@ -25,11 +25,11 @@ import utils.StateListener;
  * 
  * @author Creative
  */
-public abstract class VideoFilter implements StateListener
+public abstract class VideoFilter<ConfigsType extends FilterConfigs,DataType extends FilterData> implements StateListener
 {
 	protected String name;
-	protected FilterData filter_data;
-	protected FilterConfigs configs;
+	protected DataType filter_data;
+	protected ConfigsType configs;
 	protected Link link_in, link_out;
 	protected PluggedGUI gui;
 
@@ -131,7 +131,7 @@ public abstract class VideoFilter implements StateListener
 	 */
 	public boolean configure(final FilterConfigs configs)
 	{
-		this.configs = configs;
+		this.configs = (ConfigsType) configs;
 		return true;
 	}
 

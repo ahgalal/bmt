@@ -14,6 +14,7 @@
 
 package control.ui;
 
+import ui.BaseUI;
 import utils.PManager;
 
 /**
@@ -21,9 +22,9 @@ import utils.PManager;
  * 
  * @author Creative
  */
-public abstract class ControllerUI
+public abstract  class  ControllerUI <UIType extends BaseUI>
 {
-
+	protected UIType ui;
 	protected PManager pm;
 
 	/**
@@ -44,6 +45,9 @@ public abstract class ControllerUI
 	 */
 	public abstract boolean setVars(String[] strs);
 	
-	public abstract void unloadGUI();
+	public final void  unloadGUI()
+	{
+		ui.unloadGUI();
+	}
 
 }

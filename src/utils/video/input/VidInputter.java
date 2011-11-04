@@ -17,12 +17,16 @@ package utils.video.input;
 import utils.video.FrameIntArray;
 
 /**
- * Interface for Video libraries to communicate with the VideoManager.
+ * Parent of All Video libraries to communicate with the VideoManager.
  * 
  * @author Creative
  */
-public interface VidInputter
+public abstract class VidInputter<ConfigsType extends VidSourceConfigs>
 {
+	protected ConfigsType configs;
+	protected int status;
+	protected FrameIntArray fia;
+	
 	/**
 	 * Initializes the video library.
 	 * 
@@ -36,19 +40,19 @@ public interface VidInputter
 	 *            camera index to use
 	 * @return true if the initialization was successful
 	 */
-	boolean initialize(FrameIntArray frame_data, int width, int height, int cam_index);
+	public abstract boolean initialize(FrameIntArray frame_data, ConfigsType configs);
 
 	/**
 	 * Starts the video stream.
 	 * 
 	 * @return true if successful
 	 */
-	boolean startStream();
+	public abstract boolean startStream();
 
 	/**
 	 * Stops the video library and deinitializes it.
 	 */
-	void stopModule();
+	public abstract void stopModule();
 
 	/**
 	 * Sets the image format for the library (RGB/YUV).
@@ -56,33 +60,33 @@ public interface VidInputter
 	 * @param format
 	 *            new format
 	 */
-	void setFormat(String format);
+	public abstract void setFormat(String format);
 
 	/**
 	 * Returns the status of the video library.
 	 * 
 	 * @return 1 means streaming
 	 */
-	int getStatus();
+	public abstract int getStatus();
 
 	/**
 	 * Returns the number of available image capture devices.
 	 * 
 	 * @return number of available webcams
 	 */
-	int getNumCams();
+	public abstract int getNumCams();
 
 	/**
 	 * Shows additional cam settings (brightness/contrast/...).
 	 * 
 	 * @return 0 means success
 	 */
-	int displayMoreSettings();
+	public abstract int displayMoreSettings();
 
 	/**
 	 * Returns the name of the video library.
 	 * 
 	 * @return string containing the name of the video library
 	 */
-	String getName();
+	public abstract String getName();
 }

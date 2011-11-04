@@ -24,7 +24,7 @@ import utils.video.filters.VideoFilter;
  * 
  * @author Creative
  */
-public class RearingDetector extends VideoFilter
+public class RearingDetector extends VideoFilter<RearingFilterConfigs,RearingFilterData>
 {
 	/**
 	 * Initializes the filter.
@@ -39,25 +39,20 @@ public class RearingDetector extends VideoFilter
 	public RearingDetector(final String name, final Link linkIn, final Link linkOut)
 	{
 		super(name, linkIn, linkOut);
-		rearing_configs = (RearingFilterConfigs) configs;
-		rearing_data = new RearingFilterData("Rearing Data");
+		configs = (RearingFilterConfigs) configs;
+		filter_data = new RearingFilterData("Rearing Data");
 
 		// super's stuff:
-		filter_data = rearing_data;
 		gui = new RearingDetectorGUI();
-		rearing_data.setRearing(false);
+		filter_data.setRearing(false);
 	}
-
-	private RearingFilterConfigs rearing_configs;
 
 	@Override
 	public boolean configure(final FilterConfigs configs)
 	{
-		rearing_configs = (RearingFilterConfigs) configs;
+		this.configs = (RearingFilterConfigs) configs;
 		return super.configure(configs);
 	}
-
-	private final RearingFilterData rearing_data;
 
 	private boolean rearing_now;
 	private int normal_rat_area;
@@ -77,9 +72,9 @@ public class RearingDetector extends VideoFilter
 		if (rearing)
 		{
 			rearing_now = true;
-			rearing_configs.rearing_thresh = (normal_rat_area + current_rat_area) / 2;
+			configs.rearing_thresh = (normal_rat_area + current_rat_area) / 2;
 			System.out.print("Rearing threshold: "
-					+ rearing_configs.rearing_thresh
+					+ configs.rearing_thresh
 					+ "\n");
 		}
 		else
@@ -134,27 +129,27 @@ public class RearingDetector extends VideoFilter
 			if (imageData != null)
 			{
 				int white_area = 0;
-				for (int x = rearing_configs.ref_center_point.x
-						- (rearing_configs.margin_x / 2); x < rearing_configs.ref_center_point.x
-						+ (rearing_configs.margin_x / 2); x++)
-					for (int y = rearing_configs.ref_center_point.y
-							- (rearing_configs.margin_y / 2); y < rearing_configs.ref_center_point.y
-							+ (rearing_configs.margin_y / 2); y++)
-						if (x < rearing_configs.common_configs.width
+				for (int x = configs.ref_center_point.x
+						- (configs.margin_x / 2); x < configs.ref_center_point.x
+						+ (configs.margin_x / 2); x++)
+					for (int y = configs.ref_center_point.y
+							- (configs.margin_y / 2); y < configs.ref_center_point.y
+							+ (configs.margin_y / 2); y++)
+						if (x < configs.common_configs.width
 								& x >= 0
-								& y < rearing_configs.common_configs.height
+								& y < configs.common_configs.height
 								& y >= 0)
-							if (imageData[x + y * rearing_configs.common_configs.width] == 0x00FFFFFF)
+							if (imageData[x + y * configs.common_configs.width] == 0x00FFFFFF)
 								white_area++;
 
 				current_rat_area = white_area;
-				if (current_rat_area < rearing_configs.rearing_thresh)
+				if (current_rat_area < configs.rearing_thresh)
 					is_rearing = true;
 				else
 					is_rearing = false;
 			}
 		}
-		rearing_data.setRearing(is_rearing);
+		filter_data.setRearing(is_rearing);
 	}
 
 	@Override

@@ -259,7 +259,7 @@ public class CtrlMainGUI extends ControllerUI implements StateListener
 			ModulesManager.getDefault().setWidthandHeight(
 					commonConfigs.width,
 					commonConfigs.height);
-			pm.initializeVideoManager(commonConfigs);
+			pm.initializeVideoManager(commonConfigs,null);
 			configureScreenDrawerFilter("ScreenDrawer", commonConfigs, true);
 			pm.status_mgr.setStatus("Camera is Starting..", StatusSeverity.WARNING);
 		}
@@ -463,7 +463,7 @@ public class CtrlMainGUI extends ControllerUI implements StateListener
 		for (final PluggedGUI pgui : pGUI)
 			pm.addStateListener(pgui);
 	}
-	private String file_name ="C:\\vid.avi";
+	private String file_name ="F:\\FST.avi";
 	public void setVideoFileMode()
 	{
 		final FileDialog fileDialog = new FileDialog(ui.getShell(), SWT.OPEN);
@@ -483,8 +483,7 @@ public class CtrlMainGUI extends ControllerUI implements StateListener
 				ModulesManager.getDefault().setWidthandHeight(
 						commonConfigs.width,
 						commonConfigs.height);
-				pm.initializeVideoManager(commonConfigs);
-				((VideoFileModule) pm.getVideoManager().getVidInputter()).setVideoFile(file_name);
+				pm.initializeVideoManager(commonConfigs,file_name);
 
 				configureScreenDrawerFilter("ScreenDrawer", commonConfigs, true);
 				pm.status_mgr.setStatus("Camera is Starting..", StatusSeverity.WARNING);
@@ -548,17 +547,11 @@ public class CtrlMainGUI extends ControllerUI implements StateListener
 					ui.btnStopTrackingEnable(true);
 					ui.btnStartStreamingEnable(false);
 					ui.btnStopStreamingEnable(false);
-					ui.btnSetBackgroundEnable(true);
+					ui.btnSetBackgroundEnable(false);
 					break;
 				}
 			}
 		});
 
-	}
-
-	@Override
-	public void unloadGUI()
-	{
-		ui.unloadGUI();
 	}
 }

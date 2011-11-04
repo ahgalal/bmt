@@ -20,6 +20,7 @@ import utils.StatusManager.StatusSeverity;
 import utils.video.FrameIntArray;
 import utils.video.ImageManipulator;
 import utils.video.filters.FilterConfigs;
+import utils.video.filters.FilterData;
 import utils.video.filters.Link;
 import utils.video.filters.VideoFilter;
 
@@ -29,7 +30,7 @@ import utils.video.filters.VideoFilter;
  * 
  * @author Creative
  */
-public class SubtractorFilter extends VideoFilter
+public class SubtractorFilter extends VideoFilter<SubtractionConfigs,FilterData>
 {
 	/**
 	 * Initializes the filter.
@@ -48,14 +49,13 @@ public class SubtractorFilter extends VideoFilter
 	}
 
 	private final FrameIntArray bg_image_gray;
-	private SubtractionConfigs subtraction_configs;
 	private int[] local_data;
 
 	@Override
 	public boolean configure(
 			final FilterConfigs configs)
 	{
-		this.subtraction_configs = (SubtractionConfigs) configs;
+		this.configs = (SubtractionConfigs) configs;
 		local_data = new int[configs.common_configs.width * configs.common_configs.height];
 
 		return super.configure(configs);
@@ -88,7 +88,7 @@ public class SubtractorFilter extends VideoFilter
 				tmp3 = (short) (tmp1 - tmp2);
 				if (tmp3 < 0)
 					tmp3 *= -1;
-				if (tmp3 < subtraction_configs.threshold)
+				if (tmp3 < configs.threshold)
 					res[i] = 0;
 				else
 					res[i] = (byte) 0xFF;
@@ -132,7 +132,7 @@ public class SubtractorFilter extends VideoFilter
 					if (tmp < 0)
 						tmp *= -1;
 
-					if (tmp < subtraction_configs.threshold)
+					if (tmp < configs.threshold)
 						local_data[i] = 0;
 					else
 						local_data[i] = 0x00FFFFFF;

@@ -273,14 +273,19 @@ public class ImageManipulator
 	 */
 	public static int[] rgbIntArray2GrayIntArray(final int[] in)
 	{
-		int r, g, b;
+		int r, g, b,grey;
 		final int[] res = new int[in.length];
 		for (int i = 0; i < in.length; i++)
 		{
-			r = in[i] & (0x000000FF);
+/*			r = in[i] & (0x000000FF);
 			g = (in[i] & (0x0000FF00)) >> 8;
 			b = (in[i] & (0x00FF0000)) >> 16;
-			res[i] = (int) (0.2989 * r + 0.5870 * g + 0.1140 * b);
+			res[i] = (int) (0.2989 * r + 0.5870 * g + 0.1140 * b);*/
+			r = (int) (0.2989 *(in[i]  & (0x000000FF)));
+			g = (int) (0.5870 *((in[i] & (0x0000FF00)) >> 8));
+			b = (int) (0.1140 *((in[i] & (0x00FF0000)) >> 16));
+			grey = r+g+b;
+			res[i] =  (grey + (grey << 8) | (grey<<16));
 		}
 		return res;
 	}
@@ -328,6 +333,21 @@ public class ImageManipulator
 		
 		int res= (r1/number) << 16 | (g1/number) << 8 | (b1/number) ;
 		return res;
+	}
+	
+	private static int[] subResult;
+	public static int[] subtractImage(int[] img1,int[] img2)
+	{
+		if(subResult==null || subResult.length!=img1.length)
+			subResult = new int[img1.length];
+		assert img1.length==img2.length: "different image size!";
+		int sub;
+		for(int i=0;i<img1.length;i++)
+		{
+			sub = img1[i]-img2[i];
+			subResult[i]=sub <0? 0:sub;
+		}
+		return subResult;
 	}
 
 }

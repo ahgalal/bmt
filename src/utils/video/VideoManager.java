@@ -22,11 +22,14 @@ import utils.video.filters.FilterConfigs;
 import utils.video.filters.FilterManager;
 import utils.video.filters.VideoFilter;
 import utils.video.input.AGCamLibModule;
+import utils.video.input.AGVidLibConfigs;
 import utils.video.input.JMFModule;
 import utils.video.input.JMyronModule;
+import utils.video.input.OpenCVConfigs;
 import utils.video.input.OpenCVModule;
 import utils.video.input.V4L2Module;
 import utils.video.input.VidInputter;
+import utils.video.input.VidSourceConfigs;
 import utils.video.input.VideoFileModule;
 
 /**
@@ -41,6 +44,7 @@ public class VideoManager
 
 	private final FrameIntArray ref_fia;
 
+	@SuppressWarnings("rawtypes")
 	private VidInputter v_in;
 
 	private boolean video_processor_enabled;
@@ -117,8 +121,8 @@ public class VideoManager
 					}
 					// PManager.log.print("Device is not ready yet!", this);
 				}
-				if (v_in.getStatus() == 1)
-					for (final VideoFilter v : filter_mgr.getFilters())
+				if (v_in !=null && v_in.getStatus() == 1)
+					for (final VideoFilter<?,?> v : filter_mgr.getFilters())
 						v.process();
 
 				try
@@ -224,9 +228,11 @@ public class VideoManager
 	 * 
 	 * @param ip_common_configs
 	 *            common configurations object, used by almost all filters
+	 * @param vidFile 
 	 * @return true: success
 	 */
-	public boolean initialize(final CommonFilterConfigs ip_common_configs)
+	@SuppressWarnings("unchecked")
+	public boolean initialize(final CommonFilterConfigs ip_common_configs, String vidFile)
 	{
 		isInitialized = true;
 		updateCommonConfigs(ip_common_configs);
@@ -235,28 +241,58 @@ public class VideoManager
 		if (vid_lib.equals("default"))
 			vid_lib = getDefaultVideoLibrary();
 
-		if (vid_lib.equals("JMF"))
-			v_in = new JMFModule();
-		else if (vid_lib.equals("JMyron"))
-			v_in = new JMyronModule();
-		else if (vid_lib.equals("OpenCV"))
-			v_in = new OpenCVModule();
-		else if (vid_lib.equals("AGCamLib"))
-			v_in = new AGCamLibModule();
-		else if (vid_lib.equals("V4L2"))
-			v_in = new V4L2Module();
-		else if (vid_lib.equals("VideoFile"))
-			v_in = new VideoFileModule();
+		VidSourceConfigs srcConfigs = null;
 
+		if (vid_lib.equals("JMF"))
+		{
+			v_in = new JMFModule();
+			srcConfigs = new VidSourceConfigs();
+		}
+		else if (vid_lib.equals("JMyron"))
+		{
+			v_in = new JMyronModule();
+			srcConfigs = new VidSourceConfigs();
+		}
+		else if (vid_lib.equals("OpenCV"))
+		{
+			v_in = new OpenCVModule();
+			srcConfigs = new OpenCVConfigs();
+		}
+		else if (vid_lib.equals("AGCamLib"))
+		{
+			v_in = new AGCamLibModule();
+			srcConfigs = new VidSourceConfigs();
+		}
+		else if (vid_lib.equals("V4L2"))
+		{
+			v_in = new V4L2Module();
+			srcConfigs = new VidSourceConfigs();
+		}
+		else if (vid_lib.equals("VideoFile"))
+		{
+			if(vidFile!=null)
+				if(System.getProperty("os.name").toLowerCase().contains("windows"))
+				{
+					v_in = new VideoFileModule();
+					srcConfigs = new AGVidLibConfigs();
+					((AGVidLibConfigs)srcConfigs).vidFile=vidFile;
+				}
+				else
+				{
+					v_in = new OpenCVModule();
+					srcConfigs = new OpenCVConfigs();
+					((OpenCVConfigs)srcConfigs).fileName=vidFile;
+				}
+		}
 		filter_mgr.configureFilters(common_configs, ref_fia);
 
 		v_in.setFormat(common_configs.format);
 
+
+
 		return v_in.initialize(
 				ref_fia,
-				common_configs.width,
-				common_configs.height,
-				common_configs.cam_index);
+				srcConfigs);
 	}
 
 	/**

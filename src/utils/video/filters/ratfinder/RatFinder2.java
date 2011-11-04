@@ -57,23 +57,23 @@ public class RatFinder2 extends RatFinder
 	{
 		System.arraycopy(binaryImage, 0, out_data, 0, binaryImage.length);
 		// walking on y, step=5
-		y_loop: for (int y = 0; y < ratfinder_configs.common_configs.height; y += 5)
+		y_loop: for (int y = 0; y < configs.common_configs.height; y += 5)
 		{
 			// walking on x, step=1
-			x_loop: for (int x = 0; x < ratfinder_configs.common_configs.width; x++)
+			x_loop: for (int x = 0; x < configs.common_configs.width; x++)
 			{
 				// if white ...
-				if (out_data[x + y * ratfinder_configs.common_configs.width] == 0xFFFFFF)
+				if (out_data[x + y * configs.common_configs.width] == 0xFFFFFF)
 				{
 					contourEdge(
 							out_data,
 							x,
 							y,
-							ratfinder_configs.common_configs.width,
-							ratfinder_configs.common_configs.height);
+							configs.common_configs.width,
+							configs.common_configs.height);
 					botash_found++;
 				}
-				else if (out_data[x + y * ratfinder_configs.common_configs.width] == border_color)
+				else if (out_data[x + y * configs.common_configs.width] == border_color)
 				{
 					continue y_loop;
 				}

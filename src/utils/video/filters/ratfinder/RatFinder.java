@@ -27,7 +27,7 @@ import utils.video.filters.VideoFilter;
  * 
  * @author Creative
  */
-public class RatFinder extends VideoFilter
+public class RatFinder extends VideoFilter<RatFinderFilterConfigs,RatFinderData>
 {
 	/**
 	 * Initializes the filter.
@@ -42,15 +42,12 @@ public class RatFinder extends VideoFilter
 	public RatFinder(final String name, final Link linkIn, final Link linkOut)
 	{
 		super(name, linkIn, linkOut);
-		rat_finder_data = new RatFinderData("Rat Finder Data");
-		filter_data = rat_finder_data;
-		center_point = rat_finder_data.getCenterPoint();
+		filter_data = new RatFinderData("Rat Finder Data");
+		center_point = filter_data.getCenterPoint();
 	}
 
 	private int tmp_max;
 	private final int searchSideLength = 100;
-	protected RatFinderFilterConfigs ratfinder_configs;
-	protected final RatFinderData rat_finder_data;
 
 	int[] hori_sum;
 	int[] vert_sum;
@@ -94,21 +91,21 @@ public class RatFinder extends VideoFilter
 		if (center_point.y == 0)
 		{
 			y1 = 0;
-			y2 = ratfinder_configs.common_configs.height;
+			y2 = configs.common_configs.height;
 		}
 		else
 		{
 			y1 = (center_point.y - searchSideLength) < 0 ? 0 : center_point.y - 40;
-			y2 = (center_point.y + searchSideLength) > ratfinder_configs.common_configs.height ? ratfinder_configs.common_configs.height
+			y2 = (center_point.y + searchSideLength) > configs.common_configs.height ? configs.common_configs.height
 					: center_point.y + searchSideLength;
 		}
 		for (int y = y1; y < y2; y++) // Horizontal
 		// Sum
 		{
 			hori_sum[y] = 0;
-			for (int x = 0; x < ratfinder_configs.common_configs.width; x++)
+			for (int x = 0; x < configs.common_configs.width; x++)
 				hori_sum[y] += binary_image[y
-						* ratfinder_configs.common_configs.width
+						* configs.common_configs.width
 						+ x] & 0xff;
 			if (hori_sum[y] > tmp_max)
 			{
@@ -123,12 +120,12 @@ public class RatFinder extends VideoFilter
 		if (center_point.x == 0)
 		{
 			x1 = 0;
-			x2 = ratfinder_configs.common_configs.width;
+			x2 = configs.common_configs.width;
 		}
 		else
 		{
 			x1 = (center_point.x - searchSideLength) < 0 ? 0 : center_point.x - 40;
-			x2 = (center_point.x + searchSideLength) > ratfinder_configs.common_configs.width ? ratfinder_configs.common_configs.width
+			x2 = (center_point.x + searchSideLength) > configs.common_configs.width ? configs.common_configs.width
 					: center_point.x + searchSideLength;
 		}
 
@@ -136,9 +133,9 @@ public class RatFinder extends VideoFilter
 		// Sum
 		{
 			vert_sum[x] = 0;
-			for (int y = 0; y < ratfinder_configs.common_configs.height; y++)
+			for (int y = 0; y < configs.common_configs.height; y++)
 				vert_sum[x] += binary_image[y
-						* ratfinder_configs.common_configs.width
+						* configs.common_configs.width
 						+ x] & 0xff;
 			if (vert_sum[x] > tmp_max)
 			{
@@ -166,7 +163,7 @@ public class RatFinder extends VideoFilter
 	public boolean configure(
 			final FilterConfigs configs)
 	{
-		ratfinder_configs = (RatFinderFilterConfigs) configs;
+		this.configs = (RatFinderFilterConfigs) configs;
 
 		marker = new CrossMarker(
 				50,
@@ -188,14 +185,14 @@ public class RatFinder extends VideoFilter
 
 		out_data = new int[configs.common_configs.width * configs.common_configs.height];
 		this.link_out.setData(out_data);
-		specialConfiguration(ratfinder_configs);
+		specialConfiguration(configs);
 		return super.configure(configs);
 	}
 
 	protected void specialConfiguration(final FilterConfigs configs)
 	{
-		hori_sum = new int[ratfinder_configs.common_configs.height];
-		vert_sum = new int[ratfinder_configs.common_configs.width];
+		hori_sum = new int[configs.common_configs.height];
+		vert_sum = new int[configs.common_configs.width];
 	}
 
 	@Override

@@ -27,10 +27,8 @@ import ui.GroupsForm.TabContents;
  * 
  * @author Creative
  */
-public class CtrlGroupsForm extends ControllerUI
+public class CtrlGroupsForm extends ControllerUI<GroupsForm>
 {
-	private final GroupsForm ui;
-
 	/**
 	 * Initializes class attributes (GroupsForm and InfoController).
 	 */
@@ -108,10 +106,5 @@ public class CtrlGroupsForm extends ControllerUI
 	public void clearForm()
 	{
 		ui.clearForm();
-	}
-	@Override
-	public void unloadGUI()
-	{
-		ui.unloadGUI();
 	}
 }

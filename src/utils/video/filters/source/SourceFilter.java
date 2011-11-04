@@ -16,6 +16,7 @@ package utils.video.filters.source;
 
 import utils.PManager.ProgramState;
 import utils.video.filters.FilterConfigs;
+import utils.video.filters.FilterData;
 import utils.video.filters.Link;
 import utils.video.filters.VideoFilter;
 
@@ -25,7 +26,7 @@ import utils.video.filters.VideoFilter;
  * 
  * @author Creative
  */
-public class SourceFilter extends VideoFilter
+public class SourceFilter extends VideoFilter<SourceFilterConfigs,FilterData>
 {
 	/**
 	 * Initializes the filter.
@@ -42,19 +43,17 @@ public class SourceFilter extends VideoFilter
 		super(name, linkIn, linkOut);
 	}
 
-	private SourceFilterConfigs source_configs;
-
 	@Override
 	public boolean configure(final FilterConfigs configs)
 	{
-		source_configs = (SourceFilterConfigs) configs;
+		this.configs = (SourceFilterConfigs) configs;
 		return super.configure(configs);
 	}
 
 	@Override
 	public void process()
 	{
-		link_out.setData(source_configs.fia.frame_data);
+		link_out.setData(configs.fia.frame_data);
 	}
 
 	@Override

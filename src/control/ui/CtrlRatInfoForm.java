@@ -30,11 +30,10 @@ import utils.StatusManager.StatusSeverity;
  * 
  * @author Creative
  */
-public class CtrlRatInfoForm extends ControllerUI
+public class CtrlRatInfoForm extends ControllerUI<RatInfoForm>
 {
 	private int rat_num;
 	private String grp_name;
-	private final RatInfoForm ui;
 	private boolean iamready;
 	private boolean cancelled;
 
@@ -173,10 +172,5 @@ public class CtrlRatInfoForm extends ControllerUI
 	public boolean isCancelled()
 	{
 		return cancelled;
-	}
-	@Override
-	public void unloadGUI()
-	{
-		ui.unloadGUI();
 	}
 }

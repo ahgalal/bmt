@@ -26,13 +26,10 @@ import utils.video.FrameIntArray;
 /**
  * @author Creative
  */
-public class VideoFileModule implements VidInputter
+public class VideoFileModule extends VidInputter<AGVidLibConfigs>
 {
 	private boolean stop_stream;
-	private FrameIntArray fia;
-	private int status;
-	int[] data;
-	private String fileName;
+	private int[] data;
 
 	private final JAGVidLib vidLib;
 
@@ -120,20 +117,6 @@ public class VideoFileModule implements VidInputter
 	private Thread th_update_image;
 
 	/* (non-Javadoc)
-	 * @see utils.video.input.VidInputter#initialize(utils.video.FrameIntArray, int, int, int)
-	 */
-	@Override
-	public boolean initialize(
-			final FrameIntArray frameData,
-			final int width,
-			final int height,
-			final int camIndex)
-	{
-		fia = frameData;
-		return true;
-	}
-
-	/* (non-Javadoc)
 	 * @see utils.video.input.VidInputter#setFormat(java.lang.String)
 	 */
 	@Override
@@ -148,7 +131,7 @@ public class VideoFileModule implements VidInputter
 	@Override
 	public boolean startStream()
 	{
-		vidLib.initialize(fileName);
+		vidLib.initialize(configs.vidFile);
 		th_update_image = new Thread(new RunnableAGCamLib());
 		th_update_image.start();
 		stop_stream = false;
@@ -165,9 +148,13 @@ public class VideoFileModule implements VidInputter
 		vidLib.stop();
 	}
 
-	public void setVideoFile(final String file)
+	@Override
+	public
+	boolean initialize(FrameIntArray frame_data, AGVidLibConfigs configs)
 	{
-		fileName = file;
+		this.configs=configs;
+		fia = frame_data;
+		return true;
 	}
 
 }

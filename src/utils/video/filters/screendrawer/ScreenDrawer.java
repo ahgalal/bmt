@@ -22,6 +22,7 @@ import utils.PManager;
 import utils.PManager.ProgramState;
 import utils.StatusManager.StatusSeverity;
 import utils.video.filters.FilterConfigs;
+import utils.video.filters.FilterData;
 import utils.video.filters.Link;
 import utils.video.filters.VideoFilter;
 
@@ -30,7 +31,7 @@ import utils.video.filters.VideoFilter;
  * 
  * @author Creative
  */
-public class ScreenDrawer extends VideoFilter
+public class ScreenDrawer extends VideoFilter<ScreenDrawerConfigs,FilterData>
 {
 	/**
 	 * Initializes the filter.
@@ -58,23 +59,22 @@ public class ScreenDrawer extends VideoFilter
 	private BufferedImage buf_img_sec;
 	private int[] data_main_screen;
 	private int[] data_sec_screen;
-	private ScreenDrawerConfigs scrn_drwr_cnfgs;
 	private final Link link_in2;
 
 	@Override
 	public boolean configure(final FilterConfigs configs)
 	{
-		scrn_drwr_cnfgs = (ScreenDrawerConfigs) configs;
+		this.configs = (ScreenDrawerConfigs) configs;
 
 		buf_img_main = new BufferedImage(
-				scrn_drwr_cnfgs.common_configs.width,
-				scrn_drwr_cnfgs.common_configs.height,
+				configs.common_configs.width,
+				configs.common_configs.height,
 				BufferedImage.TYPE_INT_RGB);
 		data_main_screen = ((DataBufferInt) buf_img_main.getRaster().getDataBuffer()).getData();
 
 		buf_img_sec = new BufferedImage(
-				scrn_drwr_cnfgs.common_configs.width,
-				scrn_drwr_cnfgs.common_configs.height,
+				configs.common_configs.width,
+				configs.common_configs.height,
 				BufferedImage.TYPE_INT_RGB);
 		data_sec_screen = ((DataBufferInt) buf_img_sec.getRaster().getDataBuffer()).getData();
 		return super.configure(configs);
@@ -104,8 +104,8 @@ public class ScreenDrawer extends VideoFilter
 		public void run()
 		{
 			int wait_count = 0;
-			while (scrn_drwr_cnfgs.ref_gfx_sec_screen == null
-					|| scrn_drwr_cnfgs.ref_gfx_sec_screen == null)
+			while (configs.ref_gfx_sec_screen == null
+					|| configs.ref_gfx_sec_screen == null)
 				try
 				{
 					Thread.sleep(100);
@@ -132,10 +132,10 @@ public class ScreenDrawer extends VideoFilter
 
 				while (configs.enabled)
 				{
-					scrn_drwr_cnfgs.shape_controller.drawaAllShapes(scrn_drwr_cnfgs.ref_gfx_main_screen);
+					configs.shape_controller.drawaAllShapes(configs.ref_gfx_main_screen);
 					try
 					{
-						Thread.sleep(1000 / scrn_drwr_cnfgs.common_configs.frame_rate);
+						Thread.sleep(1000 / configs.common_configs.frame_rate);
 					} catch (final InterruptedException e)
 					{
 						e.printStackTrace();
@@ -150,31 +150,31 @@ public class ScreenDrawer extends VideoFilter
 								0,
 								link_in.getData().length);
 
-						scrn_drwr_cnfgs.ref_gfx_main_screen.drawImage(
+						configs.ref_gfx_main_screen.drawImage(
 								buf_img_main,
 								0,
 								0,
-								scrn_drwr_cnfgs.common_configs.width,
-								scrn_drwr_cnfgs.common_configs.height,
+								configs.common_configs.width,
+								configs.common_configs.height,
 								0,
 								0,
-								scrn_drwr_cnfgs.common_configs.width,
-								scrn_drwr_cnfgs.common_configs.height,
+								configs.common_configs.width,
+								configs.common_configs.height,
 								null);
-						if (scrn_drwr_cnfgs.enable_sec_screen)
-							scrn_drwr_cnfgs.ref_gfx_sec_screen.drawImage(
+						if (configs.enable_sec_screen)
+							configs.ref_gfx_sec_screen.drawImage(
 									buf_img_sec.getScaledInstance(
 											289,
 											214,
 											Image.SCALE_DEFAULT),
 											0,
 											0,
-											scrn_drwr_cnfgs.common_configs.width,
-											scrn_drwr_cnfgs.common_configs.height,
+											configs.common_configs.width,
+											configs.common_configs.height,
 											0,
 											0,
-											scrn_drwr_cnfgs.common_configs.width,
-											scrn_drwr_cnfgs.common_configs.height,
+											configs.common_configs.width,
+											configs.common_configs.height,
 											null);
 					}
 					else

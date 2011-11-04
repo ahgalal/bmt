@@ -217,10 +217,11 @@ public class PManager
 	 * 
 	 * @param common_configs
 	 *            CommonFilterConfigs object needed by most filters
+	 * @param vidFile video file to load (if not using webcam as the streaming source)
 	 */
-	public void initializeVideoManager(final CommonFilterConfigs common_configs)
+	public void initializeVideoManager(final CommonFilterConfigs common_configs, String vidFile)
 	{
-		/*if (*/vp.initialize(common_configs);/*)*/
+		/*if (*/vp.initialize(common_configs,vidFile);/*)*/
 
 	}
 

@@ -22,13 +22,9 @@ import utils.video.FrameIntArray;
  * 
  * @author Creative
  */
-public class OpenCVModule implements VidInputter
+public class OpenCVModule extends VidInputter<OpenCVConfigs>
 {
 	private static final long serialVersionUID = 1L;
-	private int status; // cam status: 1 ready
-	private int cam_index = 0;
-	private FrameIntArray fia;
-	private int width, height;
 	OpenCV cv = null; // OpenCV Object
 	Thread th_update_image = null; // the sample thread
 	private boolean stop_stream;
@@ -43,7 +39,10 @@ public class OpenCVModule implements VidInputter
 		@Override
 		public void run()
 		{
-			cv.capture(width, height, cam_index);
+			if(configs.fileName==null)
+				cv.capture(configs.width, configs.height, configs.camIndex);
+			else
+				cv.movie("C:\\vid.avi");
 			while (!stop_stream & th_update_image != null)
 			{
 				try
@@ -89,22 +88,6 @@ public class OpenCVModule implements VidInputter
 	}
 
 	@Override
-	public boolean initialize(
-			final FrameIntArray fia,
-			final int width,
-			final int height,
-			final int cam_index)
-	{
-		this.fia = fia;
-		this.width = width;
-		this.height = height;
-		this.cam_index = cam_index;
-		cv = new OpenCV();
-		// cv.capture( width, height,cam_index);
-		return true;
-	}
-
-	@Override
 	public void setFormat(final String s)
 	{
 		// Empty because OpenCV encapsulates the format in itself and gives us
@@ -134,6 +117,15 @@ public class OpenCVModule implements VidInputter
 	public String getName()
 	{
 		return "OpenCV";
+	}
+
+	@Override
+	public boolean initialize(final FrameIntArray frame_data, final OpenCVConfigs configs)
+	{
+		this.fia = frame_data;
+		this.configs=configs;
+		cv = new OpenCV();
+		return true;
 	}
 
 }

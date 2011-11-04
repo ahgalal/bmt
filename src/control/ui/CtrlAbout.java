@@ -22,10 +22,8 @@ import utils.PManager;
  * 
  * @author Creative
  */
-public class CtrlAbout extends ControllerUI
+public class CtrlAbout extends ControllerUI<About>
 {
-
-	private final About ui;
 
 	/**
 	 * Initializes class attributes.
@@ -55,11 +53,5 @@ public class CtrlAbout extends ControllerUI
 	public void show(final boolean visibility)
 	{
 		ui.show(visibility);
-	}
-	
-	@Override
-	public void unloadGUI()
-	{
-		ui.unloadGUI();
 	}
 }

@@ -29,9 +29,8 @@ import utils.video.filters.subtractionfilter.SubtractionConfigs;
  * 
  * @author Creative
  */
-public class CtrlOptionsWindow extends ControllerUI
+public class CtrlOptionsWindow extends ControllerUI<OptionsWindow>
 {
-	private final OptionsWindow ui;
 	private int subtraction_thresh;
 	private int hyst;
 	private int rearing_thresh;
@@ -122,10 +121,5 @@ public class CtrlOptionsWindow extends ControllerUI
 	public void show(final boolean visibility)
 	{
 		ui.show(visibility);
-	}
-	@Override
-	public void unloadGUI()
-	{
-		ui.unloadGUI();
 	}
 }

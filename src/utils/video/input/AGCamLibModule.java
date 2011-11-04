@@ -25,13 +25,10 @@ import cam_lib.ReturnValue;
  * 
  * @author Creative
  */
-public class AGCamLibModule implements VidInputter
+public class AGCamLibModule extends VidInputter<VidSourceConfigs>
 {
 
 	private JAGCamLib ag_cam;
-	@SuppressWarnings("unused")
-	private int width, height, cam_index, status;
-	private FrameIntArray fia;
 	private Thread th_update_image;
 	private boolean stop_stream;
 
@@ -86,19 +83,14 @@ public class AGCamLibModule implements VidInputter
 
 	@Override
 	public boolean initialize(
-			final FrameIntArray frameData,
-			final int width,
-			final int height,
-			final int camIndex)
+			final FrameIntArray frameData,VidSourceConfigs configs)
 	{
 		if (ag_cam == null)
 			ag_cam = new JAGCamLib();
-		this.width = width;
-		this.height = height;
+		this.configs = configs;
 		fia = frameData;
-		this.cam_index = camIndex;
 
-		if (ag_cam.initialize(width, height, camIndex) == ReturnValue.SUCCESS)
+		if (ag_cam.initialize(configs.width, configs.height, configs.camIndex) == ReturnValue.SUCCESS)
 			return true;
 		else
 		{

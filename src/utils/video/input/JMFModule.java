@@ -48,16 +48,13 @@ import utils.video.FrameIntArray;
  * 
  * @author Creative
  */
-public class JMFModule implements VidInputter
+public class JMFModule extends VidInputter<VidSourceConfigs>
 {
 	private String format;
 	VideoFormat video_format = null;
 	private Processor proc_1;
 	private Player pl;
 	private JMFGrabber ana_eff = null;
-	private int width;
-	private int height;
-	private int cam_index = 0;
 
 	/**
 	 * Creates the MediaLocator for the webcam device.
@@ -77,7 +74,7 @@ public class JMFModule implements VidInputter
 			System.err.print("No Cams Available using normal way ... will try finding a CAM using hardcoded way! :)\n");
 			try
 			{
-				ml = new MediaLocator("vfw://" + cam_index);
+				ml = new MediaLocator("vfw://" + configs.camIndex);
 			} catch (final Exception e)
 			{
 				e.printStackTrace();
@@ -133,8 +130,8 @@ public class JMFModule implements VidInputter
 			MediaLocator ml = null;
 
 			final RGBFormat rgb640x480 = new RGBFormat(
-					new Dimension(width, height),
-					width * height * 3,
+					new Dimension(configs.width, configs.height),
+					configs.width * configs.height * 3,
 					Format.byteArray,
 					30.0f,
 					24,
@@ -147,8 +144,8 @@ public class JMFModule implements VidInputter
 					-1);
 
 			final YUVFormat yuv640x480_device = new YUVFormat(
-					new Dimension(width, height),
-					width * height * 2,
+					new Dimension(configs.width, configs.height),
+					configs.width * configs.height * 2,
 					Format.byteArray,
 					30.0f,
 					32,
@@ -248,9 +245,9 @@ public class JMFModule implements VidInputter
 					video_format.getSize().height,
 					fia);
 			ana_eff.setInputFormat(tracks[0].getFormat());
-			ana_eff.setOutputFormat(new RGBFormat(new Dimension(width, height), width
-					* height
-					* 3, Format.byteArray, 30.0f, 24, 3, 2, 1, 3, width * 3, 0, 0));
+			ana_eff.setOutputFormat(new RGBFormat(new Dimension(configs.width, configs.height), configs.width
+					* configs.height
+					* 3, Format.byteArray, 30.0f, 24, 3, 2, 1, 3, configs.width * 3, 0, 0));
 
 			System.err.print("3");
 
@@ -395,19 +392,6 @@ public class JMFModule implements VidInputter
 	}
 
 	@Override
-	public boolean initialize(
-			final FrameIntArray fia,
-			final int width,
-			final int height,
-			final int cam_index)
-	{
-		this.width = width;
-		this.height = height;
-		this.cam_index = cam_index;
-		return initializeJMF(fia);
-	}
-
-	@Override
 	public void setFormat(final String s)
 	{
 		format = s;
@@ -438,6 +422,13 @@ public class JMFModule implements VidInputter
 	public String getName()
 	{
 		return "JMF";
+	}
+
+	@Override
+	public boolean initialize(FrameIntArray frame_data, VidSourceConfigs configs)
+	{
+		this.configs=configs;
+		return initializeJMF(frame_data);
 	}
 
 }

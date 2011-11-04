@@ -32,10 +32,8 @@ import utils.PManager;
  * 
  * @author Creative
  */
-public class CtrlDrawZones extends ControllerUI
+public class CtrlDrawZones extends ControllerUI<DrawZones>
 {
-
-	private final DrawZones ui;
 
 	/**
 	 * Initializes class attributes (DrawZones , PManager and ZoneController)
@@ -216,10 +214,5 @@ public class CtrlDrawZones extends ControllerUI
 	public void settingScale(final boolean enable)
 	{
 		ShapeController.getDefault().setSettingScale(enable);
-	}
-	@Override
-	public void unloadGUI()
-	{
-		ui.unloadGUI();
 	}
 }
