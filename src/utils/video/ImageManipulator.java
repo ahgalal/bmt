@@ -345,7 +345,7 @@ public class ImageManipulator
 		for(int i=0;i<img1.length;i++)
 		{
 			sub = img1[i]-img2[i];
-			subResult[i]=sub <0? 0:sub;
+			subResult[i]=sub <0? sub*-1:sub;
 		}
 		return subResult;
 	}

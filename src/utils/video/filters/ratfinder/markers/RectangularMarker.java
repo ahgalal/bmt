@@ -1,4 +1,4 @@
-package utils.video.filters.ratfinder;
+package utils.video.filters.ratfinder.markers;
 
 import java.awt.Color;
 

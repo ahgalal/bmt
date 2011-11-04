@@ -224,7 +224,7 @@ public class VideoManager
 	}
 
 	/**
-	 * Initialization of the video library and vifeo filters.
+	 * Initialization of the video library and video filters.
 	 * 
 	 * @param ip_common_configs
 	 *            common configurations object, used by almost all filters
@@ -288,7 +288,9 @@ public class VideoManager
 
 		v_in.setFormat(common_configs.format);
 
-
+		srcConfigs.width=common_configs.width;
+		srcConfigs.height=common_configs.height;
+		srcConfigs.camIndex=common_configs.cam_index;
 
 		return v_in.initialize(
 				ref_fia,

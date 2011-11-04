@@ -21,6 +21,9 @@ import utils.PManager.ProgramState;
 import utils.video.filters.FilterConfigs;
 import utils.video.filters.Link;
 import utils.video.filters.VideoFilter;
+import utils.video.filters.ratfinder.markers.CrossMarker;
+import utils.video.filters.ratfinder.markers.Marker;
+import utils.video.filters.ratfinder.markers.RectangularMarker;
 
 /**
  * Finds the moving object's position.

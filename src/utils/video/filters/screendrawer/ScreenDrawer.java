@@ -14,6 +14,7 @@
 
 package utils.video.filters.screendrawer;
 
+import java.awt.Color;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferInt;
@@ -31,8 +32,11 @@ import utils.video.filters.VideoFilter;
  * 
  * @author Creative
  */
-public class ScreenDrawer extends VideoFilter<ScreenDrawerConfigs,FilterData>
+public class ScreenDrawer extends VideoFilter<ScreenDrawerConfigs, FilterData>
 {
+	private long frameTimeStamp;
+	private int[] frameInterval = new int[3];
+
 	/**
 	 * Initializes the filter.
 	 * 
@@ -53,6 +57,9 @@ public class ScreenDrawer extends VideoFilter<ScreenDrawerConfigs,FilterData>
 	{
 		super(name, linkIn, linkOut);
 		this.link_in2 = link_in2;
+		frameInterval[0]=1;
+		frameInterval[1]=1;
+		frameInterval[2]=1;
 	}
 
 	private BufferedImage buf_img_main;
@@ -161,6 +168,11 @@ public class ScreenDrawer extends VideoFilter<ScreenDrawerConfigs,FilterData>
 								configs.common_configs.width,
 								configs.common_configs.height,
 								null);
+						configs.ref_gfx_main_screen.setColor(Color.GREEN);
+						configs.ref_gfx_main_screen.drawString(
+								"FPS=" + 3000 / (frameInterval[0]+frameInterval[1]+frameInterval[2]),
+								configs.common_configs.width - 60,
+								configs.common_configs.height - 10);
 						if (configs.enable_sec_screen)
 							configs.ref_gfx_sec_screen.drawImage(
 									buf_img_sec.getScaledInstance(
@@ -198,12 +210,18 @@ public class ScreenDrawer extends VideoFilter<ScreenDrawerConfigs,FilterData>
 	public void process()
 	{
 		if (configs.enabled)
+		{
 			System.arraycopy(
 					link_in2.getData(),
 					0,
 					data_sec_screen,
 					0,
 					link_in2.getData().length);
+			frameInterval[2]=frameInterval[1];
+			frameInterval[1]=frameInterval[0];
+			frameInterval[0] = (int) (System.currentTimeMillis() - frameTimeStamp);
+			frameTimeStamp = System.currentTimeMillis();
+		}
 	}
 
 	@Override

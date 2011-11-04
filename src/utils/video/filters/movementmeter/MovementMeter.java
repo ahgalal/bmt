@@ -14,7 +14,7 @@ import utils.video.filters.VideoFilter;
  * @author Creative
  *
  */
-public class MovementMeter extends VideoFilter<FilterConfigs,FilterData>
+public class MovementMeter extends VideoFilter<FilterConfigs,MovementMeterData>
 {
 	private int[] localData,prevLocalData,outputData;
 	private int summation;
@@ -22,7 +22,7 @@ public class MovementMeter extends VideoFilter<FilterConfigs,FilterData>
 	public MovementMeter(String name, Link link_in, Link link_out)
 	{
 		super(name, link_in, link_out);
-		// TODO Auto-generated constructor stub
+		filter_data=new MovementMeterData("Movement Meter Data");
 	}
 
 	/* (non-Javadoc)
@@ -53,6 +53,7 @@ public class MovementMeter extends VideoFilter<FilterConfigs,FilterData>
 		summation = addAllPixelsValues();
 		link_out.setData(outputData);
 		prevLocalData=localData;
+		filter_data.setWhiteSummation(summation);
 	}
 	
 	private int addAllPixelsValues()
