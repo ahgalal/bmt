@@ -18,6 +18,7 @@ import java.util.ArrayList;
 
 import modules.experiment.ExperimentModule;
 import modules.experiment.ExperimentModuleConfigs;
+import modules.fstmovementmeter.MovementMeterModule;
 import modules.rearing.RearingModule;
 import modules.rearing.RearingModuleConfigs;
 import modules.session.SessionModule;
@@ -31,6 +32,7 @@ import ui.PluggedGUI;
 import utils.PManager;
 import utils.StatusManager.StatusSeverity;
 import utils.video.filters.Data;
+import utils.video.filters.movementmeter.MovementMeter;
 
 /**
  * Manager for all modules.
@@ -144,11 +146,22 @@ public class ModulesManager
 		final ExperimentModule experiment_module = new ExperimentModule(
 				"Experiment Module",
 				experiment_configs);
+		
+		
+		// ////////////////////////////////
+		// MovementMeter Module
+/*		final MovementMeter experiment_configs = new ExperimentModuleConfigs(
+				"Experiment Module");*/
+		final MovementMeterModule movementMeterModule = new MovementMeterModule(
+				"Movement Meter Module",
+				experiment_configs);
 
 		modules.add(experiment_module);
 		modules.add(rearing_module);
 		modules.add(zones_module);
 		modules.add(session_module);
+		modules.add(movementMeterModule);
+
 
 		setWidthandHeight(640, 480);
 

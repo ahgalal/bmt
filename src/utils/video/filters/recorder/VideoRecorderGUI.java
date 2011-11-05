@@ -26,6 +26,7 @@ import org.eclipse.swt.widgets.CoolItem;
 import org.eclipse.swt.widgets.ExpandBar;
 import org.eclipse.swt.widgets.ExpandItem;
 import org.eclipse.swt.widgets.FileDialog;
+import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Shell;
 
@@ -61,7 +62,8 @@ public class VideoRecorderGUI extends PluggedGUI
 			final Shell shell,
 			final ExpandBar expandBar,
 			final Menu menuBar,
-			final CoolBar coolBar)
+			final CoolBar coolBar,
+			Group grpGraphs)
 	{
 		// super(shell, expandBar);
 		this.shell = shell;

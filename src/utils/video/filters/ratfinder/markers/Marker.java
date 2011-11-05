@@ -120,11 +120,11 @@ public abstract class Marker
 	{
 		if (x < 0)
 			x = 0;
-		if (x + width > img_width)
+		if (x + width >= img_width)
 			x = img_width - width - 1;
 		if (y < 0)
 			y = 0;
-		if (y + height > img_height)
+		if (y + height >= img_height)
 			y = img_height - height - 1;
 
 		for (int i = x; i < x + width; i++)

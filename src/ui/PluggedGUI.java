@@ -3,6 +3,7 @@ package ui;
 import org.eclipse.swt.widgets.CoolBar;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.ExpandBar;
+import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Shell;
 
@@ -19,7 +20,8 @@ public abstract class PluggedGUI implements StateListener
 			Shell shell,
 			ExpandBar expandBar,
 			Menu menuBar,
-			CoolBar coolBar);
+			CoolBar coolBar,
+			Group grpGraphs);
 
 	@Override
 	public void updateProgramState(final ProgramState state)

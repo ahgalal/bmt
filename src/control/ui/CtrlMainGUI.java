@@ -33,14 +33,13 @@ import utils.video.filters.CommonFilterConfigs;
 import utils.video.filters.FilterConfigs;
 import utils.video.filters.screendrawer.ScreenDrawerConfigs;
 import utils.video.filters.subtractionfilter.SubtractorFilter;
-import utils.video.input.VideoFileModule;
 
 /**
  * Controller of the MainGUI window.
  * 
  * @author Creative
  */
-public class CtrlMainGUI extends ControllerUI implements StateListener
+public class CtrlMainGUI extends ControllerUI<MainGUI> implements StateListener
 {
 	private final MainGUI ui;
 	private final PManager pm; // @jve:decl-index=0:
@@ -180,6 +179,7 @@ public class CtrlMainGUI extends ControllerUI implements StateListener
 		@Override
 		public void run()
 		{
+			
 			setTableNamesColumn();
 			while (pm.state == ProgramState.TRACKING)
 			{
@@ -196,8 +196,10 @@ public class CtrlMainGUI extends ControllerUI implements StateListener
 					public void run()
 					{
 						if (!ui.getShell().isDisposed())
+						{
 							ui.fillDataTable(null, ModulesManager.getDefault()
 									.getGUIData());
+						}
 					}
 				});
 			}

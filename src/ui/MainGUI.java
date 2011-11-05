@@ -41,6 +41,8 @@ import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.wb.swt.SWTResourceManager;
 
+import plotter.Plotter;
+
 import control.ui.ControllerUI;
 import control.ui.CtrlMainGUI;
 
@@ -82,7 +84,7 @@ public class MainGUI extends BaseUI
 	private Label lbl_status = null;
 	private Table tbl_data = null;
 	private CoolBar coolBar;
-
+	private Group grpGraphs;
 	/**
 	 * Creates GUI components, and links this Shell with the parent Shell.
 	 */
@@ -90,7 +92,11 @@ public class MainGUI extends BaseUI
 	{
 		createSShell();
 		super.sShell = this.sShell;
+
+
 	}
+
+
 
 	@Override
 	public void clearForm()
@@ -190,7 +196,7 @@ public class MainGUI extends BaseUI
 	{
 		cmpst_main = new Composite(grp_video, SWT.EMBEDDED | SWT.BORDER);
 		cmpst_main.setLayout(new GridLayout());
-		cmpst_main.setLocation(new Point(8, 20));
+		cmpst_main.setLocation(new Point(5, 15));
 		cmpst_main.setSize(new Point(640, 480));
 		createMainAWTFrame();
 	}
@@ -207,13 +213,6 @@ public class MainGUI extends BaseUI
 	}
 
 	/**
-	 * This method initializes grp_options.
-	 */
-	private void createGrpOptions()
-	{
-	}
-
-	/**
 	 * This method initializes grp_stats.
 	 */
 	private void createGrpStats()
@@ -222,12 +221,12 @@ public class MainGUI extends BaseUI
 		grp_stats.setLayout(null);
 		grp_stats.setText("Variables:");
 		createCmpstSecondary();
-		grp_stats.setBounds(new Rectangle(678, 5, 301, 563));
+		grp_stats.setBounds(new Rectangle(678, 5, 301, 500));
 
 		tbl_data = new Table(grp_stats, SWT.BORDER);
 		tbl_data.setHeaderVisible(true);
 		tbl_data.setLinesVisible(true);
-		tbl_data.setBounds(new Rectangle(9, 243, 284, 272));
+		tbl_data.setBounds(new Rectangle(9, 243, 284, 245));
 		final TableColumn tableColumn = new TableColumn(tbl_data, SWT.NONE);
 		tableColumn.setWidth(140);
 		tableColumn.setText("Name");
@@ -235,6 +234,15 @@ public class MainGUI extends BaseUI
 		tableColumn1.setWidth(140);
 		tableColumn1.setText("Value");
 
+	}
+	/**
+	 * This method initializes grp_stats.
+	 */
+	private void createGrpGraphs()
+	{
+		grpGraphs = new Group(sShell, SWT.NONE);
+		grpGraphs.setText("Graphs");
+		grpGraphs.setBounds(10, 511, 969, 165);
 	}
 
 	private ExpandBar expandBar;
@@ -344,7 +352,7 @@ public class MainGUI extends BaseUI
 		grp_video.setLayout(null);
 		grp_video.setText("Video:");
 
-		grp_video.setBounds(new Rectangle(10, 5, 665, 563));
+		grp_video.setBounds(new Rectangle(10, 5, 665, 500));
 		createCmpstMain();
 	}
 
@@ -378,12 +386,12 @@ public class MainGUI extends BaseUI
 		createExpandBar();
 		createCoolBar();
 		createGrpVideo();
-		createGrpOptions();
 		createGrpStats();
-		sShell.setSize(new Point(1160, 650));
+		createGrpGraphs();
+		sShell.setSize(new Point(1160, 740));
 		sShell.setLayout(null);
 		lbl_status = new Label(getShell(), SWT.NONE);
-		lbl_status.setBounds(new Rectangle(10, 574, 656, 20));
+		lbl_status.setBounds(new Rectangle(10, 672, 656, 20));
 		lbl_status.setText("");
 
 		menuBar = new Menu(sShell, SWT.BAR);
@@ -419,7 +427,7 @@ public class MainGUI extends BaseUI
 
 		final Menu menu = new Menu(mntmSource);
 		mntmSource.setMenu(menu);
-/*		class MntmSourceRadioHandler extends SelectionAdapter
+		/*		class MntmSourceRadioHandler extends SelectionAdapter
 		{
 			@Override
 			public void widgetSelected(final SelectionEvent e)
@@ -441,7 +449,7 @@ public class MainGUI extends BaseUI
 		mntmCameraSubMenu.setText("Camera");
 		mntmVideoFile.setSelection(true);
 
-/*		mntmVideoFile.addSelectionListener(new MntmSourceRadioHandler());
+		/*		mntmVideoFile.addSelectionListener(new MntmSourceRadioHandler());
 		mntmCameraSubMenu.addSelectionListener(new MntmSourceRadioHandler());*/
 
 		final MenuItem mntmVidOptions = new MenuItem(mnuVideo, SWT.NONE);
@@ -626,7 +634,7 @@ public class MainGUI extends BaseUI
 	{
 		btnSetBackground.setEnabled(enable);
 	}
-	
+
 	/**
 	 * Loads GUI instances for the available video filters.
 	 * 
@@ -636,7 +644,7 @@ public class MainGUI extends BaseUI
 	public void loadPluggedGUI(final PluggedGUI[] pGUIs)
 	{
 		for (final PluggedGUI pgui : pGUIs)
-			pgui.initialize(sShell, expandBar, menuBar, coolBar);
+			pgui.initialize(sShell, expandBar, menuBar, coolBar,grpGraphs);
 
 		coolBar.setBounds(5, 5, 300, 30);
 		coolBar.layout();

@@ -191,7 +191,7 @@ public class ScreenDrawer extends VideoFilter<ScreenDrawerConfigs, FilterData>
 					}
 					else
 						PManager.log.print(
-								"got non-ready state from cam module! .. skipping frame",
+								"invalid frame! .. skipping!",
 								this);
 				}
 			} catch (final Exception e)

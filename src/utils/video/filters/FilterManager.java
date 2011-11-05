@@ -310,7 +310,7 @@ public class FilterManager
 		final Link grey_link = new Link(dims);
 		final Link marker_link = new Link(dims);
 		final Link avg_link = new Link(dims);
-		final Link differential = new Link(dims);
+		final Link differentialLink = new Link(dims);
 
 		rat_finder = new RatFinder(
 				"RatFinder", grey_link, marker_link);
@@ -324,7 +324,7 @@ public class FilterManager
 
 		screen_drawer = new ScreenDrawer(
 				//"ScreenDrawer", /*src_rgb_link*/avg_link, /*marker_link*/ grey_link, null);
-				"ScreenDrawer", differential/*src_rgb_link*//*avg_link*/, marker_link /*grey_link*/, null);
+				"ScreenDrawer", /*grey_link*/differentialLink/*src_rgb_link*//*avg_link*/, /*marker_link*/src_rgb_link /*grey_link*/, null);
 
 		subtractor_filter = new SubtractorFilter(
 				"SubtractionFilter", src_rgb_link, grey_link);
@@ -333,7 +333,7 @@ public class FilterManager
 
 		avgFilter = new AverageFilter("Average Filter",grey_link, avg_link);
 		
-		movementMeter = new MovementMeter("Movement Meter", src_rgb_link, differential);
+		movementMeter = new MovementMeter("Movement Meter", src_rgb_link, differentialLink);
 		
 		// ////////////////////////////////////
 		// add filters to the filter manager
@@ -343,7 +343,7 @@ public class FilterManager
 		addFilter(rearing_det);
 		addFilter(rat_finder);
 		addFilter(screen_drawer);
-		addFilter(avgFilter);
+		//addFilter(avgFilter);
 		addFilter(movementMeter);
 
 		PManager.main_gui.loadPluggedGUI(getFiltersGUI());

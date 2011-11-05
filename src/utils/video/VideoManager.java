@@ -388,6 +388,7 @@ public class VideoManager
 		}
 	}
 
+	@SuppressWarnings("rawtypes")
 	public VidInputter getVidInputter()
 	{
 		return v_in;

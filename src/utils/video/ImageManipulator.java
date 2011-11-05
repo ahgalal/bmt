@@ -19,6 +19,8 @@ import java.io.File;
 
 import javax.imageio.ImageIO;
 
+import utils.TimeCalculator;
+
 /**
  * Collection of static methods to handle images and convert between different
  * representations (int rgb, byte rgb, int grayscale ..).
@@ -336,18 +338,43 @@ public class ImageManipulator
 	}
 	
 	private static int[] subResult;
-	public static int[] subtractImage(int[] img1,int[] img2)
+	static TimeCalculator tc = new TimeCalculator();
+	public static int[] subtractGreyImage(int[] img1,int[] img2)
 	{
-		if(subResult==null || subResult.length!=img1.length)
+	//	if(subResult==null || subResult.length!=img1.length)
 			subResult = new int[img1.length];
 		assert img1.length==img2.length: "different image size!";
 		int sub;
 		for(int i=0;i<img1.length;i++)
 		{
-			sub = img1[i]-img2[i];
-			subResult[i]=sub <0? sub*-1:sub;
+			sub = (img1[i]&0x000000FF)-(img2[i]&0x000000FF);
+			sub = sub<0?sub*-1 : sub;
+			sub = sub | sub << 8 | sub<<16;
+			subResult[i]=sub;
 		}
 		return subResult;
+	}
+
+	public static int[] subtractImage(
+			int[] img1,
+			int[] img2,
+			int x1,
+			int x2,
+			int y1,
+			int y2, int width)
+	{
+		int subWidth,subHeight,sub,i;
+		subWidth = x2-x1;
+		subHeight = y2-y1;
+		int[] subData=new int[subWidth*subHeight];
+		for(int x=x1;x<x2;x++)
+			for(int y=y1;y<y2;y++)
+			{
+				i=x+y*width;
+				sub = img1[i]-img2[i];
+				subData[x-x1+(y-y1)*subWidth]=sub <0? sub*-1:sub;
+			}
+		return null;
 	}
 
 }

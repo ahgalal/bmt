@@ -24,6 +24,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.CoolBar;
 import org.eclipse.swt.widgets.ExpandBar;
 import org.eclipse.swt.widgets.ExpandItem;
+import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Shell;
 
@@ -79,7 +80,8 @@ public class RearingModuleGUI extends PluggedGUI
 			final Shell shell,
 			final ExpandBar expandBar,
 			final Menu menuBar,
-			final CoolBar coolBar)
+			final CoolBar coolBar,
+			Group grpGraphs)
 	{
 
 		final ExpandItem xpndtmManualRearing = new ExpandItem(expandBar, SWT.NONE);

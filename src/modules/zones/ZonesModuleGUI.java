@@ -17,6 +17,7 @@ package modules.zones;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.CoolBar;
 import org.eclipse.swt.widgets.ExpandBar;
+import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Shell;
@@ -55,7 +56,8 @@ public class ZonesModuleGUI extends PluggedGUI
 			final Shell shell,
 			final ExpandBar expandBar,
 			final Menu menuBar,
-			final CoolBar coolBar)
+			final CoolBar coolBar,
+			Group grpGraphs)
 	{
 		Menu mnu_edit = null;
 		for (final MenuItem miOut : menuBar.getItems())

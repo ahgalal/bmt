@@ -22,6 +22,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.CoolBar;
 import org.eclipse.swt.widgets.ExpandBar;
 import org.eclipse.swt.widgets.ExpandItem;
+import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Shell;
 
@@ -90,7 +91,8 @@ public class RearingDetectorGUI extends PluggedGUI
 			final Shell shell,
 			final ExpandBar expandBar,
 			final Menu menuBar,
-			final CoolBar coolBar)
+			final CoolBar coolBar,
+			Group grpGraphs)
 	{
 		final ExpandItem xpndtmRearing = new ExpandItem(expandBar, SWT.NONE);
 		xpndtmRearing.setExpanded(true);
