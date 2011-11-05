@@ -423,7 +423,7 @@ public class DrawZones extends BaseUI
 		// TODO Auto-generated method stub
 
 	}
-
+	@SuppressWarnings("rawtypes")
 	@Override
 	public void setController(final ControllerUI controller)
 	{

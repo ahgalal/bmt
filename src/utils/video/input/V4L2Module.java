@@ -32,9 +32,6 @@ public class V4L2Module extends VidInputter<VidSourceConfigs> implements Capture
 
 	private VideoDevice vdevice;
 	private FrameGrabber vfg;
-	/*private Thread th_update_image;*/
-	private boolean stop_stream;
-
 	@Override
 	public boolean startStream()
 	{
@@ -47,25 +44,12 @@ public class V4L2Module extends VidInputter<VidSourceConfigs> implements Capture
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-
-		if (true/*ag_cam.start() == ReturnValue.SUCCESS*/)
-		{
-			/*			th_update_image = new Thread(new RunnableAGCamLib());
-						th_update_image.start();*/
-
-			return true;
-		}
-		else
-		{
-			PManager.log.print("Error Starting the Webcam!", this, StatusSeverity.ERROR);
-			return false;
-		}
+		return true;
 	}
 
 	@Override
 	public void stopModule()
 	{
-		stop_stream = true;
 		try
 		{
 			Thread.sleep(15);
@@ -136,25 +120,31 @@ public class V4L2Module extends VidInputter<VidSourceConfigs> implements Capture
 	}
 
 	@Override
-	public
-	boolean initialize(FrameIntArray frame_data, VidSourceConfigs configs)
+	public boolean initialize(
+			final FrameIntArray frame_data,
+			final VidSourceConfigs configs)
 	{
-		this.configs=configs;
+		this.configs = configs;
 		if (vdevice == null)
 			try
-		{
+			{
 				vdevice = new VideoDevice("/dev/video" + configs.camIndex);
-		} catch (final V4L4JException e1)
-		{
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
+			} catch (final V4L4JException e1)
+			{
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
 		try
 		{
 			final List<ImageFormat> formats = vdevice.getDeviceInfo()
-			.getFormatList()
-			.getRGBEncodableFormats();
-			vfg = vdevice.getRGBFrameGrabber(configs.width, configs.height, 0, 0, formats.get(0));
+					.getFormatList()
+					.getRGBEncodableFormats();
+			vfg = vdevice.getRGBFrameGrabber(
+					configs.width,
+					configs.height,
+					0,
+					0,
+					formats.get(0));
 			vfg.setCaptureCallback(this);
 			vfg.setFrameInterval(1, 30);
 		} catch (final V4L4JException e)

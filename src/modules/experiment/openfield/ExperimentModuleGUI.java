@@ -12,7 +12,7 @@
  * <http://www.gnu.org/licenses/>.
  **************************************************************************/
 
-package modules.experiment;
+package modules.experiment.openfield;
 
 import modules.ModulesManager;
 

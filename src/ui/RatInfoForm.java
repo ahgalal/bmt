@@ -147,7 +147,7 @@ public class RatInfoForm extends BaseUI
 			grps[i - 1] = strArray[i];
 		loadGroupsToCombo(grps);
 	}
-
+	@SuppressWarnings("rawtypes")
 	@Override
 	public void setController(final ControllerUI controller)
 	{

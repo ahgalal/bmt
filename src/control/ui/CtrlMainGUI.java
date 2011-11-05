@@ -15,7 +15,7 @@
 package control.ui;
 
 import modules.ModulesManager;
-import modules.experiment.ExperimentModule;
+import modules.experiment.openfield.ExperimentModule;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Display;

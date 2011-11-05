@@ -41,8 +41,6 @@ import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.wb.swt.SWTResourceManager;
 
-import plotter.Plotter;
-
 import control.ui.ControllerUI;
 import control.ui.CtrlMainGUI;
 
@@ -527,7 +525,7 @@ public class MainGUI extends BaseUI
 		// TODO Auto-generated method stub
 
 	}
-
+	@SuppressWarnings("rawtypes")
 	@Override
 	public void setController(final ControllerUI controller)
 	{

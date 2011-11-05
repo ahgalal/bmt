@@ -169,7 +169,7 @@ public class ExperimentForm extends BaseUI
 		txt_notes.setText(strArray[2]);
 		lbl_current_date.setText(strArray[3]);
 	}
-
+	@SuppressWarnings("rawtypes")
 	@Override
 	public void setController(final ControllerUI controller)
 	{

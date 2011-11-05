@@ -26,17 +26,18 @@ import utils.video.filters.Data;
  * 
  * @author Creative
  */
-public abstract class Module // implements StateListener
+public abstract class Module<GUIType extends PluggedGUI, ConfigsType extends ModuleConfigs, DataType extends Data> // implements
+// StateListener
 {
 	protected Cargo gui_cargo;
 	protected Cargo file_cargo;
-	protected ModuleConfigs configs;
+	protected ConfigsType configs;
 	protected String name;
 
 	protected Data[] filters_data;
 	protected Data[] modules_data;
-	protected Data data;
-	protected PluggedGUI gui;
+	protected DataType data;
+	protected GUIType gui;
 
 	/**
 	 * Gets the data cargo to be sent to GUI.
@@ -148,10 +149,10 @@ public abstract class Module // implements StateListener
 	 * @param config
 	 *            initial configurations of the module
 	 */
-	public Module(final String name, final ModuleConfigs config)
+	public Module(final String name, final ConfigsType config)
 	{
 		this.name = name;
-		configs = config;
+		this.configs = config;
 	}
 
 	/**

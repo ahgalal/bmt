@@ -127,7 +127,7 @@ public class OptionsWindow extends BaseUI
 		txt_hysteresis.setText(strArray[0]);
 		scl_sub_thresh.setSelection(Integer.parseInt(strArray[1]));
 	}
-
+	@SuppressWarnings("rawtypes")
 	@Override
 	public void setController(final ControllerUI controller)
 	{

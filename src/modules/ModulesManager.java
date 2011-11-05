@@ -16,8 +16,8 @@ package modules;
 
 import java.util.ArrayList;
 
-import modules.experiment.ExperimentModule;
-import modules.experiment.ExperimentModuleConfigs;
+import modules.experiment.openfield.ExperimentModule;
+import modules.experiment.openfield.ExperimentModuleConfigs;
 import modules.fstmovementmeter.MovementMeterModule;
 import modules.rearing.RearingModule;
 import modules.rearing.RearingModuleConfigs;
@@ -32,8 +32,7 @@ import ui.PluggedGUI;
 import utils.PManager;
 import utils.StatusManager.StatusSeverity;
 import utils.video.filters.Data;
-import utils.video.filters.movementmeter.MovementMeter;
-
+@SuppressWarnings("rawtypes")
 /**
  * Manager for all modules.
  * 

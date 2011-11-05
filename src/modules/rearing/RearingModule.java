@@ -29,12 +29,10 @@ import utils.video.filters.rearingdetection.RearingFilterData;
  * 
  * @author Creative
  */
-public class RearingModule extends Module
+public class RearingModule extends Module<RearingModuleGUI,RearingModuleConfigs,RearingModuleData>
 {
-	private final RearingModuleData rearing_module_data;
 	private boolean is_rearing;
 	private RearingFilterData rearing_filter_data;
-	private final RearingModuleConfigs rearing_configs;
 
 	/**
 	 * Initializes the module.
@@ -47,10 +45,8 @@ public class RearingModule extends Module
 	public RearingModule(final String name, final RearingModuleConfigs configs)
 	{
 		super(name, configs);
-		rearing_module_data = new RearingModuleData("Rearing Module Data");
-		this.data = rearing_module_data;
+		data = new RearingModuleData("Rearing Module Data");
 		filters_data = new Data[1];
-		rearing_configs = configs;
 		initialize();
 		gui = new RearingModuleGUI();
 	}
@@ -61,7 +57,7 @@ public class RearingModule extends Module
 	 */
 	public void incrementRearingCounter()
 	{
-		rearing_module_data.rearing_ctr++;
+		data.rearing_ctr++;
 	}
 
 	/**
@@ -70,7 +66,7 @@ public class RearingModule extends Module
 	 */
 	public void decrementRearingCounter()
 	{
-		rearing_module_data.rearing_ctr--;
+		data.rearing_ctr--;
 	}
 
 	/**
@@ -80,7 +76,7 @@ public class RearingModule extends Module
 	 */
 	public int getRearingCounter()
 	{
-		return rearing_module_data.rearing_ctr;
+		return data.rearing_ctr;
 	}
 
 	@Override
@@ -88,7 +84,7 @@ public class RearingModule extends Module
 	{
 		gui_cargo.setDataByTag(
 				Constants.GUI_REARING_COUNTER,
-				Integer.toString(rearing_module_data.rearing_ctr));
+				Integer.toString(data.rearing_ctr));
 	}
 
 	@Override
@@ -96,7 +92,7 @@ public class RearingModule extends Module
 	{
 		file_cargo.setDataByTag(
 				Constants.FILE_REARING_COUNTER,
-				Integer.toString(rearing_module_data.rearing_ctr));
+				Integer.toString(data.rearing_ctr));
 	}
 
 	@Override
@@ -113,14 +109,14 @@ public class RearingModule extends Module
 	public void process()
 	{
 		if (!is_rearing & rearing_filter_data.isRearing()) // it is rearing
-			rearing_module_data.rearing_ctr++;
+			data.rearing_ctr++;
 		is_rearing = rearing_filter_data.isRearing();
 	}
 
 	@Override
 	public void updateConfigs(final ModuleConfigs config)
 	{
-		rearing_configs.mergeConfigs(config);
+		configs.mergeConfigs(config);
 	}
 
 	@Override
@@ -133,7 +129,7 @@ public class RearingModule extends Module
 	public void initialize()
 	{
 		gui_cargo = new Cargo(new String[] { Constants.GUI_REARING_COUNTER });
-		rearing_module_data.rearing_ctr = 0;
+		data.rearing_ctr = 0;
 		file_cargo = new Cargo(new String[] { Constants.FILE_REARING_COUNTER });
 	}
 

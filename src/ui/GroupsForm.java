@@ -133,7 +133,7 @@ public class GroupsForm extends BaseUI
 			}
 		});
 	}
-
+	@SuppressWarnings("rawtypes")
 	@Override
 	public void setController(final ControllerUI controller)
 	{

@@ -11,7 +11,7 @@ import org.eclipse.swt.widgets.Shell;
 import utils.video.filters.Data;
 import utils.video.filters.movementmeter.MovementMeterData;
 
-public class MovementMeterModule extends Module
+public class MovementMeterModule extends Module<MovementMeterModuleGUI,ModuleConfigs,Data>
 {
 	private MovementMeterData movementMeterFilterData;
 	private final ArrayList<Integer> energyData;
@@ -55,7 +55,7 @@ public class MovementMeterModule extends Module
 	public void updateGUICargoData()
 	{
 		gui_cargo.setData(new String[] { "" + movementMeterFilterData.getWhiteSummation() });
-		((MovementMeterModuleGUI) gui).addPoint(
+		gui.addPoint(
 				time++,
 				movementMeterFilterData.getWhiteSummation() / 2000);
 	}

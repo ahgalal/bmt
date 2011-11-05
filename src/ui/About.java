@@ -114,6 +114,7 @@ public class About extends BaseUI
 	{
 	}
 
+	@SuppressWarnings("rawtypes")
 	@Override
 	public void setController(final ControllerUI controller)
 	{

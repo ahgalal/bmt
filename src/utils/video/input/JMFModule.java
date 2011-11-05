@@ -63,7 +63,7 @@ public class JMFModule extends VidInputter<VidSourceConfigs>
 	 *            VideoFormat, either RGB or YUV
 	 * @return MediaLocator object corresponding to the webcam
 	 */
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings("rawtypes")
 	private MediaLocator obtainMediaLocator(final VideoFormat format_to_use)
 	{
 		MediaLocator ml = null;
@@ -403,7 +403,7 @@ public class JMFModule extends VidInputter<VidSourceConfigs>
 		return ana_eff.getStatus();
 	}
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({ "rawtypes" })
 	@Override
 	public int getNumCams()
 	{

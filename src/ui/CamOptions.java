@@ -314,6 +314,7 @@ public class CamOptions extends BaseUI
 		cmbo_cam_lib.setText(libs[0]);
 	}
 
+	@SuppressWarnings("rawtypes")
 	@Override
 	public void setController(final ControllerUI controller)
 	{

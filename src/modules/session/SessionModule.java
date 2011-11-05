@@ -21,6 +21,7 @@ import modules.experiment.Constants;
 
 import org.eclipse.swt.widgets.Shell;
 
+import ui.PluggedGUI;
 import utils.video.filters.Data;
 
 /**
@@ -28,12 +29,8 @@ import utils.video.filters.Data;
  * 
  * @author Creative
  */
-public class SessionModule extends Module
+public class SessionModule extends Module<PluggedGUI, SessionModuleConfigs,SessionModuleData>
 {
-	private final SessionModuleData session_module_data;
-
-	private final SessionModuleConfigs session_configs;
-
 	/**
 	 * Initializations of the module.
 	 * 
@@ -42,23 +39,20 @@ public class SessionModule extends Module
 	 * @param config
 	 *            SessionModuleConfigs object to configure the module
 	 */
-	public SessionModule(final String name, final ModuleConfigs config)
+	public SessionModule(final String name, final SessionModuleConfigs config)
 	{
 		super(name, config);
-		session_module_data = new SessionModuleData("Session Module Data");
-		this.data = session_module_data;
-		session_configs = (SessionModuleConfigs) config;
-
+		data = new SessionModuleData("Session Module Data");
 		initialize();
 	}
 
 	@Override
 	public void process()
 	{
-		if (!session_module_data.session_is_running)
+		if (!data.session_is_running)
 		{
 			startSession();
-			session_module_data.session_is_running = true;
+			data.session_is_running = true;
 		}
 	}
 
@@ -81,7 +75,7 @@ public class SessionModule extends Module
 	@Override
 	public void updateConfigs(final ModuleConfigs config)
 	{
-		session_configs.mergeConfigs(config);
+		configs.mergeConfigs(config);
 	}
 
 	@Override
@@ -95,7 +89,7 @@ public class SessionModule extends Module
 	 */
 	private void startSessionTime()
 	{
-		session_module_data.session_start_time = System.currentTimeMillis();
+		data.session_start_time = System.currentTimeMillis();
 	}
 
 	/**
@@ -103,7 +97,7 @@ public class SessionModule extends Module
 	 */
 	private void stopSessionTimer()
 	{
-		session_module_data.session_end_time = System.currentTimeMillis();
+		data.session_end_time = System.currentTimeMillis();
 	}
 
 	/**
@@ -113,7 +107,7 @@ public class SessionModule extends Module
 	 */
 	public long getTotalSessionTime()
 	{
-		final long totalTime = (session_module_data.session_end_time - session_module_data.session_start_time) / (1000);
+		final long totalTime = (data.session_end_time - data.session_start_time) / (1000);
 		return totalTime;
 	}
 
@@ -124,15 +118,15 @@ public class SessionModule extends Module
 	 */
 	private float getSessionTimeTillNow()
 	{
-		final long time = (System.currentTimeMillis() - session_module_data.session_start_time) / (1000);
+		final long time = (System.currentTimeMillis() - data.session_start_time) / (1000);
 		return time;
 	}
 
 	@Override
 	public void initialize()
 	{
-		session_module_data.session_start_time = 0;
-		session_module_data.session_end_time = 0;
+		data.session_start_time = 0;
+		data.session_end_time = 0;
 
 		gui_cargo = new Cargo(new String[] { Constants.GUI_SESSION_TIME });
 
@@ -161,7 +155,7 @@ public class SessionModule extends Module
 	public void deInitialize()
 	{
 		endSession();
-		session_module_data.session_is_running = false;
+		data.session_is_running = false;
 	}
 
 	@Override

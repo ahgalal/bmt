@@ -29,7 +29,6 @@ import utils.video.FrameIntArray;
 public class VideoFileModule extends VidInputter<AGVidLibConfigs>
 {
 	private boolean stop_stream;
-	private int[] data;
 
 	private final JAGVidLib vidLib;
 

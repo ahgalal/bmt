@@ -27,7 +27,8 @@ public abstract class BaseUI
 {
 
 	protected Shell sShell; // Shell fo the GUI (SWT)
-	ControllerUI controller; // Controller instance
+	@SuppressWarnings("rawtypes")
+	protected ControllerUI controller; // Controller instance
 
 	/**
 	 * Shows/Hides the GUI window.
@@ -58,6 +59,7 @@ public abstract class BaseUI
 	 * @param controller
 	 *            Controller instance
 	 */
+	@SuppressWarnings("rawtypes")
 	public void setController(final ControllerUI controller)
 	{
 		this.controller = controller;

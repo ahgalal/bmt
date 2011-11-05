@@ -12,34 +12,32 @@
  * <http://www.gnu.org/licenses/>.
  **************************************************************************/
 
-package modules.experiment;
+package modules.experiment.openfield;
 
-import modules.ModuleConfigs;
+import modules.experiment.Experiment;
+import utils.video.filters.Data;
 
 /**
- * Configuration class for the Experiment module.
+ * Data of the Experiment Module.
  * 
  * @author Creative
  */
-public class ExperimentModuleConfigs extends ModuleConfigs
+public class ExperimentModuleData extends Data
 {
+	public int curr_rat_number;
+	public String curr_grp_name;
+	public Experiment exp;
+	public String exp_file_name;
 
 	/**
-	 * Initializations for the configurations.
+	 * Initializes the Data.
 	 * 
-	 * @param moduleName
-	 *            name of the module instance
+	 * @param name
+	 *            name of the data instance
 	 */
-	public ExperimentModuleConfigs(final String moduleName)
+	public ExperimentModuleData(final String name)
 	{
-		super(moduleName);
-	}
-
-	@Override
-	protected void mergeConfigs(final ModuleConfigs config)
-	{
-		// TODO Auto-generated method stub
-
+		super(name);
 	}
 
 }
