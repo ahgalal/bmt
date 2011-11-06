@@ -18,7 +18,7 @@ import java.util.ArrayList;
 
 import modules.experiment.ExperimentModule;
 import modules.experiment.ExperimentModuleConfigs;
-import modules.fstmovementmeter.MovementMeterModule;
+import modules.movementmeter.MovementMeterModule;
 import modules.rearing.RearingModule;
 import modules.rearing.RearingModuleConfigs;
 import modules.session.SessionModule;

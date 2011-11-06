@@ -1,4 +1,4 @@
-package modules.fstmovementmeter;
+package modules.movementmeter;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;

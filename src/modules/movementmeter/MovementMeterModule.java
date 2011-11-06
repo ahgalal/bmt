@@ -1,4 +1,4 @@
-package modules.fstmovementmeter;
+package modules.movementmeter;
 
 import java.util.ArrayList;
 
