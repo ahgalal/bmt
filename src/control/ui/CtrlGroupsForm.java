@@ -17,8 +17,8 @@ package control.ui;
 import java.util.ArrayList;
 
 import modules.ModulesManager;
+import modules.experiment.ExperimentModule;
 import modules.experiment.Grp2GUI;
-import modules.experiment.openfield.ExperimentModule;
 import ui.GroupsForm;
 import ui.GroupsForm.TabContents;
 

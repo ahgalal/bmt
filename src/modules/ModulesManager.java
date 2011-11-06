@@ -16,8 +16,8 @@ package modules;
 
 import java.util.ArrayList;
 
-import modules.experiment.openfield.ExperimentModule;
-import modules.experiment.openfield.ExperimentModuleConfigs;
+import modules.experiment.ExperimentModule;
+import modules.experiment.ExperimentModuleConfigs;
 import modules.fstmovementmeter.MovementMeterModule;
 import modules.rearing.RearingModule;
 import modules.rearing.RearingModuleConfigs;

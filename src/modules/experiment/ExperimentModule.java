@@ -12,19 +12,12 @@
  * <http://www.gnu.org/licenses/>.
  **************************************************************************/
 
-package modules.experiment.openfield;
+package modules.experiment;
 
 import modules.Cargo;
 import modules.Module;
 import modules.ModuleConfigs;
 import modules.ModulesManager;
-import modules.experiment.Constants;
-import modules.experiment.ExcelEngine;
-import modules.experiment.Experiment;
-import modules.experiment.Group;
-import modules.experiment.Grp2GUI;
-import modules.experiment.Rat;
-import modules.experiment.TextEngine;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Display;
@@ -40,7 +33,8 @@ import utils.video.filters.Data;
  * 
  * @author Creative
  */
-public class ExperimentModule extends Module<ExperimentModuleGUI,ExperimentModuleConfigs,ExperimentModuleData>
+public class ExperimentModule extends
+		Module<ExperimentModuleGUI, ExperimentModuleConfigs, ExperimentModuleData>
 {
 	private final TextEngine text_engine;
 	private final ExcelEngine excel_engine;
@@ -57,7 +51,6 @@ public class ExperimentModule extends Module<ExperimentModuleGUI,ExperimentModul
 	public ExperimentModule(final String name, final ExperimentModuleConfigs config)
 	{
 		super(name, config);
-		// exp_module_configs=(ExperimentModuleConfigs) config;
 		gui = new ExperimentModuleGUI();
 		data = new ExperimentModuleData("Experiment Module Data");
 		data.exp = new Experiment();
@@ -84,10 +77,10 @@ public class ExperimentModule extends Module<ExperimentModuleGUI,ExperimentModul
 	public void updateGUICargoData()
 	{
 		gui_cargo.setDataByTag(Constants.GUI_EXP_NAME, data.exp.getName());
-		gui_cargo.setDataByTag(Constants.GUI_GROUP_NAME, data.curr_grp_name);
+		gui_cargo.setDataByTag(Constants.GUI_GROUP_NAME, data.currGrpName);
 		gui_cargo.setDataByTag(
 				Constants.GUI_RAT_NUMBER,
-				Integer.toString(data.curr_rat_number));
+				Integer.toString(data.currRatNumber));
 	}
 
 	@Override
@@ -95,23 +88,18 @@ public class ExperimentModule extends Module<ExperimentModuleGUI,ExperimentModul
 	{
 		file_cargo.setDataByTag(
 				Constants.FILE_RAT_NUMBER,
-				Integer.toString(data.curr_rat_number));
-		file_cargo.setDataByTag(Constants.FILE_GROUP_NAME, data.curr_grp_name);
-
+				Integer.toString(data.currRatNumber));
+		file_cargo.setDataByTag(Constants.FILE_GROUP_NAME, data.currGrpName);
 	}
 
 	@Override
 	public void updateConfigs(final ModuleConfigs config)
 	{
-		// TODO Auto-generated method stub
-
 	}
 
 	@Override
 	public void registerFilterDataObject(final Data data)
 	{
-		// TODO Auto-generated method stub
-
 	}
 
 	/**
@@ -122,7 +110,7 @@ public class ExperimentModule extends Module<ExperimentModuleGUI,ExperimentModul
 	 */
 	public void setExpFileName(final String f_name)
 	{
-		data.exp_file_name = f_name;
+		data.exp.fileName = f_name;
 	}
 
 	/**
@@ -165,7 +153,7 @@ public class ExperimentModule extends Module<ExperimentModuleGUI,ExperimentModul
 	{
 		data.exp.setExperimentInfo(name, user, date, notes);
 		exp_is_set = true;
-		((ExperimentModuleGUI) gui).setExperimantLoaded(true);
+		(gui).setExperimantLoaded(true);
 	}
 
 	/**
@@ -236,8 +224,8 @@ public class ExperimentModule extends Module<ExperimentModuleGUI,ExperimentModul
 		final String[] data = ModulesManager.getDefault().getFileData();
 		final String[] code_names = ModulesManager.getDefault().getCodeNames();
 		boolean override_rat = false;
-		Rat rat_tmp = this.data.exp.getGroupByName(this.data.curr_grp_name)
-				.getRatByNumber(this.data.curr_rat_number);
+		Rat rat_tmp = this.data.exp.getGroupByName(this.data.currGrpName)
+				.getRatByNumber(this.data.currRatNumber);
 		if (rat_tmp == null)
 			rat_tmp = new Rat(params_list);
 		else
@@ -251,9 +239,9 @@ public class ExperimentModule extends Module<ExperimentModuleGUI,ExperimentModul
 		}
 
 		if (!override_rat)
-			this.data.exp.getGroupByName(this.data.curr_grp_name).addRat(
+			this.data.exp.getGroupByName(this.data.currGrpName).addRat(
 					rat_tmp);
-		writeToTXTFile(this.data.exp_file_name);
+		writeToTXTFile(this.data.exp.fileName);
 		return true;
 	}
 
@@ -281,7 +269,7 @@ public class ExperimentModule extends Module<ExperimentModuleGUI,ExperimentModul
 			PManager.getDefault().frm_exp.fillForm(data.exp);
 			updateGroupGUIData();
 			exp_is_set = true;
-			((ExperimentModuleGUI) gui).setExperimantLoaded(true);
+			(gui).setExperimantLoaded(true);
 		}
 	}
 
@@ -363,8 +351,8 @@ public class ExperimentModule extends Module<ExperimentModuleGUI,ExperimentModul
 		final Group tmp_grp = data.exp.getGroupByName(grp_name);
 		if (tmp_grp != null)
 		{ // Group exists
-			data.curr_rat_number = rat_num;
-			data.curr_grp_name = grp_name;
+			data.currRatNumber = rat_num;
+			data.currGrpName = grp_name;
 			return 0;
 		}
 		else
@@ -379,7 +367,7 @@ public class ExperimentModule extends Module<ExperimentModuleGUI,ExperimentModul
 		data.exp.clearExperimentData();
 		excel_engine.reset();
 		exp_is_set = false;
-		((ExperimentModuleGUI) gui).setExperimantLoaded(false);
+		(gui).setExperimantLoaded(false);
 	}
 
 	@Override

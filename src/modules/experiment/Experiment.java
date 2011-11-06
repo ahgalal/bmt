@@ -30,8 +30,8 @@ public class Experiment implements Exp2GUI
 	private String date;
 	private String notes;
 
-	private String[] exp_params;
-
+	private String[] params;
+	public String fileName;
 	/**
 	 * Clears the experiment info(data) This functions loops on all the groups
 	 * in the experiment and for each group it calls getAllRats() method and
@@ -68,7 +68,7 @@ public class Experiment implements Exp2GUI
 	public Experiment()
 	{
 		groups = new ArrayList<Group>();
-		exp_params = new String[0];
+		params = new String[0];
 	}
 
 	/**
@@ -211,7 +211,7 @@ public class Experiment implements Exp2GUI
 	 */
 	public void setParametersList(final String[] exp_parameters)
 	{
-		exp_params = exp_parameters;
+		params = exp_parameters;
 	}
 
 	/**
@@ -221,7 +221,7 @@ public class Experiment implements Exp2GUI
 	 */
 	public String[] getExpParametersList()
 	{
-		return exp_params;
+		return params;
 	}
 
 	/**
