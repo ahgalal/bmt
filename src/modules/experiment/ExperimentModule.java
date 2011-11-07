@@ -25,6 +25,7 @@ import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
 
 import utils.PManager;
+import utils.Logger.Details;
 import utils.StatusManager.StatusSeverity;
 import utils.video.filters.Data;
 
@@ -215,7 +216,7 @@ Module<ExperimentModuleGUI, ExperimentModuleConfigs, ExperimentModuleData>
 					.getCodeNames());
 		else if (getNumberOfExpParams() != ModulesManager.getDefault().getCodeNames().length)
 		{
-			PManager.getDefault().status_mgr.setStatus(
+			PManager.getDefault().statusMgr.setStatus(
 					"Experiment file loaded has some modules which are not active in this session, can't save",
 					StatusSeverity.ERROR);
 			return false;
@@ -373,6 +374,7 @@ Module<ExperimentModuleGUI, ExperimentModuleConfigs, ExperimentModuleData>
 	@Override
 	public void initialize()
 	{
+		PManager.log.print("initializing..", this, Details.VERBOSE);
 		guiCargo = new Cargo(
 				new String[] {
 						Constants.GUI_EXP_NAME,

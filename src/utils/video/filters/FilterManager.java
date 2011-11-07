@@ -18,8 +18,10 @@ import java.awt.Point;
 import java.util.ArrayList;
 
 import modules.ModulesManager;
+import modules.experiment.Experiment.ExperimentType;
 import modules.zones.ShapeController;
 import ui.PluggedGUI;
+import utils.Logger.Details;
 import utils.PManager;
 import utils.StatusManager.StatusSeverity;
 import utils.video.FrameIntArray;
@@ -46,7 +48,7 @@ import utils.video.filters.subtractionfilter.SubtractorFilter;
  */
 public class FilterManager
 {
-	private final ArrayList<VideoFilter<?,?>> arr_filters;
+	private final ArrayList<VideoFilter<?, ?>> arr_filters;
 	private SubtractorFilter subtractor_filter;
 	private RatFinder rat_finder;
 	private RearingDetector rearing_det;
@@ -58,11 +60,35 @@ public class FilterManager
 
 	/**
 	 * Initializes the filters' array.
+	 * 
+	 * @param ref_fia
+	 * @param common_configs
 	 */
-	public FilterManager()
+	public FilterManager(
+			final CommonFilterConfigs common_configs,
+			final FrameIntArray ref_fia,final ExperimentType expType)
 	{
-		arr_filters = new ArrayList<VideoFilter<?,?>>();
-		connectFilters();
+		PManager.log.print("instantiating..", this, Details.VERBOSE);
+		arr_filters = new ArrayList<VideoFilter<?, ?>>();
+
+		final FiltersSetup openFieldFiltersSetup = new FiltersSetup(
+				new String[] {
+						"RatFinder",
+						"RearingDetector",
+						"Recorder",
+						"SubtractionFilter",
+						"Source Filter" });
+		
+		final FiltersSetup forcedSwimmingFiltersSetup = new FiltersSetup(
+				new String[] {
+						"Recorder",
+						"Source Filter",
+						"Movement Meter"});
+
+		instantiateAndConnectFilters(
+				forcedSwimmingFiltersSetup.getFiltersNames(),
+				common_configs,
+				ref_fia);
 	}
 
 	/**
@@ -131,7 +157,7 @@ public class FilterManager
 	 * 
 	 * @return array of filters
 	 */
-	public ArrayList<VideoFilter<?,?>> getFilters()
+	public ArrayList<VideoFilter<?, ?>> getFilters()
 	{
 		return arr_filters;
 	}
@@ -209,84 +235,10 @@ public class FilterManager
 	}
 
 	/**
-	 * Initializes video filters, and applies their configurations.
-	 * 
-	 * @param common_configs
-	 *            common configurations
-	 * @param fia_src
-	 *            image data container from the video input library
-	 * @return true: success
+	 * @return
 	 */
-	public boolean configureFilters(
-			final CommonFilterConfigs common_configs,
-			final FrameIntArray fia_src)
+	private boolean validateFiltersConfigurations()
 	{
-		// ////////////////////////////////////
-		// Rat Finder
-		final RatFinderFilterConfigs rat_finder_configs = new RatFinderFilterConfigs(
-				"RatFinder",
-				common_configs);
-		final RatFinderData rfd = (RatFinderData) rat_finder.getFilterData();
-		rat_finder.configure(rat_finder_configs);
-
-		// ////////////////////////////////////
-		// Rearing Detector
-		final RearingFilterConfigs rearingConfigs = new RearingFilterConfigs(
-				"RearingDetector",
-				1000,
-				200,
-				200,
-				(rfd.getCenterPoint()),
-				common_configs);
-		rearing_det.configure(rearingConfigs);
-
-		// ////////////////////////////////////
-		// Video Recorder
-		final RecorderConfigs vid_recorder_configs = new RecorderConfigs(
-				"Recorder",
-				common_configs);
-		vid_rec.configure(vid_recorder_configs);
-
-		// ////////////////////////////////////
-		// Screen Drawer
-		final ScreenDrawerConfigs scrn_drwr_cnfgs = new ScreenDrawerConfigs(
-				"ScreenDrawer",
-				null,
-				null,
-				common_configs,
-				true,
-				ShapeController.getDefault());
-		screen_drawer.configure(scrn_drwr_cnfgs);
-
-		// ////////////////////////////////////
-		// Subtraction Filter
-		final SubtractionConfigs subtraction_configs = new SubtractionConfigs(
-				"SubtractionFilter",
-				40,
-				common_configs);
-		subtractor_filter.configure(subtraction_configs);
-
-		// ////////////////////////////////////
-		// Source Filter
-		final SourceFilterConfigs source_configs = new SourceFilterConfigs(
-				"Source Filter",
-				common_configs,
-				fia_src);
-		source_filter.configure(source_configs);
-		
-		///////////////////////////////////////
-		// Average Filter
-		// TODO: create a config class for avg filter
-		avgFilter.configure(source_configs);
-		
-		
-		///////////////////////////////////////
-		// MovementMeter Filter
-		// TODO: create a config class for MovementMeter
-		movementMeter.configure(source_configs);
-
-		// ///////////////////////////////////
-		// check that configurations of all filters are valid
 		for (final VideoFilter<?, ?> vf : getFilters())
 			if (!vf.getConfigs().validate())
 			{
@@ -299,11 +251,25 @@ public class FilterManager
 		return true;
 	}
 
+	private boolean isWithinArray(final String name, final String[] array)
+	{
+		for (final String str : array)
+			if (str.equals(name))
+				return true;
+		return false;
+	}
+
 	/**
 	 * Connects the filters and adds them to the filters array.
+	 * 
+	 * @param ref_fia
 	 */
-	private void connectFilters()
+	private boolean instantiateAndConnectFilters(
+			final String[] filtersNames,
+			final CommonFilterConfigs common_configs,
+			final FrameIntArray ref_fia)
 	{
+		PManager.log.print("Connecting video filters", this, Details.VERBOSE);
 		final Point dims = new Point(0, 0);
 
 		final Link src_rgb_link = new Link(dims);
@@ -312,43 +278,123 @@ public class FilterManager
 		final Link avg_link = new Link(dims);
 		final Link differentialLink = new Link(dims);
 
-		rat_finder = new RatFinder(
-				"RatFinder", grey_link, marker_link);
-		/*		rat_finder = new RatFinder2(
-						"RatFinder", grey_link, marker_link);*/
-
-		rearing_det = new RearingDetector(
-				"RearingDetector", grey_link, null);
-
-		vid_rec = new VideoRecorder("Recorder", src_rgb_link, null);
-
-		screen_drawer = new ScreenDrawer(
-				//"ScreenDrawer", /*src_rgb_link*/avg_link, /*marker_link*/ grey_link, null);
-				"ScreenDrawer", /*grey_link*/differentialLink/*src_rgb_link*//*avg_link*/, /*marker_link*/src_rgb_link /*grey_link*/, null);
-
-		subtractor_filter = new SubtractorFilter(
-				"SubtractionFilter", src_rgb_link, grey_link);
-
 		source_filter = new SourceFilter("Source Filter", null, src_rgb_link);
-
-		avgFilter = new AverageFilter("Average Filter",grey_link, avg_link);
-		
-		movementMeter = new MovementMeter("Movement Meter", src_rgb_link, differentialLink);
-		
-		// ////////////////////////////////////
-		// add filters to the filter manager
+		final SourceFilterConfigs source_configs = new SourceFilterConfigs(
+				"Source Filter",
+				common_configs,
+				ref_fia);
+		source_filter.configure(source_configs);
 		addFilter(source_filter);
-		addFilter(vid_rec);
-		addFilter(subtractor_filter);
-		addFilter(rearing_det);
-		addFilter(rat_finder);
-		addFilter(screen_drawer);
-		//addFilter(avgFilter);
-		addFilter(movementMeter);
+		
+		
+		screen_drawer = new ScreenDrawer(
+				// "ScreenDrawer", /*src_rgb_link*/avg_link, /*marker_link*/
+				// grey_link, null);
+				"ScreenDrawer", /*grey_link*/
+				differentialLink/*src_rgb_link*//*avg_link*/, /*marker_link*/
+				src_rgb_link /*grey_link*/,
+				null);
 
+		final ScreenDrawerConfigs scrn_drwr_cnfgs = new ScreenDrawerConfigs(
+				"ScreenDrawer",
+				null,
+				null,
+				common_configs,
+				true,
+				ShapeController.getDefault());
+		screen_drawer.configure(scrn_drwr_cnfgs);
+		addFilter(screen_drawer);
+
+		if (isWithinArray("RatFinder", filtersNames))
+		{
+			if (isWithinArray("SubtractionFilter", filtersNames))
+			{
+				rat_finder = new RatFinder(
+						"RatFinder", grey_link, marker_link);
+				/*		rat_finder = new RatFinder2(
+						"RatFinder", grey_link, marker_link);*/
+				addFilter(rat_finder);
+				final RatFinderFilterConfigs rat_finder_configs = new RatFinderFilterConfigs(
+						"RatFinder",
+						common_configs);
+				final RatFinderData rfd = (RatFinderData) rat_finder.getFilterData();
+				rat_finder.configure(rat_finder_configs);
+			}
+			else
+				PManager.log.print(
+						"Can't find the SubtractionFilter Filter, it is needed to run the RatFinder filter; please check filters list!",
+						this,
+						StatusSeverity.ERROR);
+		}
+		if (isWithinArray("RearingDetector", filtersNames))
+		{
+			rearing_det = new RearingDetector(
+					"RearingDetector", grey_link, null);
+			final RatFinderData rfd = (RatFinderData) getFilterByName("RatFinder").getFilterData();
+			if (rfd == null)
+				PManager.log.print(
+						"Can't find the RatFinder Filter, it is needed to run the RearingDetector filter; please check filters list!",
+						this,
+						StatusSeverity.ERROR);
+			else
+			{
+				final RearingFilterConfigs rearingConfigs = new RearingFilterConfigs(
+						"RearingDetector",
+						1000,
+						200,
+						200,
+						(rfd.getCenterPoint()),
+						common_configs);
+				rearing_det.configure(rearingConfigs);
+				addFilter(rearing_det);
+			}
+		}
+		if (isWithinArray("Recorder", filtersNames))
+		{
+			vid_rec = new VideoRecorder("Recorder", src_rgb_link, null);
+			final RecorderConfigs vid_recorder_configs = new RecorderConfigs(
+					"Recorder",
+					common_configs);
+			vid_rec.configure(vid_recorder_configs);
+			addFilter(vid_rec);
+		}
+		if (isWithinArray("SubtractionFilter", filtersNames))
+		{
+			subtractor_filter = new SubtractorFilter(
+					"SubtractionFilter", src_rgb_link, grey_link);
+
+			final SubtractionConfigs subtraction_configs = new SubtractionConfigs(
+					"SubtractionFilter",
+					40,
+					common_configs);
+			subtractor_filter.configure(subtraction_configs);
+			addFilter(subtractor_filter);
+		}
+
+		if (isWithinArray("Average Filter", filtersNames))
+		{
+			avgFilter = new AverageFilter("Average Filter", grey_link, avg_link);
+			// TODO: create a config class for avg filter
+			avgFilter.configure(source_configs);
+			// addFilter(avgFilter);
+		}
+		if (isWithinArray("Movement Meter", filtersNames))
+		{
+			movementMeter = new MovementMeter(
+					"Movement Meter",
+					src_rgb_link,
+					differentialLink);
+			// TODO: create a config class for MovementMeter
+			movementMeter.configure(source_configs);
+			addFilter(movementMeter);
+		}
+		PManager.log.print("finished connecting video filters", this, Details.VERBOSE);
+		PManager.log.print("loading filters' GUI..", this, Details.VERBOSE);
 		PManager.main_gui.loadPluggedGUI(getFiltersGUI());
 		for (final PluggedGUI fgui : getFiltersGUI())
 			PManager.getDefault().addStateListener(fgui);
+
+		return validateFiltersConfigurations();
 	}
 
 	/**

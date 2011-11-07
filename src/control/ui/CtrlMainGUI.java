@@ -15,6 +15,7 @@
 package control.ui;
 
 import modules.ModulesManager;
+import modules.experiment.Experiment.ExperimentType;
 import modules.experiment.ExperimentModule;
 
 import org.eclipse.swt.SWT;
@@ -68,7 +69,7 @@ public class CtrlMainGUI extends ControllerUI<MainGUI> implements StateListener
 		ui.setController(this);
 		th_update_gui = new Thread(new RunnableUpdateGUI());
 
-		pm.status_mgr.initialize(ui.getStatusLabel());
+		pm.statusMgr.initialize(ui.getStatusLabel());
 		ctrl_about_box = new CtrlAbout();
 
 		// ui.loadModulesGUI(ModulesManager.getDefault().getModulesNames());
@@ -230,16 +231,16 @@ public class CtrlMainGUI extends ControllerUI<MainGUI> implements StateListener
 		if (pm.state == ProgramState.STREAMING)
 		{
 			pm.drw_zns.setBackground(pm.getVideoManager().updateRGBBackground());
-			((SubtractorFilter) pm.getVideoManager()
+/*			((SubtractorFilter) pm.getVideoManager()
 					.getFilterManager()
-					.getFilterByName("SubtractionFilter")).updateBG();
+					.getFilterByName("SubtractionFilter")).updateBG();*/
 		}
 		else if (pm.state == ProgramState.TRACKING)
-			pm.status_mgr.setStatus(
+			pm.statusMgr.setStatus(
 					"Background can't be taken while tracking.",
 					StatusSeverity.ERROR);
 		else
-			pm.status_mgr.setStatus(
+			pm.statusMgr.setStatus(
 					"Please start the camera first.",
 					StatusSeverity.ERROR);
 	}
@@ -263,10 +264,10 @@ public class CtrlMainGUI extends ControllerUI<MainGUI> implements StateListener
 					commonConfigs.height);
 			pm.initializeVideoManager(commonConfigs,null);
 			configureScreenDrawerFilter("ScreenDrawer", commonConfigs, true);
-			pm.status_mgr.setStatus("Camera is Starting..", StatusSeverity.WARNING);
+			pm.statusMgr.setStatus("Camera is Starting..", StatusSeverity.WARNING);
 		}
 		else
-			pm.status_mgr.setStatus("Camera is already started.", StatusSeverity.ERROR);
+			pm.statusMgr.setStatus("Camera is already started.", StatusSeverity.ERROR);
 
 	}
 
@@ -396,7 +397,7 @@ public class CtrlMainGUI extends ControllerUI<MainGUI> implements StateListener
 							@Override
 							public void run()
 							{
-								pm.status_mgr.setStatus(
+								pm.statusMgr.setStatus(
 										"Some Modules have problems.",
 										StatusSeverity.ERROR);
 							}
@@ -409,7 +410,7 @@ public class CtrlMainGUI extends ControllerUI<MainGUI> implements StateListener
 						@Override
 						public void run()
 						{
-							pm.status_mgr.setStatus(
+							pm.statusMgr.setStatus(
 									"Please make sure the camera is running, you have set the background.",
 									StatusSeverity.ERROR);
 						}
@@ -488,14 +489,20 @@ public class CtrlMainGUI extends ControllerUI<MainGUI> implements StateListener
 				pm.initializeVideoManager(commonConfigs,file_name);
 
 				configureScreenDrawerFilter("ScreenDrawer", commonConfigs, true);
-				pm.status_mgr.setStatus("Camera is Starting..", StatusSeverity.WARNING);
+				pm.statusMgr.setStatus("Camera is Starting..", StatusSeverity.WARNING);
 			}
 			else
-				pm.status_mgr.setStatus(
+				pm.statusMgr.setStatus(
 						"Camera is already started.",
 						StatusSeverity.ERROR);
 		}
 		file_name=null;
+	}
+	
+	public void setExperimentType(ExperimentType type)
+	{
+		ModulesManager.getDefault().instantiateExperimentModule(type);
+		pm.getVideoManager().initializeFilters(type);
 	}
 
 	public void startStreamingAction()
@@ -512,10 +519,10 @@ public class CtrlMainGUI extends ControllerUI<MainGUI> implements StateListener
 		if (pm.state == ProgramState.STREAMING)
 		{
 			pm.stopStreaming();
-			pm.status_mgr.setStatus("Streaming is Stopped!", StatusSeverity.WARNING);
+			pm.statusMgr.setStatus("Streaming is Stopped!", StatusSeverity.WARNING);
 		}
 		else if (pm.state == ProgramState.TRACKING)
-			pm.status_mgr.setStatus(
+			pm.statusMgr.setStatus(
 					"Streaming Cannot be stopped while Tracking is running.",
 					StatusSeverity.ERROR);
 	}

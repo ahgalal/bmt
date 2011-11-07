@@ -81,7 +81,7 @@ public class RearingDetectorGUI extends PluggedGUI
 					.getFilterByName(
 							"RearingDetector")).rearingNow(rearing);
 		else
-			PManager.getDefault().status_mgr.setStatus(
+			PManager.getDefault().statusMgr.setStatus(
 					"Tracking is not running!",
 					StatusSeverity.ERROR);
 	}

@@ -30,6 +30,7 @@ import modules.zones.Zone.ZoneType;
 import org.eclipse.swt.widgets.Shell;
 
 import utils.PManager;
+import utils.Logger.Details;
 import utils.StatusManager.StatusSeverity;
 import utils.video.filters.Data;
 import utils.video.filters.ratfinder.RatFinderData;
@@ -396,6 +397,7 @@ public class ZonesModule extends Module<ZonesModuleGUI,ZonesModuleConfigs,ZonesM
 	@Override
 	public void initialize()
 	{
+		PManager.log.print("initializing..", this, Details.VERBOSE);
 		data.current_zone_num = -1;
 		central_start_tmp = 0;
 		data.central_flag = false;

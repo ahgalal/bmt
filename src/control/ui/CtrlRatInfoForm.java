@@ -134,10 +134,10 @@ public class CtrlRatInfoForm extends ControllerUI<RatInfoForm>
 				}
 			}
 			else if (tmp_confirmation == -1) // Group not found
-				pm.status_mgr.setStatus("Please select a group.", StatusSeverity.ERROR);
+				pm.statusMgr.setStatus("Please select a group.", StatusSeverity.ERROR);
 		} catch (final NumberFormatException e1)
 		{
-			pm.status_mgr.setStatus(
+			pm.statusMgr.setStatus(
 					"Please enter a valid Rat number.",
 					StatusSeverity.ERROR);
 		}

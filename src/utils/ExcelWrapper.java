@@ -82,9 +82,9 @@ public class ExcelWrapper
 			}
 		}
 		else if (sheet.getPhysicalNumberOfRows() == 0)
-			pm.status_mgr.setStatus("Excel sheet is Empty!", StatusSeverity.ERROR);
+			pm.statusMgr.setStatus("Excel sheet is Empty!", StatusSeverity.ERROR);
 		else
-			pm.status_mgr.setStatus("Row is not found!!", StatusSeverity.ERROR);
+			pm.statusMgr.setStatus("Row is not found!!", StatusSeverity.ERROR);
 	}
 
 	/**

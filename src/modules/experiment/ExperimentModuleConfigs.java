@@ -15,6 +15,7 @@
 package modules.experiment;
 
 import modules.ModuleConfigs;
+import modules.experiment.Experiment.ExperimentType;
 
 /**
  * Configuration class for the Experiment module.
@@ -23,16 +24,17 @@ import modules.ModuleConfigs;
  */
 public class ExperimentModuleConfigs extends ModuleConfigs
 {
-
+	public ExperimentType expType;
 	/**
 	 * Initializations for the configurations.
 	 * 
 	 * @param moduleName
 	 *            name of the module instance
 	 */
-	public ExperimentModuleConfigs(final String moduleName)
+	public ExperimentModuleConfigs(final String moduleName,ExperimentType expType)
 	{
 		super(moduleName);
+		this.expType=expType;
 	}
 
 	@Override

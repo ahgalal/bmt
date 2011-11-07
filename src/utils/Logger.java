@@ -23,8 +23,27 @@ import utils.StatusManager.StatusSeverity;
  */
 public class Logger
 {
+	public enum Details {
+		NOTES(1),VERBOSE(0);
+		int value;
+		private Details(int value)
+		{
+			this.value=value;
+		}
+		
+		public int getValue()
+		{
+			return value;
+		}
+	}
+	
+	public Logger(Details details)
+	{
+		this.details =details;
+	}
 
 	private boolean enabled = true; // is it enabled?
+	private Details details=Details.NOTES;
 
 	/**
 	 * Prints messages on the screen, along with the caller object name.
@@ -34,10 +53,24 @@ public class Logger
 	 * @param o
 	 *            caller object (caller object should send "this")
 	 */
-	public void print(final String str, final Object o)
+	public void print(final String str, final Object o,final Details details)
 	{
 		if (enabled)
-			System.out.print(o.getClass().toString().substring(6) + " | " + str + "\n");
+			if(details.getValue()>=this.details.getValue())
+				System.out.print(fillLength(o.getClass().toString().substring(o.getClass().toString().lastIndexOf(".")+1),20) + "\t|\t" + str + "\n");
+	}
+	
+	private String fillLength(String in,int requiredLen)
+	{
+		String pad = new String();
+		for(int i=0;i<requiredLen-in.length();i++)
+			pad+=" ";
+		return in+pad;
+	}
+	
+	public void print(final String str, final Object o)
+	{
+		this.print(str, o,Details.NOTES);
 	}
 
 	/**

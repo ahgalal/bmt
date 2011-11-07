@@ -8,6 +8,8 @@ import modules.ModuleConfigs;
 
 import org.eclipse.swt.widgets.Shell;
 
+import utils.PManager;
+import utils.Logger.Details;
 import utils.video.filters.Data;
 import utils.video.filters.movementmeter.MovementMeterData;
 
@@ -30,6 +32,7 @@ public class MovementMeterModule extends Module<MovementMeterModuleGUI,ModuleCon
 	@Override
 	public void initialize()
 	{
+		PManager.log.print("initializing..", this, Details.VERBOSE);
 		guiCargo = new Cargo(new String[] { "Energy" });
 		
 		fileCargo = new Cargo(new String[] { "Energy" });

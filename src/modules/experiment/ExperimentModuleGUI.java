@@ -112,7 +112,7 @@ public class ExperimentModuleGUI extends PluggedGUI
 					"Experiment Module")).loadInfoFromTXTFile(file_name);
 			((ExperimentModule) ModulesManager.getDefault().getModuleByName(
 					"Experiment Module")).setExpFileName(file_name);
-			PManager.getDefault().status_mgr.setStatus(
+			PManager.getDefault().statusMgr.setStatus(
 					"Experiment Loaded Successfully!",
 					StatusSeverity.WARNING);
 		}

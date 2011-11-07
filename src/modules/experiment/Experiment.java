@@ -24,11 +24,15 @@ import java.util.ArrayList;
 public class Experiment implements Exp2GUI
 {
 
+	public enum ExperimentType{
+		OPEN_FIELD,FORCED_SWIMMING
+	}
 	private final ArrayList<modules.experiment.Group> groups;
 	private String name;
 	private String user;
 	private String date;
 	private String notes;
+	public ExperimentType type= ExperimentType.FORCED_SWIMMING;
 
 	private String[] params;
 	public String fileName;

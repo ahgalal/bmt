@@ -123,7 +123,7 @@ public class VideoRecorder extends VideoFilter<RecorderConfigs,FilterData>
 				return true;
 			}
 			else
-				pm.status_mgr.setStatus(
+				pm.statusMgr.setStatus(
 						"Please start tracking first",
 						StatusSeverity.ERROR);
 			return false;

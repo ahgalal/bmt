@@ -16,9 +16,11 @@ package modules;
 
 import java.util.ArrayList;
 
+import modules.experiment.Experiment.ExperimentType;
 import modules.experiment.ExperimentModule;
 import modules.experiment.ExperimentModuleConfigs;
 import modules.movementmeter.MovementMeterModule;
+import modules.movementmeter.MovementMeterModuleConfigs;
 import modules.rearing.RearingModule;
 import modules.rearing.RearingModuleConfigs;
 import modules.session.SessionModule;
@@ -29,9 +31,11 @@ import modules.zones.ZonesModuleConfigs;
 import org.eclipse.swt.widgets.Shell;
 
 import ui.PluggedGUI;
+import utils.Logger.Details;
 import utils.PManager;
 import utils.StatusManager.StatusSeverity;
 import utils.video.filters.Data;
+
 @SuppressWarnings("rawtypes")
 /**
  * Manager for all modules.
@@ -112,66 +116,139 @@ public class ModulesManager
 		filters_data = new ArrayList<Data>();
 		modules_data = new ArrayList<Data>();
 		modules = new ArrayList<Module>();
+	}
 
-		// ////////////////////////////////
-		// Rearing Module
-		final RearingModuleConfigs rearing_configs = new RearingModuleConfigs(
-				"Rearing Module");
-		final RearingModule rearing_module = new RearingModule(
-				"Rearing Module",
-				rearing_configs);
+	private void setupModules(final ModulesSetup setup)
+	{
 
-		// ////////////////////////////////
-		// Zones Module
-		final ZonesModuleConfigs zones_configs = new ZonesModuleConfigs(
-				"Zones Module",
-				50, // TODO: change 50
-				width,
-				height);
-		final ZonesModule zones_module = new ZonesModule("Zones Module", zones_configs);
+		instantiateModules(setup.getModulesNames());
 
-		// ////////////////////////////////
-		// Session Module
-		final SessionModuleConfigs session_configs = new SessionModuleConfigs(
-				"Session Module");
-		final SessionModule session_module = new SessionModule(
-				"Session Module",
-				session_configs);
+		// setWidthandHeight(640, 480);
+		connectModules();
+		loadModulesGUI();
+	}
 
+	/**
+	 * 
+	 */
+	public void instantiateExperimentModule(final ExperimentType expType)
+	{
 		// ////////////////////////////////
 		// Experiment Module
 		final ExperimentModuleConfigs experiment_configs = new ExperimentModuleConfigs(
-				"Experiment Module");
+				"Experiment Module", expType);
 		final ExperimentModule experiment_module = new ExperimentModule(
 				"Experiment Module",
 				experiment_configs);
-		
-		
+		modules.add(experiment_module);
+
+		final ModulesSetup openFieldModulesSetup = new ModulesSetup(new String[] {
+				"Rearing Module",
+				"Zones Module",
+				"Session Module" });
+
+		final ModulesSetup forcedSwimmingModulesSetup = new ModulesSetup(
+				new String[] {
+						"Session Module",
+						"Movement Meter Module" });
+		switch (expType)
+		{
+		case FORCED_SWIMMING:
+			setupModules(forcedSwimmingModulesSetup);
+			break;
+		case OPEN_FIELD:
+			setupModules(openFieldModulesSetup);
+			break;
+		}
+	}
+
+	private void instantiateModules(final String[] moduleNames)
+	{
+		PManager.log.print("instantiating Modules", this, Details.VERBOSE);
+		// ////////////////////////////////
+		// Rearing Module
+		if (isWithinArray("Rearing Module", moduleNames))
+		{
+			final RearingModuleConfigs rearingConfigs = new RearingModuleConfigs(
+					"Rearing Module");
+			final RearingModule rearingModule = new RearingModule(
+					"Rearing Module",
+					rearingConfigs);
+			modules.add(rearingModule);
+		}
+		// ////////////////////////////////
+		// Zones Module
+		if (isWithinArray("Zones Module", moduleNames))
+		{
+			final ZonesModuleConfigs zonesConfigs = new ZonesModuleConfigs(
+					"Zones Module",
+					50, // TODO: change 50
+					width,
+					height);
+			final ZonesModule zones_module = new ZonesModule(
+					"Zones Module",
+					zonesConfigs);
+			modules.add(zones_module);
+		}
+		// ////////////////////////////////
+		// Session Module
+		if (isWithinArray("Session Module", moduleNames))
+		{
+			final SessionModuleConfigs sessionConfigs = new SessionModuleConfigs(
+					"Session Module");
+			final SessionModule sessionModule = new SessionModule(
+					"Session Module",
+					sessionConfigs);
+			modules.add(sessionModule);
+		}
 		// ////////////////////////////////
 		// MovementMeter Module
-/*		final MovementMeter experiment_configs = new ExperimentModuleConfigs(
-				"Experiment Module");*/
-		final MovementMeterModule movementMeterModule = new MovementMeterModule(
-				"Movement Meter Module",
-				experiment_configs);
+		if (isWithinArray("Movement Meter Module", moduleNames))
+		{
+			final MovementMeterModuleConfigs movementModuleConfigs = new MovementMeterModuleConfigs(
+					"Movement Meter Module");
+			final MovementMeterModule movementMeterModule = new MovementMeterModule(
+					"Movement Meter Module",
+					movementModuleConfigs);
+			modules.add(movementMeterModule);
+		}
+		PManager.log.print("finished instantiating Modules", this, Details.VERBOSE);
+	}
 
-		modules.add(experiment_module);
-		modules.add(rearing_module);
-		modules.add(zones_module);
-		modules.add(session_module);
-		modules.add(movementMeterModule);
+	private boolean isWithinArray(final String name, final String[] array)
+	{
+		for (final String str : array)
+			if (str.equals(name))
+				return true;
+		return false;
+	}
 
+	/**
+	 * 
+	 */
+	private void loadModulesGUI()
+	{
+		PManager.log.print("loading Modules GUI..", this, Details.VERBOSE);
+		PManager.main_gui.loadPluggedGUI(getModulesGUI());
+	}
 
-		setWidthandHeight(640, 480);
-
+	private void connectModules()
+	{
+		PManager.log.print(
+				"registering modules data with each others",
+				this,
+				Details.VERBOSE);
 		for (final Module mo : modules)
 			modules_data.add(mo.getModuleData());
 
 		for (final Module mo : modules)
 			for (final Data data : modules_data)
 				mo.registerModuleDataObject(data);
+		PManager.log.print(
+				"finished registering modules data with each others",
+				this,
+				Details.VERBOSE);
 
-		PManager.main_gui.loadPluggedGUI(getModulesGUI());
 	}
 
 	public PluggedGUI[] getModulesGUI()

@@ -22,6 +22,8 @@ import modules.experiment.Constants;
 import org.eclipse.swt.widgets.Shell;
 
 import ui.PluggedGUI;
+import utils.PManager;
+import utils.Logger.Details;
 import utils.video.filters.Data;
 
 /**
@@ -125,6 +127,7 @@ public class SessionModule extends Module<PluggedGUI, SessionModuleConfigs,Sessi
 	@Override
 	public void initialize()
 	{
+		PManager.log.print("initializing..", this, Details.VERBOSE);
 		data.session_start_time = 0;
 		data.session_end_time = 0;
 

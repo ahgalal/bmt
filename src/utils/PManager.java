@@ -19,11 +19,13 @@ import gfx_panel.GfxPanel;
 import java.util.ArrayList;
 
 import modules.ModulesManager;
+import modules.ModulesSetup;
 import modules.experiment.ExcelEngine;
 import modules.zones.ShapeController;
 
 import org.eclipse.swt.widgets.Display;
 
+import utils.Logger.Details;
 import utils.StatusManager.StatusSeverity;
 import utils.video.VideoManager;
 import utils.video.filters.CommonFilterConfigs;
@@ -55,10 +57,10 @@ public class PManager
 	{
 		/**
 		 * IDLE: doing nothing, STREAMING: displaying video frames on the
-		 * screen, TRACKING: tracking the object: STREAMING + TRACKING,
-		 * RECORDING: recording video: STREAMING + TRACKING + RECORDING.
+		 * screen, TRACKING: tracking the object: STREAMING + TRACKING, video:
+		 * STREAMING + TRACKING.
 		 */
-		LAUNCHING, IDLE, /*RECORDING,*/STREAMING, TRACKING;
+		LAUNCHING, IDLE, STREAMING, TRACKING;
 	}
 
 	private static PManager default_me;
@@ -111,8 +113,8 @@ public class PManager
 	 * Status manager instance, manages the status label at the bottom of the
 	 * MainGUI.
 	 */
-	public StatusManager status_mgr;
-	private final VideoManager vp;
+	public StatusManager statusMgr;
+	private final VideoManager vidMgr;
 	/**
 	 * About Dialog box instance, displays credits of this software.
 	 */
@@ -129,6 +131,7 @@ public class PManager
 	}
 
 	public static boolean testingMode;
+
 	/**
 	 * @param args
 	 *            Main arguments
@@ -138,14 +141,14 @@ public class PManager
 		new PManager();
 		final Display display = Display.getDefault();
 
-		if(!testingMode)
+		if (!testingMode)
 			while (!main_gui.isShellDisposed())
 			{
 				if (!display.readAndDispatch())
 					display.sleep();
 			}
 
-		//display.dispose();
+		// display.dispose();
 	}
 
 	/**
@@ -156,7 +159,7 @@ public class PManager
 		state = ProgramState.IDLE;
 		excel_engine = new ExcelEngine();
 		default_me = this;
-		status_mgr = new StatusManager();
+		statusMgr = new StatusManager();
 
 		shape_controller = ShapeController.getDefault();
 		drw_zns = new CtrlDrawZones();
@@ -165,15 +168,15 @@ public class PManager
 		frm_rat = new CtrlRatInfoForm();
 		cam_options = new CtrlCamOptions();
 		options_window = new CtrlOptionsWindow();
-		log = new Logger();
+		log = new Logger(Details.VERBOSE);
 
 		main_gui = new CtrlMainGUI();
 		new ModulesManager();
 		addStateListener(main_gui);
-		
+
 		main_gui.show(true);
 
-		vp = new VideoManager();
+		vidMgr = new VideoManager();
 
 		// State watcher, when state changes, it notified all StateListsners
 		final Thread thStateChangedNotifier = new Thread(new Runnable() {
@@ -209,7 +212,7 @@ public class PManager
 	 */
 	public VideoManager getVideoManager()
 	{
-		return vp;
+		return vidMgr;
 	}
 
 	/**
@@ -217,20 +220,26 @@ public class PManager
 	 * 
 	 * @param common_configs
 	 *            CommonFilterConfigs object needed by most filters
-	 * @param vidFile video file to load (if not using webcam as the streaming source)
+	 * @param vidFile
+	 *            video file to load (if not using webcam as the streaming
+	 *            source)
 	 */
-	public void initializeVideoManager(final CommonFilterConfigs common_configs, String vidFile)
+	public void initializeVideoManager(
+			final CommonFilterConfigs common_configs,
+			final String vidFile)
 	{
-		/*if (*/vp.initialize(common_configs,vidFile);/*)*/
-
+		vidMgr.initialize(common_configs, vidFile);
 	}
 
 	public void startStreaming()
 	{
-		if (state == ProgramState.IDLE && vp.isInitialized())
-			vp.startStreaming();
+		if (state == ProgramState.IDLE && vidMgr.isInitialized())
+		{
+			//ModulesManager.getDefault().setupModules(forcedSwimmingModulesSetup);
+			vidMgr.startStreaming();
+		}
 		else
-			status_mgr.setStatus(
+			statusMgr.setStatus(
 					"State is not idle or no video source selected, not able to start streaming",
 					StatusSeverity.ERROR);
 	}
@@ -252,10 +261,10 @@ public class PManager
 	 */
 	public void stopStreaming()
 	{
-		if (vp != null & state != ProgramState.IDLE)
-			vp.unloadLibrary();
+		if (vidMgr != null & state != ProgramState.IDLE)
+			vidMgr.unloadLibrary();
 		else
-			status_mgr.setStatus(
+			statusMgr.setStatus(
 					"incorrect state, unable to unload video library",
 					StatusSeverity.ERROR);
 	}
@@ -281,13 +290,13 @@ public class PManager
 		if (state == ProgramState.STREAMING)
 		{
 			ModulesManager.getDefault().initialize();
-			vp.startProcessing();
+			vidMgr.startProcessing();
 			ModulesManager.getDefault().runModules(true);
 			return true;
 		}
 		else
 		{
-			status_mgr.setStatus(
+			statusMgr.setStatus(
 					"Please start the camera first.",
 					StatusSeverity.ERROR);
 			return false;
@@ -299,10 +308,10 @@ public class PManager
 		if (state == ProgramState.TRACKING /*|state == ProgramState.RECORDING*/)
 		{
 			ModulesManager.getDefault().runModules(false);
-			vp.stopProcessing();
+			vidMgr.stopProcessing();
 		}
 		else
-			status_mgr.setStatus("Tracking is not running.", StatusSeverity.ERROR);
+			statusMgr.setStatus("Tracking is not running.", StatusSeverity.ERROR);
 	}
 
 	public void unloadGUI()

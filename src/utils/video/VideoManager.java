@@ -14,6 +14,8 @@
 
 package utils.video;
 
+import modules.experiment.Experiment.ExperimentType;
+import utils.Logger.Details;
 import utils.PManager;
 import utils.PManager.ProgramState;
 import utils.StatusManager.StatusSeverity;
@@ -48,8 +50,8 @@ public class VideoManager
 	private VidInputter v_in;
 
 	private boolean video_processor_enabled;
-	private final FilterManager filter_mgr;
-	private final CommonFilterConfigs common_configs;
+	private FilterManager filter_mgr;
+	private final CommonFilterConfigs commonConfigs;
 	private boolean isInitialized;
 
 	/**
@@ -67,7 +69,7 @@ public class VideoManager
 	 */
 	public VideoManager()
 	{
-		common_configs = new CommonFilterConfigs(
+		commonConfigs = new CommonFilterConfigs(
 				640,
 				480,
 				30,
@@ -76,8 +78,8 @@ public class VideoManager
 				null);
 		video_processor_enabled = true;
 		ref_fia = new FrameIntArray();
-		filter_mgr = new FilterManager();
-		filter_mgr.configureFilters(common_configs, ref_fia);
+		// filter_mgr = new FilterManager(common_configs, ref_fia);
+		// filter_mgr.configureFilters(common_configs, ref_fia);
 	}
 
 	/**
@@ -121,13 +123,13 @@ public class VideoManager
 					}
 					// PManager.log.print("Device is not ready yet!", this);
 				}
-				if (v_in !=null && v_in.getStatus() == 1)
-					for (final VideoFilter<?,?> v : filter_mgr.getFilters())
+				if (v_in != null && v_in.getStatus() == 1)
+					for (final VideoFilter<?, ?> v : filter_mgr.getFilters())
 						v.process();
 
 				try
 				{
-					Thread.sleep(1000 / common_configs.frame_rate);
+					Thread.sleep(1000 / commonConfigs.frame_rate);
 				} catch (final InterruptedException e)
 				{
 				}
@@ -176,24 +178,24 @@ public class VideoManager
 	public void updateCommonConfigs(final CommonFilterConfigs common_configs)
 	{
 		if (common_configs.cam_index != -1)
-			this.common_configs.cam_index = common_configs.cam_index;
+			this.commonConfigs.cam_index = common_configs.cam_index;
 		if (common_configs.format != null)
-			this.common_configs.format = common_configs.format;
+			this.commonConfigs.format = common_configs.format;
 		if (common_configs.vid_library != null)
-			this.common_configs.vid_library = common_configs.vid_library;
+			this.commonConfigs.vid_library = common_configs.vid_library;
 		if (common_configs.frame_rate != -1)
-			this.common_configs.frame_rate = common_configs.frame_rate;
+			this.commonConfigs.frame_rate = common_configs.frame_rate;
 		if (common_configs.height != -1)
-			this.common_configs.height = common_configs.height;
+			this.commonConfigs.height = common_configs.height;
 		if (common_configs.width != -1)
-			this.common_configs.width = common_configs.width;
+			this.commonConfigs.width = common_configs.width;
 		common_configs.validate();
 	}
 
 	private String getOS()
 	{
 		final String os = System.getProperty("os.name");
-		System.out.print("OS: " + os + "\n");
+		PManager.log.print("OS: " + os, this, Details.VERBOSE);
 		if (os.indexOf("Linux") != -1)
 			return "Linux";
 		else if (os.indexOf("Windows") != -1)
@@ -228,16 +230,18 @@ public class VideoManager
 	 * 
 	 * @param ip_common_configs
 	 *            common configurations object, used by almost all filters
-	 * @param vidFile 
+	 * @param vidFile
 	 * @return true: success
 	 */
 	@SuppressWarnings("unchecked")
-	public boolean initialize(final CommonFilterConfigs ip_common_configs, String vidFile)
+	public boolean initialize(
+			final CommonFilterConfigs ip_common_configs,
+			final String vidFile)
 	{
 		isInitialized = true;
 		updateCommonConfigs(ip_common_configs);
 
-		String vid_lib = common_configs.vid_library;
+		String vid_lib = commonConfigs.vid_library;
 		if (vid_lib.equals("default"))
 			vid_lib = getDefaultVideoLibrary();
 
@@ -270,27 +274,26 @@ public class VideoManager
 		}
 		else if (vid_lib.equals("VideoFile"))
 		{
-			if(vidFile!=null)
-				if(System.getProperty("os.name").toLowerCase().contains("windows"))
+			if (vidFile != null)
+				if (System.getProperty("os.name").toLowerCase().contains("windows"))
 				{
 					v_in = new VideoFileModule();
 					srcConfigs = new AGVidLibConfigs();
-					((AGVidLibConfigs)srcConfigs).vidFile=vidFile;
+					((AGVidLibConfigs) srcConfigs).vidFile = vidFile;
 				}
 				else
 				{
 					v_in = new OpenCVModule();
 					srcConfigs = new OpenCVConfigs();
-					((OpenCVConfigs)srcConfigs).fileName=vidFile;
+					((OpenCVConfigs) srcConfigs).fileName = vidFile;
 				}
 		}
-		filter_mgr.configureFilters(common_configs, ref_fia);
 
-		v_in.setFormat(common_configs.format);
+		v_in.setFormat(commonConfigs.format);
 
-		srcConfigs.width=common_configs.width;
-		srcConfigs.height=common_configs.height;
-		srcConfigs.camIndex=common_configs.cam_index;
+		srcConfigs.width = commonConfigs.width;
+		srcConfigs.height = commonConfigs.height;
+		srcConfigs.camIndex = commonConfigs.cam_index;
 
 		return v_in.initialize(
 				ref_fia,
@@ -305,6 +308,19 @@ public class VideoManager
 	public boolean isBgSet()
 	{
 		return bg_is_set;
+	}
+
+	public void initializeFilters(final ExperimentType expType)
+	{
+		switch (expType)
+		{
+		case FORCED_SWIMMING:
+			filter_mgr = new FilterManager(commonConfigs, ref_fia, expType);
+			break;
+		case OPEN_FIELD:
+			filter_mgr = new FilterManager(commonConfigs, ref_fia, expType);
+			break;
+		}
 	}
 
 	/**
@@ -383,7 +399,7 @@ public class VideoManager
 	{
 		for (final FilterConfigs f_cfg : filters_configs)
 		{
-			f_cfg.common_configs = common_configs;
+			f_cfg.common_configs = commonConfigs;
 			filter_mgr.applyConfigsToFilter(f_cfg);
 		}
 	}

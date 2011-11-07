@@ -21,6 +21,8 @@ import modules.experiment.Constants;
 
 import org.eclipse.swt.widgets.Shell;
 
+import utils.PManager;
+import utils.Logger.Details;
 import utils.video.filters.Data;
 import utils.video.filters.rearingdetection.RearingFilterData;
 
@@ -128,6 +130,7 @@ public class RearingModule extends Module<RearingModuleGUI,RearingModuleConfigs,
 	@Override
 	public void initialize()
 	{
+		PManager.log.print("initializing..", this, Details.VERBOSE);
 		guiCargo = new Cargo(new String[] { Constants.GUI_REARING_COUNTER });
 		data.rearing_ctr = 0;
 		fileCargo = new Cargo(new String[] { Constants.FILE_REARING_COUNTER });

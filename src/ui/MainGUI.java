@@ -16,6 +16,8 @@ package ui;
 
 import java.awt.Frame;
 
+import modules.experiment.Experiment.ExperimentType;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.awt.SWT_AWT;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -241,6 +243,16 @@ public class MainGUI extends BaseUI
 		grpGraphs = new Group(sShell, SWT.NONE);
 		grpGraphs.setText("Graphs");
 		grpGraphs.setBounds(10, 511, 969, 165);
+		
+		Button btnNewButton = new Button(grpGraphs, SWT.NONE);
+		btnNewButton.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				controller.setExperimentType(ExperimentType.FORCED_SWIMMING);
+			}
+		});
+		btnNewButton.setBounds(640, 60, 75, 25);
+		btnNewButton.setText("New Button");
 	}
 
 	private ExpandBar expandBar;
