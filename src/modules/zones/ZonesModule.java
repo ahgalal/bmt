@@ -408,14 +408,14 @@ public class ZonesModule extends Module<ZonesModuleGUI,ZonesModuleConfigs,ZonesM
 
 		arr_path.clear();
 
-		gui_cargo = new Cargo(new String[] {
+		guiCargo = new Cargo(new String[] {
 				Constants.GUI_CURRENT_ZONE,
 				Constants.GUI_ALL_ENTRANCE,
 				Constants.GUI_CENTRAL_ENTRANCE,
 				Constants.GUI_CENTRAL_TIME,
 				Constants.GUI_TOTAL_DISTANCE });
 
-		file_cargo = new Cargo(new String[] {
+		fileCargo = new Cargo(new String[] {
 				Constants.FILE_ALL_ENTRANCE,
 				Constants.FILE_CENTRAL_ENTRANCE,
 				Constants.FILE_CENTRAL_TIME,
@@ -444,19 +444,19 @@ public class ZonesModule extends Module<ZonesModuleGUI,ZonesModuleConfigs,ZonesM
 	@Override
 	public void updateGUICargoData()
 	{
-		gui_cargo.setDataByTag(
+		guiCargo.setDataByTag(
 				Constants.GUI_CURRENT_ZONE,
 				Integer.toString(data.current_zone_num));
-		gui_cargo.setDataByTag(
+		guiCargo.setDataByTag(
 				Constants.GUI_ALL_ENTRANCE,
 				Integer.toString(data.all_entrance));
-		gui_cargo.setDataByTag(
+		guiCargo.setDataByTag(
 				Constants.GUI_CENTRAL_ENTRANCE,
 				Integer.toString(data.central_entrance));
-		gui_cargo.setDataByTag(
+		guiCargo.setDataByTag(
 				Constants.GUI_CENTRAL_TIME,
 				Integer.toString(data.central_zone_time));
-		gui_cargo.setDataByTag(
+		guiCargo.setDataByTag(
 				Constants.GUI_TOTAL_DISTANCE,
 				Long.toString(data.total_distance));
 	}
@@ -464,16 +464,16 @@ public class ZonesModule extends Module<ZonesModuleGUI,ZonesModuleConfigs,ZonesM
 	@Override
 	public void updateFileCargoData()
 	{
-		file_cargo.setDataByTag(
+		fileCargo.setDataByTag(
 				Constants.FILE_ALL_ENTRANCE,
 				Integer.toString(data.all_entrance));
-		file_cargo.setDataByTag(
+		fileCargo.setDataByTag(
 				Constants.FILE_CENTRAL_ENTRANCE,
 				Integer.toString(data.central_entrance));
-		file_cargo.setDataByTag(
+		fileCargo.setDataByTag(
 				Constants.FILE_CENTRAL_TIME,
 				Integer.toString(data.central_zone_time));
-		file_cargo.setDataByTag(
+		fileCargo.setDataByTag(
 				Constants.FILE_TOTAL_DISTANCE,
 				Long.toString(data.total_distance));
 	}

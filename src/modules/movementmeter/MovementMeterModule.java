@@ -23,12 +23,16 @@ public class MovementMeterModule extends Module<MovementMeterModuleGUI,ModuleCon
 		filters_data = new Data[1];
 		energyData = new ArrayList<Integer>();
 		gui = new MovementMeterModuleGUI();
+		
+		initialize();
 	}
 
 	@Override
 	public void initialize()
 	{
-		gui_cargo = new Cargo(new String[] { "Energy" });
+		guiCargo = new Cargo(new String[] { "Energy" });
+		
+		fileCargo = new Cargo(new String[] { "Energy" });
 	}
 
 	@Override
@@ -54,7 +58,7 @@ public class MovementMeterModule extends Module<MovementMeterModuleGUI,ModuleCon
 	@Override
 	public void updateGUICargoData()
 	{
-		gui_cargo.setData(new String[] { "" + movementMeterFilterData.getWhiteSummation() });
+		guiCargo.setDataByIndex(0, "" + movementMeterFilterData.getWhiteSummation());
 		gui.addPoint(
 				time++,
 				movementMeterFilterData.getWhiteSummation() / 2000);
@@ -63,8 +67,7 @@ public class MovementMeterModule extends Module<MovementMeterModuleGUI,ModuleCon
 	@Override
 	public void updateFileCargoData()
 	{
-		// TODO Auto-generated method stub
-
+		fileCargo.setDataByIndex(0, "" + movementMeterFilterData.getWhiteSummation());
 	}
 
 	@Override

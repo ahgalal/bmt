@@ -34,7 +34,7 @@ import utils.video.filters.Data;
  * @author Creative
  */
 public class ExperimentModule extends
-		Module<ExperimentModuleGUI, ExperimentModuleConfigs, ExperimentModuleData>
+Module<ExperimentModuleGUI, ExperimentModuleConfigs, ExperimentModuleData>
 {
 	private final TextEngine text_engine;
 	private final ExcelEngine excel_engine;
@@ -76,9 +76,9 @@ public class ExperimentModule extends
 	@Override
 	public void updateGUICargoData()
 	{
-		gui_cargo.setDataByTag(Constants.GUI_EXP_NAME, data.exp.getName());
-		gui_cargo.setDataByTag(Constants.GUI_GROUP_NAME, data.currGrpName);
-		gui_cargo.setDataByTag(
+		guiCargo.setDataByTag(Constants.GUI_EXP_NAME, data.exp.getName());
+		guiCargo.setDataByTag(Constants.GUI_GROUP_NAME, data.currGrpName);
+		guiCargo.setDataByTag(
 				Constants.GUI_RAT_NUMBER,
 				Integer.toString(data.currRatNumber));
 	}
@@ -86,10 +86,10 @@ public class ExperimentModule extends
 	@Override
 	public void updateFileCargoData()
 	{
-		file_cargo.setDataByTag(
+		fileCargo.setDataByTag(
 				Constants.FILE_RAT_NUMBER,
 				Integer.toString(data.currRatNumber));
-		file_cargo.setDataByTag(Constants.FILE_GROUP_NAME, data.currGrpName);
+		fileCargo.setDataByTag(Constants.FILE_GROUP_NAME, data.currGrpName);
 	}
 
 	@Override
@@ -179,7 +179,7 @@ public class ExperimentModule extends
 			data.exp.addGroup(gp);
 		}
 		else
-		// group is already existing ... edit it..
+			// group is already existing ... edit it..
 		{
 			tmp_grp.setName(name);
 			tmp_grp.setNotes(notes);
@@ -225,7 +225,7 @@ public class ExperimentModule extends
 		final String[] code_names = ModulesManager.getDefault().getCodeNames();
 		boolean override_rat = false;
 		Rat rat_tmp = this.data.exp.getGroupByName(this.data.currGrpName)
-				.getRatByNumber(this.data.currRatNumber);
+		.getRatByNumber(this.data.currRatNumber);
 		if (rat_tmp == null)
 			rat_tmp = new Rat(params_list);
 		else
@@ -373,13 +373,13 @@ public class ExperimentModule extends
 	@Override
 	public void initialize()
 	{
-		gui_cargo = new Cargo(
+		guiCargo = new Cargo(
 				new String[] {
 						Constants.GUI_EXP_NAME,
 						Constants.GUI_GROUP_NAME,
 						Constants.GUI_RAT_NUMBER });
 
-		file_cargo = new Cargo(new String[] {
+		fileCargo = new Cargo(new String[] {
 				Constants.FILE_RAT_NUMBER,
 				Constants.FILE_GROUP_NAME });
 	}
@@ -398,7 +398,11 @@ public class ExperimentModule extends
 	 */
 	public int getNumberOfExpParams()
 	{
-		return data.exp.getExpParametersList().length;
+		if(data.exp.getExpParametersList()!=null)
+			return data.exp.getExpParametersList().length;
+		else
+			return 0;
+
 	}
 
 	private boolean rat_frm_is_shown = false;
@@ -429,11 +433,11 @@ public class ExperimentModule extends
 						final MessageBox mbox = new MessageBox(
 								shell,
 								SWT.ICON_QUESTION
-										| SWT.YES
-										| SWT.NO);
+								| SWT.YES
+								| SWT.NO);
 						mbox.setMessage("Experiment loaded has some Modules" +
 								" which are not active now, you can't save the" +
-								" experiment when done!, Continue?");
+						" experiment when done!, Continue?");
 						mbox.setText("Continue?");
 						if (mbox.open() == SWT.YES)
 						{
@@ -463,8 +467,8 @@ public class ExperimentModule extends
 					final MessageBox mbox = new MessageBox(
 							shell,
 							SWT.ICON_QUESTION
-									| SWT.YES
-									| SWT.NO);
+							| SWT.YES
+							| SWT.NO);
 					mbox.setMessage("No experiment is loaded!, Continue?");
 					mbox.setText("Continue?");
 					if (mbox.open() == SWT.YES)
@@ -477,12 +481,12 @@ public class ExperimentModule extends
 		}
 		while (msgbox_pending)
 			try
-			{
+		{
 				Thread.sleep(200);
-			} catch (final InterruptedException e)
-			{
-				e.printStackTrace();
-			}
+		} catch (final InterruptedException e)
+		{
+			e.printStackTrace();
+		}
 		if (force_ready)
 			return true;
 		return waitForRatFrm();
@@ -496,15 +500,15 @@ public class ExperimentModule extends
 	private boolean waitForRatFrm()
 	{
 		while (rat_frm_is_shown
-					&& (!PManager.getDefault().frm_rat.isValidRatEntered()
-					&& !PManager.getDefault().frm_rat.isCancelled()))
+				&& (!PManager.getDefault().frm_rat.isValidRatEntered()
+						&& !PManager.getDefault().frm_rat.isCancelled()))
 			try
-			{
+		{
 				Thread.sleep(200);
-			} catch (final InterruptedException e)
-			{
-				e.printStackTrace();
-			}
+		} catch (final InterruptedException e)
+		{
+			e.printStackTrace();
+		}
 		if (PManager.getDefault().frm_rat.isValidRatEntered())
 			return true;
 		else

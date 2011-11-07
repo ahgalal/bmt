@@ -29,8 +29,8 @@ import utils.video.filters.Data;
 public abstract class Module<GUIType extends PluggedGUI, ConfigsType extends ModuleConfigs, DataType extends Data> // implements
 // StateListener
 {
-	protected Cargo gui_cargo;
-	protected Cargo file_cargo;
+	protected Cargo guiCargo;
+	protected Cargo fileCargo;
 	protected ConfigsType configs;
 	protected String name;
 
@@ -46,7 +46,7 @@ public abstract class Module<GUIType extends PluggedGUI, ConfigsType extends Mod
 	 */
 	public Cargo getGUICargo()
 	{
-		return gui_cargo;
+		return guiCargo;
 	}
 
 	/**
@@ -56,7 +56,7 @@ public abstract class Module<GUIType extends PluggedGUI, ConfigsType extends Mod
 	 */
 	public Cargo getFileCargo()
 	{
-		return file_cargo;
+		return fileCargo;
 	}
 
 	/**

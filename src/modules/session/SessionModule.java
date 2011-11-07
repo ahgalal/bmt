@@ -59,7 +59,7 @@ public class SessionModule extends Module<PluggedGUI, SessionModuleConfigs,Sessi
 	@Override
 	public void updateGUICargoData()
 	{
-		gui_cargo.setDataByTag(
+		guiCargo.setDataByTag(
 				Constants.GUI_SESSION_TIME,
 				Float.toString(getSessionTimeTillNow()));
 	}
@@ -67,7 +67,7 @@ public class SessionModule extends Module<PluggedGUI, SessionModuleConfigs,Sessi
 	@Override
 	public void updateFileCargoData()
 	{
-		file_cargo.setDataByTag(
+		fileCargo.setDataByTag(
 				Constants.FILE_SESSION_TIME,
 				Float.toString(getSessionTimeTillNow()));
 	}
@@ -128,9 +128,9 @@ public class SessionModule extends Module<PluggedGUI, SessionModuleConfigs,Sessi
 		data.session_start_time = 0;
 		data.session_end_time = 0;
 
-		gui_cargo = new Cargo(new String[] { Constants.GUI_SESSION_TIME });
+		guiCargo = new Cargo(new String[] { Constants.GUI_SESSION_TIME });
 
-		file_cargo = new Cargo(new String[] { Constants.FILE_SESSION_TIME });
+		fileCargo = new Cargo(new String[] { Constants.FILE_SESSION_TIME });
 	}
 
 	/**

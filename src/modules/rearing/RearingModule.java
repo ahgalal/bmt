@@ -82,7 +82,7 @@ public class RearingModule extends Module<RearingModuleGUI,RearingModuleConfigs,
 	@Override
 	public void updateGUICargoData()
 	{
-		gui_cargo.setDataByTag(
+		guiCargo.setDataByTag(
 				Constants.GUI_REARING_COUNTER,
 				Integer.toString(data.rearing_ctr));
 	}
@@ -90,7 +90,7 @@ public class RearingModule extends Module<RearingModuleGUI,RearingModuleConfigs,
 	@Override
 	public void updateFileCargoData()
 	{
-		file_cargo.setDataByTag(
+		fileCargo.setDataByTag(
 				Constants.FILE_REARING_COUNTER,
 				Integer.toString(data.rearing_ctr));
 	}
@@ -128,9 +128,9 @@ public class RearingModule extends Module<RearingModuleGUI,RearingModuleConfigs,
 	@Override
 	public void initialize()
 	{
-		gui_cargo = new Cargo(new String[] { Constants.GUI_REARING_COUNTER });
+		guiCargo = new Cargo(new String[] { Constants.GUI_REARING_COUNTER });
 		data.rearing_ctr = 0;
-		file_cargo = new Cargo(new String[] { Constants.FILE_REARING_COUNTER });
+		fileCargo = new Cargo(new String[] { Constants.FILE_REARING_COUNTER });
 	}
 
 	@Override
