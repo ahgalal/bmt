@@ -29,96 +29,85 @@ import utils.PManager;
  * 
  * @author Creative
  */
-public class CtrlExperimentForm extends ControllerUI<ExperimentForm>
-{
-	private String name, user, date, notes,type;
+public class CtrlExperimentForm extends ControllerUI<ExperimentForm> {
+    private String name, user, date, notes, type;
 
-	@Override
-	public boolean setVars(final String[] strs)
-	{
-		name = strs[0];
-		user = strs[1];
-		date = strs[2];
-		notes = strs[3];
-		type = strs[4];
-		return true;
-	}
+    @Override
+    public boolean setVars(final String[] strs) {
+	name = strs[0];
+	user = strs[1];
+	date = strs[2];
+	notes = strs[3];
+	type = strs[4];
+	return true;
+    }
 
-	/**
-	 * Initializes class attributes (ExperimentForm , PManager and
-	 * InfoController).
-	 */
-	public CtrlExperimentForm()
-	{
-		pm = PManager.getDefault();
-		ui = new ExperimentForm();
-		ui.setController(this);
-	}
+    /**
+     * Initializes class attributes (ExperimentForm , PManager and
+     * InfoController).
+     */
+    public CtrlExperimentForm() {
+	pm = PManager.getDefault();
+	ui = new ExperimentForm();
+	ui.setController(this);
+    }
 
-	@Override
-	public void show(final boolean visibility)
-	{
-		ui.show(visibility);
-	}
+    @Override
+    public void show(final boolean visibility) {
+	ui.show(visibility);
+    }
 
-	/**
-	 * Fills the GUI controls with data from the experiment object.
-	 * 
-	 * @param exp
-	 *            Experiment object that contains data to be displayed on GUI
-	 */
-	public void fillForm(final Exp2GUI exp)
-	{
-		ui.loadData(new String[] { exp.getName(), exp.getUser(), exp.getNotes(),
-				exp.getDate() });
-	}
+    /**
+     * Fills the GUI controls with data from the experiment object.
+     * 
+     * @param exp
+     *            Experiment object that contains data to be displayed on GUI
+     */
+    public void fillForm(final Exp2GUI exp) {
+	ui.loadData(new String[] { exp.getName(), exp.getUser(),
+		exp.getNotes(), exp.getDate() });
+    }
 
-	/**
-	 * Saves experiment's data to file.
-	 * 
-	 * @param sShell
-	 *            Shell used to display the Save Dialog
-	 */
-	public void btnSaveAction(final Shell sShell)
-	{
-		try
-		{
-			if (pm.frm_grps.getNumberOfGroups()==0)
-				System.out.print("please specify at least one group.\n");
-			else
-			{
-				final FileDialog fileDialog = new FileDialog(sShell, SWT.SAVE);
-				final String file_name = fileDialog.open();
-				if (file_name != null)
-				{
-					ExperimentManager.getDefault().setExpInfo(name, user, date, notes,type);
-					pm.frm_grps.updateGroupsInformation();
-					ExperimentManager.getDefault().writeToTXTFile(file_name);
-					ExperimentManager.getDefault().setExpFileName(file_name);
-					sShell.setVisible(false);
-				}
-			}
-
-		} catch (final NumberFormatException e1)
-		{
-			System.out.print("Error in user input ... aborting !\n");
+    /**
+     * Saves experiment's data to file.
+     * 
+     * @param sShell
+     *            Shell used to display the Save Dialog
+     */
+    public void btnSaveAction(final Shell sShell) {
+	try {
+	    if (pm.frm_grps.getNumberOfGroups() == 0)
+		System.out.print("please specify at least one group.\n");
+	    else {
+		final FileDialog fileDialog = new FileDialog(sShell, SWT.SAVE);
+		final String file_name = fileDialog.open();
+		if (file_name != null) {
+		    ExperimentManager.getDefault().setExpInfo(name, user, date,
+			    notes, type);
+		    pm.frm_grps.updateGroupsInformation();
+		    ExperimentManager.getDefault().writeToTXTFile(file_name);
+		    ExperimentManager.getDefault().setExpFileName(file_name);
+		    sShell.setVisible(false);
 		}
-	}
+	    }
 
-	/**
-	 * Shows GroupsForm GUI window.
-	 */
-	public void btnMngGrpsAction()
-	{
-		ExperimentManager.getDefault().updateGroupGUIData();
-		pm.frm_grps.show(true);
+	} catch (final NumberFormatException e1) {
+	    System.out.print("Error in user input ... aborting !\n");
 	}
+    }
 
-	/**
-	 * Clears the GUI data.
-	 */
-	public void clearForm()
-	{
-		ui.clearForm();
-	}
+    /**
+     * Shows GroupsForm GUI window.
+     */
+    public void btnMngGrpsAction() {
+	ExperimentManager.getDefault().updateGroupGUIData();
+	pm.frm_grps.show(true);
+    }
+
+    /**
+     * Clears the GUI data.
+     */
+    public void clearForm() {
+	ui.clearForm();
+    }
 }

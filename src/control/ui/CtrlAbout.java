@@ -22,36 +22,31 @@ import utils.PManager;
  * 
  * @author Creative
  */
-public class CtrlAbout extends ControllerUI<About>
-{
+public class CtrlAbout extends ControllerUI<About> {
 
-	/**
-	 * Initializes class attributes.
-	 */
-	public CtrlAbout()
-	{
-		pm = PManager.getDefault();
-		ui = new About();
-		ui.setController(this);
-	}
+    /**
+     * Initializes class attributes.
+     */
+    public CtrlAbout() {
+	pm = PManager.getDefault();
+	ui = new About();
+	ui.setController(this);
+    }
 
-	/**
-	 * Hides the window.
-	 */
-	public void btnOkAction()
-	{
-		show(false);
-	}
+    /**
+     * Hides the window.
+     */
+    public void btnOkAction() {
+	show(false);
+    }
 
-	@Override
-	public boolean setVars(final String[] strs)
-	{
-		return true;
-	}
+    @Override
+    public boolean setVars(final String[] strs) {
+	return true;
+    }
 
-	@Override
-	public void show(final boolean visibility)
-	{
-		ui.show(visibility);
-	}
+    @Override
+    public void show(final boolean visibility) {
+	ui.show(visibility);
+    }
 }

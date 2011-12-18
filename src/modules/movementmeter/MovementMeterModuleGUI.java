@@ -9,58 +9,47 @@ import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Shell;
 
 import plotter.Plotter;
-
 import ui.PluggedGUI;
 
-public class MovementMeterModuleGUI extends PluggedGUI<MovementMeterModule>
-{
-	public MovementMeterModuleGUI(MovementMeterModule owner)
-	{
-		super(owner);
-	}
+public class MovementMeterModuleGUI extends PluggedGUI<MovementMeterModule> {
+    public MovementMeterModuleGUI(final MovementMeterModule owner) {
+	super(owner);
+    }
 
-	private Composite cmpstPlotter;
-	private Plotter plotter;
-	@Override
-	public void initialize(
-			Shell shell,
-			ExpandBar expandBar,
-			Menu menuBar,
-			CoolBar coolBar,
-			Group grpGraphs)
-	{
-		this.owner=owner;
-		cmpstPlotter = new Composite(grpGraphs, SWT.NONE);
-		cmpstPlotter.setBounds(10, 20, 232, 135);
+    private Composite cmpstPlotter;
+    private Plotter plotter;
 
-		plotter = new Plotter(cmpstPlotter);
-		plotter.initialize();
-	}
-	
-	public void addPoint(int x,int y)
-	{
-		plotter.addPoint(x, y);
-	}
+    @Override
+    public void initialize(final Shell shell, final ExpandBar expandBar,
+	    final Menu menuBar, final CoolBar coolBar, final Group grpGraphs) {
+	this.owner = owner;
+	cmpstPlotter = new Composite(grpGraphs, SWT.NONE);
+	cmpstPlotter.setBounds(10, 20, 232, 135);
 
-	@Override
-	public void inIdleState()
-	{
-		// TODO Auto-generated method stub
+	plotter = new Plotter(cmpstPlotter);
+	plotter.initialize();
+    }
 
-	}
+    public void addPoint(final int x, final int y) {
+	plotter.addPoint(x, y);
+    }
 
-	@Override
-	public void inStreamingState()
-	{
-		// TODO Auto-generated method stub
+    @Override
+    public void inIdleState() {
+	// TODO Auto-generated method stub
 
-	}
+    }
 
-	@Override
-	public void inTrackingState()
-	{
-		// TODO Auto-generated method stub
+    @Override
+    public void inStreamingState() {
+	// TODO Auto-generated method stub
 
-	}
+    }
+
+    @Override
+    public void inTrackingState() {
+	// TODO Auto-generated method stub
+
+    }
 
 }

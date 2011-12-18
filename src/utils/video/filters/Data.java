@@ -19,29 +19,26 @@ package utils.video.filters;
  * 
  * @author Creative
  */
-public abstract class Data
-{
-	private final String name;
+public abstract class Data {
+    private final String name;
 
-	/**
-	 * Initializes the name of the data object.
-	 * 
-	 * @param name
-	 *            name of the data object
-	 */
-	public Data(final String name)
-	{
-		this.name = name;
-	}
+    /**
+     * Initializes the name of the data object.
+     * 
+     * @param name
+     *            name of the data object
+     */
+    public Data(final String name) {
+	this.name = name;
+    }
 
-	/**
-	 * Gets the name of the data object.
-	 * 
-	 * @return String containing the name of the data object
-	 */
-	public String getName()
-	{
-		return name;
-	}
+    /**
+     * Gets the name of the data object.
+     * 
+     * @return String containing the name of the data object
+     */
+    public String getName() {
+	return name;
+    }
 
 }

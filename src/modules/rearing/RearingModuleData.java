@@ -21,18 +21,16 @@ import utils.video.filters.Data;
  * 
  * @author Creative
  */
-public class RearingModuleData extends Data
-{
-	/**
-	 * Initializes the Data.
-	 * 
-	 * @param name
-	 *            name of the data instance
-	 */
-	public RearingModuleData(final String name)
-	{
-		super(name);
-	}
+public class RearingModuleData extends Data {
+    /**
+     * Initializes the Data.
+     * 
+     * @param name
+     *            name of the data instance
+     */
+    public RearingModuleData(final String name) {
+	super(name);
+    }
 
-	public int rearing_ctr;
+    public int rearing_ctr;
 }

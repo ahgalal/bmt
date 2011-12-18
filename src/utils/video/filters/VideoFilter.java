@@ -18,139 +18,129 @@
 package utils.video.filters;
 
 import ui.PluggedGUI;
+import utils.Logger.Details;
 import utils.PManager;
 import utils.StateListener;
-import utils.Logger.Details;
 
 /**
  * Parent of all Video utilities & filters.
  * 
  * @author Creative
  */
-public abstract class VideoFilter<ConfigsType extends FilterConfigs,DataType extends FilterData> implements StateListener
-{
-	protected String name;
-	protected DataType filterData;
-	protected ConfigsType configs;
-	protected Link link_in, link_out;
-	protected PluggedGUI gui;
+public abstract class VideoFilter<ConfigsType extends FilterConfigs, DataType extends FilterData>
+	implements StateListener {
+    protected String name;
+    protected DataType filterData;
+    protected ConfigsType configs;
+    protected Link link_in, link_out;
+    protected PluggedGUI gui;
 
-	/**
-	 * Initializes the filter.
-	 * 
-	 * @param name
-	 *            filter's name
-	 * @param link_in
-	 *            input Link for the filter
-	 * @param link_out
-	 *            output Link from the filter
-	 */
-	public VideoFilter(
-			final String name, final Link link_in, final Link link_out)
-	{
-		this.name = name;
-		this.link_in = link_in;
-		this.link_out = link_out;
-	}
+    /**
+     * Initializes the filter.
+     * 
+     * @param name
+     *            filter's name
+     * @param link_in
+     *            input Link for the filter
+     * @param link_out
+     *            output Link from the filter
+     */
+    public VideoFilter(final String name, final Link link_in,
+	    final Link link_out) {
+	this.name = name;
+	this.link_in = link_in;
+	this.link_out = link_out;
+    }
 
-	/**
-	 * Returns the filter's configurations.
-	 * 
-	 * @return configuration object
-	 */
-	public FilterConfigs getConfigs()
-	{
-		return configs;
-	}
+    /**
+     * Returns the filter's configurations.
+     * 
+     * @return configuration object
+     */
+    public FilterConfigs getConfigs() {
+	return configs;
+    }
 
-	/**
-	 * Updates the filter's configurations.
-	 * 
-	 * @param configs
-	 *            configurations object for the filter
-	 */
-	public void updateConfigs(final FilterConfigs configs)
-	{
-		this.configs.mergeConfigs(configs);
-	}
+    /**
+     * Updates the filter's configurations.
+     * 
+     * @param configs
+     *            configurations object for the filter
+     */
+    public void updateConfigs(final FilterConfigs configs) {
+	this.configs.mergeConfigs(configs);
+    }
 
-	/**
-	 * Processes the data from the input link and put the processed data on the
-	 * output link.
-	 */
-	public abstract void process();
+    /**
+     * Processes the data from the input link and put the processed data on the
+     * output link.
+     */
+    public abstract void process();
 
-	/**
-	 * Enables/Disables the filter.
-	 * 
-	 * @param enable
-	 *            enable/disable the filter
-	 * @return confirmation that the filter was enabled/disabled
-	 */
-	public boolean enable(final boolean enable)
-	{
-		configs.enabled = enable;
-		return configs.enabled;
-	}
+    /**
+     * Enables/Disables the filter.
+     * 
+     * @param enable
+     *            enable/disable the filter
+     * @return confirmation that the filter was enabled/disabled
+     */
+    public boolean enable(final boolean enable) {
+	configs.enabled = enable;
+	return configs.enabled;
+    }
 
-	/**
-	 * Gets the name of the filter.
-	 * 
-	 * @return String containing the filter's name
-	 */
-	public String getName()
-	{
-		return name;
-	}
+    /**
+     * Gets the name of the filter.
+     * 
+     * @return String containing the filter's name
+     */
+    public String getName() {
+	return name;
+    }
 
-	/**
-	 * Gets the filter's data.
-	 * 
-	 * @return Data object of the filter
-	 */
-	public Data getFilterData()
-	{
-		return filterData;
-	}
+    /**
+     * Gets the filter's data.
+     * 
+     * @return Data object of the filter
+     */
+    public Data getFilterData() {
+	return filterData;
+    }
 
-	/**
-	 * Sets the name of the filter.
-	 * 
-	 * @param name
-	 *            new name for the filter
-	 */
-	public void setName(final String name)
-	{
-		this.name = name;
-	}
+    /**
+     * Sets the name of the filter.
+     * 
+     * @param name
+     *            new name for the filter
+     */
+    public void setName(final String name) {
+	this.name = name;
+    }
 
-	/**
-	 * Optional initializations for the filter.
-	 * 
-	 * @param configs
-	 *            filter's configurations
-	 * @return true: success, false: failure
-	 */
-	public boolean configure(final FilterConfigs configs)
-	{
-		this.configs = (ConfigsType) configs;
-		PManager.log.print("initializing..", this, Details.VERBOSE);
-		return true;
-	}
+    /**
+     * Optional initializations for the filter.
+     * 
+     * @param configs
+     *            filter's configurations
+     * @return true: success, false: failure
+     */
+    public boolean configure(final FilterConfigs configs) {
+	this.configs = (ConfigsType) configs;
+	PManager.log.print("initializing..", this, Details.VERBOSE);
+	return true;
+    }
 
-	/**
-	 * Gets the Filter configurations object.
-	 * 
-	 * @return filter configurations object
-	 */
-	public FilterConfigs getConfigurations()
-	{
-		return configs;
-	}
+    /**
+     * Gets the Filter configurations object.
+     * 
+     * @return filter configurations object
+     */
+    public FilterConfigs getConfigurations() {
+	return configs;
+    }
 
-	public PluggedGUI getGUI()
-	{
-		return gui;
-	}
+    public PluggedGUI getGUI() {
+	return gui;
+    }
 
 }

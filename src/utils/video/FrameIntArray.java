@@ -19,10 +19,9 @@ package utils.video;
  * 
  * @author Creative
  */
-public class FrameIntArray
-{
-	/**
-	 * Array containing the image data as an array of integers.
-	 */
-	public int[] frame_data;
+public class FrameIntArray {
+    /**
+     * Array containing the image data as an array of integers.
+     */
+    public int[] frame_data;
 }

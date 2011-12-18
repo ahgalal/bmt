@@ -21,13 +21,12 @@ import java.awt.Graphics;
  * 
  * @author Creative
  */
-public interface ShapeCollection
-{
-	/**
-	 * Draws all shapes stored on the graphics object specified.
-	 * 
-	 * @param gfx
-	 *            Graphics object to draw the shapes on
-	 */
-	void drawaAllShapes(final Graphics gfx);
+public interface ShapeCollection {
+    /**
+     * Draws all shapes stored on the graphics object specified.
+     * 
+     * @param gfx
+     *            Graphics object to draw the shapes on
+     */
+    void drawaAllShapes(final Graphics gfx);
 }

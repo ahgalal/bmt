@@ -19,18 +19,16 @@ package utils.video.filters;
  * 
  * @author Creative
  */
-public abstract class FilterData extends Data
-{
+public abstract class FilterData extends Data {
 
-	/**
-	 * Initializes data.
-	 * 
-	 * @param name
-	 *            name of the data object
-	 */
-	public FilterData(final String name)
-	{
-		super(name);
-	}
+    /**
+     * Initializes data.
+     * 
+     * @param name
+     *            name of the data object
+     */
+    public FilterData(final String name) {
+	super(name);
+    }
 
 }

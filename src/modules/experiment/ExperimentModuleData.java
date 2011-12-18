@@ -21,17 +21,15 @@ import utils.video.filters.Data;
  * 
  * @author Creative
  */
-public class ExperimentModuleData extends Data
-{
-	/**
-	 * Initializes the Data.
-	 * 
-	 * @param name
-	 *            name of the data instance
-	 */
-	public ExperimentModuleData(final String name)
-	{
-		super(name);
-	}
+public class ExperimentModuleData extends Data {
+    /**
+     * Initializes the Data.
+     * 
+     * @param name
+     *            name of the data instance
+     */
+    public ExperimentModuleData(final String name) {
+	super(name);
+    }
 
 }

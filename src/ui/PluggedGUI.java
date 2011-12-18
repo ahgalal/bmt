@@ -11,57 +11,45 @@ import utils.PManager;
 import utils.PManager.ProgramState;
 import utils.StateListener;
 
-public abstract class PluggedGUI<OwnerType> implements StateListener
-{
-	protected Shell shell;
-	protected PManager.ProgramState programState;
-	protected OwnerType owner;
+public abstract class PluggedGUI<OwnerType> implements StateListener {
+    protected Shell shell;
+    protected PManager.ProgramState programState;
+    protected OwnerType owner;
 
-	
-	public PluggedGUI(OwnerType owner)
-	{
-		this.owner=owner;
-	}
-	
-	public abstract void initialize(
-			Shell shell,
-			ExpandBar expandBar,
-			Menu menuBar,
-			CoolBar coolBar,
-			Group grpGraphs);
+    public PluggedGUI(final OwnerType owner) {
+	this.owner = owner;
+    }
 
-	@Override
-	public void updateProgramState(final ProgramState state)
-	{
-		if (state != programState)
-		{
-			Display.getDefault().asyncExec(new Runnable() {
+    public abstract void initialize(Shell shell, ExpandBar expandBar,
+	    Menu menuBar, CoolBar coolBar, Group grpGraphs);
 
-				@Override
-				public void run()
-				{
-					switch (state)
-					{
-					case IDLE:
-						inIdleState();
-						break;
-					case STREAMING:
-						inStreamingState();
-						break;
-					case TRACKING:
-						inTrackingState();
-						break;
-					}
-				}
-			});
+    @Override
+    public void updateProgramState(final ProgramState state) {
+	if (state != programState)
+	    Display.getDefault().asyncExec(new Runnable() {
+
+		@Override
+		public void run() {
+		    switch (state) {
+		    case IDLE:
+			inIdleState();
+			break;
+		    case STREAMING:
+			inStreamingState();
+			break;
+		    case TRACKING:
+			inTrackingState();
+			break;
+		    }
 		}
-		programState = state;
-	}
+	    });
+	programState = state;
+    }
 
-	public abstract void inIdleState();
+    public abstract void inIdleState();
 
-	public abstract void inStreamingState();
+    public abstract void inStreamingState();
 
-	public abstract void inTrackingState();
+    public abstract void inTrackingState();
 
 }

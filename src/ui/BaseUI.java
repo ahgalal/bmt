@@ -23,58 +23,54 @@ import control.ui.ControllerUI;
  * 
  * @author Creative
  */
-public abstract class BaseUI
-{
+public abstract class BaseUI {
 
-	protected Shell sShell; // Shell fo the GUI (SWT)
-	@SuppressWarnings("rawtypes")
-	protected ControllerUI controller; // Controller instance
+    protected Shell sShell; // Shell fo the GUI (SWT)
+    @SuppressWarnings("rawtypes")
+    protected ControllerUI controller; // Controller instance
 
-	/**
-	 * Shows/Hides the GUI window.
-	 * 
-	 * @param visibility
-	 *            visible: true/false
-	 */
-	public void show(final boolean visibility)
-	{
-		sShell.setVisible(visibility);
-		sShell.setActive();
-	}
+    /**
+     * Shows/Hides the GUI window.
+     * 
+     * @param visibility
+     *            visible: true/false
+     */
+    public void show(final boolean visibility) {
+	sShell.setVisible(visibility);
+	sShell.setActive();
+    }
 
-	/**
-	 * Loads data from an array of strings to the GUI controls, by a specific
-	 * order.
-	 * 
-	 * @param str_array
-	 *            array of strings that contains data to load to the GUI
-	 *            controls
-	 */
-	public abstract void loadData(String[] str_array);
+    /**
+     * Loads data from an array of strings to the GUI controls, by a specific
+     * order.
+     * 
+     * @param str_array
+     *            array of strings that contains data to load to the GUI
+     *            controls
+     */
+    public abstract void loadData(String[] str_array);
 
-	/**
-	 * Registers the controller with the GUI. the Controller is the one who
-	 * instantiates the GUI, so it has to register itself with the GUI for the
-	 * GUI to be able to communicate with the controller.
-	 * 
-	 * @param controller
-	 *            Controller instance
-	 */
-	@SuppressWarnings("rawtypes")
-	public void setController(final ControllerUI controller)
-	{
-		this.controller = controller;
-	}
+    /**
+     * Registers the controller with the GUI. the Controller is the one who
+     * instantiates the GUI, so it has to register itself with the GUI for the
+     * GUI to be able to communicate with the controller.
+     * 
+     * @param controller
+     *            Controller instance
+     */
+    @SuppressWarnings("rawtypes")
+    public void setController(final ControllerUI controller) {
+	this.controller = controller;
+    }
 
-	/**
-	 * Clears GUI data of the controls.
-	 */
-	public abstract void clearForm();
+    /**
+     * Clears GUI data of the controls.
+     */
+    public abstract void clearForm();
 
-	public void unloadGUI()
-	{
-		if (sShell!=null)
-			sShell.dispose();
-	}
+    public void unloadGUI() {
+	if (sShell != null)
+	    sShell.dispose();
+    }
 
 }

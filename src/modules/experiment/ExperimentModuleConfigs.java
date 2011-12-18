@@ -21,48 +21,42 @@ import modules.ModuleConfigs;
  * 
  * @author Creative
  */
-public class ExperimentModuleConfigs extends ModuleConfigs
-{
-	private int currRatNumber;
-	private String currGrpName;
-	public Experiment exp;
-	/**
-	 * Initializations for the configurations.
-	 * 
-	 * @param moduleName
-	 *            name of the module instance
-	 */
-	public ExperimentModuleConfigs(final String moduleName,Experiment exp)
-	{
-		super(moduleName);
-		this.exp=exp;
-	}
+public class ExperimentModuleConfigs extends ModuleConfigs {
+    private int currRatNumber;
+    private String currGrpName;
+    public Experiment exp;
 
-	@Override
-	protected void mergeConfigs(final ModuleConfigs config)
-	{
-		// TODO Auto-generated method stub
+    /**
+     * Initializations for the configurations.
+     * 
+     * @param moduleName
+     *            name of the module instance
+     */
+    public ExperimentModuleConfigs(final String moduleName, final Experiment exp) {
+	super(moduleName);
+	this.exp = exp;
+    }
 
-	}
+    @Override
+    protected void mergeConfigs(final ModuleConfigs config) {
+	// TODO Auto-generated method stub
 
-	public void setCurrRatNumber(int currRatNumber)
-	{
-		this.currRatNumber = currRatNumber;
-	}
+    }
 
-	public int getCurrRatNumber()
-	{
-		return currRatNumber;
-	}
+    public void setCurrRatNumber(final int currRatNumber) {
+	this.currRatNumber = currRatNumber;
+    }
 
-	public void setCurrGrpName(String currGrpName)
-	{
-		this.currGrpName = currGrpName;
-	}
+    public int getCurrRatNumber() {
+	return currRatNumber;
+    }
 
-	public String getCurrGrpName()
-	{
-		return currGrpName;
-	}
+    public void setCurrGrpName(final String currGrpName) {
+	this.currGrpName = currGrpName;
+    }
+
+    public String getCurrGrpName() {
+	return currGrpName;
+    }
 
 }

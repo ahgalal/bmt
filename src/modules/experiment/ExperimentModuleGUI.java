@@ -21,36 +21,33 @@ import ui.PluggedGUI;
  * 
  * @author Creative
  */
-public abstract class ExperimentModuleGUI extends PluggedGUI<ExperimentModule>
-{
-	public ExperimentModuleGUI(final ExperimentModule owner)
-	{
-		super(owner);
-	}
+public abstract class ExperimentModuleGUI extends PluggedGUI<ExperimentModule> {
+    public ExperimentModuleGUI(final ExperimentModule owner) {
+	super(owner);
+    }
 
-	/**
-	 * Initializes/shows the GUI components.
-	 * 
-	 * @param menuBar
-	 *            menubar of MainGUI
-	 * @param shell
-	 *            parent shell (MainGUI's shell)
-	 */
-	/*	public ExperimentModuleGUI( Shell shell)
-		{}*/
+    /**
+     * Initializes/shows the GUI components.
+     * 
+     * @param menuBar
+     *            menubar of MainGUI
+     * @param shell
+     *            parent shell (MainGUI's shell)
+     */
+    /*
+     * public ExperimentModuleGUI( Shell shell) {}
+     */
 
-
-
-		/*		CoolItem coolItem = new CoolItem(coolBar, SWT.NONE);
-				
-				Composite composite = new Composite(coolBar, SWT.NONE);
-				coolItem.setControl(composite);
-				composite.setLayout(new FillLayout(SWT.HORIZONTAL));
-				
-				Button btnNewExp = new Button(composite, SWT.NONE);
-				btnNewExp.setText("New Experiment");
-				composite.setBounds(0, 0, 40, 32);
-				coolItem.setSize(composite.getSize().x, composite.getSize().y);*/
-
+    /*
+     * CoolItem coolItem = new CoolItem(coolBar, SWT.NONE);
+     * 
+     * Composite composite = new Composite(coolBar, SWT.NONE);
+     * coolItem.setControl(composite); composite.setLayout(new
+     * FillLayout(SWT.HORIZONTAL));
+     * 
+     * Button btnNewExp = new Button(composite, SWT.NONE);
+     * btnNewExp.setText("New Experiment"); composite.setBounds(0, 0, 40, 32);
+     * coolItem.setSize(composite.getSize().x, composite.getSize().y);
+     */
 
 }

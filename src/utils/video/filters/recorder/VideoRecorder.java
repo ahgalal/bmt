@@ -30,136 +30,115 @@ import utils.video.filters.VideoFilter;
  * 
  * @author Creative
  */
-public class VideoRecorder extends VideoFilter<RecorderConfigs,FilterData>
-{
-	/**
-	 * Initializes the filter.
-	 * 
-	 * @param name
-	 *            filter's name
-	 * @param linkIn
-	 *            input Link for the filter
-	 * @param linkOut
-	 *            output Link from the filter
-	 */
-	public VideoRecorder(final String name, final Link linkIn, final Link linkOut)
-	{
-		super(name, linkIn, linkOut);
-		gui = new VideoRecorderGUI(this);
-		pm = PManager.getDefault();
+public class VideoRecorder extends VideoFilter<RecorderConfigs, FilterData> {
+    /**
+     * Initializes the filter.
+     * 
+     * @param name
+     *            filter's name
+     * @param linkIn
+     *            input Link for the filter
+     * @param linkOut
+     *            output Link from the filter
+     */
+    public VideoRecorder(final String name, final Link linkIn,
+	    final Link linkOut) {
+	super(name, linkIn, linkOut);
+	gui = new VideoRecorderGUI(this);
+	pm = PManager.getDefault();
+    }
+
+    private final PManager pm;
+    private StreamToAVI avi_saver;
+    private boolean isRecording = false;
+
+    @Override
+    public boolean configure(final FilterConfigs configs) {
+	this.configs = (RecorderConfigs) configs;
+	return super.configure(configs);
+    }
+
+    /**
+     * Renames the current video file to the given name.
+     * 
+     * @param file_name
+     *            new name of the video file
+     */
+    public void renameVideoFile(final String file_name) {
+	try {
+	    final File tmp_file = new File("video.avi");
+	    if (!tmp_file.renameTo(new File(file_name)))
+		throw new Exception();
+	} catch (final Exception e) {
+	    PManager.log.print("Couldn't rename video file", this,
+		    StatusSeverity.ERROR);
 	}
+    }
 
-	private final PManager pm;
-	private StreamToAVI avi_saver;
-	private boolean isRecording = false;
+    /**
+     * Saves the current video with the given file name.
+     * 
+     * @param fileName
+     *            name of the file to save data to
+     */
+    public void saveVideoFile(final String fileName) {
+	renameVideoFile(fileName);
+    }
 
-	@Override
-	public boolean configure(final FilterConfigs configs)
-	{
-		this.configs = (RecorderConfigs) configs;
-		return super.configure(configs);
+    /*
+     * (non-Javadoc)
+     * 
+     * @see utils.video.processors.VideoFilter#process(int[])
+     */
+    @Override
+    public void process() {
+	if (configs.enabled) {
+	    final int[] imageData = link_in.getData();
+	    avi_saver.writeFrame(imageData);
 	}
+    }
 
-	/**
-	 * Renames the current video file to the given name.
-	 * 
-	 * @param file_name
-	 *            new name of the video file
-	 */
-	public void renameVideoFile(final String file_name)
-	{
-		try
-		{
-			final File tmp_file = new File("video.avi");
-			if (!tmp_file.renameTo(new File(file_name)))
-				throw new Exception();
-		} catch (Exception e)
-		{
-			PManager.log.print("Couldn't rename video file", this, StatusSeverity.ERROR);
+    @Override
+    public boolean enable(final boolean enable) {
+	if (enable) {
+	    if (pm.state == ProgramState.TRACKING) {
+		avi_saver = new StreamToAVI();
+		avi_saver.initialize("video.avi", VideoFormat.JPG, 10,
+			configs.common_configs.width,
+			configs.common_configs.height);
+		isRecording = true;
+		configs.enabled = true;
+		return true;
+	    } else
+		pm.statusMgr.setStatus("Please start tracking first",
+			StatusSeverity.ERROR);
+	    return false;
+	} else {
+	    final Thread th_stop_recording = new Thread(new Runnable() {
+		@Override
+		public void run() {
+		    configs.enabled = false;
+		    try {
+			Thread.sleep(100);
+		    } catch (final InterruptedException e) {
+			e.printStackTrace();
+		    }
+		    if (isRecording == true) {
+			avi_saver.close();
+			avi_saver = null;
+			isRecording = false;
+		    }
 		}
+	    });
+	    th_stop_recording.start();
+	    return true;
 	}
+    }
 
-	/**
-	 * Saves the current video with the given file name.
-	 * 
-	 * @param fileName
-	 *            name of the file to save data to
-	 */
-	public void saveVideoFile(final String fileName)
-	{
-		renameVideoFile(fileName);
-	}
+    @Override
+    public void updateProgramState(final ProgramState state) {
+	// TODO Auto-generated method stub
 
-	/*
-	 * (non-Javadoc)
-	 * @see utils.video.processors.VideoFilter#process(int[])
-	 */
-	@Override
-	public void process()
-	{
-		if (configs.enabled)
-		{
-			final int[] imageData = link_in.getData();
-			avi_saver.writeFrame(imageData);
-		}
-	}
-
-	@Override
-	public boolean enable(final boolean enable)
-	{
-		if (enable)
-		{
-			if (pm.state == ProgramState.TRACKING)
-			{
-				avi_saver = new StreamToAVI();
-				avi_saver.initialize(
-						"video.avi",
-						VideoFormat.JPG,
-						10,
-						configs.common_configs.width,
-						configs.common_configs.height);
-				isRecording = true;
-				configs.enabled = true;
-				return true;
-			}
-			else
-				pm.statusMgr.setStatus(
-						"Please start tracking first",
-						StatusSeverity.ERROR);
-			return false;
-		}
-		else
-		{
-			final Thread th_stop_recording = new Thread(new Runnable() {
-				@Override
-				public void run()
-				{
-					configs.enabled = false;
-					try
-					{
-						Thread.sleep(100);
-					} catch (final InterruptedException e)
-					{
-						e.printStackTrace();
-					}
-					if (isRecording == true)
-					{
-						avi_saver.close();
-						avi_saver = null;
-						isRecording = false;
-					}
-				}
-			});
-			th_stop_recording.start();
-			return true;
-		}
-	}
-
-	@Override
-	public void updateProgramState(final ProgramState state)
-	{
-		// TODO Auto-generated method stub
-
-	}
+    }
 
 }
