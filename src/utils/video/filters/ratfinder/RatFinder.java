@@ -30,7 +30,7 @@ import utils.video.filters.ratfinder.markers.RectangularMarker;
  * 
  * @author Creative
  */
-public class RatFinder extends VideoFilter<RatFinderFilterConfigs,RatFinderData>
+public class RatFinder extends VideoFilter<RatFinderFilterConfigs, RatFinderData>
 {
 	/**
 	 * Initializes the filter.
@@ -45,8 +45,8 @@ public class RatFinder extends VideoFilter<RatFinderFilterConfigs,RatFinderData>
 	public RatFinder(final String name, final Link linkIn, final Link linkOut)
 	{
 		super(name, linkIn, linkOut);
-		filter_data = new RatFinderData("Rat Finder Data");
-		center_point = filter_data.getCenterPoint();
+		filterData = new RatFinderData("Rat Finder Data");
+		center_point = filterData.getCenterPoint();
 	}
 
 	private int tmp_max;
@@ -72,7 +72,9 @@ public class RatFinder extends VideoFilter<RatFinderFilterConfigs,RatFinderData>
 		try
 		{
 			marker.draw(out_data, center_point.x, center_point.y);
-			marker2.draw(out_data, center_point.x-searchSideLength/2, center_point.y-searchSideLength/2);
+			marker2.draw(out_data, center_point.x - searchSideLength / 2, center_point.y
+					- searchSideLength
+					/ 2);
 		} catch (final Exception e)
 		{
 			System.err.print("Error in marker");

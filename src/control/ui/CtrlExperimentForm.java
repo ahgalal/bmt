@@ -14,9 +14,8 @@
 
 package control.ui;
 
-import modules.ModulesManager;
+import modules.ExperimentManager;
 import modules.experiment.Exp2GUI;
-import modules.experiment.ExperimentModule;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.FileDialog;
@@ -32,7 +31,7 @@ import utils.PManager;
  */
 public class CtrlExperimentForm extends ControllerUI<ExperimentForm>
 {
-	private String name, user, date, notes;
+	private String name, user, date, notes,type;
 
 	@Override
 	public boolean setVars(final String[] strs)
@@ -41,6 +40,7 @@ public class CtrlExperimentForm extends ControllerUI<ExperimentForm>
 		user = strs[1];
 		date = strs[2];
 		notes = strs[3];
+		type = strs[4];
 		return true;
 	}
 
@@ -83,8 +83,7 @@ public class CtrlExperimentForm extends ControllerUI<ExperimentForm>
 	{
 		try
 		{
-			if (!((ExperimentModule) ModulesManager.getDefault().getModuleByName(
-					"Experiment Module")).isThereAnyGroups())
+			if (pm.frm_grps.getNumberOfGroups()==0)
 				System.out.print("please specify at least one group.\n");
 			else
 			{
@@ -92,12 +91,10 @@ public class CtrlExperimentForm extends ControllerUI<ExperimentForm>
 				final String file_name = fileDialog.open();
 				if (file_name != null)
 				{
-					((ExperimentModule) ModulesManager.getDefault().getModuleByName(
-							"Experiment Module")).saveExpInfo(name, user, date, notes);
-					((ExperimentModule) ModulesManager.getDefault().getModuleByName(
-							"Experiment Module")).writeToTXTFile(file_name);
-					((ExperimentModule) ModulesManager.getDefault().getModuleByName(
-							"Experiment Module")).setExpFileName(file_name);
+					ExperimentManager.getDefault().setExpInfo(name, user, date, notes,type);
+					pm.frm_grps.updateGroupsInformation();
+					ExperimentManager.getDefault().writeToTXTFile(file_name);
+					ExperimentManager.getDefault().setExpFileName(file_name);
 					sShell.setVisible(false);
 				}
 			}
@@ -113,8 +110,7 @@ public class CtrlExperimentForm extends ControllerUI<ExperimentForm>
 	 */
 	public void btnMngGrpsAction()
 	{
-		((ExperimentModule) ModulesManager.getDefault().getModuleByName(
-				"Experiment Module")).updateGroupGUIData();
+		ExperimentManager.getDefault().updateGroupGUIData();
 		pm.frm_grps.show(true);
 	}
 

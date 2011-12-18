@@ -16,8 +16,6 @@ package ui;
 
 import java.awt.Frame;
 
-import modules.experiment.Experiment.ExperimentType;
-
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.awt.SWT_AWT;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -79,12 +77,21 @@ public class MainGUI extends BaseUI
 	private MenuItem mntmCameraSubMenu;
 	private MenuItem mntmVideoFile;
 	// data
-	private Button btnSetBackground = null;
+
 	private Button btnStopTracking = null;
 	private Label lbl_status = null;
 	private Table tbl_data = null;
 	private CoolBar coolBar;
 	private Group grpGraphs;
+	
+	private MenuItem mnu_experiment_item = null;
+	private Menu mnu_experiment = null;
+	private MenuItem mnutm_experiment_loadexp = null;
+	private MenuItem mnutm_experiment_exporttoexcel = null;
+	private MenuItem mnuitm_edt_exp;
+	private MenuItem mnutm_experiment_newexp;
+	
+	
 	/**
 	 * Creates GUI components, and links this Shell with the parent Shell.
 	 */
@@ -95,8 +102,11 @@ public class MainGUI extends BaseUI
 
 
 	}
-
-
+	
+	public void setActive()
+	{
+		sShell.setActive();
+	}
 
 	@Override
 	public void clearForm()
@@ -243,16 +253,27 @@ public class MainGUI extends BaseUI
 		grpGraphs = new Group(sShell, SWT.NONE);
 		grpGraphs.setText("Graphs");
 		grpGraphs.setBounds(10, 511, 969, 165);
-		
-		Button btnNewButton = new Button(grpGraphs, SWT.NONE);
-		btnNewButton.addSelectionListener(new SelectionAdapter() {
+/*		
+		Button button = new Button(grpGraphs, SWT.NONE);
+		button.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				controller.setExperimentType(ExperimentType.FORCED_SWIMMING);
+				System.out.println("B1");
 			}
 		});
-		btnNewButton.setBounds(640, 60, 75, 25);
-		btnNewButton.setText("New Button");
+		button.setBounds(52, 50, 75, 25);
+		button.setText("1");
+		
+		Button button_1 = new Button(grpGraphs, SWT.NONE);
+		button_1.setBounds(152, 50, 75, 25);
+		button_1.setText("2");
+		button_1.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e)
+			{
+				System.out.println("B2");
+			}
+		});*/
 	}
 
 	private ExpandBar expandBar;
@@ -288,7 +309,7 @@ public class MainGUI extends BaseUI
 			}
 		});
 		btnStartStream.setBounds(10, 10, 109, 25);
-		btnStartStream.setText("Start Stream");
+		btnStartStream.setText(ExternalStrings.get("MainGUI.StartStream")); //$NON-NLS-1$
 
 		btnStopStream = new Button(cmpstStreaming, SWT.NONE);
 		btnStopStream.setBounds(10, 37, 109, 25);
@@ -299,7 +320,7 @@ public class MainGUI extends BaseUI
 				controller.stopStreamingAction();
 			}
 		});
-		btnStopStream.setText("Stop Stream");
+		btnStopStream.setText(ExternalStrings.get("MainGUI.StopStream")); //$NON-NLS-1$
 
 		xpndtmStreaming.setHeight(xpndtmStreaming.getControl().computeSize(
 				SWT.DEFAULT,
@@ -309,14 +330,14 @@ public class MainGUI extends BaseUI
 		// Tracking Controls
 		final ExpandItem xpndtmTracking = new ExpandItem(expandBar, SWT.NONE);
 		xpndtmTracking.setExpanded(true);
-		xpndtmTracking.setText("Tracking");
+		xpndtmTracking.setText(ExternalStrings.get("MainGUI.Tracking")); //$NON-NLS-1$
 
 		cmpstTracking = new Composite(expandBar, SWT.NONE);
 		xpndtmTracking.setControl(cmpstTracking);
 
 		btnStartTracking = new Button(cmpstTracking, SWT.NONE);
-		btnStartTracking.setBounds(new Rectangle(10, 35, 109, 25));
-		btnStartTracking.setText("Start Tracking");
+		btnStartTracking.setBounds(new Rectangle(10, 10, 109, 25));
+		btnStartTracking.setText(ExternalStrings.get("MainGUI.StartTracking")); //$NON-NLS-1$
 		btnStartTracking.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
 			@Override
 			public void widgetSelected(final org.eclipse.swt.events.SelectionEvent e)
@@ -326,24 +347,13 @@ public class MainGUI extends BaseUI
 		});
 
 		btnStopTracking = new Button(cmpstTracking, SWT.NONE);
-		btnStopTracking.setBounds(new Rectangle(10, 61, 109, 25));
-		btnStopTracking.setText("Stop Tracking");
+		btnStopTracking.setBounds(new Rectangle(10, 37, 109, 25));
+		btnStopTracking.setText(ExternalStrings.get("MainGUI.StopTracking")); //$NON-NLS-1$
 		btnStopTracking.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
 			@Override
 			public void widgetSelected(final org.eclipse.swt.events.SelectionEvent e)
 			{
 				controller.stopTrackingAction();
-			}
-		});
-
-		btnSetBackground = new Button(cmpstTracking, SWT.NONE);
-		btnSetBackground.setBounds(new Rectangle(10, 10, 109, 25));
-		btnSetBackground.setText("Set Background");
-		btnSetBackground.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
-			@Override
-			public void widgetSelected(final org.eclipse.swt.events.SelectionEvent e)
-			{
-				controller.btnSetbgAction();
 			}
 		});
 
@@ -409,11 +419,11 @@ public class MainGUI extends BaseUI
 
 		mnu_file_item = new MenuItem(menuBar, SWT.CASCADE); // file
 		mnu_edit_item = new MenuItem(menuBar, SWT.CASCADE); // edit
-		mnu_file_item.setText("File");
+		mnu_file_item.setText(ExternalStrings.get("MainGUI.Menu.File")); //$NON-NLS-1$
 		mnu_file = new Menu(mnu_file_item);
 		mnu_file_item.setMenu(mnu_file);
 		mnutm_file_exit = new MenuItem(mnu_file, 0);
-		mnutm_file_exit.setText("Exit");
+		mnutm_file_exit.setText(ExternalStrings.get("MainGUI.Menu.File.Exit")); //$NON-NLS-1$
 		mnutm_file_exit.addSelectionListener(new org.eclipse.swt.events.SelectionListener() {
 			@Override
 			public void widgetDefaultSelected(final SelectionEvent arg0)
@@ -428,39 +438,20 @@ public class MainGUI extends BaseUI
 		});
 
 		mnuVideoSource = new MenuItem(menuBar, SWT.CASCADE); // camera
-		mnuVideoSource.setText("Video");
+		mnuVideoSource.setText(ExternalStrings.get("MainGUI.Menu.Video")); //$NON-NLS-1$
 		mnuVideo = new Menu(mnuVideoSource);
 		mnuVideoSource.setMenu(mnuVideo);
 
 		final MenuItem mntmSource = new MenuItem(mnuVideo, SWT.CASCADE);
-		mntmSource.setText("Source");
+		mntmSource.setText(ExternalStrings.get("MainGUI.Menu.Video.Source")); //$NON-NLS-1$
 
 		final Menu menu = new Menu(mntmSource);
 		mntmSource.setMenu(menu);
-		/*		class MntmSourceRadioHandler extends SelectionAdapter
-		{
-			@Override
-			public void widgetSelected(final SelectionEvent e)
-			{
-				if (radioSelection == true)
-				{
-					if (((MenuItem) e.widget).getText().equals("Video File .."))
-						controller.setVideoFileMode();
-					radioSelection = false;
-				}
-				else
-					radioSelection = true;
-			}
-		}*/
-
 		mntmVideoFile = new MenuItem(menu, SWT.RADIO);
-		mntmVideoFile.setText("Video File ..");
+		mntmVideoFile.setText(ExternalStrings.get("MainGUI.Menu.Video.Source.VideoFile")); //$NON-NLS-1$
 		mntmCameraSubMenu = new MenuItem(menu, SWT.RADIO);
-		mntmCameraSubMenu.setText("Camera");
+		mntmCameraSubMenu.setText(ExternalStrings.get("MainGUI.Menu.Video.Source.Camera")); //$NON-NLS-1$
 		mntmVideoFile.setSelection(true);
-
-		/*		mntmVideoFile.addSelectionListener(new MntmSourceRadioHandler());
-		mntmCameraSubMenu.addSelectionListener(new MntmSourceRadioHandler());*/
 
 		final MenuItem mntmVidOptions = new MenuItem(mnuVideo, SWT.NONE);
 		mntmVidOptions.addSelectionListener(new SelectionAdapter() {
@@ -470,14 +461,14 @@ public class MainGUI extends BaseUI
 				controller.mnutmCameraOptionsAction();
 			}
 		});
-		mntmVidOptions.setText("Options ..");
+		mntmVidOptions.setText(ExternalStrings.get("MainGUI.Menu.Video.Source.Options")); //$NON-NLS-1$
 
-		mnu_edit_item.setText("Edit");
+		mnu_edit_item.setText(ExternalStrings.get("MainGUI.Menu.Edit")); //$NON-NLS-1$
 		mnu_edit = new Menu(mnu_edit_item);
 		mnu_edit_item.setMenu(mnu_edit);
 
 		final MenuItem mnutm_edit_options = new MenuItem(mnu_edit, SWT.PUSH);
-		mnutm_edit_options.setText("Options ..");
+		mnutm_edit_options.setText(ExternalStrings.get("MainGUI.Menu.Options")); //$NON-NLS-1$
 		mnutm_edit_options.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(final SelectionEvent e)
@@ -493,13 +484,83 @@ public class MainGUI extends BaseUI
 				controller.closeProgram();
 			}
 		});
+		
+		
+		mnu_experiment_item = new MenuItem(menuBar, SWT.CASCADE); // experiment
+		mnu_experiment_item.setText(ExternalStrings.get("MainGUI.Menu.Experiment")); //$NON-NLS-1$
+		mnu_experiment = new Menu(mnu_experiment_item);
+		mnu_experiment_item.setMenu(mnu_experiment);
+		mnutm_experiment_newexp = new MenuItem(mnu_experiment, SWT.PUSH);
+		mnutm_experiment_loadexp = new MenuItem(mnu_experiment, 0);
+		mnutm_experiment_loadexp.setText(ExternalStrings.get("MainGUI.Menu.Exp.Load")); //$NON-NLS-1$
+		mnutm_experiment_loadexp.setEnabled(true);
+		mnuitm_edt_exp = new MenuItem(mnu_experiment, SWT.PUSH);
+		mnuitm_edt_exp.setEnabled(false);
+		mnutm_experiment_exporttoexcel = new MenuItem(mnu_experiment, 0);
+		mnutm_experiment_exporttoexcel.setText(ExternalStrings.get("MainGUI.Menu.Exp.ExporttoExcel")); //$NON-NLS-1$
+		mnutm_experiment_exporttoexcel.setEnabled(false);
+		mnutm_experiment_exporttoexcel.addSelectionListener(new org.eclipse.swt.events.SelectionListener() {
+			@Override
+			public void widgetSelected(final org.eclipse.swt.events.SelectionEvent e)
+			{
+				controller.mnutmExperimentExportToExcelAction();
+			}
+
+			@Override
+			public void widgetDefaultSelected(
+					final org.eclipse.swt.events.SelectionEvent e)
+			{
+			}
+		});
+		mnutm_experiment_newexp.setText(ExternalStrings.get("MainGUI.Menu.Exp.New")); //$NON-NLS-1$
+		
+				mnuitm_edt_exp.setText(ExternalStrings.get("MainGUI.Menu.Exp.Edit")); //$NON-NLS-1$
+				mnuitm_edt_exp.addSelectionListener(new org.eclipse.swt.events.SelectionListener() {
+					@Override
+					public void widgetDefaultSelected(
+							final org.eclipse.swt.events.SelectionEvent e)
+					{
+					}
+
+					@Override
+					public void widgetSelected(final org.eclipse.swt.events.SelectionEvent e)
+					{
+						controller.mnuitmEditExpAction();
+					}
+				});
+				mnutm_experiment_newexp.addSelectionListener(new org.eclipse.swt.events.SelectionListener() {
+					@Override
+					public void widgetDefaultSelected(
+							final org.eclipse.swt.events.SelectionEvent e)
+					{
+					}
+
+					@Override
+					public void widgetSelected(final org.eclipse.swt.events.SelectionEvent e)
+					{
+						controller.mnutmExperimentNewExpAction();
+					}
+				});
+				
+						mnutm_experiment_loadexp.addSelectionListener(new org.eclipse.swt.events.SelectionListener() {
+							@Override
+							public void widgetDefaultSelected(final SelectionEvent arg0)
+							{
+							}
+				
+							@Override
+							public void widgetSelected(final org.eclipse.swt.events.SelectionEvent e)
+							{
+								controller.mnutmExperimentLoadexpAction(sShell);
+							}
+						});
 
 		mnu_help_item = new MenuItem(menuBar, SWT.CASCADE); // help
-		mnu_help_item.setText("Help");
+		mnu_help_item.setText(ExternalStrings.get("MainGUI.Menu.Help")); //$NON-NLS-1$
 		mnu_help = new Menu(mnu_help_item);
 		mnu_help_item.setMenu(mnu_help);
 		final MenuItem mnutm_help_about = new MenuItem(mnu_help, SWT.PUSH);
-		mnutm_help_about.setText("About");
+		mnutm_help_about.setText(ExternalStrings.get("MainGUI.Menu.About")); //$NON-NLS-1$
 		mnutm_help_about.setEnabled(true);
 		mnutm_help_about.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -508,6 +569,7 @@ public class MainGUI extends BaseUI
 				controller.mnutmHelpAboutAction();
 			}
 		});
+		
 		clearForm();
 	}
 
@@ -534,7 +596,6 @@ public class MainGUI extends BaseUI
 	@Override
 	public void loadData(final String[] strArray)
 	{
-		// TODO Auto-generated method stub
 
 	}
 	@SuppressWarnings("rawtypes")
@@ -635,32 +696,20 @@ public class MainGUI extends BaseUI
 	}
 
 	/**
-	 * Enables/disables the set background button.
-	 * 
-	 * @param enable
-	 *            true/false
-	 */
-	public void btnSetBackgroundEnable(final boolean enable)
-	{
-		btnSetBackground.setEnabled(enable);
-	}
-
-	/**
 	 * Loads GUI instances for the available video filters.
 	 * 
 	 * @param filtersGUI
 	 *            ArrayList of available filters' gui
 	 */
-	public void loadPluggedGUI(final PluggedGUI[] pGUIs)
+	public void loadPluggedGUI(final PluggedGUI<?>[] pGUIs)
 	{
-		for (final PluggedGUI pgui : pGUIs)
+		for (final PluggedGUI<?> pgui : pGUIs)
 			pgui.initialize(sShell, expandBar, menuBar, coolBar,grpGraphs);
 
 		coolBar.setBounds(5, 5, 300, 30);
 		coolBar.layout();
 		coolBar.setLocked(true);
 		coolBar.setVisible(false);
-		sShell.setActive();
 	}
 
 	public String getSelectedInputMode()
@@ -670,5 +719,19 @@ public class MainGUI extends BaseUI
 		else if (mntmVideoFile.getSelection())
 			return "VIDEOFILE";
 		return null;
+	}
+	
+	public void setExperimantLoaded(final boolean loaded)
+	{
+		if (loaded)
+		{
+			mnuitm_edt_exp.setEnabled(true);
+			mnutm_experiment_exporttoexcel.setEnabled(true);
+		}
+		else
+		{
+			mnuitm_edt_exp.setEnabled(false);
+			mnutm_experiment_exporttoexcel.setEnabled(false);
+		}
 	}
 }

@@ -39,6 +39,7 @@ public abstract class BaseUI
 	public void show(final boolean visibility)
 	{
 		sShell.setVisible(visibility);
+		sShell.setActive();
 	}
 
 	/**

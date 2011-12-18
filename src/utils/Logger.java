@@ -43,7 +43,7 @@ public class Logger
 	}
 
 	private boolean enabled = true; // is it enabled?
-	private Details details=Details.NOTES;
+	private Details details=Details.VERBOSE;
 
 	/**
 	 * Prints messages on the screen, along with the caller object name.

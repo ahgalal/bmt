@@ -23,7 +23,7 @@ public class MovementMeter extends VideoFilter<FilterConfigs, MovementMeterData>
 	public MovementMeter(final String name, final Link link_in, final Link link_out)
 	{
 		super(name, link_in, link_out);
-		filter_data = new MovementMeterData("Movement Meter Data");
+		filterData = new MovementMeterData("Movement Meter Data");
 	}
 
 	/* (non-Javadoc)
@@ -82,7 +82,7 @@ public class MovementMeter extends VideoFilter<FilterConfigs, MovementMeterData>
 		}
 
 		prevGreyData = greyData;
-		filter_data.setWhiteSummation(summation);
+		filterData.setWhiteSummation(summation);
 	}
 
 	private int addAllPixelsValues(final int[] arr)

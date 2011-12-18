@@ -16,9 +16,8 @@ package modules;
 
 import java.util.ArrayList;
 
-import modules.experiment.Experiment.ExperimentType;
+import modules.experiment.Experiment;
 import modules.experiment.ExperimentModule;
-import modules.experiment.ExperimentModuleConfigs;
 import modules.movementmeter.MovementMeterModule;
 import modules.movementmeter.MovementMeterModuleConfigs;
 import modules.rearing.RearingModule;
@@ -47,8 +46,8 @@ public class ModulesManager
 	private static ModulesManager me;
 	private final ArrayList<Data> filters_data;
 	private final ArrayList<Module> modules;
-	private Cargo[] gui_cargos;
-	private Cargo[] file_cargos;
+	private final ArrayList<Cargo> gui_cargos = new ArrayList<Cargo>();
+	private final ArrayList<Cargo> file_cargos = new ArrayList<Cargo>();
 
 	private final ArrayList<Data> modules_data;
 
@@ -118,30 +117,21 @@ public class ModulesManager
 		modules = new ArrayList<Module>();
 	}
 
-	private void setupModules(final ModulesSetup setup)
+	public void setupModulesAndFilters(Experiment exp)
 	{
-
-		instantiateModules(setup.getModulesNames());
-
-		// setWidthandHeight(640, 480);
-		connectModules();
-		loadModulesGUI();
+		ModulesManager.getDefault().setupModules(exp);
+		PManager.getDefault().getVideoManager().initializeFilters(exp.type);
+		PManager.getDefault().signalProgramStateUpdate();
 	}
-
-	/**
-	 * 
-	 */
-	public void instantiateExperimentModule(final ExperimentType expType)
+	
+	
+	public void setupModules(Experiment exp)
 	{
 		// ////////////////////////////////
 		// Experiment Module
-		final ExperimentModuleConfigs experiment_configs = new ExperimentModuleConfigs(
-				"Experiment Module", expType);
-		final ExperimentModule experiment_module = new ExperimentModule(
-				"Experiment Module",
-				experiment_configs);
-		modules.add(experiment_module);
-
+		ExperimentModule expModule = ExperimentManager.getDefault().instantiateExperimentModule();
+		modules.add(expModule);
+		
 		final ModulesSetup openFieldModulesSetup = new ModulesSetup(new String[] {
 				"Rearing Module",
 				"Zones Module",
@@ -151,16 +141,25 @@ public class ModulesManager
 				new String[] {
 						"Session Module",
 						"Movement Meter Module" });
-		switch (expType)
+
+		switch (exp.type)
 		{
 		case FORCED_SWIMMING:
-			setupModules(forcedSwimmingModulesSetup);
+			instantiateModules(forcedSwimmingModulesSetup.getModulesNames());
 			break;
 		case OPEN_FIELD:
-			setupModules(openFieldModulesSetup);
+			instantiateModules(openFieldModulesSetup.getModulesNames());
 			break;
 		}
+		// setWidthandHeight(640, 480);
+		connectModules();
+		loadModulesGUI();
 	}
+
+	/**
+	 * 
+	 */
+
 
 	private void instantiateModules(final String[] moduleNames)
 	{
@@ -425,34 +424,32 @@ public class ModulesManager
 	 */
 	private void constructCargoArray()
 	{
-		gui_cargos = null;
-		int num_gui_cargos = 0;
-		int num_file_cargos = 0;
-		for (final Module m : modules)
-			if (m.getGUICargo() != null)
-				num_gui_cargos++;
-
-		for (final Module m : modules)
-			if (m.getFileCargo() != null)
-				num_file_cargos++;
-
 		int num_strs = 0;
-		gui_cargos = new Cargo[num_gui_cargos];
-		file_cargos = new Cargo[num_file_cargos];
+		gui_cargos.clear();
+		file_cargos.clear();
 
-		for (int i = 0; i < num_gui_cargos; i++)
+		Cargo tmp;
+		for (final Module m : modules)
 		{
-			gui_cargos[i] = modules.get(i).getGUICargo();
-			num_strs += gui_cargos[i].getData().length;
+			tmp = m.getGUICargo();
+			if (tmp != null)
+			{
+				gui_cargos.add(tmp);
+				num_strs += tmp.getData().length;
+			}
 		}
+
 		gui_data_array = new String[num_strs];
 		gui_names_array = new String[num_strs];
 
 		num_strs = 0;
-		for (int i = 0; i < num_file_cargos; i++)
+		for (final Module m : modules)
 		{
-			file_cargos[i] = modules.get(i).getFileCargo();
-			num_strs += file_cargos[i].getData().length;
+			tmp = m.getFileCargo();
+			if (tmp != null){
+				file_cargos.add(tmp);
+				num_strs += tmp.getData().length;
+			}
 		}
 
 		file_data_array = new String[num_strs];
@@ -461,6 +458,8 @@ public class ModulesManager
 		int i = 0;
 		for (final Cargo cargo : gui_cargos)
 		{
+			if (cargo == null)
+				System.out.println();
 			final String[] tmp_cargo_names = cargo.getTags();
 			for (int j = 0; j < tmp_cargo_names.length; j++)
 			{

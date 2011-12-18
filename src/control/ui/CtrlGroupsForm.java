@@ -16,8 +16,7 @@ package control.ui;
 
 import java.util.ArrayList;
 
-import modules.ModulesManager;
-import modules.experiment.ExperimentModule;
+import modules.ExperimentManager;
 import modules.experiment.Grp2GUI;
 import ui.GroupsForm;
 import ui.GroupsForm.TabContents;
@@ -54,18 +53,7 @@ public class CtrlGroupsForm extends ControllerUI<GroupsForm>
 	{
 		try
 		{
-			String name, notes;
-
-			for (final TabContents tc : arr_tabs)
-			{
-				name = tc.txt_name.getText();
-				notes = tc.txt_notes.getText();
-				((ExperimentModule) ModulesManager.getDefault().getModuleByName(
-						"Experiment Module")).saveGrpInfo(
-						tc.grp_id,
-						name,
-						notes);
-			}
+			//saveGroupsInformation(arr_tabs);
 
 			show(false);
 		} catch (final NumberFormatException e1)
@@ -73,6 +61,25 @@ public class CtrlGroupsForm extends ControllerUI<GroupsForm>
 			System.out.print("Error in user input ... aborting !\n");
 		}
 
+	}
+
+	/**
+	 * @param arr_tabs
+	 */
+	public void updateGroupsInformation()
+	{
+		String name, notes;
+		
+		ArrayList<TabContents> arr_tabs = ui.getArr_tabs();
+		for (final TabContents tc : arr_tabs )
+		{
+			name = tc.txt_name.getText();
+			notes = tc.txt_notes.getText();
+			ExperimentManager.getDefault().updateGrpInfo(
+					tc.grp_id,
+					name,
+					notes);
+		}
 	}
 
 	@Override
@@ -106,5 +113,10 @@ public class CtrlGroupsForm extends ControllerUI<GroupsForm>
 	public void clearForm()
 	{
 		ui.clearForm();
+	}
+	
+	public int getNumberOfGroups()
+	{
+		return ui.getArr_tabs().size();
 	}
 }

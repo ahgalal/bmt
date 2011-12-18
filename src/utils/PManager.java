@@ -19,7 +19,6 @@ import gfx_panel.GfxPanel;
 import java.util.ArrayList;
 
 import modules.ModulesManager;
-import modules.ModulesSetup;
 import modules.experiment.ExcelEngine;
 import modules.zones.ShapeController;
 
@@ -141,12 +140,11 @@ public class PManager
 		new PManager();
 		final Display display = Display.getDefault();
 
-		if (!testingMode)
-			while (!main_gui.isShellDisposed())
-			{
-				if (!display.readAndDispatch())
-					display.sleep();
-			}
+		while (!main_gui.isShellDisposed())
+		{
+			if (!display.readAndDispatch())
+				display.sleep();
+		}
 
 		// display.dispose();
 	}
@@ -194,7 +192,7 @@ public class PManager
 					}
 					try
 					{
-						Thread.sleep(30);
+						Thread.sleep(100);
 					} catch (final InterruptedException e)
 					{
 						e.printStackTrace();
@@ -203,6 +201,8 @@ public class PManager
 			}
 		});
 		thStateChangedNotifier.start();
+
+		main_gui.setActive();
 	}
 
 	/**
@@ -235,7 +235,7 @@ public class PManager
 	{
 		if (state == ProgramState.IDLE && vidMgr.isInitialized())
 		{
-			//ModulesManager.getDefault().setupModules(forcedSwimmingModulesSetup);
+			// ModulesManager.getDefault().setupModules(forcedSwimmingModulesSetup);
 			vidMgr.startStreaming();
 		}
 		else
@@ -279,6 +279,11 @@ public class PManager
 		arrStateListsners.remove(sListener);
 	}
 
+	public void signalProgramStateUpdate()
+	{
+		notifyStateListeners();
+	}
+
 	private void notifyStateListeners()
 	{
 		for (final StateListener sl : arrStateListsners)
@@ -305,13 +310,20 @@ public class PManager
 
 	public void stopTracking()
 	{
-		if (state == ProgramState.TRACKING /*|state == ProgramState.RECORDING*/)
+		if (state == ProgramState.TRACKING)
 		{
 			ModulesManager.getDefault().runModules(false);
 			vidMgr.stopProcessing();
 		}
 		else
-			statusMgr.setStatus("Tracking is not running.", StatusSeverity.ERROR);
+			Display.getDefault().asyncExec(new Runnable() {
+				@Override
+				public void run()
+				{
+					statusMgr.setStatus("Tracking is not running.", StatusSeverity.ERROR);					
+				}
+			});
+			
 	}
 
 	public void unloadGUI()

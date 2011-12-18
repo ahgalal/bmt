@@ -21,6 +21,8 @@ import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
@@ -65,15 +67,6 @@ public class GroupsForm extends BaseUI
 	private Button btn_cancel = null;
 	private CtrlGroupsForm controller;
 
-	// Do NOT DELETE .. they are for GUI Design process
-	/*
-	 * private Label lbl_name = null; private Label lbl_no_rats = null; private
-	 * Label lbl_rats_numbering = null; private Label lbl_notes = null; private
-	 * Text txt_name = null; private Text txt_no_rats = null; private Text
-	 * txt_rats_numbers = null; private Text txt_notes = null;
-	 */
-	// End Do Not DELETE :D
-
 	@Override
 	public void clearForm()
 	{
@@ -91,9 +84,9 @@ public class GroupsForm extends BaseUI
 		sShell.setText("Groups Information");
 		createGrpsInfo();
 		sShell.setLayout(null);
-		sShell.setSize(new Point(372, 377));
+		sShell.setSize(new Point(372, 342));
 		btn_save = new Button(sShell, SWT.NONE);
-		btn_save.setBounds(new Rectangle(165, 315, 91, 25));
+		btn_save.setBounds(new Rectangle(167, 280, 91, 25));
 		btn_save.setText("Save");
 		btn_save.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
 			@Override
@@ -103,10 +96,10 @@ public class GroupsForm extends BaseUI
 			}
 		});
 		btn_cancel = new Button(sShell, SWT.NONE);
-		btn_cancel.setBounds(new Rectangle(255, 315, 91, 25));
+		btn_cancel.setBounds(new Rectangle(257, 280, 91, 25));
 		btn_cancel.setText("Cancel");
 		btn_add_tab = new Button(sShell, SWT.NONE);
-		btn_add_tab.setBounds(new Rectangle(13, 317, 29, 27));
+		btn_add_tab.setBounds(new Rectangle(15, 282, 29, 27));
 		btn_add_tab.setText("+");
 		btn_add_tab.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
 			@Override
@@ -116,7 +109,7 @@ public class GroupsForm extends BaseUI
 			}
 		});
 		btn_del_tab = new Button(sShell, SWT.NONE);
-		btn_del_tab.setBounds(new Rectangle(47, 317, 29, 27));
+		btn_del_tab.setBounds(new Rectangle(49, 282, 29, 27));
 		btn_del_tab.setText("-");
 		btn_del_tab.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
 			@Override
@@ -133,6 +126,14 @@ public class GroupsForm extends BaseUI
 			}
 		});
 	}
+	/**
+	 * @return the arr_tabs
+	 */
+	public ArrayList<TabContents> getArr_tabs()
+	{
+		return arr_tabs;
+	}
+
 	@SuppressWarnings("rawtypes")
 	@Override
 	public void setController(final ControllerUI controller)
@@ -149,9 +150,16 @@ public class GroupsForm extends BaseUI
 		grp_grps_info = new Group(sShell, SWT.NONE);
 		grp_grps_info.setLayout(null);
 		grp_grps_info.setText("Information:");
-		grp_grps_info.setBounds(new Rectangle(5, 5, 356, 311));
+		grp_grps_info.setBounds(new Rectangle(5, 5, 356, 273));
 		createTabsGrps();
 	}
+	
+/*	public Text txt_name, txt_rats_numbers, txt_notes;
+	public Label lbl_name, lbl_no_rats_data, lbl_no_rats, lbl_rats_numbering,
+			lbl_notes;
+	public Composite cmpst;
+	public TabItem tab;
+	public int grp_id;*/
 
 	/**
 	 * This method initializes tabs_grps.
@@ -159,66 +167,23 @@ public class GroupsForm extends BaseUI
 	private void createTabsGrps()
 	{
 		tabs_grps = new TabFolder(grp_grps_info, SWT.NONE);
-		tabs_grps.setBounds(new Rectangle(8, 20, 341, 281));
+		tabs_grps.setBounds(new Rectangle(8, 20, 341, 246));
 		// createCmpst_tabs(tabs_no);
 		// addNewTab();
 		/*
 		 * TabItem tabItem = new TabItem(tabs_grps, SWT.NONE);
 		 * tabItem.setText("Grppp"); tabItem.setControl(cmpst_tab);
 		 */
+/*		String name="";
+		String no_rats="";
+		String rat_numbers="";
+		String notes="";
+		int id=0;*/
+		
+
+
+
 	}
-
-	/**
-	 * This method initializes cmpst_tab
-	 */
-	/*
-	 * private void createCmpst_tab() { //for Design Purposes ONLY cmpst_tab =
-	 * new Composite(tabs_grps, SWT.NONE); cmpst_tab.setLayout(null);
-	 * cmpst_tab.setBounds(new Rectangle(4, 24, 328, 358)); lbl_name = new
-	 * Label(cmpst_tab, SWT.NONE); lbl_name.setBounds(new Rectangle(14, 14, 92,
-	 * 15)); lbl_name.setText("Name:"); lbl_no_rats = new Label(cmpst_tab,
-	 * SWT.NONE); lbl_no_rats.setBounds(new Rectangle(14, 56, 92, 15));
-	 * lbl_no_rats.setText("Number of Rats:"); lbl_rats_numbering = new
-	 * Label(cmpst_tab, SWT.NONE); lbl_rats_numbering.setBounds(new
-	 * Rectangle(14, 98, 92, 15)); lbl_rats_numbering.setText("Rats Numbers:");
-	 * lbl_notes = new Label(cmpst_tab, SWT.NONE); lbl_notes.setBounds(new
-	 * Rectangle(14, 140, 92, 15)); lbl_notes.setText("Additional Notes:");
-	 * txt_name = new Text(cmpst_tab, SWT.BORDER); txt_name.setBounds(new
-	 * Rectangle(140, 14, 183, 21)); txt_no_rats = new Text(cmpst_tab,
-	 * SWT.BORDER); txt_no_rats.setBounds(new Rectangle(140, 56, 183, 21));
-	 * txt_rats_numbers = new Text(cmpst_tab, SWT.BORDER);
-	 * txt_rats_numbers.setBounds(new Rectangle(140, 98, 183, 21)); txt_notes =
-	 * new Text(cmpst_tab, SWT.BORDER | SWT.MULTI); txt_notes.setBounds(new
-	 * Rectangle(140, 140, 183, 99)); }
-	 */
-
-	/*
-	 * private void createCmpst_tabs(int no_tabs) { for(int i=0;i<no_tabs;i++) {
-	 * final TabContents tmp_tab= new TabContents(); tmp_tab.cmpst=new
-	 * Composite(tabs_grps, SWT.NONE); tmp_tab.cmpst.setLayout(null);
-	 * tmp_tab.cmpst.setBounds(new Rectangle(4, 24, 328, 358)); tmp_tab.lbl_name
-	 * = new Label(tmp_tab.cmpst, SWT.NONE); tmp_tab.lbl_name.setBounds(new
-	 * Rectangle(14, 14, 92, 15)); tmp_tab.lbl_name.setText("Name:");
-	 * tmp_tab.lbl_no_rats = new Label(tmp_tab.cmpst, SWT.NONE);
-	 * tmp_tab.lbl_no_rats.setBounds(new Rectangle(14, 56, 92, 15));
-	 * tmp_tab.lbl_no_rats.setText("Number of Rats:");
-	 * tmp_tab.lbl_rats_numbering = new Label(tmp_tab.cmpst, SWT.NONE);
-	 * tmp_tab.lbl_rats_numbering.setBounds(new Rectangle(14, 98, 92, 15));
-	 * tmp_tab.lbl_rats_numbering.setText("Rats Numbers:"); tmp_tab.lbl_notes =
-	 * new Label(tmp_tab.cmpst, SWT.NONE); tmp_tab.lbl_notes.setBounds(new
-	 * Rectangle(14, 140, 92, 15));
-	 * tmp_tab.lbl_notes.setText("Additional Notes:"); tmp_tab.txt_name = new
-	 * Text(tmp_tab.cmpst, SWT.BORDER); tmp_tab.txt_name.setBounds(new
-	 * Rectangle(140, 14, 183, 21)); tmp_tab.txt_no_rats = new
-	 * Text(tmp_tab.cmpst, SWT.BORDER); tmp_tab.txt_no_rats.setBounds(new
-	 * Rectangle(140, 56, 183, 21)); tmp_tab.txt_rats_numbers = new
-	 * Text(tmp_tab.cmpst, SWT.BORDER); tmp_tab.txt_rats_numbers.setBounds(new
-	 * Rectangle(140, 98, 183, 21)); tmp_tab.txt_notes = new Text(tmp_tab.cmpst,
-	 * SWT.BORDER | SWT.MULTI); tmp_tab.txt_notes.setBounds(new Rectangle(140,
-	 * 140, 183, 99)); tmp_tab.tab = new TabItem(tabs_grps, SWT.NONE);
-	 * tmp_tab.tab.setText("Group "+i); tmp_tab.tab.setControl(tmp_tab.cmpst);
-	 * arr_tabs.add(tmp_tab); } }
-	 */
 
 	/**
 	 * Adds a new tab to the GUI (blank tab), to enter a new group's
@@ -253,51 +218,7 @@ public class GroupsForm extends BaseUI
 		if (sShell != null)
 		{
 			final TabContents tmp_tab = new TabContents();
-			tmp_tab.cmpst = new Composite(tabs_grps, SWT.NONE);
-			tmp_tab.cmpst.setLayout(null);
-			tmp_tab.cmpst.setBounds(new Rectangle(4, 24, 328, 358));
-			tmp_tab.lbl_name = new Label(tmp_tab.cmpst, SWT.NONE);
-			tmp_tab.lbl_name.setBounds(new Rectangle(14, 14, 92, 15));
-			tmp_tab.lbl_name.setText("Name:");
-			tmp_tab.lbl_no_rats = new Label(tmp_tab.cmpst, SWT.NONE);
-			tmp_tab.lbl_no_rats.setBounds(new Rectangle(14, 56, 92, 15));
-			tmp_tab.lbl_no_rats.setText("Number of Rats:");
-			tmp_tab.lbl_rats_numbering = new Label(tmp_tab.cmpst, SWT.NONE);
-			tmp_tab.lbl_rats_numbering.setBounds(new Rectangle(14, 98, 92, 15));
-			tmp_tab.lbl_rats_numbering.setText("Rats Numbers:");
-			tmp_tab.lbl_notes = new Label(tmp_tab.cmpst, SWT.NONE);
-			tmp_tab.lbl_notes.setBounds(new Rectangle(14, 140, 92, 15));
-			tmp_tab.lbl_notes.setText("Additional Notes:");
-			tmp_tab.txt_name = new Text(tmp_tab.cmpst, SWT.BORDER);
-			tmp_tab.txt_name.setBounds(new Rectangle(140, 14, 183, 21));
-			tmp_tab.txt_name.setText(name);
-			tmp_tab.txt_name.addModifyListener(new ModifyListener() {
-				@Override
-				public void modifyText(final ModifyEvent e)
-				{
-					tmp_tab.tab.setText(tmp_tab.txt_name.getText());
-				}
-			});
-			tmp_tab.lbl_no_rats_data = new Label(tmp_tab.cmpst, SWT.NONE);
-			tmp_tab.lbl_no_rats_data.setBounds(new Rectangle(140, 56, 183, 21));
-			tmp_tab.lbl_no_rats_data.setText(no_rats);
-			tmp_tab.txt_rats_numbers = new Text(tmp_tab.cmpst, SWT.BORDER);
-			tmp_tab.txt_rats_numbers.setBounds(new Rectangle(140, 98, 183, 21));
-			tmp_tab.txt_rats_numbers.setText(rat_numbers);
-			tmp_tab.txt_rats_numbers.setEditable(false);
-			tmp_tab.txt_notes = new Text(tmp_tab.cmpst, SWT.BORDER | SWT.MULTI);
-			tmp_tab.txt_notes.setBounds(new Rectangle(140, 140, 183, 99));
-			tmp_tab.txt_notes.setText(notes);
-			tmp_tab.tab = new TabItem(tabs_grps, SWT.NONE);
-			if (name.equals(""))
-				tmp_tab.tab.setText("new Group");
-			else
-				tmp_tab.tab.setText(name);
-			tmp_tab.tab.setControl(tmp_tab.cmpst);
-			if (id == -1)
-				tmp_tab.grp_id = latest_grp_id;
-			else
-				tmp_tab.grp_id = id;
+			tmp_tab.createGUI(name, no_rats, rat_numbers, notes, id);
 			latest_grp_id++;
 			arr_tabs.add(tmp_tab);
 		}
@@ -324,6 +245,58 @@ public class GroupsForm extends BaseUI
 		public Composite cmpst;
 		public TabItem tab;
 		public int grp_id;
+		
+		public void createGUI(String name, String no_rats, String rat_numbers, String notes, int id)
+		{		cmpst = new Composite(tabs_grps, SWT.NONE);
+		cmpst.setBounds(new Rectangle(4, 24, 328, 358));
+		GridLayout gl_cmpst = new GridLayout(2, false);
+		gl_cmpst.verticalSpacing = 15;
+		cmpst.setLayout(gl_cmpst);
+		lbl_name = new Label(cmpst, SWT.NONE);
+		lbl_name.setText("Name:");
+		txt_name = new Text(cmpst, SWT.BORDER);
+		GridData gd_txt_name = new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1);
+		gd_txt_name.widthHint = 140;
+		txt_name.setLayoutData(gd_txt_name);
+		txt_name.setText(name);
+		txt_name.addModifyListener(new ModifyListener() {
+			@Override
+			public void modifyText(final ModifyEvent e)
+			{
+				tab.setText(txt_name.getText());
+			}
+		});
+		lbl_no_rats = new Label(cmpst, SWT.NONE);
+		lbl_no_rats.setText("Number of Rats:");
+		lbl_no_rats_data = new Label(cmpst, SWT.NONE);
+		lbl_no_rats_data.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		lbl_no_rats_data.setText(no_rats);
+		lbl_rats_numbering = new Label(cmpst, SWT.NONE);
+		lbl_rats_numbering.setText("Rats Numbers:");
+		txt_rats_numbers = new Text(cmpst, SWT.BORDER);
+		txt_rats_numbers.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		txt_rats_numbers.setText(rat_numbers);
+		txt_rats_numbers.setEditable(false);
+		lbl_notes = new Label(cmpst, SWT.NONE);
+		GridData gd_lbl_notes = new GridData(SWT.LEFT, SWT.TOP, false, false, 1, 1);
+		gd_lbl_notes.widthHint = 129;
+		lbl_notes.setLayoutData(gd_lbl_notes);
+		lbl_notes.setText("Additional Notes:");
+		txt_notes = new Text(cmpst, SWT.BORDER | SWT.MULTI);
+		GridData gd_txt_notes = new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1);
+		gd_txt_notes.heightHint = 100;
+		txt_notes.setLayoutData(gd_txt_notes);
+		txt_notes.setText(notes);
+		tab = new TabItem(tabs_grps, SWT.NONE);
+		if (name.equals(""))
+			tab.setText("new Group");
+		else
+			tab.setText(name);
+		tab.setControl(cmpst);
+		if (id == -1)
+			grp_id = latest_grp_id;
+		else
+			grp_id = id;}
 	}
 
 	@Override

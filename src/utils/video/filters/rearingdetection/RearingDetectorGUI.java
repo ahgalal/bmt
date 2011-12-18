@@ -37,8 +37,13 @@ import utils.StatusManager.StatusSeverity;
  * @author Creative
  */
 
-public class RearingDetectorGUI extends PluggedGUI
+public class RearingDetectorGUI extends PluggedGUI<RearingDetector>
 {
+	public RearingDetectorGUI(RearingDetector owner)
+	{
+		super(owner);
+	}
+
 	private Button btn_rearing_now = null;
 	private Button btn_not_rearing = null;
 

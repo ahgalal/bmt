@@ -14,8 +14,8 @@
 
 package control.ui;
 
+import modules.ExperimentManager;
 import modules.ModulesManager;
-import modules.experiment.Experiment.ExperimentType;
 import modules.experiment.ExperimentModule;
 
 import org.eclipse.swt.SWT;
@@ -33,7 +33,6 @@ import utils.StatusManager.StatusSeverity;
 import utils.video.filters.CommonFilterConfigs;
 import utils.video.filters.FilterConfigs;
 import utils.video.filters.screendrawer.ScreenDrawerConfigs;
-import utils.video.filters.subtractionfilter.SubtractorFilter;
 
 /**
  * Controller of the MainGUI window.
@@ -58,8 +57,7 @@ public class CtrlMainGUI extends ControllerUI<MainGUI> implements StateListener
 	}
 
 	/**
-	 * Initializes class attributes (MainGUI,StatsController, PManager and
-	 * InfoController).
+	 * Initializes class attributes
 	 */
 	public CtrlMainGUI()
 	{
@@ -71,8 +69,11 @@ public class CtrlMainGUI extends ControllerUI<MainGUI> implements StateListener
 
 		pm.statusMgr.initialize(ui.getStatusLabel());
 		ctrl_about_box = new CtrlAbout();
+	}
 
-		// ui.loadModulesGUI(ModulesManager.getDefault().getModulesNames());
+	public void setActive()
+	{
+		ui.setActive();
 	}
 
 	/**
@@ -94,11 +95,12 @@ public class CtrlMainGUI extends ControllerUI<MainGUI> implements StateListener
 	@Override
 	public void show(final boolean visibility)
 	{
-		//ui.getShell().open();
+		// ui.getShell().open();
 		ui.show(visibility);
-		///final Thread th_ui_state = new Thread(new RunnableKeepMainGUIStateUpdated());
+		// /final Thread th_ui_state = new Thread(new
+		// RunnableKeepMainGUIStateUpdated());
 		ui_is_opened = true;
-		//th_ui_state.start();
+		// th_ui_state.start();
 	}
 
 	/**
@@ -117,51 +119,52 @@ public class CtrlMainGUI extends ControllerUI<MainGUI> implements StateListener
 	}
 
 	/*	*//**
-	 * Keeps MainGUI's controls in consistency with the current program state.
-	 * ex: which buttons should be enabled at each state.
+	 * Keeps MainGUI's controls in consistency with the current program
+	 * state. ex: which buttons should be enabled at each state.
 	 * 
 	 * @author Creative
-	 *//*
+	 */
+	/*
 	private class RunnableKeepMainGUIStateUpdated implements Runnable
 	{
-		@Override
-		public void run()
-		{
-			final ExperimentModule local_exp_module = (ExperimentModule) ModulesManager.getDefault()
-					.getModuleByName("Experiment Module");
+	@Override
+	public void run()
+	{
+		final ExperimentModule local_exp_module = (ExperimentModule) ModulesManager.getDefault()
+				.getModuleByName("Experiment Module");
 
-			while (ui_is_opened)
-			{
-				Display.getDefault().asyncExec(new Runnable() {
-					@Override
-					public void run()
+		while (ui_is_opened)
+		{
+			Display.getDefault().asyncExec(new Runnable() {
+				@Override
+				public void run()
+				{
+					if (!ui.getShell().isDisposed())
 					{
-						if (!ui.getShell().isDisposed())
+						if (local_exp_module != null)
 						{
-							if (local_exp_module != null)
-							{
-																if (!local_exp_module.isExperimentPresent())
-																{
-																	ui.experiment_module_gui.editExpMenuItemEnable(false);
-																	ui.experiment_module_gui.exportExpToExcelMenuItemEnable(false);
-																}
-																else
-																{
-																	ui.experiment_module_gui.editExpMenuItemEnable(true);
-																	ui.experiment_module_gui.exportExpToExcelMenuItemEnable(true);
-																}
-							}
+															if (!local_exp_module.isExperimentPresent())
+															{
+																ui.experiment_module_gui.editExpMenuItemEnable(false);
+																ui.experiment_module_gui.exportExpToExcelMenuItemEnable(false);
+															}
+															else
+															{
+																ui.experiment_module_gui.editExpMenuItemEnable(true);
+																ui.experiment_module_gui.exportExpToExcelMenuItemEnable(true);
+															}
 						}
 					}
-				});
-				try
-				{
-					Thread.sleep(500);
-				} catch (final InterruptedException e)
-				{
 				}
+			});
+			try
+			{
+				Thread.sleep(500);
+			} catch (final InterruptedException e)
+			{
 			}
 		}
+	}
 
 	}*/
 
@@ -180,7 +183,7 @@ public class CtrlMainGUI extends ControllerUI<MainGUI> implements StateListener
 		@Override
 		public void run()
 		{
-			
+
 			setTableNamesColumn();
 			while (pm.state == ProgramState.TRACKING)
 			{
@@ -223,29 +226,6 @@ public class CtrlMainGUI extends ControllerUI<MainGUI> implements StateListener
 	}
 
 	/**
-	 * Sets the background of DrawZones window and the VideoManager to the
-	 * current cam. image at that instant.
-	 */
-	public void btnSetbgAction()
-	{
-		if (pm.state == ProgramState.STREAMING)
-		{
-			pm.drw_zns.setBackground(pm.getVideoManager().updateRGBBackground());
-/*			((SubtractorFilter) pm.getVideoManager()
-					.getFilterManager()
-					.getFilterByName("SubtractionFilter")).updateBG();*/
-		}
-		else if (pm.state == ProgramState.TRACKING)
-			pm.statusMgr.setStatus(
-					"Background can't be taken while tracking.",
-					StatusSeverity.ERROR);
-		else
-			pm.statusMgr.setStatus(
-					"Please start the camera first.",
-					StatusSeverity.ERROR);
-	}
-
-	/**
 	 * Starts the Streaming process, by initializing the VideoManager.
 	 */
 	public void mnutmCameraStartAction()
@@ -262,7 +242,7 @@ public class CtrlMainGUI extends ControllerUI<MainGUI> implements StateListener
 			ModulesManager.getDefault().setWidthandHeight(
 					commonConfigs.width,
 					commonConfigs.height);
-			pm.initializeVideoManager(commonConfigs,null);
+			pm.initializeVideoManager(commonConfigs, null);
 			configureScreenDrawerFilter("ScreenDrawer", commonConfigs, true);
 			pm.statusMgr.setStatus("Camera is Starting..", StatusSeverity.WARNING);
 		}
@@ -318,7 +298,7 @@ public class CtrlMainGUI extends ControllerUI<MainGUI> implements StateListener
 	 */
 	public void closeProgram()
 	{
-		if(pm.state == ProgramState.TRACKING)
+		if (pm.state == ProgramState.TRACKING)
 			pm.stopTracking();
 		if (pm.state == ProgramState.STREAMING)
 			pm.stopStreaming();
@@ -332,7 +312,7 @@ public class CtrlMainGUI extends ControllerUI<MainGUI> implements StateListener
 		}
 		ui.closeWindow();
 		pm.unloadGUI();
-		//System.exit(0);
+		// System.exit(0);
 	}
 
 	/**
@@ -357,14 +337,13 @@ public class CtrlMainGUI extends ControllerUI<MainGUI> implements StateListener
 			@Override
 			public void run()
 			{
-				if (pm.state == ProgramState.STREAMING
-						&& pm.getVideoManager().isBgSet())
+				if (pm.state == ProgramState.STREAMING)
 				{
 					if (ModulesManager.getDefault().areModulesReady(ui.getShell()))
 					{
 						final ExperimentModule tmp_exp_module = (ExperimentModule) ModulesManager.getDefault()
-						.getModuleByName(
-								"Experiment Module");
+								.getModuleByName(
+										"Experiment Module");
 						if (tmp_exp_module != null)
 						{
 							startTracking();
@@ -378,8 +357,8 @@ public class CtrlMainGUI extends ControllerUI<MainGUI> implements StateListener
 									final MessageBox mbox = new MessageBox(
 											ui.getShell(),
 											SWT.ICON_QUESTION
-											| SWT.YES
-											| SWT.NO);
+													| SWT.YES
+													| SWT.NO);
 									mbox.setMessage("No experiment module is found! continue?");
 									mbox.setText("Continue?");
 									final int res = mbox.open();
@@ -466,12 +445,14 @@ public class CtrlMainGUI extends ControllerUI<MainGUI> implements StateListener
 		for (final PluggedGUI pgui : pGUI)
 			pm.addStateListener(pgui);
 	}
-	private String file_name ="F:\\FST.avi";
+
+	private String file_name = "FST.avi";
+
 	public void setVideoFileMode()
 	{
 		final FileDialog fileDialog = new FileDialog(ui.getShell(), SWT.OPEN);
-		if(file_name==null)
-			file_name= fileDialog.open();
+		if (file_name == null)
+			file_name = fileDialog.open();
 		if (file_name != null)
 		{
 			if (pm.state == ProgramState.IDLE)
@@ -486,7 +467,7 @@ public class CtrlMainGUI extends ControllerUI<MainGUI> implements StateListener
 				ModulesManager.getDefault().setWidthandHeight(
 						commonConfigs.width,
 						commonConfigs.height);
-				pm.initializeVideoManager(commonConfigs,file_name);
+				pm.initializeVideoManager(commonConfigs, file_name);
 
 				configureScreenDrawerFilter("ScreenDrawer", commonConfigs, true);
 				pm.statusMgr.setStatus("Camera is Starting..", StatusSeverity.WARNING);
@@ -496,20 +477,14 @@ public class CtrlMainGUI extends ControllerUI<MainGUI> implements StateListener
 						"Camera is already started.",
 						StatusSeverity.ERROR);
 		}
-		file_name=null;
-	}
-	
-	public void setExperimentType(ExperimentType type)
-	{
-		ModulesManager.getDefault().instantiateExperimentModule(type);
-		pm.getVideoManager().initializeFilters(type);
+		file_name = null;
 	}
 
 	public void startStreamingAction()
 	{
 		if (ui.getSelectedInputMode().equals("CAM"))
 			mnutmCameraStartAction();
-		else if(ui.getSelectedInputMode().equals("VIDEOFILE"))
+		else if (ui.getSelectedInputMode().equals("VIDEOFILE"))
 			setVideoFileMode();
 		pm.startStreaming();
 	}
@@ -542,25 +517,84 @@ public class CtrlMainGUI extends ControllerUI<MainGUI> implements StateListener
 					ui.btnStopTrackingEnable(false);
 					ui.btnStartStreamingEnable(true);
 					ui.btnStopStreamingEnable(false);
-					ui.btnSetBackgroundEnable(false);
 					break;
 				case STREAMING:
 					ui.btnStartTrackingEnable(true);
 					ui.btnStopTrackingEnable(false);
 					ui.btnStartStreamingEnable(false);
 					ui.btnStopStreamingEnable(true);
-					ui.btnSetBackgroundEnable(true);
 					break;
 				case TRACKING:
 					ui.btnStartTrackingEnable(false);
 					ui.btnStopTrackingEnable(true);
 					ui.btnStartStreamingEnable(false);
 					ui.btnStopStreamingEnable(false);
-					ui.btnSetBackgroundEnable(false);
 					break;
 				}
 			}
 		});
-
 	}
+
+	/**
+	 * Shows a save file dialog to save the exported Excel data to that file.
+	 */
+	public void mnutmExperimentExportToExcelAction()
+	{
+		final FileDialog fileDialog = new FileDialog(ui.getShell(), SWT.SAVE);
+		fileDialog.setFilterExtensions(new String[] { "*.xlsx" });
+		final String file_name = fileDialog.open();
+		if (file_name != null)
+			ExperimentManager.getDefault().writeToExcelFile(file_name);
+	}
+
+	/**
+	 * Handles the "Edit Experiment" menu item click action.
+	 */
+	public void mnuitmEditExpAction()
+	{
+		PManager.getDefault().frm_exp.show(true);
+	}
+
+	/**
+	 * Shows the new ExperimentForm and unloads the previous experiment.
+	 */
+	public void mnutmExperimentNewExpAction()
+	{
+		PManager.getDefault().frm_exp.clearForm();
+		PManager.getDefault().frm_grps.clearForm();
+		PManager.main_gui.clearForm();
+		PManager.getDefault().frm_exp.show(true);
+		ExperimentManager.getDefault().unloadExperiment();
+	}
+
+	/**
+	 * Loads an experiment from file: Shows Open Dialog box, Unloads the
+	 * previous experiment and loads the new experiment from the selected file.
+	 * 
+	 * @param sShell
+	 *            parent shell for the open dialogbox
+	 */
+	public void mnutmExperimentLoadexpAction(final Shell sShell)
+	{
+		final FileDialog fileDialog = new FileDialog(sShell, SWT.OPEN);
+		final String file_name = fileDialog.open();
+		if (file_name != null)
+		{
+			PManager.getDefault().frm_exp.clearForm();
+			PManager.getDefault().frm_grps.clearForm();
+			PManager.main_gui.clearForm();
+			ExperimentManager.getDefault().unloadExperiment();
+			ExperimentManager.getDefault().loadInfoFromTXTFile(file_name);
+			ExperimentManager.getDefault().setExpFileName(file_name);
+			PManager.getDefault().statusMgr.setStatus(
+					"Experiment Loaded Successfully!",
+					StatusSeverity.WARNING);
+		}
+	}
+
+	public void setExperimantLoaded(final boolean b)
+	{
+		ui.setExperimantLoaded(b);
+	}
+
 }

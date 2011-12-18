@@ -45,7 +45,7 @@ public class VideoRecorder extends VideoFilter<RecorderConfigs,FilterData>
 	public VideoRecorder(final String name, final Link linkIn, final Link linkOut)
 	{
 		super(name, linkIn, linkOut);
-		gui = new VideoRecorderGUI();
+		gui = new VideoRecorderGUI(this);
 		pm = PManager.getDefault();
 	}
 

@@ -30,7 +30,7 @@ import utils.PManager;
  * 
  * @author Creative
  */
-public class ZonesModuleGUI extends PluggedGUI
+public class ZonesModuleGUI extends PluggedGUI<ZonesModule>
 {
 	/**
 	 * Initializes/shows the GUI components.
@@ -42,6 +42,11 @@ public class ZonesModuleGUI extends PluggedGUI
 	{
 
 	}*/
+
+	public ZonesModuleGUI(ZonesModule owner)
+	{
+		super(owner);
+	}
 
 	/**
 	 * Handles the "Zone editor" menu item click action.

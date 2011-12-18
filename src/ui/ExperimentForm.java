@@ -18,13 +18,19 @@ import java.util.Calendar;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Point;
-import org.eclipse.swt.graphics.Rectangle;
+import org.eclipse.swt.layout.FormAttachment;
+import org.eclipse.swt.layout.FormData;
+import org.eclipse.swt.layout.FormLayout;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
+import utils.PManager;
 import control.ui.ControllerUI;
 import control.ui.CtrlExperimentForm;
 
@@ -52,6 +58,8 @@ public class ExperimentForm extends BaseUI
 	private Label lbl_current_date = null;
 	private Button btn_mng_grps = null;
 	private CtrlExperimentForm controller;
+	private Combo cmboType;
+	private FormData fd_grp_info;
 
 	/**
 	 * Creates GUI components, and links this Shell with the parent Shell.
@@ -70,22 +78,33 @@ public class ExperimentForm extends BaseUI
 		sShell = new Shell(SWT.APPLICATION_MODAL | SWT.ON_TOP | SWT.TITLE);
 		sShell.setText("Experiment Information");
 		createGrpInfo();
-		sShell.setSize(new Point(366, 352));
-		sShell.setLayout(null);
+		sShell.setSize(new Point(363, 360));
 		btn_save = new Button(sShell, SWT.NONE);
-		btn_save.setBounds(new Rectangle(158, 289, 96, 25));
+		FormData fd_btn_save = new FormData();
+		fd_btn_save.top = new FormAttachment(0, 301);
+		fd_btn_save.left = new FormAttachment(0, 141);
+		btn_save.setLayoutData(fd_btn_save);
 		btn_save.setText("Save");
 		btn_save.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
 			@Override
 			public void widgetSelected(final org.eclipse.swt.events.SelectionEvent e)
 			{
-				controller.setVars(new String[] { txt_name.getText(), txt_user.getText(),
-						lbl_current_date.getText(), txt_notes.getText() });
+				controller.setVars(new String[] {
+						txt_name.getText(),
+						txt_user.getText(),
+						lbl_current_date.getText(),
+						txt_notes.getText(),
+						cmboType.getText() });
 				controller.btnSaveAction(sShell);
 			}
 		});
 		btn_cancel = new Button(sShell, SWT.NONE);
-		btn_cancel.setBounds(new Rectangle(258, 289, 96, 25));
+		fd_btn_save.right = new FormAttachment(100, -120);
+		FormData fd_btn_cancel = new FormData();
+		fd_btn_cancel.top = new FormAttachment(grp_info, 6);
+		fd_btn_cancel.left = new FormAttachment(btn_save, 14);
+		fd_btn_cancel.right = new FormAttachment(100, -10);
+		btn_cancel.setLayoutData(fd_btn_cancel);
 		btn_cancel.setText("Cancel");
 		btn_cancel.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
 			@Override
@@ -98,43 +117,56 @@ public class ExperimentForm extends BaseUI
 		setLabelToDate();
 	}
 
+	private void loadTestData()
+	{
+		txt_name.setText("TestName");
+		txt_notes.setText("TestNotes");
+		txt_user.setText("TestUser");
+	}
+
 	/**
 	 * This method initializes grp_info.
 	 */
 	private void createGrpInfo()
 	{
+		sShell.setLayout(new FormLayout());
 		grp_info = new Group(sShell, SWT.NONE);
-		grp_info.setLayout(null);
+		grp_info.setLayout(new GridLayout(2, false));
+		fd_grp_info = new FormData();
+		fd_grp_info.right = new FormAttachment(0, 352);
+		fd_grp_info.left = new FormAttachment(0, 5);
+		fd_grp_info.bottom = new FormAttachment(0, 295);
+		fd_grp_info.top = new FormAttachment(0, 5);
+		grp_info.setLayoutData(fd_grp_info);
 		grp_info.setText("Information:");
-		grp_info.setBounds(new Rectangle(5, 5, 352, 275));
 		lbl_name = new Label(grp_info, SWT.NONE);
-		lbl_name.setBounds(new Rectangle(12, 23, 92, 15));
 		lbl_name.setText("Name:");
-		lbl_no_groups = new Label(grp_info, SWT.NONE);
-		lbl_no_groups.setBounds(new Rectangle(12, 99, 92, 15));
-		lbl_no_groups.setText("Groups:");
-		lbl_date = new Label(grp_info, SWT.NONE);
-		lbl_date.setBounds(new Rectangle(12, 137, 92, 15));
-		lbl_date.setText("Date:");
-		lbl_username = new Label(grp_info, SWT.NONE);
-		lbl_username.setBounds(new Rectangle(12, 61, 92, 15));
-		lbl_username.setText("User:");
-		lbl_notes = new Label(grp_info, SWT.NONE);
-		lbl_notes.setBounds(new Rectangle(12, 175, 92, 15));
-		lbl_notes.setText("Additional Notes:");
 		txt_name = new Text(grp_info, SWT.BORDER);
-		txt_name.setBounds(new Rectangle(153, 16, 192, 21));
+		GridData gd_txt_name = new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1);
+		gd_txt_name.widthHint = 125;
+		txt_name.setLayoutData(gd_txt_name);
+				
+						final Label lblType = new Label(grp_info, SWT.NONE);
+						lblType.setText("Type");
+		
+				cmboType = new Combo(grp_info, SWT.READ_ONLY);
+				cmboType.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, true, false, 1, 1));
+				cmboType.setItems(new String[] {"Open Field", "Forced Swimming"});
+				cmboType.setText("Open Field");
+		lbl_username = new Label(grp_info, SWT.NONE);
+		lbl_username.setText("User:");
 		txt_user = new Text(grp_info, SWT.BORDER);
-		txt_user.setBounds(new Rectangle(153, 56, 192, 21));
-		txt_notes = new Text(grp_info, SWT.BORDER | SWT.MULTI);
-		txt_notes.setBounds(new Rectangle(153, 177, 194, 88));
+		txt_user.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		lbl_date = new Label(grp_info, SWT.NONE);
+		lbl_date.setText("Date:");
 		lbl_current_date = new Label(grp_info, SWT.NONE);
-		lbl_current_date.setBounds(new Rectangle(153, 138, 192, 15));
+		lbl_current_date.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, true, false, 1, 1));
 		lbl_current_date.setText("Current Date");
+		lbl_no_groups = new Label(grp_info, SWT.NONE);
+		lbl_no_groups.setText("Groups:");
 		btn_mng_grps = new Button(grp_info, SWT.NONE);
+		btn_mng_grps.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, true, false, 1, 1));
 		btn_mng_grps.setText("Manage Groups..");
-		btn_mng_grps.setSize(new Point(119, 25));
-		btn_mng_grps.setLocation(new Point(154, 93));
 		btn_mng_grps.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
 			@Override
 			public void widgetSelected(final org.eclipse.swt.events.SelectionEvent e)
@@ -142,6 +174,15 @@ public class ExperimentForm extends BaseUI
 				controller.btnMngGrpsAction();
 			}
 		});
+		lbl_notes = new Label(grp_info, SWT.NONE);
+		GridData gd_lbl_notes = new GridData(SWT.LEFT, SWT.TOP, false, false, 1, 1);
+		gd_lbl_notes.widthHint = 125;
+		lbl_notes.setLayoutData(gd_lbl_notes);
+		lbl_notes.setText("Additional Notes:");
+		txt_notes = new Text(grp_info, SWT.BORDER | SWT.MULTI);
+		GridData gd_txt_notes = new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1);
+		gd_txt_notes.heightHint = 124;
+		txt_notes.setLayoutData(gd_txt_notes);
 	}
 
 	/**
@@ -159,6 +200,8 @@ public class ExperimentForm extends BaseUI
 		txt_notes.setText("");
 		txt_user.setText("");
 		setLabelToDate();
+		if(PManager.testingMode)
+			loadTestData();
 	}
 
 	@Override
@@ -169,6 +212,7 @@ public class ExperimentForm extends BaseUI
 		txt_notes.setText(strArray[2]);
 		lbl_current_date.setText(strArray[3]);
 	}
+
 	@SuppressWarnings("rawtypes")
 	@Override
 	public void setController(final ControllerUI controller)
@@ -176,5 +220,4 @@ public class ExperimentForm extends BaseUI
 		super.setController(controller);
 		this.controller = (CtrlExperimentForm) super.controller;
 	}
-
 }

@@ -11,11 +11,18 @@ import utils.PManager;
 import utils.PManager.ProgramState;
 import utils.StateListener;
 
-public abstract class PluggedGUI implements StateListener
+public abstract class PluggedGUI<OwnerType> implements StateListener
 {
 	protected Shell shell;
 	protected PManager.ProgramState programState;
+	protected OwnerType owner;
 
+	
+	public PluggedGUI(OwnerType owner)
+	{
+		this.owner=owner;
+	}
+	
 	public abstract void initialize(
 			Shell shell,
 			ExpandBar expandBar,

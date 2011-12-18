@@ -66,29 +66,15 @@ public class FilterManager
 	 */
 	public FilterManager(
 			final CommonFilterConfigs common_configs,
-			final FrameIntArray ref_fia,final ExperimentType expType)
+			final FrameIntArray ref_fia, final ExperimentType expType)
 	{
 		PManager.log.print("instantiating..", this, Details.VERBOSE);
 		arr_filters = new ArrayList<VideoFilter<?, ?>>();
 
-		final FiltersSetup openFieldFiltersSetup = new FiltersSetup(
-				new String[] {
-						"RatFinder",
-						"RearingDetector",
-						"Recorder",
-						"SubtractionFilter",
-						"Source Filter" });
-		
-		final FiltersSetup forcedSwimmingFiltersSetup = new FiltersSetup(
-				new String[] {
-						"Recorder",
-						"Source Filter",
-						"Movement Meter"});
-
 		instantiateAndConnectFilters(
-				forcedSwimmingFiltersSetup.getFiltersNames(),
 				common_configs,
-				ref_fia);
+				ref_fia,
+				expType);
 	}
 
 	/**
@@ -265,12 +251,25 @@ public class FilterManager
 	 * @param ref_fia
 	 */
 	private boolean instantiateAndConnectFilters(
-			final String[] filtersNames,
 			final CommonFilterConfigs common_configs,
-			final FrameIntArray ref_fia)
+			final FrameIntArray ref_fia,
+			final ExperimentType expType)
 	{
+		String[] filtersNames = null;
+		final FiltersSetup openFieldFiltersSetup = new FiltersSetup(
+				new String[] {
+						"RatFinder",
+						"RearingDetector",
+						"Recorder",
+						"SubtractionFilter" });
+
+		final FiltersSetup forcedSwimmingFiltersSetup = new FiltersSetup(
+				new String[] {
+						"Recorder",
+						"Movement Meter" });
+
 		PManager.log.print("Connecting video filters", this, Details.VERBOSE);
-		final Point dims = new Point(0, 0);
+		final Point dims = new Point(common_configs.width, common_configs.height);
 
 		final Link src_rgb_link = new Link(dims);
 		final Link grey_link = new Link(dims);
@@ -285,15 +284,30 @@ public class FilterManager
 				ref_fia);
 		source_filter.configure(source_configs);
 		addFilter(source_filter);
-		
-		
-		screen_drawer = new ScreenDrawer(
-				// "ScreenDrawer", /*src_rgb_link*/avg_link, /*marker_link*/
-				// grey_link, null);
-				"ScreenDrawer", /*grey_link*/
-				differentialLink/*src_rgb_link*//*avg_link*/, /*marker_link*/
-				src_rgb_link /*grey_link*/,
-				null);
+
+		switch (expType)
+		{
+		case OPEN_FIELD:
+			screen_drawer = new ScreenDrawer(
+					// "ScreenDrawer", /*src_rgb_link*/avg_link, /*marker_link*/
+					// grey_link, null);
+					"ScreenDrawer", /*grey_link*/
+					src_rgb_link/*avg_link*/, /*marker_link*/
+					grey_link,//TODO:marker_link,
+					null);
+			filtersNames = openFieldFiltersSetup.getFiltersNames();
+			break;
+		case FORCED_SWIMMING:
+			screen_drawer = new ScreenDrawer(
+					// "ScreenDrawer", /*src_rgb_link*/avg_link, /*marker_link*/
+					// grey_link, null);
+					"ScreenDrawer", /*grey_link*/
+					differentialLink/*src_rgb_link*//*avg_link*/, /*marker_link*/
+					src_rgb_link /*grey_link*/,
+					null);
+			filtersNames = forcedSwimmingFiltersSetup.getFiltersNames();
+			break;
+		}
 
 		final ScreenDrawerConfigs scrn_drwr_cnfgs = new ScreenDrawerConfigs(
 				"ScreenDrawer",

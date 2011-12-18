@@ -41,9 +41,6 @@ import utils.video.input.VideoFileModule;
  */
 public class VideoManager
 {
-	private int[] bg_image_rgb;
-	private boolean bg_is_set;
-
 	private final FrameIntArray ref_fia;
 
 	@SuppressWarnings("rawtypes")
@@ -142,6 +139,7 @@ public class VideoManager
 			// finish up opened filters/utils:
 			// ////////////////////////////////
 
+			PManager.getDefault().stopTracking();
 			filter_mgr.disableAll();
 
 			PManager.log.print("Ended Video Streaming", this);
@@ -154,19 +152,6 @@ public class VideoManager
 	public void displayMoreSettings()
 	{
 		v_in.displayMoreSettings();
-	}
-
-	/**
-	 * Updates the RGB background of the subtraction filter with the current
-	 * image, and returns the current image.
-	 * 
-	 * @return integer array representing the RGB background image
-	 */
-	public int[] updateRGBBackground()
-	{
-		bg_image_rgb = ref_fia.frame_data;
-		bg_is_set = true;
-		return bg_image_rgb;
 	}
 
 	/**
@@ -300,27 +285,9 @@ public class VideoManager
 				srcConfigs);
 	}
 
-	/**
-	 * Checks if the Background (Subtraction filter) has been set.
-	 * 
-	 * @return true/false
-	 */
-	public boolean isBgSet()
-	{
-		return bg_is_set;
-	}
-
 	public void initializeFilters(final ExperimentType expType)
 	{
-		switch (expType)
-		{
-		case FORCED_SWIMMING:
-			filter_mgr = new FilterManager(commonConfigs, ref_fia, expType);
-			break;
-		case OPEN_FIELD:
-			filter_mgr = new FilterManager(commonConfigs, ref_fia, expType);
-			break;
-		}
+		filter_mgr = new FilterManager(commonConfigs, ref_fia, expType);
 	}
 
 	/**

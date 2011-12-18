@@ -70,6 +70,8 @@ public class TextEngine
 				{ // load exp. info
 					final String tmp_name = buf_rdr.readLine().substring(
 							Constants.h_exp_name.length());
+					final String tmp_type = buf_rdr.readLine().substring(
+							Constants.h_exp_type.length());
 					final String tmp_user = buf_rdr.readLine().substring(
 							Constants.h_exp_user.length());
 					final String tmp_date = buf_rdr.readLine().substring(
@@ -82,7 +84,7 @@ public class TextEngine
 					// be
 					// loaded!!
 					// as a fix: think of Object Serialization/Deserialization.
-					exp.setExperimentInfo(tmp_name, tmp_user, tmp_date, tmp_notes);
+					exp.setExperimentInfo(tmp_name, tmp_user, tmp_date, tmp_notes,tmp_type);
 				}
 				else if (tmp_line.equals(Constants.h_grp))
 				{ // load grp. info

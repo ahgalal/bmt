@@ -30,7 +30,7 @@ import utils.video.filters.VideoFilter;
  * 
  * @author Creative
  */
-public class SubtractorFilter extends VideoFilter<SubtractionConfigs,FilterData>
+public class SubtractorFilter extends VideoFilter<SubtractionConfigs, FilterData>
 {
 	/**
 	 * Initializes the filter.
@@ -119,12 +119,16 @@ public class SubtractorFilter extends VideoFilter<SubtractionConfigs,FilterData>
 	@Override
 	public void process()
 	{
+		int tmp;
+		final int threshMask = configs.threshold
+				| configs.threshold << 8
+				| configs.threshold << 16;
 		if (configs.enabled)
 		{
 			if (link_in.getData().length == bg_image_gray.frame_data.length)
 			{
 				local_data = ImageManipulator.rgbIntArray2GrayIntArray(link_in.getData());
-				int tmp = 0;
+				tmp = 0;
 				for (int i = 0; i < local_data.length; i++)
 				{
 					tmp = local_data[i] - bg_image_gray.frame_data[i];
@@ -132,7 +136,7 @@ public class SubtractorFilter extends VideoFilter<SubtractionConfigs,FilterData>
 					if (tmp < 0)
 						tmp *= -1;
 
-					if (tmp < configs.threshold)
+					if (tmp < threshMask)
 						local_data[i] = 0;
 					else
 						local_data[i] = 0x00FFFFFF;

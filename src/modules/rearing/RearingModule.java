@@ -50,7 +50,7 @@ public class RearingModule extends Module<RearingModuleGUI,RearingModuleConfigs,
 		data = new RearingModuleData("Rearing Module Data");
 		filters_data = new Data[1];
 		initialize();
-		gui = new RearingModuleGUI();
+		gui = new RearingModuleGUI(this);
 	}
 
 	/**

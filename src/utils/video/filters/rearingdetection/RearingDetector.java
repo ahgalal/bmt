@@ -40,11 +40,11 @@ public class RearingDetector extends VideoFilter<RearingFilterConfigs,RearingFil
 	{
 		super(name, linkIn, linkOut);
 		configs = (RearingFilterConfigs) configs;
-		filter_data = new RearingFilterData("Rearing Data");
+		filterData = new RearingFilterData("Rearing Data");
 
 		// super's stuff:
-		gui = new RearingDetectorGUI();
-		filter_data.setRearing(false);
+		gui = new RearingDetectorGUI(this);
+		filterData.setRearing(false);
 	}
 
 	@Override
@@ -149,7 +149,7 @@ public class RearingDetector extends VideoFilter<RearingFilterConfigs,RearingFil
 					is_rearing = false;
 			}
 		}
-		filter_data.setRearing(is_rearing);
+		filterData.setRearing(is_rearing);
 	}
 
 	@Override

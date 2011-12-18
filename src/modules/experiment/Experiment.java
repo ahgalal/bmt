@@ -24,18 +24,42 @@ import java.util.ArrayList;
 public class Experiment implements Exp2GUI
 {
 
-	public enum ExperimentType{
-		OPEN_FIELD,FORCED_SWIMMING
+	public enum ExperimentType
+	{
+		OPEN_FIELD("Open Field"), FORCED_SWIMMING("Forced Swimming");
+		private String name;
+		private ExperimentType(String name)
+		{
+			this.name=name;
+		}
+		
+		@Override
+		public String toString()
+		{
+			return name;
+		}
+		public static ExperimentType enumOf(String str)
+		{
+			if(str.equals("Open Field"))
+				return OPEN_FIELD;
+			else if(str.equals("Forced Swimming"))
+				return FORCED_SWIMMING;
+			else
+				return null;
+		}
+		
 	}
+
 	private final ArrayList<modules.experiment.Group> groups;
 	private String name;
 	private String user;
 	private String date;
 	private String notes;
-	public ExperimentType type= ExperimentType.FORCED_SWIMMING;
+	public ExperimentType type;
 
 	private String[] params;
 	public String fileName;
+
 	/**
 	 * Clears the experiment info(data) This functions loops on all the groups
 	 * in the experiment and for each group it calls getAllRats() method and
@@ -72,7 +96,7 @@ public class Experiment implements Exp2GUI
 	public Experiment()
 	{
 		groups = new ArrayList<Group>();
-		//params = new String[0];
+		// params = new String[0];
 	}
 
 	/**
@@ -86,17 +110,20 @@ public class Experiment implements Exp2GUI
 	 *            date of the experiment
 	 * @param notes
 	 *            any additional notes about the experiment
+	 * @param type
 	 */
 	public void setExperimentInfo(
 			final String name,
 			final String user,
 			final String date2,
-			final String notes)
+			final String notes, final String type)
 	{
 		this.name = name;
 		this.user = user;
 		this.date = date2;
 		this.notes = notes;
+		this.type= ExperimentType.enumOf(type);
+		System.out.println(this.type);
 	}
 
 	/**
@@ -227,7 +254,7 @@ public class Experiment implements Exp2GUI
 	{
 		return params;
 	}
-
+	
 	/**
 	 * Stores all the experiment's information in a string.
 	 * 
@@ -244,6 +271,9 @@ public class Experiment implements Exp2GUI
 					+ System.getProperty("line.separator")
 					+ Constants.h_exp_name
 					+ getName()
+					+ System.getProperty("line.separator")
+					+ Constants.h_exp_type
+					+ type
 					+ System.getProperty("line.separator")
 					+ Constants.h_exp_user
 					+ getUser()

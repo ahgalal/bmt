@@ -14,6 +14,7 @@
 
 package control.ui;
 
+import modules.ExperimentManager;
 import modules.ModulesManager;
 import modules.experiment.ExperimentModule;
 
@@ -62,8 +63,7 @@ public class CtrlRatInfoForm extends ControllerUI<RatInfoForm>
 	@Override
 	public void show(final boolean visibility)
 	{
-		final String[] grps = ((ExperimentModule) ModulesManager.getDefault()
-				.getModuleByName("Experiment Module")).getGroupsNames();
+		final String[] grps = ExperimentManager.getDefault().getGroupsNames();
 		final String[] params = new String[grps.length + 1];
 		iamready = false;
 		cancelled = false;
@@ -108,14 +108,12 @@ public class CtrlRatInfoForm extends ControllerUI<RatInfoForm>
 		try
 		{
 
-			final int tmp_confirmation = ((ExperimentModule) ModulesManager.getDefault()
-					.getModuleByName("Experiment Module")).validateRatAndGroup(
+			final int tmp_confirmation = ExperimentManager.getDefault().validateRatAndGroup(
 					rat_num,
 					grp_name);
 			if (tmp_confirmation == 0)
 			{
-				((ExperimentModule) ModulesManager.getDefault().getModuleByName(
-						"Experiment Module")).setCurrentRatAndGroup(rat_num, grp_name);
+				ExperimentManager.getDefault().setCurrentRatAndGroup(rat_num, grp_name);
 				return true;
 			}
 			else if (tmp_confirmation == 1)
@@ -128,8 +126,7 @@ public class CtrlRatInfoForm extends ControllerUI<RatInfoForm>
 				final int res = msg.open();
 				if (res == SWT.YES)
 				{
-					((ExperimentModule) ModulesManager.getDefault().getModuleByName(
-							"Experiment Module")).setCurrentRatAndGroup(rat_num, grp_name);
+					ExperimentManager.getDefault().setCurrentRatAndGroup(rat_num, grp_name);
 					return true;
 				}
 			}

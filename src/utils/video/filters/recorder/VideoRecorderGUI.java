@@ -39,8 +39,13 @@ import utils.PManager.ProgramState;
  * 
  * @author Creative
  */
-public class VideoRecorderGUI extends PluggedGUI
+public class VideoRecorderGUI extends PluggedGUI<VideoRecorder>
 {
+
+	public VideoRecorderGUI(VideoRecorder owner)
+	{
+		super(owner);
+	}
 
 	private Button btnStartRecordingEBar = null;
 	private Button btnStopRecordingEBar = null;

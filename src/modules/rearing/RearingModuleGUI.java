@@ -37,8 +37,13 @@ import utils.PManager.ProgramState;
  * 
  * @author Creative
  */
-public class RearingModuleGUI extends PluggedGUI
+public class RearingModuleGUI extends PluggedGUI<RearingModule>
 {
+	public RearingModuleGUI(RearingModule owner)
+	{
+		super(owner);
+	}
+
 	private Button btn_sub_rearing = null;
 	private Button btn_add_rearing = null;
 
@@ -81,9 +86,8 @@ public class RearingModuleGUI extends PluggedGUI
 			final ExpandBar expandBar,
 			final Menu menuBar,
 			final CoolBar coolBar,
-			Group grpGraphs)
+			final Group grpGraphs)
 	{
-
 		final ExpandItem xpndtmManualRearing = new ExpandItem(expandBar, SWT.NONE);
 		xpndtmManualRearing.setExpanded(true);
 		xpndtmManualRearing.setText("Manual Rearing");

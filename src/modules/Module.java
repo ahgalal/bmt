@@ -153,6 +153,7 @@ public abstract class Module<GUIType extends PluggedGUI, ConfigsType extends Mod
 	{
 		this.name = name;
 		this.configs = config;
+
 	}
 
 	/**

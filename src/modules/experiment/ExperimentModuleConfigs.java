@@ -15,7 +15,6 @@
 package modules.experiment;
 
 import modules.ModuleConfigs;
-import modules.experiment.Experiment.ExperimentType;
 
 /**
  * Configuration class for the Experiment module.
@@ -24,17 +23,19 @@ import modules.experiment.Experiment.ExperimentType;
  */
 public class ExperimentModuleConfigs extends ModuleConfigs
 {
-	public ExperimentType expType;
+	private int currRatNumber;
+	private String currGrpName;
+	public Experiment exp;
 	/**
 	 * Initializations for the configurations.
 	 * 
 	 * @param moduleName
 	 *            name of the module instance
 	 */
-	public ExperimentModuleConfigs(final String moduleName,ExperimentType expType)
+	public ExperimentModuleConfigs(final String moduleName,Experiment exp)
 	{
 		super(moduleName);
-		this.expType=expType;
+		this.exp=exp;
 	}
 
 	@Override
@@ -42,6 +43,26 @@ public class ExperimentModuleConfigs extends ModuleConfigs
 	{
 		// TODO Auto-generated method stub
 
+	}
+
+	public void setCurrRatNumber(int currRatNumber)
+	{
+		this.currRatNumber = currRatNumber;
+	}
+
+	public int getCurrRatNumber()
+	{
+		return currRatNumber;
+	}
+
+	public void setCurrGrpName(String currGrpName)
+	{
+		this.currGrpName = currGrpName;
+	}
+
+	public String getCurrGrpName()
+	{
+		return currGrpName;
 	}
 
 }

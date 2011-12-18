@@ -23,11 +23,6 @@ import utils.video.filters.Data;
  */
 public class ExperimentModuleData extends Data
 {
-	public int currRatNumber;
-	public String currGrpName;
-	public Experiment exp;
-
-
 	/**
 	 * Initializes the Data.
 	 * 

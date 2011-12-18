@@ -24,7 +24,7 @@ public class MovementMeterModule extends Module<MovementMeterModuleGUI,ModuleCon
 		super(name, config);
 		filters_data = new Data[1];
 		energyData = new ArrayList<Integer>();
-		gui = new MovementMeterModuleGUI();
+		gui = new MovementMeterModuleGUI(this);
 		
 		initialize();
 	}

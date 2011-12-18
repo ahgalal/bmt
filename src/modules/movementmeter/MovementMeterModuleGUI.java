@@ -12,8 +12,13 @@ import plotter.Plotter;
 
 import ui.PluggedGUI;
 
-public class MovementMeterModuleGUI extends PluggedGUI
+public class MovementMeterModuleGUI extends PluggedGUI<MovementMeterModule>
 {
+	public MovementMeterModuleGUI(MovementMeterModule owner)
+	{
+		super(owner);
+	}
+
 	private Composite cmpstPlotter;
 	private Plotter plotter;
 	@Override
@@ -24,6 +29,7 @@ public class MovementMeterModuleGUI extends PluggedGUI
 			CoolBar coolBar,
 			Group grpGraphs)
 	{
+		this.owner=owner;
 		cmpstPlotter = new Composite(grpGraphs, SWT.NONE);
 		cmpstPlotter.setBounds(10, 20, 232, 135);
 

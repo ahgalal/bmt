@@ -26,7 +26,7 @@ import utils.video.filters.VideoFilter;
  * 
  * @author Creative
  */
-public class SourceFilter extends VideoFilter<SourceFilterConfigs,FilterData>
+public class SourceFilter extends VideoFilter<SourceFilterConfigs,SourceFilterData>
 {
 	/**
 	 * Initializes the filter.
@@ -41,6 +41,7 @@ public class SourceFilter extends VideoFilter<SourceFilterConfigs,FilterData>
 	public SourceFilter(final String name, final Link linkIn, final Link linkOut)
 	{
 		super(name, linkIn, linkOut);
+		filterData=new SourceFilterData("Source Filter");
 	}
 
 	@Override
@@ -54,6 +55,7 @@ public class SourceFilter extends VideoFilter<SourceFilterConfigs,FilterData>
 	public void process()
 	{
 		link_out.setData(configs.fia.frame_data);
+		filterData.setData(configs.fia.frame_data);
 	}
 
 	@Override

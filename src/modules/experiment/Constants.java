@@ -34,6 +34,7 @@ public class Constants
 	public static final String h_exp_user = "User Name: ";
 	public static final String h_exp_date = "Date: ";
 	public static final String h_exp_notes = "Notes: ";
+	public static final String h_exp_type = "Type: ";
 
 	/**
 	 * Group Headers:.
@@ -64,6 +65,7 @@ public class Constants
 	public static final String GUI_EXP_NAME = "Experiment's Name";
 	public static final String GUI_GROUP_NAME = "Group's Name";
 	public static final String GUI_RAT_NUMBER = "Rat Number";
+	public static final String GUI_EXP_TYPE = "Type";
 	public static final String GUI_REARING_COUNTER = "Rearing Counter";
 	public static final String GUI_SESSION_TIME = "Session Time";
 	public static final String GUI_CURRENT_ZONE = "Current Zone";

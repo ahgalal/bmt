@@ -18,7 +18,9 @@
 package utils.video.filters;
 
 import ui.PluggedGUI;
+import utils.PManager;
 import utils.StateListener;
+import utils.Logger.Details;
 
 /**
  * Parent of all Video utilities & filters.
@@ -28,7 +30,7 @@ import utils.StateListener;
 public abstract class VideoFilter<ConfigsType extends FilterConfigs,DataType extends FilterData> implements StateListener
 {
 	protected String name;
-	protected DataType filter_data;
+	protected DataType filterData;
 	protected ConfigsType configs;
 	protected Link link_in, link_out;
 	protected PluggedGUI gui;
@@ -108,7 +110,7 @@ public abstract class VideoFilter<ConfigsType extends FilterConfigs,DataType ext
 	 */
 	public Data getFilterData()
 	{
-		return filter_data;
+		return filterData;
 	}
 
 	/**
@@ -132,6 +134,7 @@ public abstract class VideoFilter<ConfigsType extends FilterConfigs,DataType ext
 	public boolean configure(final FilterConfigs configs)
 	{
 		this.configs = (ConfigsType) configs;
+		PManager.log.print("initializing..", this, Details.VERBOSE);
 		return true;
 	}
 

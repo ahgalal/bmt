@@ -77,9 +77,9 @@ public class ZonesModule extends Module<ZonesModuleGUI,ZonesModuleConfigs,ZonesM
 		data.zones = new ZonesCollection();
 		shape_controller = ShapeController.getDefault();
 		initialize();
-		gui = new ZonesModuleGUI();
+		gui = new ZonesModuleGUI(this);
 
-		// TODO: IMPORTANT update the wisth & height of the zone_mape when the
+		// TODO: IMPORTANT update the width & height of the zone_mape when the
 		// user changes them.
 		// We can make a GLOBAL_CONFIGs object that is accessible everywhere,
 		// and
