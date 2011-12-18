@@ -21,8 +21,8 @@ import modules.experiment.Constants;
 
 import org.eclipse.swt.widgets.Shell;
 
-import utils.PManager;
 import utils.Logger.Details;
+import utils.PManager;
 import utils.video.filters.Data;
 import utils.video.filters.rearingdetection.RearingFilterData;
 
@@ -31,7 +31,8 @@ import utils.video.filters.rearingdetection.RearingFilterData;
  * 
  * @author Creative
  */
-public class RearingModule extends Module<RearingModuleGUI,RearingModuleConfigs,RearingModuleData>
+public class RearingModule extends
+		Module<RearingModuleGUI, RearingModuleConfigs, RearingModuleData>
 {
 	private boolean is_rearing;
 	private RearingFilterData rearing_filter_data;
@@ -140,9 +141,7 @@ public class RearingModule extends Module<RearingModuleGUI,RearingModuleConfigs,
 	public void deRegisterDataObject(final Data data)
 	{
 		if (rearing_filter_data == data)
-		{
 			rearing_filter_data = null;
-		}
 		this.filters_data[0] = null;
 	}
 
@@ -159,5 +158,4 @@ public class RearingModule extends Module<RearingModuleGUI,RearingModuleConfigs,
 	{
 		// TODO Auto-generated method stub
 	}
-
 }

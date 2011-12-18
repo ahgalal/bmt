@@ -83,15 +83,14 @@ public class MainGUI extends BaseUI
 	private Table tbl_data = null;
 	private CoolBar coolBar;
 	private Group grpGraphs;
-	
+
 	private MenuItem mnu_experiment_item = null;
 	private Menu mnu_experiment = null;
 	private MenuItem mnutm_experiment_loadexp = null;
 	private MenuItem mnutm_experiment_exporttoexcel = null;
 	private MenuItem mnuitm_edt_exp;
 	private MenuItem mnutm_experiment_newexp;
-	
-	
+
 	/**
 	 * Creates GUI components, and links this Shell with the parent Shell.
 	 */
@@ -100,9 +99,8 @@ public class MainGUI extends BaseUI
 		createSShell();
 		super.sShell = this.sShell;
 
-
 	}
-	
+
 	public void setActive()
 	{
 		sShell.setActive();
@@ -245,6 +243,7 @@ public class MainGUI extends BaseUI
 		tableColumn1.setText("Value");
 
 	}
+
 	/**
 	 * This method initializes grp_stats.
 	 */
@@ -253,27 +252,27 @@ public class MainGUI extends BaseUI
 		grpGraphs = new Group(sShell, SWT.NONE);
 		grpGraphs.setText("Graphs");
 		grpGraphs.setBounds(10, 511, 969, 165);
-/*		
-		Button button = new Button(grpGraphs, SWT.NONE);
-		button.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				System.out.println("B1");
-			}
-		});
-		button.setBounds(52, 50, 75, 25);
-		button.setText("1");
-		
-		Button button_1 = new Button(grpGraphs, SWT.NONE);
-		button_1.setBounds(152, 50, 75, 25);
-		button_1.setText("2");
-		button_1.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e)
-			{
-				System.out.println("B2");
-			}
-		});*/
+		/*		
+				Button button = new Button(grpGraphs, SWT.NONE);
+				button.addSelectionListener(new SelectionAdapter() {
+					@Override
+					public void widgetSelected(SelectionEvent e) {
+						System.out.println("B1");
+					}
+				});
+				button.setBounds(52, 50, 75, 25);
+				button.setText("1");
+				
+				Button button_1 = new Button(grpGraphs, SWT.NONE);
+				button_1.setBounds(152, 50, 75, 25);
+				button_1.setText("2");
+				button_1.addSelectionListener(new SelectionAdapter() {
+					@Override
+					public void widgetSelected(SelectionEvent e)
+					{
+						System.out.println("B2");
+					}
+				});*/
 	}
 
 	private ExpandBar expandBar;
@@ -484,8 +483,7 @@ public class MainGUI extends BaseUI
 				controller.closeProgram();
 			}
 		});
-		
-		
+
 		mnu_experiment_item = new MenuItem(menuBar, SWT.CASCADE); // experiment
 		mnu_experiment_item.setText(ExternalStrings.get("MainGUI.Menu.Experiment")); //$NON-NLS-1$
 		mnu_experiment = new Menu(mnu_experiment_item);
@@ -513,47 +511,47 @@ public class MainGUI extends BaseUI
 			}
 		});
 		mnutm_experiment_newexp.setText(ExternalStrings.get("MainGUI.Menu.Exp.New")); //$NON-NLS-1$
-		
-				mnuitm_edt_exp.setText(ExternalStrings.get("MainGUI.Menu.Exp.Edit")); //$NON-NLS-1$
-				mnuitm_edt_exp.addSelectionListener(new org.eclipse.swt.events.SelectionListener() {
-					@Override
-					public void widgetDefaultSelected(
+
+		mnuitm_edt_exp.setText(ExternalStrings.get("MainGUI.Menu.Exp.Edit")); //$NON-NLS-1$
+		mnuitm_edt_exp.addSelectionListener(new org.eclipse.swt.events.SelectionListener() {
+			@Override
+			public void widgetDefaultSelected(
 							final org.eclipse.swt.events.SelectionEvent e)
 					{
 					}
 
-					@Override
-					public void widgetSelected(final org.eclipse.swt.events.SelectionEvent e)
+			@Override
+			public void widgetSelected(final org.eclipse.swt.events.SelectionEvent e)
 					{
 						controller.mnuitmEditExpAction();
 					}
-				});
-				mnutm_experiment_newexp.addSelectionListener(new org.eclipse.swt.events.SelectionListener() {
-					@Override
-					public void widgetDefaultSelected(
+		});
+		mnutm_experiment_newexp.addSelectionListener(new org.eclipse.swt.events.SelectionListener() {
+			@Override
+			public void widgetDefaultSelected(
 							final org.eclipse.swt.events.SelectionEvent e)
 					{
 					}
 
-					@Override
-					public void widgetSelected(final org.eclipse.swt.events.SelectionEvent e)
+			@Override
+			public void widgetSelected(final org.eclipse.swt.events.SelectionEvent e)
 					{
 						controller.mnutmExperimentNewExpAction();
 					}
-				});
-				
-						mnutm_experiment_loadexp.addSelectionListener(new org.eclipse.swt.events.SelectionListener() {
-							@Override
-							public void widgetDefaultSelected(final SelectionEvent arg0)
+		});
+
+		mnutm_experiment_loadexp.addSelectionListener(new org.eclipse.swt.events.SelectionListener() {
+			@Override
+			public void widgetDefaultSelected(final SelectionEvent arg0)
 							{
 							}
-				
-							@Override
-							public void widgetSelected(final org.eclipse.swt.events.SelectionEvent e)
+
+			@Override
+			public void widgetSelected(final org.eclipse.swt.events.SelectionEvent e)
 							{
 								controller.mnutmExperimentLoadexpAction(sShell);
 							}
-						});
+		});
 
 		mnu_help_item = new MenuItem(menuBar, SWT.CASCADE); // help
 		mnu_help_item.setText(ExternalStrings.get("MainGUI.Menu.Help")); //$NON-NLS-1$
@@ -569,7 +567,7 @@ public class MainGUI extends BaseUI
 				controller.mnutmHelpAboutAction();
 			}
 		});
-		
+
 		clearForm();
 	}
 
@@ -598,6 +596,7 @@ public class MainGUI extends BaseUI
 	{
 
 	}
+
 	@SuppressWarnings("rawtypes")
 	@Override
 	public void setController(final ControllerUI controller)
@@ -637,13 +636,11 @@ public class MainGUI extends BaseUI
 	public void fillDataTable(final String[] names, final String[] values)
 	{
 		if (names != null)
-		{
 			for (int i = 0; i < names.length; i++)
 			{
 				final TableItem ti = new TableItem(tbl_data, 0);
 				ti.setText(names[i]);
 			}
-		}
 
 		if (values != null)
 			for (int i = 0; i < values.length; i++)
@@ -659,7 +656,13 @@ public class MainGUI extends BaseUI
 	 */
 	public void btnStartTrackingEnable(final boolean enable)
 	{
-		btnStartTracking.setEnabled(enable);
+		Display.getDefault().asyncExec(new Runnable() {
+			@Override
+			public void run()
+			{
+				btnStartTracking.setEnabled(enable);
+			}
+		});
 	}
 
 	/**
@@ -704,7 +707,7 @@ public class MainGUI extends BaseUI
 	public void loadPluggedGUI(final PluggedGUI<?>[] pGUIs)
 	{
 		for (final PluggedGUI<?> pgui : pGUIs)
-			pgui.initialize(sShell, expandBar, menuBar, coolBar,grpGraphs);
+			pgui.initialize(sShell, expandBar, menuBar, coolBar, grpGraphs);
 
 		coolBar.setBounds(5, 5, 300, 30);
 		coolBar.layout();
@@ -720,7 +723,7 @@ public class MainGUI extends BaseUI
 			return "VIDEOFILE";
 		return null;
 	}
-	
+
 	public void setExperimantLoaded(final boolean loaded)
 	{
 		if (loaded)

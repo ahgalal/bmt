@@ -90,9 +90,7 @@ public class ModulesManager
 			th_modules = null;
 
 			for (final Module mo : modules)
-			{
 				mo.deInitialize();
-			}
 		}
 	}
 
@@ -117,21 +115,21 @@ public class ModulesManager
 		modules = new ArrayList<Module>();
 	}
 
-	public void setupModulesAndFilters(Experiment exp)
+	public void setupModulesAndFilters(final Experiment exp)
 	{
 		ModulesManager.getDefault().setupModules(exp);
 		PManager.getDefault().getVideoManager().initializeFilters(exp.type);
 		PManager.getDefault().signalProgramStateUpdate();
 	}
-	
-	
-	public void setupModules(Experiment exp)
+
+	public void setupModules(final Experiment exp)
 	{
 		// ////////////////////////////////
 		// Experiment Module
-		ExperimentModule expModule = ExperimentManager.getDefault().instantiateExperimentModule();
+		final ExperimentModule expModule = ExperimentManager.getDefault()
+				.instantiateExperimentModule();
 		modules.add(expModule);
-		
+
 		final ModulesSetup openFieldModulesSetup = new ModulesSetup(new String[] {
 				"Rearing Module",
 				"Zones Module",
@@ -159,7 +157,6 @@ public class ModulesManager
 	/**
 	 * 
 	 */
-
 
 	private void instantiateModules(final String[] moduleNames)
 	{
@@ -254,22 +251,16 @@ public class ModulesManager
 	{
 		int validGUIsNumber = 0;
 		for (final Module module : modules)
-		{
 			if (module.getGUI() != null)
-			{
 				validGUIsNumber++;
-			}
-		}
 		final PluggedGUI[] arr = new PluggedGUI[validGUIsNumber];
 		int i = 0;
 		for (final Module module : modules)
-		{
 			if (module.getGUI() != null)
 			{
 				arr[i] = module.getGUI();
 				i++;
 			}
-		}
 		return arr;
 	}
 
@@ -446,7 +437,8 @@ public class ModulesManager
 		for (final Module m : modules)
 		{
 			tmp = m.getFileCargo();
-			if (tmp != null){
+			if (tmp != null)
+			{
 				file_cargos.add(tmp);
 				num_strs += tmp.getData().length;
 			}
@@ -572,6 +564,14 @@ public class ModulesManager
 		for (final Module m : modules)
 			tmp_arr.add(m.getName());
 		return tmp_arr;
+	}
+
+	public boolean allowTracking()
+	{
+		for (final Module m : modules)
+			if (m.allowTracking() == false)
+				return false;
+		return true;
 	}
 
 }

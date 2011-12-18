@@ -180,4 +180,8 @@ public abstract class Module<GUIType extends PluggedGUI, ConfigsType extends Mod
 	{
 		return gui;
 	}
+	
+	public boolean allowTracking(){
+		return true;
+	}
 }

@@ -72,4 +72,13 @@ public class OpenFieldExperimentModule extends ExperimentModule
 			return false;
 	}
 
+	@Override
+	public boolean allowTracking()
+	{
+		if (bg_is_set)
+			return true;
+		else
+			return false;
+	}
+
 }
