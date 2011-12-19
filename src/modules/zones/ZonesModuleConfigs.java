@@ -62,7 +62,7 @@ public class ZonesModuleConfigs extends ModuleConfigs {
      *   	calculating number of entering/leaving of zones. 
      *   
      */
-    public int hyst_value = 50, width, height;
+    public int hyst_value = 50;
 
     /**
      * Initializations for the configurations.

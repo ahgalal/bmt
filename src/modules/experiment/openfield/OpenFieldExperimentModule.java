@@ -25,8 +25,6 @@ public class OpenFieldExperimentModule extends ExperimentModule {
 	super(name, config);
 	gui = new OpenFieldExperimentModuleGUI(this);
 	data = new ExperimentModuleData(name);
-	// configs.exp=new Experiment();
-	// configs.exp.type=ExperimentType.OPEN_FIELD;
     }
 
     /**

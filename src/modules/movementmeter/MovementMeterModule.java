@@ -32,14 +32,13 @@ public class MovementMeterModule extends
     public void initialize() {
 	PManager.log.print("initializing..", this, Details.VERBOSE);
 	guiCargo = new Cargo(new String[] { "Energy" });
-
+	energyData.clear();
 	fileCargo = new Cargo(new String[] { "Energy" });
     }
 
     @Override
     public void deInitialize() {
-	// TODO Auto-generated method stub
-
+	sectorizeEnergy();
     }
 
     @Override
@@ -58,6 +57,34 @@ public class MovementMeterModule extends
 	guiCargo.setDataByIndex(0,
 		"" + movementMeterFilterData.getWhiteSummation());
 	gui.addPoint(time++, movementMeterFilterData.getWhiteSummation() / 2000);
+    }
+
+    private void sectorizeEnergy() {
+	int max = 0, min = 100000000;
+	final int noLevels=5;
+	int[] sectorsData = new int[noLevels];
+	for (final int i : energyData)
+	    if (i > max)
+		max = i;
+	    else if (i < min)
+		min = i;
+
+	int[] levels = new int[noLevels];
+	int levelHeight = (max - min)/noLevels;
+	
+	for(int k=0;k<noLevels;k++)
+	    levels[k]=levelHeight*k;
+	
+	for(int i:energyData)
+	    for(int j=1;j<noLevels;j++)
+		if(i<levels[j] && i> levels[j-1])
+		    sectorsData[j-1]++;
+	
+	
+	System.out.println("Sectors data:\n");
+	for(int i:sectorsData)
+	    System.out.println(i);
+	
     }
 
     @Override

@@ -116,14 +116,14 @@ public class ModulesManager {
 	// ////////////////////////////////
 	// Experiment Module
 	final ExperimentModule expModule = ExperimentManager.getDefault()
-		.instantiateExperimentModule();
+	.instantiateExperimentModule();
 	modules.add(expModule);
 
-	final ModulesSetup openFieldModulesSetup = new ModulesSetup(
+	final ModulesSet openFieldModulesSetup = new ModulesSet(
 		new String[] { "Rearing Module", "Zones Module",
-			"Session Module" });
+		"Session Module" });
 
-	final ModulesSetup forcedSwimmingModulesSetup = new ModulesSetup(
+	final ModulesSet forcedSwimmingModulesSetup = new ModulesSet(
 		new String[] { "Session Module", "Movement Meter Module" });
 
 	switch (exp.type) {
@@ -140,8 +140,8 @@ public class ModulesManager {
     }
 
     /**
-	 * 
-	 */
+     * 
+     */
 
     private void instantiateModules(final String[] moduleNames) {
 	PManager.log.print("instantiating Modules", this, Details.VERBOSE);
@@ -149,7 +149,7 @@ public class ModulesManager {
 	// Rearing Module
 	if (isWithinArray("Rearing Module", moduleNames)) {
 	    final RearingModuleConfigs rearingConfigs = new RearingModuleConfigs(
-		    "Rearing Module");
+	    "Rearing Module");
 	    final RearingModule rearingModule = new RearingModule(
 		    "Rearing Module", rearingConfigs);
 	    modules.add(rearingModule);
@@ -168,7 +168,7 @@ public class ModulesManager {
 	// Session Module
 	if (isWithinArray("Session Module", moduleNames)) {
 	    final SessionModuleConfigs sessionConfigs = new SessionModuleConfigs(
-		    "Session Module");
+	    "Session Module");
 	    final SessionModule sessionModule = new SessionModule(
 		    "Session Module", sessionConfigs);
 	    modules.add(sessionModule);
@@ -177,7 +177,7 @@ public class ModulesManager {
 	// MovementMeter Module
 	if (isWithinArray("Movement Meter Module", moduleNames)) {
 	    final MovementMeterModuleConfigs movementModuleConfigs = new MovementMeterModuleConfigs(
-		    "Movement Meter Module");
+	    "Movement Meter Module");
 	    final MovementMeterModule movementMeterModule = new MovementMeterModule(
 		    "Movement Meter Module", movementModuleConfigs);
 	    modules.add(movementMeterModule);
@@ -194,8 +194,8 @@ public class ModulesManager {
     }
 
     /**
-	 * 
-	 */
+     * 
+     */
     private void loadModulesGUI() {
 	PManager.log.print("loading Modules GUI..", this, Details.VERBOSE);
 	PManager.main_gui.loadPluggedGUI(getModulesGUI());
@@ -318,7 +318,6 @@ public class ModulesManager {
      *         GUI
      */
     public String[] getGUINames() {
-
 	return gui_names_array;
     }
 
@@ -475,7 +474,7 @@ public class ModulesManager {
      * @param height
      *            webcam image's height
      */
-    public void setWidthandHeight(final int width, final int height) {
+    public void setModulesWidthandHeight(final int width, final int height) {
 	this.width = width;
 	this.height = height;
 
@@ -496,10 +495,15 @@ public class ModulesManager {
     }
 
     public boolean allowTracking() {
-	for (final Module m : modules)
-	    if (m.allowTracking() == false)
-		return false;
-	return true;
+	boolean ret = false;
+	for (final Module m : modules){
+	    ret=true;
+	    if (m.allowTracking() == false){
+		ret=false;
+		break;
+	    }
+	}
+	return ret;
     }
 
 }

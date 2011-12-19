@@ -296,7 +296,6 @@ public class VideoManager {
 	}
 	v_in.stopModule();
 	v_in = null;
-	PManager.getDefault().state = ProgramState.IDLE;
     }
 
     /**

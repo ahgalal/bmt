@@ -14,6 +14,8 @@
 
 package control.ui;
 
+import java.io.File;
+
 import modules.ExperimentManager;
 import modules.ModulesManager;
 import modules.experiment.ExperimentModule;
@@ -96,11 +98,16 @@ public class CtrlMainGUI extends ControllerUI<MainGUI> implements StateListener 
 	    @Override
 	    public void run() {
 		while (!ui_shell.isDisposed()) {
-		    if (ModulesManager.getDefault().allowTracking())
+		    if (ExperimentManager.getDefault().isExperimentPresent()
+			    && pm.state == ProgramState.IDLE)
+			ui.btnStartStreamingEnable(true);
+		    else
+			ui.btnStartStreamingEnable(false);
+		    if (ModulesManager.getDefault().allowTracking()
+			    && pm.state == ProgramState.STREAMING)
 			ui.btnStartTrackingEnable(true);
 		    else
 			ui.btnStartTrackingEnable(false);
-
 		    try {
 			Thread.sleep(100);
 		    } catch (final InterruptedException e) {
@@ -126,33 +133,6 @@ public class CtrlMainGUI extends ControllerUI<MainGUI> implements StateListener 
 	    th_update_gui.start();
 	}
     }
-
-    /*	*//**
-     * Keeps MainGUI's controls in consistency with the current program
-     * state. ex: which buttons should be enabled at each state.
-     * 
-     * @author Creative
-     */
-    /*
-     * private class RunnableKeepMainGUIStateUpdated implements Runnable {
-     * 
-     * @Override public void run() { final ExperimentModule local_exp_module =
-     * (ExperimentModule) ModulesManager.getDefault()
-     * .getModuleByName("Experiment Module");
-     * 
-     * while (ui_is_opened) { Display.getDefault().asyncExec(new Runnable() {
-     * 
-     * @Override public void run() { if (!ui.getShell().isDisposed()) { if
-     * (local_exp_module != null) { if (!local_exp_module.isExperimentPresent())
-     * { ui.experiment_module_gui.editExpMenuItemEnable(false);
-     * ui.experiment_module_gui.exportExpToExcelMenuItemEnable(false); } else {
-     * ui.experiment_module_gui.editExpMenuItemEnable(true);
-     * ui.experiment_module_gui.exportExpToExcelMenuItemEnable(true); } } } }
-     * }); try { Thread.sleep(500); } catch (final InterruptedException e) { } }
-     * }
-     * 
-     * }
-     */
 
     /**
      * Updates the MainGUI with the latest counters' values got from
@@ -186,6 +166,7 @@ public class CtrlMainGUI extends ControllerUI<MainGUI> implements StateListener 
 		    }
 		});
 	    }
+	    th_update_gui = null;
 	}
     }
 
@@ -210,8 +191,8 @@ public class CtrlMainGUI extends ControllerUI<MainGUI> implements StateListener 
 	if (pm.state == ProgramState.IDLE) {
 	    final CommonFilterConfigs commonConfigs = new CommonFilterConfigs(
 		    640, 480, 30, 0, "default", null);
-	    ModulesManager.getDefault().setWidthandHeight(commonConfigs.width,
-		    commonConfigs.height);
+	    ModulesManager.getDefault().setModulesWidthandHeight(
+		    commonConfigs.width, commonConfigs.height);
 	    pm.initializeVideoManager(commonConfigs, null);
 	    configureScreenDrawerFilter("ScreenDrawer", commonConfigs, true);
 	    pm.statusMgr.setStatus("Camera is Starting..",
@@ -280,9 +261,7 @@ public class CtrlMainGUI extends ControllerUI<MainGUI> implements StateListener 
      * and saves the video file.
      */
     public void stopTrackingAction() {
-	th_update_gui = null;
 	pm.stopTracking();
-
     }
 
     /**
@@ -379,6 +358,7 @@ public class CtrlMainGUI extends ControllerUI<MainGUI> implements StateListener 
      * @param filters
      *            ArrayList of available filters
      */
+    @SuppressWarnings("rawtypes")
     public void loadPluggedGUI(final PluggedGUI[] pGUI) {
 	ui.loadPluggedGUI(pGUI);
 	for (final PluggedGUI pgui : pGUI)
@@ -389,13 +369,13 @@ public class CtrlMainGUI extends ControllerUI<MainGUI> implements StateListener 
 
     public void setVideoFileMode() {
 	final FileDialog fileDialog = new FileDialog(ui.getShell(), SWT.OPEN);
-	if (file_name == null)
+	if (file_name == null || new File(file_name).exists() == false)
 	    file_name = fileDialog.open();
 	if (file_name != null)
 	    if (pm.state == ProgramState.IDLE) {
 		final CommonFilterConfigs commonConfigs = new CommonFilterConfigs(
 			640, 480, 30, 0, "VideoFile", null);
-		ModulesManager.getDefault().setWidthandHeight(
+		ModulesManager.getDefault().setModulesWidthandHeight(
 			commonConfigs.width, commonConfigs.height);
 		pm.initializeVideoManager(commonConfigs, file_name);
 
@@ -430,14 +410,14 @@ public class CtrlMainGUI extends ControllerUI<MainGUI> implements StateListener 
     @Override
     public void updateProgramState(final ProgramState state) {
 	Display.getDefault().asyncExec(new Runnable() {
-
 	    @Override
 	    public void run() {
 		switch (state) {
 		case IDLE:
 		    ui.btnStopTrackingEnable(false);
-		    ui.btnStartStreamingEnable(true);
+		    // ui.btnStartStreamingEnable(true);
 		    ui.btnStopStreamingEnable(false);
+		    ui.btnStartTrackingEnable(false);
 		    break;
 		case STREAMING:
 		    ui.btnStopTrackingEnable(false);
@@ -445,6 +425,7 @@ public class CtrlMainGUI extends ControllerUI<MainGUI> implements StateListener 
 		    ui.btnStopStreamingEnable(true);
 		    break;
 		case TRACKING:
+		    ui.btnStartTrackingEnable(false);
 		    ui.btnStopTrackingEnable(true);
 		    ui.btnStartStreamingEnable(false);
 		    ui.btnStopStreamingEnable(false);

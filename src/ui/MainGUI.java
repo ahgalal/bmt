@@ -290,6 +290,7 @@ public class MainGUI extends BaseUI {
 	});
 	btnStartStream.setBounds(10, 10, 109, 25);
 	btnStartStream.setText(ExternalStrings.get("MainGUI.StartStream")); //$NON-NLS-1$
+	btnStartStream.setEnabled(false);
 
 	btnStopStream = new Button(cmpstStreaming, SWT.NONE);
 	btnStopStream.setBounds(10, 37, 109, 25);
@@ -324,6 +325,7 @@ public class MainGUI extends BaseUI {
 			controller.startTrackingAction();
 		    }
 		});
+	btnStartTracking.setEnabled(false);
 
 	btnStopTracking = new Button(cmpstTracking, SWT.NONE);
 	btnStopTracking.setBounds(new Rectangle(10, 37, 109, 25));
@@ -654,7 +656,12 @@ public class MainGUI extends BaseUI {
      *            true/false
      */
     public void btnStartStreamingEnable(final boolean enable) {
-	btnStartStream.setEnabled(enable);
+	Display.getDefault().asyncExec(new Runnable() {
+	    @Override
+	    public void run() {
+		btnStartStream.setEnabled(enable);
+	    }
+	});
     }
 
     /**

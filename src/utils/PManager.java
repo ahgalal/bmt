@@ -179,6 +179,7 @@ public class PManager {
 		    if (old_state != state) {
 			notifyStateListeners();
 			old_state = state;
+			log.print("State is: " + state, this);
 		    }
 		    try {
 			Thread.sleep(100);
@@ -242,8 +243,10 @@ public class PManager {
      * Unloads the Video Processor, used when switching video libraries..
      */
     public void stopStreaming() {
-	if (vidMgr != null & state != ProgramState.IDLE)
+	if (vidMgr != null & state != ProgramState.IDLE){
 	    vidMgr.unloadLibrary();
+	    state=ProgramState.IDLE;
+	}
 	else
 	    statusMgr.setStatus(
 		    "incorrect state, unable to unload video library",
@@ -284,6 +287,7 @@ public class PManager {
 	if (state == ProgramState.TRACKING) {
 	    ModulesManager.getDefault().runModules(false);
 	    vidMgr.stopProcessing();
+	    state=ProgramState.IDLE;
 	} else
 	    Display.getDefault().asyncExec(new Runnable() {
 		@Override
@@ -292,7 +296,6 @@ public class PManager {
 			    StatusSeverity.ERROR);
 		}
 	    });
-
     }
 
     public void unloadGUI() {

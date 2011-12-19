@@ -2,10 +2,10 @@ package modules;
 
 import java.util.ArrayList;
 
-public class ModulesSetup {
+public class ModulesSet {
     private final ArrayList<String> modulesNames;
 
-    public ModulesSetup(final String[] modulesNames) {
+    public ModulesSet(final String[] modulesNames) {
 	this.modulesNames = new ArrayList<String>();
 	for (final String str : modulesNames)
 	    this.modulesNames.add(str);

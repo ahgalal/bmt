@@ -51,14 +51,6 @@ public abstract class ExperimentModule
      * @param config
      *            module's configurations
      */
-    /*
-     * public ExperimentModule(final String name, final ExperimentModuleConfigs
-     * config) { super(name, config); gui = new ExperimentModuleGUI(this); data
-     * = new ExperimentModuleData("Experiment Module Data"); data.exp = new
-     * Experiment();
-     * 
-     * initialize(); }
-     */
 
     @Override
     public void process() {
@@ -94,8 +86,7 @@ public abstract class ExperimentModule
 
     @Override
     public void deInitialize() {
-	if (ExperimentManager.getDefault().isExperimentPresent())
-	    ExperimentManager.getDefault().saveRatInfo();
+	ExperimentManager.getDefault().saveRatInfo();
     }
 
     @Override

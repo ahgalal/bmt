@@ -23,6 +23,8 @@ public abstract class ModuleConfigs {
 
     protected boolean enable;
     protected String module_name;
+    public int width;
+    public int height;
 
     /**
      * Get the module name this configuration object is to be applied to.

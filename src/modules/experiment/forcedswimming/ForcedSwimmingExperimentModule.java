@@ -18,11 +18,4 @@ public class ForcedSwimmingExperimentModule extends ExperimentModule {
 	// data.exp=new Experiment();
 	// data.exp.type=ExperimentType.FORCED_SWIMMING;
     }
-
-    @Override
-    public boolean allowTracking() {
-	// TODO Auto-generated method stub
-	return true;
-    }
-
 }

@@ -8,6 +8,7 @@ import modules.experiment.Group;
 import modules.experiment.Grp2GUI;
 import modules.experiment.Rat;
 import modules.experiment.TextEngine;
+import modules.experiment.forcedswimming.ForcedSwimmingExperimentModule;
 import modules.experiment.openfield.OpenFieldExperimentModule;
 import utils.PManager;
 import utils.StatusManager.StatusSeverity;
@@ -51,7 +52,7 @@ public class ExperimentManager {
 	exp.fileName = f_name;
     }
 
-    public void setExperimantLoaded(final boolean b) {
+    public void setExperimantLoadedInGUI(final boolean b) {
 	PManager.main_gui.setExperimantLoaded(b);
     }
 
@@ -61,8 +62,20 @@ public class ExperimentManager {
     public ExperimentModule instantiateExperimentModule() {
 	experiment_configs = new ExperimentModuleConfigs("Experiment Module",
 		exp);
-	experiment_module = new OpenFieldExperimentModule("Experiment Module",
-		experiment_configs);
+	
+	switch (exp.type) {
+	case OPEN_FIELD:
+	    experiment_module = new OpenFieldExperimentModule("Experiment Module",
+			experiment_configs);
+	    break;
+	case FORCED_SWIMMING:
+	    experiment_module = new ForcedSwimmingExperimentModule("Experiment Module",
+			experiment_configs);
+	    break;
+	default:
+	    break;
+	}
+	
 	return experiment_module;
     }
 
@@ -85,7 +98,7 @@ public class ExperimentManager {
 	    exp = new Experiment();
 	exp.setExperimentInfo(name, user, date, notes, type);
 	exp_is_set = true;
-	setExperimantLoaded(true);
+	setExperimantLoadedInGUI(true);
 
 	ModulesManager.getDefault().setupModulesAndFilters(exp);
     }
@@ -121,35 +134,40 @@ public class ExperimentManager {
      * @return true: success
      */
     public boolean saveRatInfo() {
-	if (exp.getExpParametersList() == null)
-	    exp.setParametersList(ModulesManager.getDefault().getCodeNames());
-	else if (getNumberOfExpParams() != ModulesManager.getDefault()
-		.getCodeNames().length) {
-	    PManager.getDefault().statusMgr
-		    .setStatus(
-			    "Experiment file loaded has some modules which are not active in this session, can't save",
-			    StatusSeverity.ERROR);
-	    return false;
+	if (isExperimentPresent()) {
+	    if (exp.getExpParametersList() == null)
+		exp.setParametersList(ModulesManager.getDefault()
+			.getCodeNames());
+	    else if (getNumberOfExpParams() != ModulesManager.getDefault()
+		    .getCodeNames().length) {
+		PManager.getDefault().statusMgr
+			.setStatus(
+				"Experiment file loaded has some modules which are not active in this session, can't save",
+				StatusSeverity.ERROR);
+		return false;
+	    }
+	    final String[] params_list = exp.getExpParametersList();
+	    final String[] data = ModulesManager.getDefault().getFileData();
+	    final String[] code_names = ModulesManager.getDefault()
+		    .getCodeNames();
+	    boolean override_rat = false;
+	    Rat rat_tmp = this.exp.getGroupByName(getCurrGrpName())
+		    .getRatByNumber(getCurrRatNumber());
+	    if (rat_tmp == null)
+		rat_tmp = new Rat(params_list);
+	    else
+		override_rat = true;
+
+	    for (int i = 0; i < params_list.length; i++)
+		rat_tmp.setValueByParameterName(params_list[i],
+			data[getIndexByStringValue(code_names, params_list[i])]);
+
+	    if (!override_rat)
+		this.exp.getGroupByName(getCurrGrpName()).addRat(rat_tmp);
+	    writeToTXTFile(exp.fileName);
+	    return true;
 	}
-	final String[] params_list = exp.getExpParametersList();
-	final String[] data = ModulesManager.getDefault().getFileData();
-	final String[] code_names = ModulesManager.getDefault().getCodeNames();
-	boolean override_rat = false;
-	Rat rat_tmp = this.exp.getGroupByName(getCurrGrpName()).getRatByNumber(
-		getCurrRatNumber());
-	if (rat_tmp == null)
-	    rat_tmp = new Rat(params_list);
-	else
-	    override_rat = true;
-
-	for (int i = 0; i < params_list.length; i++)
-	    rat_tmp.setValueByParameterName(params_list[i],
-		    data[getIndexByStringValue(code_names, params_list[i])]);
-
-	if (!override_rat)
-	    this.exp.getGroupByName(getCurrGrpName()).addRat(rat_tmp);
-	writeToTXTFile(exp.fileName);
-	return true;
+	return false;
     }
 
     /**
@@ -165,7 +183,7 @@ public class ExperimentManager {
 	    PManager.getDefault().frm_exp.fillForm(exp);
 	    exp_is_set = true;
 	    ModulesManager.getDefault().setupModulesAndFilters(exp);
-	    setExperimantLoaded(true);
+	    setExperimantLoadedInGUI(true);
 	}
     }
 
@@ -255,7 +273,7 @@ public class ExperimentManager {
 	    exp.clearExperimentData();
 	excel_engine.reset();
 	exp_is_set = false;
-	setExperimantLoaded(false);
+	setExperimantLoadedInGUI(false);
     }
 
     /**
