@@ -14,6 +14,8 @@
 
 package modules.experiment;
 
+import java.io.Serializable;
+
 import modules.Cargo;
 import utils.PManager;
 import utils.StatusManager.StatusSeverity;
@@ -23,7 +25,11 @@ import utils.StatusManager.StatusSeverity;
  * 
  * @author ShaQ
  */
-public class Rat {
+public class Rat implements Serializable {
+    /**
+     * 
+     */
+    private static final long serialVersionUID = -6143229970194595747L;
     private final Cargo info;
 
     /**

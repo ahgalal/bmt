@@ -84,6 +84,7 @@ public class ModulesManager {
 
 	    for (final Module mo : modules)
 		mo.deInitialize();
+	    ExperimentManager.getDefault().saveRatInfo();
 	}
     }
 
@@ -116,12 +117,11 @@ public class ModulesManager {
 	// ////////////////////////////////
 	// Experiment Module
 	final ExperimentModule expModule = ExperimentManager.getDefault()
-	.instantiateExperimentModule();
+		.instantiateExperimentModule();
 	modules.add(expModule);
 
-	final ModulesSet openFieldModulesSetup = new ModulesSet(
-		new String[] { "Rearing Module", "Zones Module",
-		"Session Module" });
+	final ModulesSet openFieldModulesSetup = new ModulesSet(new String[] {
+		"Rearing Module", "Zones Module", "Session Module" });
 
 	final ModulesSet forcedSwimmingModulesSetup = new ModulesSet(
 		new String[] { "Session Module", "Movement Meter Module" });
@@ -149,7 +149,7 @@ public class ModulesManager {
 	// Rearing Module
 	if (isWithinArray("Rearing Module", moduleNames)) {
 	    final RearingModuleConfigs rearingConfigs = new RearingModuleConfigs(
-	    "Rearing Module");
+		    "Rearing Module");
 	    final RearingModule rearingModule = new RearingModule(
 		    "Rearing Module", rearingConfigs);
 	    modules.add(rearingModule);
@@ -168,7 +168,7 @@ public class ModulesManager {
 	// Session Module
 	if (isWithinArray("Session Module", moduleNames)) {
 	    final SessionModuleConfigs sessionConfigs = new SessionModuleConfigs(
-	    "Session Module");
+		    "Session Module");
 	    final SessionModule sessionModule = new SessionModule(
 		    "Session Module", sessionConfigs);
 	    modules.add(sessionModule);
@@ -177,7 +177,7 @@ public class ModulesManager {
 	// MovementMeter Module
 	if (isWithinArray("Movement Meter Module", moduleNames)) {
 	    final MovementMeterModuleConfigs movementModuleConfigs = new MovementMeterModuleConfigs(
-	    "Movement Meter Module");
+		    "Movement Meter Module");
 	    final MovementMeterModule movementMeterModule = new MovementMeterModule(
 		    "Movement Meter Module", movementModuleConfigs);
 	    modules.add(movementMeterModule);
@@ -496,10 +496,10 @@ public class ModulesManager {
 
     public boolean allowTracking() {
 	boolean ret = false;
-	for (final Module m : modules){
-	    ret=true;
-	    if (m.allowTracking() == false){
-		ret=false;
+	for (final Module m : modules) {
+	    ret = true;
+	    if (m.allowTracking() == false) {
+		ret = false;
 		break;
 	    }
 	}

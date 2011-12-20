@@ -1,6 +1,9 @@
 package sys;
 
+import java.security.Permission;
+
 import gui.CamStartDefaultTest;
+import gui.SetBackgroundTest;
 import gui.VideoFileTest;
 import junit.framework.Test;
 
@@ -11,80 +14,68 @@ import org.junit.BeforeClass;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 
+import sys.NoExitTestCase.ExitException;
 import utils.PManager;
 
 import junit.framework.TestSuite;
 
 @RunWith(Suite.class)
-@Suite.SuiteClasses( { CamStartDefaultTest.class,VideoFileTest.class })
+@Suite.SuiteClasses( {
+	CamStartDefaultTest.class,
+	VideoFileTest.class,
+	SetBackgroundTest.class
+})
 public class GUITests
 {
-	private static Shell dummyShell;
+    protected static class ExitException extends SecurityException 
+    {
+        public final int status;
+        public ExitException(int status) 
+        {
+                super("There is no escape!");
+                this.status = status;
+        }
+    }
+
+    private static class NoExitSecurityManager extends SecurityManager 
+    {
+        @Override
+        public void checkPermission(Permission perm) 
+        {
+                // allow anything.
+        }
+        @Override
+        public void checkPermission(Permission perm, Object context) 
+        {
+                // allow anything.
+        }
+        @Override
+        public void checkExit(int status) 
+        {
+                //super.checkExit(status);
+                throw new ExitException(status);
+        }
+    }
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception
 	{
-//		final Display display = Display.getDefault();
-//		dummyShell = new Shell();
-//		dummyShell.setBounds(0, 0, 50, 50);
-//		/*		Thread t = new Thread(new Runnable() {
-//
-//			@Override
-//			public void run()
-//			{
-//				// TODO Auto-generated method stub
-//				display.asyncExec(new Runnable() {
-//
-//					@Override
-//					public void run()
-//					{
-//						// TODO Auto-generated method stub
-//
-//					}
-//				});
-//
-//
-//			}
-//		});
-//		t.start();*/
-//		new Thread(new Runnable() {
-//
-//			@Override
-//			public void run()
-//			{
-//				// TODO Auto-generated method stub
-//				Display.getDefault().syncExec(new Runnable() {
-//
-//					@Override
-//					public void run()
-//					{
-//						dummyShell.setVisible(true);
-//						while (!dummyShell.isDisposed())
-//						{
-//							if (!display.readAndDispatch())
-//								display.sleep();
-//						}
-//					}
-//				});
-//			}
-//		}).start();
-//
-//
-//
-//		Thread.sleep(100);
-//		/*		while (!dummyShell.isDisposed())
-//		{
-//			if (!display.readAndDispatch())
-//				display.sleep();
-//		}*/
-//
-//		System.out.println("Thread: " + Thread.currentThread().getName());
+		//System.setSecurityManager(new NoExitSecurityManager());
+		Display.getDefault().syncExec(new Runnable() {
+			
+			@Override
+			public void run()
+			{
+				// TODO Auto-generated method stub
+				Shell s = new Shell();
+				s.setVisible(false);
+			}
+		});
 
 	}
 
 	@AfterClass
 	public static void tearDownAfterClass() throws Exception
 	{
-		dummyShell.dispose();
 	}
 
 	/*	public static Test suite()

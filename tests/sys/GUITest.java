@@ -65,7 +65,7 @@ public abstract class GUITest
 		}).start();
 
 		//PManager.main(null);
-		waitForGUIToLoad(2000);
+		waitForGUIToLoad(1000);
 		initializeBot();
 	}
 
@@ -79,16 +79,17 @@ public abstract class GUITest
 				@Override
 				public void run()
 				{
-					//PManager.main_gui.closeProgram();
-					Display.getDefault().getActiveShell().close();
+					PManager.main_gui.closeProgram();
+					//Display.getDefault().getActiveShell().close();
 					//Display.getDefault().close();
 				}
 			});
-
+		}catch(SecurityException se){
+			
 		}catch(Exception e){e.printStackTrace();}
 
 		System.out.println("Display is disposed!");
-		sleep(2000);
+		sleep(1000);
 	}
 
 	public abstract void Test();

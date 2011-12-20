@@ -116,6 +116,7 @@ public class VideoManager {
 	    // ////////////////////////////////
 
 	    PManager.getDefault().stopTracking();
+	    PManager.getDefault().state=ProgramState.IDLE;
 	    filter_mgr.disableAll();
 
 	    PManager.log.print("Ended Video Streaming", this);

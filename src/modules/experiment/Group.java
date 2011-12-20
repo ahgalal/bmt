@@ -14,6 +14,7 @@
 
 package modules.experiment;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
@@ -21,7 +22,7 @@ import java.util.ArrayList;
  * 
  * @author ShaQ
  */
-public class Group implements Grp2GUI {
+public class Group implements Grp2GUI, Serializable {
 
     private String name;
     private int id;

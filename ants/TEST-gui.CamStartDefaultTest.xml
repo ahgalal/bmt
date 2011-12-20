@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<testsuite errors="1" failures="0" hostname="Creative-NB" name="gui.CamStartDefaultTest" tests="1" time="0.0" timestamp="2011-10-17T21:06:19">
+  <properties>
+    <property name="java.vendor" value="Sun Microsystems Inc." />
+    <property name="jarfile" value="../output/release/BMT_v0.2.jar" />
+    <property name="sun.java.launcher" value="SUN_STANDARD" />
+    <property name="eclipse.pdebuild.templates" value="/F:/eclipse/eclipseJEE/plugins/org.eclipse.pde.build_3.6.2.R36x_20110203/templates/" />
+    <property name="sun.management.compiler" value="HotSpot Client Compiler" />
+    <property name="jmf_libs" value="&apos;C:/Program Files/JMF2.1.1e/lib/custom.jar&apos; &apos;C:/Program Files/JMF2.1.1e/lib/jmf.jar&apos; &apos;C:/Program Files/JMF2.1.1e/lib/mediaplayer.jar&apos; &apos;C:/Program Files/JMF2.1.1e/lib/multiplayer.jar&apos; &apos;C:/Program Files/JMF2.1.1e/lib/sound.jar&apos;" />
+    <property name="os.name" value="Windows 7" />
+    <property name="sun.boot.class.path" value="C:\Program Files\Java\jre6\lib\resources.jar;C:\Program Files\Java\jre6\lib\rt.jar;C:\Program Files\Java\jre6\lib\sunrsasign.jar;C:\Program Files\Java\jre6\lib\jsse.jar;C:\Program Files\Java\jre6\lib\jce.jar;C:\Program Files\Java\jre6\lib\charsets.jar;C:\Program Files\Java\jre6\lib\modules\jdk.boot.jar;C:\Program Files\Java\jre6\classes" />
+    <property name="sun.desktop" value="windows" />
+    <property name="jmf_home_lib" value="C:/Program Files/JMF2.1.1e/lib" />
+    <property name="java.vm.specification.vendor" value="Sun Microsystems Inc." />
+    <property name="ant.home" value="F:\eclipse\eclipseJEE\plugins\org.apache.ant_1.7.1.v20100518-1145" />
+    <property name="java.runtime.version" value="1.6.0_27-b07" />
+    <property name="user.name" value="Creative" />
+    <property name="uploads_dir" value="../output/uploads" />
+    <property name="user.language" value="en" />
+    <property name="sun.boot.library.path" value="C:\Program Files\Java\jre6\bin" />
+    <property name="ant.project.name" value="BMT" />
+    <property name="java.version" value="1.6.0_27" />
+    <property name="user.timezone" value="" />
+    <property name="sun.arch.data.model" value="32" />
+    <property name="java.endorsed.dirs" value="C:\Program Files\Java\jre6\lib\endorsed" />
+    <property name="sun.cpu.isalist" value="pentium_pro+mmx pentium_pro pentium+mmx pentium i486 i386 i86" />
+    <property name="sun.jnu.encoding" value="Cp1256" />
+    <property name="file.encoding.pkg" value="sun.io" />
+    <property name="file.separator" value="\" />
+    <property name="java.specification.name" value="Java Platform API Specification" />
+    <property name="ant.file.BMT" value="E:\Documents\eclipse\Java\JMF_sf\BMT\ants\BuildJar.xml" />
+    <property name="java.class.version" value="50.0" />
+    <property name="user.country" value="US" />
+    <property name="java.home" value="C:\Program Files\Java\jre6" />
+    <property name="bmt_version" value="0.2" />
+    <property name="java.vm.info" value="mixed mode, sharing" />
+    <property name="ant.file" value="E:\Documents\eclipse\Java\JMF_sf\BMT\ants\BuildJar.xml" />
+    <property name="os.version" value="6.1" />
+    <property name="release_dir" value="../output/release" />
+    <property name="path.separator" value=";" />
+    <property name="java.vm.version" value="20.2-b06" />
+    <property name="user.variant" value="" />
+    <property name="ant.library.dir" value="F:\eclipse\eclipseJEE\plugins\org.apache.ant_1.7.1.v20100518-1145\lib" />
+    <property name="java.awt.printerjob" value="sun.awt.windows.WPrinterJob" />
+    <property name="sun.io.unicode.encoding" value="UnicodeLittle" />
+    <property name="awt.toolkit" value="sun.awt.windows.WToolkit" />
+    <property name="eclipse.pdebuild.scripts" value="/F:/eclipse/eclipseJEE/plugins/org.eclipse.pde.build_3.6.2.R36x_20110203/scripts/" />
+    <property name="user.home" value="E:\Documents" />
+    <property name="java.specification.vendor" value="Sun Microsystems Inc." />
+    <property name="java.library.path" value="C:\Program Files\Java\jre6\bin;C:\Windows\Sun\Java\bin;C:\Windows\system32;C:\Windows;C:/Program Files/Java/jre6/bin/client;C:/Program Files/Java/jre6/bin;C:/Program Files/Java/jre6/lib/i386;C:\Program Files\Common Files\Microsoft Shared\Windows Live;C:\Program Files\PC Connectivity Solution\;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;C:\Program Files\MATLAB\R2009a\bin;C:\Program Files\MATLAB\R2009a\bin\win32;C:\Program Files\Common Files\Autodesk Shared\;C:\Program Files\Autodesk\backburner\;C:\Program Files\Microsoft SQL Server\90\Tools\binn\;C:\Program Files\Java\jdk1.6.0_10\bin;C:\djgpp\bin;C:\Program Files\ImageConverter Plus;C:\Program Files\MySQL\MySQL Server 5.1\bin;C:\Program Files\Windows Live\Shared;C:\Program Files\ATI Technologies\ATI.ACE\Core-Static;C:\MinGW\bin;C:\Program Files\OpenCV\bin;C:\AppServ\Apache2.2\bin;C:\AppServ\php5;C:\modeltech_6.5b\win32;C:\Program Files\OpenCV\binC:\AppServ\Apache2.2\bin;C:\AppServ\php5;C:\modeltech_6.5b\win32;F:\eclipse\eclipseJEE;;." />
+    <property name="java.vendor.url" value="http://java.sun.com/" />
+    <property name="java.vm.vendor" value="Sun Microsystems Inc." />
+    <property name="libs_version" value="0.2" />
+    <property name="java.runtime.name" value="Java(TM) SE Runtime Environment" />
+    <property name="sun.java.command" value="org.apache.tools.ant.taskdefs.optional.junit.JUnitTestRunner gui.CamStartDefaultTest filtertrace=true haltOnError=false haltOnFailure=false formatter=org.apache.tools.ant.taskdefs.optional.junit.SummaryJUnitResultFormatter showoutput=true outputtoformatters=true logtestlistenerevents=true formatter=org.apache.tools.ant.taskdefs.optional.junit.XMLJUnitResultFormatter,E:\Documents\eclipse\Java\JMF_sf\BMT\ants\TEST-gui.CamStartDefaultTest.xml crashfile=E:\Documents\eclipse\Java\JMF_sf\BMT\ants\junitvmwatcher7760425804057714293.properties propsfile=E:\Documents\eclipse\Java\JMF_sf\BMT\ants\junit3119931774697021046.properties" />
+    <property name="java.class.path" value="F:\eclipse\eclipseJEE\plugins\org.junit_4.8.1.v4_8_1_v20100427-1100\junit.jar;C:\PROGRA~1\JMF21~1.1E\lib\sound.jar;C:\PROGRA~1\JMF21~1.1E\lib\jmf.jar;C:\PROGRA~1\JMF21~1.1E\lib;F:\eclipse\eclipseJEE\plugins\org.apache.ant_1.7.1.v20100518-1145\lib\ant-launcher.jar;F:\eclipse\eclipseJEE\plugins\org.apache.ant_1.7.1.v20100518-1145\lib\ant.jar;F:\eclipse\eclipseJEE\plugins\org.apache.ant_1.7.1.v20100518-1145\lib\ant-junit.jar" />
+    <property name="ant.version" value="Apache Ant version 1.7.1 compiled on June 27 2008" />
+    <property name="java.vm.specification.name" value="Java Virtual Machine Specification" />
+    <property name="java.vm.specification.version" value="1.0" />
+    <property name="sun.cpu.endian" value="little" />
+    <property name="sun.os.patch.level" value="" />
+    <property name="eclipse.pdebuild.home" value="/F:/eclipse/eclipseJEE/plugins/org.eclipse.pde.build_3.6.2.R36x_20110203/./" />
+    <property name="java.io.tmpdir" value="C:\Users\Creative\AppData\Local\Temp\" />
+    <property name="java.vendor.url.bug" value="http://java.sun.com/cgi-bin/bugreport.cgi" />
+    <property name="output_dir" value="../output/" />
+    <property name="os.arch" value="x86" />
+    <property name="java.awt.graphicsenv" value="sun.awt.Win32GraphicsEnvironment" />
+    <property name="java.ext.dirs" value="C:\Program Files\Java\jre6\lib\ext;C:\Windows\Sun\Java\lib\ext" />
+    <property name="user.dir" value="E:\Documents\eclipse\Java\JMF_sf\BMT\ants" />
+    <property name="bin_libs_version" value="0.2" />
+    <property name="line.separator" value="
+" />
+    <property name="java.vm.name" value="Java HotSpot(TM) Client VM" />
+    <property name="basedir" value="E:\Documents\eclipse\Java\JMF_sf\BMT\ants" />
+    <property name="ant.java.version" value="1.6" />
+    <property name="ant.core.lib" value="F:\eclipse\eclipseJEE\plugins\org.apache.ant_1.7.1.v20100518-1145\lib\ant.jar" />
+    <property name="file.encoding" value="Cp1252" />
+    <property name="java.specification.version" value="1.6" />
+    <property name="libs_dir" value="../output/release/libs" />
+  </properties>
+  <error message="gui.CamStartDefaultTest" type="java.lang.ClassNotFoundException">java.lang.ClassNotFoundException: gui.CamStartDefaultTest
+	at java.net.URLClassLoader$1.run(URLClassLoader.java:202)
+	at java.security.AccessController.doPrivileged(Native Method)
+	at java.net.URLClassLoader.findClass(URLClassLoader.java:190)
+	at java.lang.ClassLoader.loadClass(ClassLoader.java:306)
+	at sun.misc.Launcher$AppClassLoader.loadClass(Launcher.java:301)
+	at java.lang.ClassLoader.loadClass(ClassLoader.java:247)
+	at java.lang.Class.forName0(Native Method)
+	at java.lang.Class.forName(Class.java:169)
+</error>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

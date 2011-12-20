@@ -14,12 +14,18 @@
 
 package modules;
 
+import java.io.Serializable;
+
 /**
  * Data carrier, contains a set of tags and data corresponding to those tags.
  * 
  * @author Creative
  */
-public class Cargo {
+public class Cargo implements Serializable {
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 271285755448822703L;
     private String[] arr_data;
     private String[] arr_tags;
 

@@ -85,7 +85,7 @@ public class CtrlExperimentForm extends ControllerUI<ExperimentForm> {
 		    ExperimentManager.getDefault().setExpInfo(name, user, date,
 			    notes, type);
 		    pm.frm_grps.updateGroupsInformation();
-		    ExperimentManager.getDefault().writeToTXTFile(file_name);
+		    ExperimentManager.getDefault().saveExperimentToFile(file_name);
 		    ExperimentManager.getDefault().setExpFileName(file_name);
 		    sShell.setVisible(false);
 		}

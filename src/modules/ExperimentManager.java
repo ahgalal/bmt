@@ -1,5 +1,13 @@
 package modules;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+
 import modules.experiment.ExcelEngine;
 import modules.experiment.Experiment;
 import modules.experiment.ExperimentModule;
@@ -62,20 +70,20 @@ public class ExperimentManager {
     public ExperimentModule instantiateExperimentModule() {
 	experiment_configs = new ExperimentModuleConfigs("Experiment Module",
 		exp);
-	
+
 	switch (exp.type) {
 	case OPEN_FIELD:
-	    experiment_module = new OpenFieldExperimentModule("Experiment Module",
-			experiment_configs);
+	    experiment_module = new OpenFieldExperimentModule(
+		    "Experiment Module", experiment_configs);
 	    break;
 	case FORCED_SWIMMING:
-	    experiment_module = new ForcedSwimmingExperimentModule("Experiment Module",
-			experiment_configs);
+	    experiment_module = new ForcedSwimmingExperimentModule(
+		    "Experiment Module", experiment_configs);
 	    break;
 	default:
 	    break;
 	}
-	
+
 	return experiment_module;
     }
 
@@ -151,20 +159,23 @@ public class ExperimentManager {
 	    final String[] code_names = ModulesManager.getDefault()
 		    .getCodeNames();
 	    boolean override_rat = false;
+
 	    Rat rat_tmp = this.exp.getGroupByName(getCurrGrpName())
 		    .getRatByNumber(getCurrRatNumber());
 	    if (rat_tmp == null)
+		// Create a new rat object, and set its params
 		rat_tmp = new Rat(params_list);
 	    else
 		override_rat = true;
 
+	    // Fill the rate object with the values of params
 	    for (int i = 0; i < params_list.length; i++)
 		rat_tmp.setValueByParameterName(params_list[i],
 			data[getIndexByStringValue(code_names, params_list[i])]);
 
 	    if (!override_rat)
 		this.exp.getGroupByName(getCurrGrpName()).addRat(rat_tmp);
-	    writeToTXTFile(exp.fileName);
+	    saveExperimentToFile(exp.fileName);
 	    return true;
 	}
 	return false;
@@ -177,9 +188,25 @@ public class ExperimentManager {
      *            file name to load the experiment from
      */
     public void loadInfoFromTXTFile(final String file_name) {
-	exp = new Experiment();
-	if (ExperimentManager.getDefault().text_engine.readExpInfoFromTXTFile(
-		file_name, exp)) {
+	ObjectInputStream ois;
+	try {
+	    ois = new ObjectInputStream(
+		    new FileInputStream(new File(file_name)));
+	    exp = (Experiment) ois.readObject();
+	} catch (final FileNotFoundException e) {
+	    e.printStackTrace();
+	} catch (final IOException e) {
+	    e.printStackTrace();
+	} catch (final ClassNotFoundException e) {
+	    System.err.println("incompatible experiment file!");
+	}
+
+	/*
+	 * exp = new Experiment(); if
+	 * (ExperimentManager.getDefault().text_engine.readExpInfoFromTXTFile(
+	 * file_name, exp))
+	 */
+	if (exp != null) {
 	    PManager.getDefault().frm_exp.fillForm(exp);
 	    exp_is_set = true;
 	    ModulesManager.getDefault().setupModulesAndFilters(exp);
@@ -295,8 +322,19 @@ public class ExperimentManager {
      * @param FilePath
      *            file path to write to
      */
-    public void writeToTXTFile(final String FilePath) {
-	text_engine.writeExpInfoToTXTFile(FilePath, exp);
+    public void saveExperimentToFile(final String FilePath) {
+	try {
+	    final ObjectOutputStream oos = new ObjectOutputStream(
+		    new FileOutputStream(new File(FilePath)));
+	    oos.writeObject(exp);
+	    oos.close();
+	} catch (final FileNotFoundException e) {
+	    e.printStackTrace();
+	} catch (final IOException e) {
+	    e.printStackTrace();
+	}
+
+	// text_engine.writeExpInfoToTXTFile(FilePath, exp);
     }
 
     /**

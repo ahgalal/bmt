@@ -287,7 +287,7 @@ public class PManager {
 	if (state == ProgramState.TRACKING) {
 	    ModulesManager.getDefault().runModules(false);
 	    vidMgr.stopProcessing();
-	    state=ProgramState.IDLE;
+	    state=ProgramState.STREAMING;
 	} else
 	    Display.getDefault().asyncExec(new Runnable() {
 		@Override

@@ -86,7 +86,6 @@ public abstract class ExperimentModule
 
     @Override
     public void deInitialize() {
-	ExperimentManager.getDefault().saveRatInfo();
     }
 
     @Override

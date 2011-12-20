@@ -14,6 +14,7 @@
 
 package modules.experiment;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
@@ -21,7 +22,12 @@ import java.util.ArrayList;
  * 
  * @author ShaQ
  */
-public class Experiment implements Exp2GUI {
+public class Experiment implements Exp2GUI, Serializable {
+
+    /**
+     * 
+     */
+    private static final long serialVersionUID = -786827888276630828L;
 
     public enum ExperimentType {
 	OPEN_FIELD("Open Field"), FORCED_SWIMMING("Forced Swimming");

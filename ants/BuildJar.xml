@@ -12,9 +12,9 @@
             Build and Release the BMT project
     </description>
 
-	<property name="bmt_version" value="0.2"/>
-	<property name="libs_version" value="0.2"/>
-	<property name="bin_libs_version" value="0.2"/>
+	<property name="bmt_version" value="0.3"/>
+	<property name="libs_version" value="0.3"/>
+	<property name="bin_libs_version" value="0.3"/>
 	<property name="jarfile" value="../output/release/BMT_v${bmt_version}.jar" />
 	<property name="jmf_libs" value="'C:/Program Files/JMF2.1.1e/lib/custom.jar' 'C:/Program Files/JMF2.1.1e/lib/jmf.jar' 'C:/Program Files/JMF2.1.1e/lib/mediaplayer.jar' 'C:/Program Files/JMF2.1.1e/lib/multiplayer.jar' 'C:/Program Files/JMF2.1.1e/lib/sound.jar'" />
 	<condition property="jmf_home_lib" value="C:/Program Files/JMF2.1.1e/lib" else="">
@@ -39,7 +39,11 @@
 	<!-- ================================= 
           target: release              
          ================================= -->
-	<target name="release" depends="buildall,zip_all">
+	<target name="release" depends="
+		buildall,
+		copy_license,
+		create_runner,
+		zip_all">
 
 	</target>
 
@@ -58,7 +62,7 @@
 	<fileset id="jmf_libs" dir="${jmf_home_lib}">
 		<include name="**/*.jar" />
 	</fileset>
-	
+
 	<!-- - - - - - - - - - - - - - - - - - 
           target: copy_libs                      
          - - - - - - - - - - - - - - - - - -->
@@ -83,7 +87,7 @@
 			<fileset refid="bin_libs"/>
 		</copy>
 	</target>
-	
+
 	<fileset id="bin_libs_flat" dir="${release_dir}">
 		<include name="**/*.dll" />
 		<include name="**/*.so" />
@@ -110,7 +114,7 @@
 			</manifest>
 			<fileset dir="../bin" />
 		</jar>
-		
+
 		<copy file="${jarfile}" todir="${uploads_dir}"/>
 	</target>
 
@@ -127,7 +131,7 @@
 		<mkdir dir="${uploads_dir}" />
 		<zip destfile="${uploads_dir}/libs_v${libs_version}.zip" basedir="${libs_dir}/../" includes="libs/**"/>
 	</target>
-	
+
 	<!-- - - - - - - - - - - - - - - - - - 
           target: zip_bin_libs                      
          - - - - - - - - - - - - - - - - - -->
@@ -135,7 +139,7 @@
 		<mkdir dir="${uploads_dir}" />
 		<zip destfile="${uploads_dir}/link_libs_v${bin_libs_version}.zip" filesonly="true" >
 			<fileset refid="bin_libs_flat"/>
-			</zip>
+		</zip>
 	</target>
 
 	<!-- - - - - - - - - - - - - - - - - - 
@@ -177,5 +181,48 @@
 			</fileset>
 		</zip>
 	</target>
+
+	<path id="classpath.main">
+		<pathelement path="../bin"/>
+		<fileset dir="../libs">
+			<include name="**/*.jar" />
+		</fileset>
+	</path>
+
+	<target name="test">
+		<property name="myclasspath" refid="classpath.main"/>
+		<echo message="Classpath = ${myclasspath}"/>
+		<junit printsummary="yes" haltonfailure="no" failureproperty="yes" showoutput="yes">
+			<classpath>
+				<path refid="classpath.main" />
+				<pathelement location="../tests/gui" />
+				<pathelement location="F:\eclipse\eclipseJEE\plugins\org.hamcrest.core_1.1.0.v20090501071000.jar" />
+				<pathelement location="F:\eclipse\eclipseJEE\plugins\org.eclipse.swtbot.swt.finder_2.0.5.20111003_1754-3676ac8-dev-e36.jar" />
+			</classpath>
+			<!-- must fork, to run each test on a separate VM -->
+			<batchtest fork="yes" todir="../tests/reports">
+				<!-- will search "dir" for all java files and run them! -->
+				<fileset dir="../tests"/>
+				<formatter type="xml"/>
+			</batchtest>
+		</junit>
+	</target>
+	
+	<!-- ================================= 
+          target: create_runner              
+         ================================= -->
+    <target name="create_runner">
+        <echo file="${release_dir}/run.bat"
+        	message="java -jar BMT_v${bmt_version}.jar${line.separator}pause"
+        />
+    </target>
+
+	<!-- ================================= 
+          target: copy_license              
+         ================================= -->
+    <target name="copy_license">
+        <copyfile dest="${release_dir}/license.txt" src="../license.txt"/>
+    </target>
+
 
 </project>
