@@ -12,22 +12,19 @@ import com.windowtester.runtime.swt.locator.LabeledTextLocator;
 import com.windowtester.runtime.swt.locator.MenuItemLocator;
 import com.windowtester.runtime.swt.locator.TabItemLocator;
 
-public class SaveExperimentTest extends UITestCaseSWT
-{
+public class SaveExperimentTest extends UITestCaseSWT {
 
 	/**
 	 * Create an Instance
 	 */
-	public SaveExperimentTest()
-	{
+	public SaveExperimentTest() {
 		super(utils.PManager.class);
 	}
 
 	/**
 	 * Main test method.
 	 */
-	public void testSaveExperiment() throws Exception
-	{
+	public void testSaveExperiment() throws Exception {
 		final String expName = "Exp1";
 		final String userName = "AGalal";
 		final String grpName = "Grp1";
@@ -58,15 +55,15 @@ public class SaveExperimentTest extends UITestCaseSWT
 		ui.enterText("ExpNotes");
 		ui.click(new ButtonLocator("Save"));
 		Thread.sleep(100);
-		KeyboardUtils.typeText(System.getProperty("user.dir") + "\\Exp.bmt", true);
+		KeyboardUtils.typeText(System.getProperty("user.dir") + "\\Exp.bmt",
+				true);
 		// ui.ensureThat(new
 		// ShellLocator("Behavioral Monitoring Tool").isClosed());
 		// ui.close(new ShellLocator("Behavioral Monitoring Tool"));
 
 		final String fileData = FileReader.read(System.getProperty("user.dir")
 				+ "\\Exp.bmt");
-		assert fileData.contains(expName)
-				&& fileData.contains(userName)
+		assert fileData.contains(expName) && fileData.contains(userName)
 				&& fileData.contains(grpName);
 		Thread.sleep(1000);
 	}

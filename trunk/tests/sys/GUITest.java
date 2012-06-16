@@ -6,55 +6,36 @@ import org.junit.Before;
 
 import utils.PManager;
 
-public abstract class GUITest
-{
+public abstract class GUITest {
 
-	//TODO: use windowtester| protected SWTBot bot;
-	protected PManager pm;
+	// TODO: use windowtester| protected SWTBot bot;
+	protected PManager	pm;
 
-	protected void initializeBot()
-	{
+	protected void initializeBot() {
 		System.out.println("initializing bot..");
-		//TODO: use windowtester| bot=new SWTBot();
-	}
-
-	protected void waitForGUIToLoad(int delay)
-	{
-		System.out.println("waiting for gui to load..");
-		sleep(delay);
-	}
-
-	protected void sleep(int delay)
-	{
-		try
-		{
-			Thread.sleep(delay);
-		} catch (InterruptedException e)
-		{
-			e.printStackTrace();
-		}
+		// TODO: use windowtester| bot=new SWTBot();
 	}
 
 	@Before
-	public void setUp() throws Exception
-	{
+	public void setUp() throws Exception {
 		System.out.println("setUp");
 		System.out.println("Thread: " + Thread.currentThread().getName());
-		//		PManager.testingMode=true;
+		// PManager.testingMode=true;
 		new Thread(new Runnable() {
 			@Override
-			public void run()
-			{
-				System.out.println("State:" + Display.getDefault().getThread().getState());
+			public void run() {
+				System.out.println("State:"
+						+ Display.getDefault().getThread().getState());
 				Display.getDefault().wake();
-				System.out.println("State:" + Display.getDefault().getThread().getState());
+				System.out.println("State:"
+						+ Display.getDefault().getThread().getState());
 				Display.getDefault().syncExec(new Runnable() {
-					
+
 					@Override
-					public void run()
-					{
+					public void run() {
 						System.out.println("starting main");
-						System.out.println("Thread: " + Thread.currentThread().getName());
+						System.out.println("Thread: "
+								+ Thread.currentThread().getName());
 						PManager.main(null);
 						System.out.println("finished with main");
 					}
@@ -63,33 +44,46 @@ public abstract class GUITest
 			}
 		}).start();
 
-		//PManager.main(null);
+		// PManager.main(null);
 		waitForGUIToLoad(1000);
 		initializeBot();
 	}
 
+	protected void sleep(final int delay) {
+		try {
+			Thread.sleep(delay);
+		} catch (final InterruptedException e) {
+			e.printStackTrace();
+		}
+	}
+
 	@After
-	public void tearDown() throws Exception
-	{
+	public void tearDown() throws Exception {
 		System.out.println("tearDown ..");
-		try{
+		try {
 			Display.getDefault().syncExec(new Runnable() {
-				
+
 				@Override
-				public void run()
-				{
+				public void run() {
 					PManager.main_gui.closeProgram();
-					//Display.getDefault().getActiveShell().close();
-					//Display.getDefault().close();
+					// Display.getDefault().getActiveShell().close();
+					// Display.getDefault().close();
 				}
 			});
-		}catch(SecurityException se){
-			
-		}catch(Exception e){e.printStackTrace();}
+		} catch (final SecurityException se) {
+
+		} catch (final Exception e) {
+			e.printStackTrace();
+		}
 
 		System.out.println("Display is disposed!");
 		sleep(1000);
 	}
 
 	public abstract void Test();
+
+	protected void waitForGUIToLoad(final int delay) {
+		System.out.println("waiting for gui to load..");
+		sleep(delay);
+	}
 }

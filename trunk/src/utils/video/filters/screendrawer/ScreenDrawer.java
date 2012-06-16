@@ -33,158 +33,158 @@ import utils.video.filters.VideoFilter;
  * @author Creative
  */
 public class ScreenDrawer extends VideoFilter<ScreenDrawerConfigs, FilterData> {
-    private long frameTimeStamp;
-    private final int[] frameInterval = new int[3];
+	/**
+	 * Runnable for drawing the incoming data on the Graphics objects.
+	 * 
+	 * @author Creative
+	 */
+	private class RunnableDrawer implements Runnable {
+		@Override
+		public void run() {
+			int wait_count = 0;
+			while ((configs.ref_gfx_sec_screen == null)
+					|| (configs.ref_gfx_sec_screen == null))
+				try {
+					Thread.sleep(100);
+					wait_count++;
+					if (wait_count == 10)
+						PManager.log.print("Drawing Screen is NULL!", this,
+								StatusSeverity.ERROR);
+				} catch (final InterruptedException e2) {
+					e2.printStackTrace();
+				}
 
-    /**
-     * Initializes the filter.
-     * 
-     * @param name
-     *            filter's name
-     * @param linkIn
-     *            main input Link for the filter
-     * @param link_in2
-     *            secondary input Link for the filter
-     * @param linkOut
-     *            output Link from the filter
-     */
-    public ScreenDrawer(final String name, final Link linkIn,
-	    final Link link_in2, final Link linkOut) {
-	super(name, linkIn, linkOut);
-	this.link_in2 = link_in2;
-	frameInterval[0] = 1;
-	frameInterval[1] = 1;
-	frameInterval[2] = 1;
-    }
+			try {
+				try {
+					Thread.sleep(100);
+				} catch (final InterruptedException e1) {
+					e1.printStackTrace();
+				}
 
-    private BufferedImage buf_img_main;
-    private BufferedImage buf_img_sec;
-    private int[] data_main_screen;
-    private int[] data_sec_screen;
-    private final Link link_in2;
+				while (configs.enabled) {
+					configs.shape_controller
+							.drawaAllShapes(configs.ref_gfx_main_screen);
+					try {
+						Thread.sleep(1000 / configs.common_configs.frame_rate);
+					} catch (final InterruptedException e) {
+						e.printStackTrace();
+					}
 
-    @Override
-    public boolean configure(final FilterConfigs configs) {
-	this.configs = (ScreenDrawerConfigs) configs;
+					if (link_in.getData() != null) {
+						System.arraycopy(link_in.getData(), 0,
+								data_main_screen, 0, link_in.getData().length);
 
-	buf_img_main = new BufferedImage(configs.common_configs.width,
-		configs.common_configs.height, BufferedImage.TYPE_INT_RGB);
-	data_main_screen = ((DataBufferInt) buf_img_main.getRaster()
-		.getDataBuffer()).getData();
-
-	buf_img_sec = new BufferedImage(configs.common_configs.width,
-		configs.common_configs.height, BufferedImage.TYPE_INT_RGB);
-	data_sec_screen = ((DataBufferInt) buf_img_sec.getRaster()
-		.getDataBuffer()).getData();
-	return super.configure(configs);
-    }
-
-    private Thread th_drawer;
-
-    @Override
-    public boolean enable(final boolean enable) {
-	if (enable) {
-	    th_drawer = new Thread(new RunnableDrawer());
-	    th_drawer.start();
+						configs.ref_gfx_main_screen.drawImage(buf_img_main, 0,
+								0, configs.common_configs.width,
+								configs.common_configs.height, 0, 0,
+								configs.common_configs.width,
+								configs.common_configs.height, null);
+						configs.ref_gfx_main_screen.setColor(Color.GREEN);
+						configs.ref_gfx_main_screen
+								.drawString(
+										"FPS="
+												+ 3000
+												/ (frameInterval[0]
+														+ frameInterval[1] + frameInterval[2]),
+										configs.common_configs.width - 60,
+										configs.common_configs.height - 10);
+						if (configs.enable_sec_screen)
+							configs.ref_gfx_sec_screen.drawImage(buf_img_sec
+									.getScaledInstance(289, 214,
+											Image.SCALE_DEFAULT), 0, 0,
+									configs.common_configs.width,
+									configs.common_configs.height, 0, 0,
+									configs.common_configs.width,
+									configs.common_configs.height, null);
+					} else
+						PManager.log.print("invalid frame! .. skipping!", this);
+				}
+			} catch (final Exception e) {
+				PManager.log.print("Error in th_drawer!!!!", this,
+						StatusSeverity.ERROR);
+				e.printStackTrace();
+			}
+		}
 	}
-	return super.enable(enable);
-    }
 
-    /**
-     * Runnable for drawing the incoming data on the Graphics objects.
-     * 
-     * @author Creative
-     */
-    private class RunnableDrawer implements Runnable {
+	private BufferedImage	buf_img_main;
+
+	private BufferedImage	buf_img_sec;
+
+	private int[]			data_main_screen;
+	private int[]			data_sec_screen;
+	private final int[]		frameInterval	= new int[3];
+	private long			frameTimeStamp;
+	private final Link		link_in2;
+
+	private Thread			th_drawer;
+
+	/**
+	 * Initializes the filter.
+	 * 
+	 * @param name
+	 *            filter's name
+	 * @param linkIn
+	 *            main input Link for the filter
+	 * @param link_in2
+	 *            secondary input Link for the filter
+	 * @param linkOut
+	 *            output Link from the filter
+	 */
+	public ScreenDrawer(final String name, final Link linkIn,
+			final Link link_in2, final Link linkOut) {
+		super(name, linkIn, linkOut);
+		this.link_in2 = link_in2;
+		frameInterval[0] = 1;
+		frameInterval[1] = 1;
+		frameInterval[2] = 1;
+	}
+
 	@Override
-	public void run() {
-	    int wait_count = 0;
-	    while (configs.ref_gfx_sec_screen == null
-		    || configs.ref_gfx_sec_screen == null)
-		try {
-		    Thread.sleep(100);
-		    wait_count++;
-		    if (wait_count == 10)
-			PManager.log.print("Drawing Screen is NULL!", this,
-				StatusSeverity.ERROR);
-		} catch (final InterruptedException e2) {
-		    e2.printStackTrace();
-		}
+	public boolean configure(final FilterConfigs configs) {
+		this.configs = (ScreenDrawerConfigs) configs;
 
-	    try {
-		try {
-		    Thread.sleep(100);
-		} catch (final InterruptedException e1) {
-		    e1.printStackTrace();
-		}
+		buf_img_main = new BufferedImage(configs.common_configs.width,
+				configs.common_configs.height, BufferedImage.TYPE_INT_RGB);
+		data_main_screen = ((DataBufferInt) buf_img_main.getRaster()
+				.getDataBuffer()).getData();
 
-		while (configs.enabled) {
-		    configs.shape_controller
-			    .drawaAllShapes(configs.ref_gfx_main_screen);
-		    try {
-			Thread.sleep(1000 / configs.common_configs.frame_rate);
-		    } catch (final InterruptedException e) {
-			e.printStackTrace();
-		    }
-
-		    if (link_in.getData() != null) {
-			System.arraycopy(link_in.getData(), 0,
-				data_main_screen, 0, link_in.getData().length);
-
-			configs.ref_gfx_main_screen.drawImage(buf_img_main, 0,
-				0, configs.common_configs.width,
-				configs.common_configs.height, 0, 0,
-				configs.common_configs.width,
-				configs.common_configs.height, null);
-			configs.ref_gfx_main_screen.setColor(Color.GREEN);
-			configs.ref_gfx_main_screen
-				.drawString(
-					"FPS="
-						+ 3000
-						/ (frameInterval[0]
-							+ frameInterval[1] + frameInterval[2]),
-					configs.common_configs.width - 60,
-					configs.common_configs.height - 10);
-			if (configs.enable_sec_screen)
-			    configs.ref_gfx_sec_screen.drawImage(buf_img_sec
-				    .getScaledInstance(289, 214,
-					    Image.SCALE_DEFAULT), 0, 0,
-				    configs.common_configs.width,
-				    configs.common_configs.height, 0, 0,
-				    configs.common_configs.width,
-				    configs.common_configs.height, null);
-		    } else
-			PManager.log.print("invalid frame! .. skipping!", this);
-		}
-	    } catch (final Exception e) {
-		PManager.log.print("Error in th_drawer!!!!", this,
-			StatusSeverity.ERROR);
-		e.printStackTrace();
-	    }
+		buf_img_sec = new BufferedImage(configs.common_configs.width,
+				configs.common_configs.height, BufferedImage.TYPE_INT_RGB);
+		data_sec_screen = ((DataBufferInt) buf_img_sec.getRaster()
+				.getDataBuffer()).getData();
+		return super.configure(configs);
 	}
-    }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see utils.video.processors.VideoFilter#process(int[])
-     */
-    @Override
-    public void process() {
-	if (configs.enabled) {
-	    System.arraycopy(link_in2.getData(), 0, data_sec_screen, 0,
-		    link_in2.getData().length);
-	    frameInterval[2] = frameInterval[1];
-	    frameInterval[1] = frameInterval[0];
-	    frameInterval[0] = (int) (System.currentTimeMillis() - frameTimeStamp);
-	    frameTimeStamp = System.currentTimeMillis();
+	@Override
+	public boolean enable(final boolean enable) {
+		if (enable) {
+			th_drawer = new Thread(new RunnableDrawer());
+			th_drawer.start();
+		}
+		return super.enable(enable);
 	}
-    }
 
-    @Override
-    public void updateProgramState(final ProgramState state) {
-	// TODO Auto-generated method stub
+	/*
+	 * (non-Javadoc)
+	 * @see utils.video.processors.VideoFilter#process(int[])
+	 */
+	@Override
+	public void process() {
+		if (configs.enabled) {
+			System.arraycopy(link_in2.getData(), 0, data_sec_screen, 0,
+					link_in2.getData().length);
+			frameInterval[2] = frameInterval[1];
+			frameInterval[1] = frameInterval[0];
+			frameInterval[0] = (int) (System.currentTimeMillis() - frameTimeStamp);
+			frameTimeStamp = System.currentTimeMillis();
+		}
+	}
 
-    }
+	@Override
+	public void updateProgramState(final ProgramState state) {
+		// TODO Auto-generated method stub
+
+	}
 
 }

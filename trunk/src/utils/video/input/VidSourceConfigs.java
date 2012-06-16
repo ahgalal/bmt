@@ -1,5 +1,5 @@
 package utils.video.input;
 
 public class VidSourceConfigs {
-    public int width, height, camIndex;
+	public int	width, height, camIndex;
 }

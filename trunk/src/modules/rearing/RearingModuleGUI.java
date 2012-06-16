@@ -38,99 +38,98 @@ import utils.PManager.ProgramState;
  * @author Creative
  */
 public class RearingModuleGUI extends PluggedGUI<RearingModule> {
-    public RearingModuleGUI(final RearingModule owner) {
-	super(owner);
-    }
+	private Button	btn_add_rearing	= null;
 
-    private Button btn_sub_rearing = null;
-    private Button btn_add_rearing = null;
+	private Button	btn_sub_rearing	= null;
 
-    /**
-     * Initializes/shows the GUI components.
-     * 
-     * @param parent
-     *            parent composite that the components will be children of
-     */
-    /*
-     * public RearingModuleGUI(final Composite parent) {
-     * 
-     * }
-     */
+	public RearingModuleGUI(final RearingModule owner) {
+		super(owner);
+	}
 
-    /**
-     * Handles the "Subtract Rearing" button click action.
-     */
-    public void btnSubRearingAction() {
-	if (PManager.getDefault().state == ProgramState.TRACKING
-	/* || PManager.getDefault().state == ProgramState.RECORDING */)
-	    ((RearingModule) ModulesManager.getDefault().getModuleByName(
-		    "Rearing Module")).decrementRearingCounter();
-    }
+	/**
+	 * Initializes/shows the GUI components.
+	 * 
+	 * @param parent
+	 *            parent composite that the components will be children of
+	 */
+	/*
+	 * public RearingModuleGUI(final Composite parent) { }
+	 */
 
-    /**
-     * Handles the "Add Rearing" button click action.
-     */
-    public void btnAddRearingAction() {
-	if (PManager.getDefault().state == ProgramState.TRACKING
-	/* || PManager.getDefault().state == ProgramState.RECORDING */)
-	    ((RearingModule) ModulesManager.getDefault().getModuleByName(
-		    "Rearing Module")).incrementRearingCounter();
-    }
+	/**
+	 * Handles the "Add Rearing" button click action.
+	 */
+	public void btnAddRearingAction() {
+		if (PManager.getDefault().state == ProgramState.TRACKING
+		/* || PManager.getDefault().state == ProgramState.RECORDING */)
+			((RearingModule) ModulesManager.getDefault().getModuleByName(
+					"Rearing Module")).incrementRearingCounter();
+	}
 
-    @Override
-    public void initialize(final Shell shell, final ExpandBar expandBar,
-	    final Menu menuBar, final CoolBar coolBar, final Group grpGraphs) {
-	final ExpandItem xpndtmManualRearing = new ExpandItem(expandBar,
-		SWT.NONE);
-	xpndtmManualRearing.setExpanded(true);
-	xpndtmManualRearing.setText("Manual Rearing");
+	/**
+	 * Handles the "Subtract Rearing" button click action.
+	 */
+	public void btnSubRearingAction() {
+		if (PManager.getDefault().state == ProgramState.TRACKING
+		/* || PManager.getDefault().state == ProgramState.RECORDING */)
+			((RearingModule) ModulesManager.getDefault().getModuleByName(
+					"Rearing Module")).decrementRearingCounter();
+	}
 
-	final Composite cmpstManualRearing = new Composite(expandBar, SWT.NONE);
-	xpndtmManualRearing.setControl(cmpstManualRearing);
+	@Override
+	public void inIdleState() {
+		btn_add_rearing.setEnabled(false);
+		btn_sub_rearing.setEnabled(false);
+	}
 
-	btn_sub_rearing = new Button(cmpstManualRearing, SWT.NONE);
-	btn_sub_rearing.setBounds(new Rectangle(10, 10, 28, 21));
-	btn_sub_rearing.setText("-");
-	btn_sub_rearing
-		.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
-		    @Override
-		    public void widgetSelected(
-			    final org.eclipse.swt.events.SelectionEvent e) {
-			btnSubRearingAction();
-		    }
-		});
-	btn_add_rearing = new Button(cmpstManualRearing, SWT.NONE);
-	btn_add_rearing.setText("+");
-	btn_add_rearing.setSize(new Point(28, 21));
-	btn_add_rearing.setLocation(new Point(40, 10));
+	@Override
+	public void initialize(final Shell shell, final ExpandBar expandBar,
+			final Menu menuBar, final CoolBar coolBar, final Group grpGraphs) {
+		final ExpandItem xpndtmManualRearing = new ExpandItem(expandBar,
+				SWT.NONE);
+		xpndtmManualRearing.setExpanded(true);
+		xpndtmManualRearing.setText("Manual Rearing");
 
-	btn_add_rearing
-		.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
-		    @Override
-		    public void widgetSelected(
-			    final org.eclipse.swt.events.SelectionEvent e) {
-			btnAddRearingAction();
-		    }
-		});
-	xpndtmManualRearing.setHeight(xpndtmManualRearing.getControl()
-		.computeSize(SWT.DEFAULT, SWT.DEFAULT).y + 10);
-    }
+		final Composite cmpstManualRearing = new Composite(expandBar, SWT.NONE);
+		xpndtmManualRearing.setControl(cmpstManualRearing);
 
-    @Override
-    public void inIdleState() {
-	btn_add_rearing.setEnabled(false);
-	btn_sub_rearing.setEnabled(false);
-    }
+		btn_sub_rearing = new Button(cmpstManualRearing, SWT.NONE);
+		btn_sub_rearing.setBounds(new Rectangle(10, 10, 28, 21));
+		btn_sub_rearing.setText("-");
+		btn_sub_rearing
+				.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
+					@Override
+					public void widgetSelected(
+							final org.eclipse.swt.events.SelectionEvent e) {
+						btnSubRearingAction();
+					}
+				});
+		btn_add_rearing = new Button(cmpstManualRearing, SWT.NONE);
+		btn_add_rearing.setText("+");
+		btn_add_rearing.setSize(new Point(28, 21));
+		btn_add_rearing.setLocation(new Point(40, 10));
 
-    @Override
-    public void inStreamingState() {
-	btn_add_rearing.setEnabled(false);
-	btn_sub_rearing.setEnabled(false);
-    }
+		btn_add_rearing
+				.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
+					@Override
+					public void widgetSelected(
+							final org.eclipse.swt.events.SelectionEvent e) {
+						btnAddRearingAction();
+					}
+				});
+		xpndtmManualRearing.setHeight(xpndtmManualRearing.getControl()
+				.computeSize(SWT.DEFAULT, SWT.DEFAULT).y + 10);
+	}
 
-    @Override
-    public void inTrackingState() {
-	btn_add_rearing.setEnabled(true);
-	btn_sub_rearing.setEnabled(true);
-    }
+	@Override
+	public void inStreamingState() {
+		btn_add_rearing.setEnabled(false);
+		btn_sub_rearing.setEnabled(false);
+	}
+
+	@Override
+	public void inTrackingState() {
+		btn_add_rearing.setEnabled(true);
+		btn_sub_rearing.setEnabled(true);
+	}
 }
