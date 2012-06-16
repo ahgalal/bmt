@@ -29,151 +29,151 @@ import utils.video.filters.Data;
 public abstract class Module<GUIType extends PluggedGUI, ConfigsType extends ModuleConfigs, DataType extends Data> // implements
 // StateListener
 {
-    protected Cargo guiCargo;
-    protected Cargo fileCargo;
-    protected ConfigsType configs;
-    protected String name;
+	protected ConfigsType	configs;
+	protected DataType		data;
+	protected Cargo			fileCargo;
+	protected Data[]		filters_data;
 
-    protected Data[] filters_data;
-    protected Data[] modules_data;
-    protected DataType data;
-    protected GUIType gui;
+	protected GUIType		gui;
+	protected Cargo			guiCargo;
+	protected Data[]		modules_data;
+	protected String		name;
 
-    /**
-     * Gets the data cargo to be sent to GUI.
-     * 
-     * @return Cargo containing data for GUI
-     */
-    public Cargo getGUICargo() {
-	return guiCargo;
-    }
+	/**
+	 * Initializes the module.
+	 * 
+	 * @param name
+	 *            module's name
+	 * @param config
+	 *            initial configurations of the module
+	 */
+	public Module(final String name, final ConfigsType config) {
+		this.name = name;
+		this.configs = config;
 
-    /**
-     * Gets the data cargo to be sent to file writer.
-     * 
-     * @return Cargo containing data for file writer
-     */
-    public Cargo getFileCargo() {
-	return fileCargo;
-    }
+	}
 
-    /**
-     * Initializes a HashTable with empty data.
-     * 
-     * @param hash
-     *            HashTable to initialize
-     * @param keys
-     *            keys of the hashtable
-     */
-    protected void initializeHashKeys(final Hashtable<String, String> hash,
-	    final String[] keys) {
-	for (final String s : keys)
-	    hash.put(s, "");
-    }
+	public boolean allowTracking() {
+		return true;
+	}
 
-    /**
-     * Initializes the module.
-     */
-    public abstract void initialize();
+	/**
+	 * Checks if the module is ready to run/process data.
+	 * 
+	 * @param shell
+	 *            parent shell, used to display messageboxes on the screen
+	 * @return true: ready, false: not ready(something is missing or
+	 *         misconfiguration)
+	 */
+	public abstract boolean amIReady(Shell shell);
 
-    /**
-     * Gets the module's name.
-     * 
-     * @return String containing the module's name
-     */
-    public String getName() {
-	return name;
-    }
+	/**
+	 * Deinitializes the module.
+	 */
+	public abstract void deInitialize();
 
-    /**
-     * Deinitializes the module.
-     */
-    public abstract void deInitialize();
+	/**
+	 * Unregisters a data object of a video filter from the module.
+	 * 
+	 * @param data
+	 *            data object of a video filer
+	 */
+	public abstract void deRegisterDataObject(Data data);
 
-    /**
-     * Updates the configurations of the module.
-     * 
-     * @param config
-     *            configurations object containing new values
-     */
-    public abstract void updateConfigs(ModuleConfigs config);
+	/**
+	 * Gets the data cargo to be sent to file writer.
+	 * 
+	 * @return Cargo containing data for file writer
+	 */
+	public Cargo getFileCargo() {
+		return fileCargo;
+	}
 
-    /**
-     * Process , do all the work the module should do at each time interval.
-     */
-    public abstract void process();
+	public PluggedGUI getGUI() {
+		return gui;
+	}
 
-    /**
-     * Updates the cargo data to be sent to GUI.
-     */
-    public abstract void updateGUICargoData();
+	/**
+	 * Gets the data cargo to be sent to GUI.
+	 * 
+	 * @return Cargo containing data for GUI
+	 */
+	public Cargo getGUICargo() {
+		return guiCargo;
+	}
 
-    /**
-     * Updates the cargo data to be sent to file writer.
-     */
-    public abstract void updateFileCargoData();
+	/**
+	 * Gets the Module data.
+	 * 
+	 * @return Data object containing the data of this module
+	 */
+	public Data getModuleData() {
+		return data;
+	}
 
-    /**
-     * Registers a data object of a video filter with the module.
-     * 
-     * @param data
-     *            data object of a video filer
-     */
-    public abstract void registerFilterDataObject(Data data);
+	/**
+	 * Gets the module's name.
+	 * 
+	 * @return String containing the module's name
+	 */
+	public String getName() {
+		return name;
+	}
 
-    /**
-     * Registers a data object of another module with this module.
-     * 
-     * @param data
-     */
-    public abstract void registerModuleDataObject(Data data);
+	/**
+	 * Initializes the module.
+	 */
+	public abstract void initialize();
 
-    /**
-     * Unregisters a data object of a video filter from the module.
-     * 
-     * @param data
-     *            data object of a video filer
-     */
-    public abstract void deRegisterDataObject(Data data);
+	/**
+	 * Initializes a HashTable with empty data.
+	 * 
+	 * @param hash
+	 *            HashTable to initialize
+	 * @param keys
+	 *            keys of the hashtable
+	 */
+	protected void initializeHashKeys(final Hashtable<String, String> hash,
+			final String[] keys) {
+		for (final String s : keys)
+			hash.put(s, "");
+	}
 
-    /**
-     * Initializes the module.
-     * 
-     * @param name
-     *            module's name
-     * @param config
-     *            initial configurations of the module
-     */
-    public Module(final String name, final ConfigsType config) {
-	this.name = name;
-	this.configs = config;
+	/**
+	 * Process , do all the work the module should do at each time interval.
+	 */
+	public abstract void process();
 
-    }
+	/**
+	 * Registers a data object of a video filter with the module.
+	 * 
+	 * @param data
+	 *            data object of a video filer
+	 */
+	public abstract void registerFilterDataObject(Data data);
 
-    /**
-     * Checks if the module is ready to run/process data.
-     * 
-     * @param shell
-     *            parent shell, used to display messageboxes on the screen
-     * @return true: ready, false: not ready(something is missing or
-     *         misconfiguration)
-     */
-    public abstract boolean amIReady(Shell shell);
+	/**
+	 * Registers a data object of another module with this module.
+	 * 
+	 * @param data
+	 */
+	public abstract void registerModuleDataObject(Data data);
 
-    /**
-     * Gets the Module data.
-     * 
-     * @return Data object containing the data of this module
-     */
-    public Data getModuleData() {
-	return data;
-    }
+	/**
+	 * Updates the configurations of the module.
+	 * 
+	 * @param config
+	 *            configurations object containing new values
+	 */
+	public abstract void updateConfigs(ModuleConfigs config);
 
-    public PluggedGUI getGUI() {
-	return gui;
-    }
+	/**
+	 * Updates the cargo data to be sent to file writer.
+	 */
+	public abstract void updateFileCargoData();
 
-    public boolean allowTracking() {
-	return true;
-    }
+	/**
+	 * Updates the cargo data to be sent to GUI.
+	 */
+	public abstract void updateGUICargoData();
 }

@@ -22,71 +22,71 @@ import utils.video.FrameIntArray;
  * @author Creative
  */
 public abstract class VidInputter<ConfigsType extends VidSourceConfigs> {
-    protected ConfigsType configs;
-    protected int status;
-    protected FrameIntArray fia;
+	protected ConfigsType	configs;
+	protected FrameIntArray	fia;
+	protected int			status;
 
-    /**
-     * Initializes the video library.
-     * 
-     * @param frame_data
-     *            frame data carrier object
-     * @param width
-     *            image width
-     * @param height
-     *            image height
-     * @param cam_index
-     *            camera index to use
-     * @return true if the initialization was successful
-     */
-    public abstract boolean initialize(FrameIntArray frame_data,
-	    ConfigsType configs);
+	/**
+	 * Shows additional cam settings (brightness/contrast/...).
+	 * 
+	 * @return 0 means success
+	 */
+	public abstract int displayMoreSettings();
 
-    /**
-     * Starts the video stream.
-     * 
-     * @return true if successful
-     */
-    public abstract boolean startStream();
+	/**
+	 * Returns the name of the video library.
+	 * 
+	 * @return string containing the name of the video library
+	 */
+	public abstract String getName();
 
-    /**
-     * Stops the video library and deinitializes it.
-     */
-    public abstract void stopModule();
+	/**
+	 * Returns the number of available image capture devices.
+	 * 
+	 * @return number of available webcams
+	 */
+	public abstract int getNumCams();
 
-    /**
-     * Sets the image format for the library (RGB/YUV).
-     * 
-     * @param format
-     *            new format
-     */
-    public abstract void setFormat(String format);
+	/**
+	 * Returns the status of the video library.
+	 * 
+	 * @return 1 means streaming
+	 */
+	public abstract int getStatus();
 
-    /**
-     * Returns the status of the video library.
-     * 
-     * @return 1 means streaming
-     */
-    public abstract int getStatus();
+	/**
+	 * Initializes the video library.
+	 * 
+	 * @param frame_data
+	 *            frame data carrier object
+	 * @param width
+	 *            image width
+	 * @param height
+	 *            image height
+	 * @param cam_index
+	 *            camera index to use
+	 * @return true if the initialization was successful
+	 */
+	public abstract boolean initialize(FrameIntArray frame_data,
+			ConfigsType configs);
 
-    /**
-     * Returns the number of available image capture devices.
-     * 
-     * @return number of available webcams
-     */
-    public abstract int getNumCams();
+	/**
+	 * Sets the image format for the library (RGB/YUV).
+	 * 
+	 * @param format
+	 *            new format
+	 */
+	public abstract void setFormat(String format);
 
-    /**
-     * Shows additional cam settings (brightness/contrast/...).
-     * 
-     * @return 0 means success
-     */
-    public abstract int displayMoreSettings();
+	/**
+	 * Starts the video stream.
+	 * 
+	 * @return true if successful
+	 */
+	public abstract boolean startStream();
 
-    /**
-     * Returns the name of the video library.
-     * 
-     * @return string containing the name of the video library
-     */
-    public abstract String getName();
+	/**
+	 * Stops the video library and deinitializes it.
+	 */
+	public abstract void stopModule();
 }

@@ -23,51 +23,51 @@ import java.awt.Color;
  */
 public class CrossMarker extends Marker {
 
-    private final int width, height, thikness;
-    private int actual_width, actual_height;
-    private int x1, x2, y1, y2;
+	private int	actual_width, actual_height;
+	private final int	width, height, thikness;
+	private int			x1, x2, y1, y2;
 
-    /**
-     * Initializes the marker.
-     * 
-     * @param width
-     *            marker's width
-     * @param height
-     *            marker's height
-     * @param thickness
-     *            line thickness
-     * @param color
-     *            color
-     * @param img_width
-     *            image's width
-     * @param img_height
-     *            image's height
-     */
-    public CrossMarker(final int width, final int height, final int thickness,
-	    final Color color, final int img_width, final int img_height) {
-	super(img_width, img_height, color);
-	this.width = width;
-	this.height = height;
-	this.thikness = thickness;
-    }
+	/**
+	 * Initializes the marker.
+	 * 
+	 * @param width
+	 *            marker's width
+	 * @param height
+	 *            marker's height
+	 * @param thickness
+	 *            line thickness
+	 * @param color
+	 *            color
+	 * @param img_width
+	 *            image's width
+	 * @param img_height
+	 *            image's height
+	 */
+	public CrossMarker(final int width, final int height, final int thickness,
+			final Color color, final int img_width, final int img_height) {
+		super(img_width, img_height, color);
+		this.width = width;
+		this.height = height;
+		this.thikness = thickness;
+	}
 
-    @Override
-    public void draw(final int[] img, final int x, final int y) {
-	actual_width = (x < width / 2) ? x + width / 2 : width;
-	actual_height = (y < height / 2) ? y + height / 2 : height;
+	@Override
+	public void draw(final int[] img, final int x, final int y) {
+		actual_width = (x < width / 2) ? x + width / 2 : width;
+		actual_height = (y < height / 2) ? y + height / 2 : height;
 
-	x1 = (x < width / 2) ? 0 : x - width / 2;
-	x2 = (x < thikness / 2) ? 0 : x - thikness / 2;
+		x1 = (x < width / 2) ? 0 : x - width / 2;
+		x2 = (x < thikness / 2) ? 0 : x - thikness / 2;
 
-	y1 = (y < thikness / 2) ? 0 : y - thikness / 2;
-	y2 = (y < height / 2) ? 0 : y - height / 2;
+		y1 = (y < thikness / 2) ? 0 : y - thikness / 2;
+		y2 = (y < height / 2) ? 0 : y - height / 2;
 
-	// Horizontal line
-	fillRect(img, x1, y1, actual_width, thikness);
+		// Horizontal line
+		fillRect(img, x1, y1, actual_width, thikness);
 
-	// Vertical line
-	fillRect(img, x2, y2, thikness, actual_height);
+		// Vertical line
+		fillRect(img, x2, y2, thikness, actual_height);
 
-    }
+	}
 
 }

@@ -26,38 +26,38 @@ import utils.video.filters.VideoFilter;
  * @author Creative
  */
 public class SourceFilter extends
-	VideoFilter<SourceFilterConfigs, SourceFilterData> {
-    /**
-     * Initializes the filter.
-     * 
-     * @param name
-     *            filter's name
-     * @param linkIn
-     *            input Link for the filter
-     * @param linkOut
-     *            output link that will distribute the data on other filters
-     */
-    public SourceFilter(final String name, final Link linkIn, final Link linkOut) {
-	super(name, linkIn, linkOut);
-	filterData = new SourceFilterData("Source Filter");
-    }
+		VideoFilter<SourceFilterConfigs, SourceFilterData> {
+	/**
+	 * Initializes the filter.
+	 * 
+	 * @param name
+	 *            filter's name
+	 * @param linkIn
+	 *            input Link for the filter
+	 * @param linkOut
+	 *            output link that will distribute the data on other filters
+	 */
+	public SourceFilter(final String name, final Link linkIn, final Link linkOut) {
+		super(name, linkIn, linkOut);
+		filterData = new SourceFilterData("Source Filter");
+	}
 
-    @Override
-    public boolean configure(final FilterConfigs configs) {
-	this.configs = (SourceFilterConfigs) configs;
-	return super.configure(configs);
-    }
+	@Override
+	public boolean configure(final FilterConfigs configs) {
+		this.configs = (SourceFilterConfigs) configs;
+		return super.configure(configs);
+	}
 
-    @Override
-    public void process() {
-	link_out.setData(configs.fia.frame_data);
-	filterData.setData(configs.fia.frame_data);
-    }
+	@Override
+	public void process() {
+		link_out.setData(configs.fia.frame_data);
+		filterData.setData(configs.fia.frame_data);
+	}
 
-    @Override
-    public void updateProgramState(final ProgramState state) {
-	// TODO Auto-generated method stub
+	@Override
+	public void updateProgramState(final ProgramState state) {
+		// TODO Auto-generated method stub
 
-    }
+	}
 
 }

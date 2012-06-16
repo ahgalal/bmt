@@ -4,18 +4,18 @@ import utils.video.filters.FilterData;
 
 public class MovementMeterData extends FilterData {
 
-    private int whiteSummation;
+	private int	whiteSummation;
 
-    public MovementMeterData(final String name) {
-	super(name);
-    }
+	public MovementMeterData(final String name) {
+		super(name);
+	}
 
-    public void setWhiteSummation(final int whiteSummation) {
-	this.whiteSummation = whiteSummation;
-    }
+	public int getWhiteSummation() {
+		return whiteSummation;
+	}
 
-    public int getWhiteSummation() {
-	return whiteSummation;
-    }
+	public void setWhiteSummation(final int whiteSummation) {
+		this.whiteSummation = whiteSummation;
+	}
 
 }

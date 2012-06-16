@@ -12,44 +12,44 @@ import utils.PManager.ProgramState;
 import utils.StateListener;
 
 public abstract class PluggedGUI<OwnerType> implements StateListener {
-    protected Shell shell;
-    protected PManager.ProgramState programState;
-    protected OwnerType owner;
+	protected OwnerType				owner;
+	protected PManager.ProgramState	programState;
+	protected Shell					shell;
 
-    public PluggedGUI(final OwnerType owner) {
-	this.owner = owner;
-    }
+	public PluggedGUI(final OwnerType owner) {
+		this.owner = owner;
+	}
 
-    public abstract void initialize(Shell shell, ExpandBar expandBar,
-	    Menu menuBar, CoolBar coolBar, Group grpGraphs);
+	public abstract void inIdleState();
 
-    @Override
-    public void updateProgramState(final ProgramState state) {
-	if (state != programState)
-	    Display.getDefault().asyncExec(new Runnable() {
+	public abstract void initialize(Shell shell, ExpandBar expandBar,
+			Menu menuBar, CoolBar coolBar, Group grpGraphs);
 
-		@Override
-		public void run() {
-		    switch (state) {
-		    case IDLE:
-			inIdleState();
-			break;
-		    case STREAMING:
-			inStreamingState();
-			break;
-		    case TRACKING:
-			inTrackingState();
-			break;
-		    }
-		}
-	    });
-	programState = state;
-    }
+	public abstract void inStreamingState();
 
-    public abstract void inIdleState();
+	public abstract void inTrackingState();
 
-    public abstract void inStreamingState();
+	@Override
+	public void updateProgramState(final ProgramState state) {
+		if (state != programState)
+			Display.getDefault().asyncExec(new Runnable() {
 
-    public abstract void inTrackingState();
+				@Override
+				public void run() {
+					switch (state) {
+						case IDLE:
+							inIdleState();
+							break;
+						case STREAMING:
+							inStreamingState();
+							break;
+						case TRACKING:
+							inTrackingState();
+							break;
+					}
+				}
+			});
+		programState = state;
+	}
 
 }

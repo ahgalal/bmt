@@ -14,83 +14,84 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 
 public class Plotter {
-    private final Composite parent;
-    private Canvas canvas;
-    private Composite mainComposite;
-    private GC gc;
-    private Point lastPoint;
+	public static void main(final String... strings) {
+		final Shell s = new Shell();
+		s.setSize(687, 487);
+		final Plotter p = new Plotter(s);
+		p.initialize();
+		s.open();
+		while (!s.isDisposed())
+			if (!Display.getDefault().readAndDispatch())
+				Display.getDefault().sleep();
+	}
 
-    private final int axisOffsetX = 20;
-    private final int axisOffsetY = 20;
+	private final int		axisOffsetX	= 20;
+	private final int		axisOffsetY	= 20;
+	private Canvas			canvas;
+	private GC				gc;
 
-    public Plotter(final Composite parent) {
-	this.parent = parent;
-	// TODO Auto-generated constructor stub
-    }
+	private Point			lastPoint;
+	private Composite		mainComposite;
 
-    private Point shiftAxis(final int x, final int y) {
-	final Point ret = new Point(0, 0);
+	private final Composite	parent;
 
-	ret.x = x + axisOffsetX;
-	ret.y = canvas.getSize().y - axisOffsetY - y;
+	public Plotter(final Composite parent) {
+		this.parent = parent;
+		// TODO Auto-generated constructor stub
+	}
 
-	return ret;
-    }
-
-    public void initialize() {
-	mainComposite = new Composite(parent, SWT.BORDER);
-	mainComposite.setBounds(0, 0, parent.getBounds().width,
-		parent.getBounds().height);
-
-	canvas = new Canvas(mainComposite, 0);
-	gc = new GC(canvas);
-	canvas.setBounds(0, 0, mainComposite.getSize().x,
-		mainComposite.getSize().y);
-	canvas.setBackground(new Color(null, new RGB(255, 255, 255)));
-
-	final Button btnNewButton = new Button(mainComposite, SWT.NONE);
-	btnNewButton.addSelectionListener(new SelectionAdapter() {
-	    @Override
-	    public void widgetSelected(final SelectionEvent e) {
-		/*
-		 * addPoint(20, 20); addPoint((int)(Math.random()*200),
-		 * (int)(Math.random()*200)); addPoint((int)(Math.random()*200),
-		 * (int)(Math.random()*200)); addPoint((int)(Math.random()*200),
-		 * (int)(Math.random()*200));
-		 */
+	public void addPoint(final int x, final int y) {
+		final Point tmp = shiftAxis(x, y);
+		gc.drawLine(lastPoint.x, lastPoint.y, tmp.x, tmp.y);
+		lastPoint.x = tmp.x;
+		lastPoint.y = tmp.y;
 		drawAxes();
-	    }
-	});
-	btnNewButton.setBounds(29, 316, 75, 25);
-	btnNewButton.setText("New Button");
-	lastPoint = shiftAxis(0, 0);
-	drawAxes();
-    }
+	}
 
-    public void addPoint(final int x, final int y) {
-	final Point tmp = shiftAxis(x, y);
-	gc.drawLine(lastPoint.x, lastPoint.y, tmp.x, tmp.y);
-	lastPoint.x = tmp.x;
-	lastPoint.y = tmp.y;
-	drawAxes();
-    }
+	public void drawAxes() {
+		gc.drawLine(axisOffsetX, 10, axisOffsetX,
+				canvas.getBounds().height - 10);
+		gc.drawLine(10, canvas.getBounds().height - axisOffsetY,
+				canvas.getBounds().width - 10, canvas.getBounds().height
+						- axisOffsetY);
+	}
 
-    public void drawAxes() {
-	gc.drawLine(axisOffsetX, 10, axisOffsetX,
-		canvas.getBounds().height - 10);
-	gc.drawLine(10, canvas.getBounds().height - axisOffsetY,
-		canvas.getBounds().width - 10, canvas.getBounds().height
-			- axisOffsetY);
-    }
+	public void initialize() {
+		mainComposite = new Composite(parent, SWT.BORDER);
+		mainComposite.setBounds(0, 0, parent.getBounds().width,
+				parent.getBounds().height);
 
-    public static void main(final String... strings) {
-	final Shell s = new Shell();
-	s.setSize(687, 487);
-	final Plotter p = new Plotter(s);
-	p.initialize();
-	s.open();
-	while (!s.isDisposed())
-	    if (!Display.getDefault().readAndDispatch())
-		Display.getDefault().sleep();
-    }
+		canvas = new Canvas(mainComposite, 0);
+		gc = new GC(canvas);
+		canvas.setBounds(0, 0, mainComposite.getSize().x,
+				mainComposite.getSize().y);
+		canvas.setBackground(new Color(null, new RGB(255, 255, 255)));
+
+		final Button btnNewButton = new Button(mainComposite, SWT.NONE);
+		btnNewButton.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(final SelectionEvent e) {
+				/*
+				 * addPoint(20, 20); addPoint((int)(Math.random()*200),
+				 * (int)(Math.random()*200)); addPoint((int)(Math.random()*200),
+				 * (int)(Math.random()*200)); addPoint((int)(Math.random()*200),
+				 * (int)(Math.random()*200));
+				 */
+				drawAxes();
+			}
+		});
+		btnNewButton.setBounds(29, 316, 75, 25);
+		btnNewButton.setText("New Button");
+		lastPoint = shiftAxis(0, 0);
+		drawAxes();
+	}
+
+	private Point shiftAxis(final int x, final int y) {
+		final Point ret = new Point(0, 0);
+
+		ret.x = x + axisOffsetX;
+		ret.y = canvas.getSize().y - axisOffsetY - y;
+
+		return ret;
+	}
 }

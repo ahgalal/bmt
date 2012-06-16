@@ -27,104 +27,100 @@ import utils.video.filters.subtractionfilter.SubtractorFilter;
  * @author Creative
  */
 public class OpenFieldExperimentModuleGUI extends ExperimentModuleGUI {
-    public OpenFieldExperimentModuleGUI(final OpenFieldExperimentModule owner) {
-	super(owner);
-    }
+	private Button	btnSetBackground	= null;
 
-    private Button btnSetBackground = null;
+	public OpenFieldExperimentModuleGUI(final OpenFieldExperimentModule owner) {
+		super(owner);
+	}
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see PluggedGUI#initialize(org.eclipse.swt.widgets.Shell,
-     * org.eclipse.swt.widgets.ExpandBar, org.eclipse.swt.widgets.Menu,
-     * org.eclipse.swt.widgets.CoolBar, org.eclipse.swt.widgets.Group)
-     */
-    @Override
-    public void initialize(final Shell shell, final ExpandBar expandBar,
-	    final Menu menuBar, final CoolBar coolBar, final Group grpGraphs) {
-	final ExpandItem xpndtmOptions = new ExpandItem(expandBar, SWT.NONE);
-	xpndtmOptions.setExpanded(true);
-	xpndtmOptions.setText("Open Field");
+	/**
+	 * Enables/disables the set background button.
+	 * 
+	 * @param enable
+	 *            true/false
+	 */
+	public void btnSetBackgroundEnable(final boolean enable) {
+		btnSetBackground.setEnabled(enable);
 
-	final Composite cmpstOptions = new Composite(expandBar, SWT.NONE);
-	xpndtmOptions.setControl(cmpstOptions);
-	btnSetBackground = new Button(cmpstOptions, SWT.NONE);
-	btnSetBackground.setBounds(new Rectangle(10, 10, 109, 25));
-	btnSetBackground.setText("Set Background");
-	btnSetBackground.addSelectionListener(new SelectionAdapter() {
-	    @Override
-	    public void widgetSelected(final SelectionEvent e) {
-		btnSetbgAction();
-	    }
-	});
+	}
 
-	xpndtmOptions.setHeight(xpndtmOptions.getControl().computeSize(
-		SWT.DEFAULT, SWT.DEFAULT).y + 10);
-    }
+	/**
+	 * Sets the background of DrawZones window and the VideoManager to the
+	 * current cam. image at that instant.
+	 */
+	public void btnSetbgAction() {
+		if (PManager.getDefault().state == ProgramState.STREAMING) {
+			PManager.getDefault().drw_zns
+					.setBackground(((OpenFieldExperimentModule) owner)
+							.updateRGBBackground());
+			((SubtractorFilter) PManager.getDefault().getVideoManager()
+					.getFilterManager().getFilterByName("SubtractionFilter"))
+					.updateBG();
+		} else if (PManager.getDefault().state == ProgramState.TRACKING)
+			PManager.getDefault().statusMgr.setStatus(
+					"Background can't be taken while tracking.",
+					StatusSeverity.ERROR);
+		else
+			PManager.getDefault().statusMgr.setStatus(
+					"Please start the camera first.", StatusSeverity.ERROR);
+	}
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see PluggedGUI#inIdleState()
-     */
-    @Override
-    public void inIdleState() {
-	// TODO Auto-generated method stub
-	btnSetBackgroundEnable(false);
-    }
+	/*
+	 * (non-Javadoc)
+	 * @see PluggedGUI#inIdleState()
+	 */
+	@Override
+	public void inIdleState() {
+		// TODO Auto-generated method stub
+		btnSetBackgroundEnable(false);
+	}
 
-    /**
-     * Enables/disables the set background button.
-     * 
-     * @param enable
-     *            true/false
-     */
-    public void btnSetBackgroundEnable(final boolean enable) {
-	btnSetBackground.setEnabled(enable);
+	/*
+	 * (non-Javadoc)
+	 * @see PluggedGUI#initialize(org.eclipse.swt.widgets.Shell,
+	 * org.eclipse.swt.widgets.ExpandBar, org.eclipse.swt.widgets.Menu,
+	 * org.eclipse.swt.widgets.CoolBar, org.eclipse.swt.widgets.Group)
+	 */
+	@Override
+	public void initialize(final Shell shell, final ExpandBar expandBar,
+			final Menu menuBar, final CoolBar coolBar, final Group grpGraphs) {
+		final ExpandItem xpndtmOptions = new ExpandItem(expandBar, SWT.NONE);
+		xpndtmOptions.setExpanded(true);
+		xpndtmOptions.setText("Open Field");
 
-    }
+		final Composite cmpstOptions = new Composite(expandBar, SWT.NONE);
+		xpndtmOptions.setControl(cmpstOptions);
+		btnSetBackground = new Button(cmpstOptions, SWT.NONE);
+		btnSetBackground.setBounds(new Rectangle(10, 10, 109, 25));
+		btnSetBackground.setText("Set Background");
+		btnSetBackground.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(final SelectionEvent e) {
+				btnSetbgAction();
+			}
+		});
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see PluggedGUI#inStreamingState()
-     */
-    @Override
-    public void inStreamingState() {
-	// TODO Auto-generated method stub
-	btnSetBackgroundEnable(true);
-    }
+		xpndtmOptions.setHeight(xpndtmOptions.getControl().computeSize(
+				SWT.DEFAULT, SWT.DEFAULT).y + 10);
+	}
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see PluggedGUI#inTrackingState()
-     */
-    @Override
-    public void inTrackingState() {
-	btnSetBackgroundEnable(false);
-    }
+	/*
+	 * (non-Javadoc)
+	 * @see PluggedGUI#inStreamingState()
+	 */
+	@Override
+	public void inStreamingState() {
+		// TODO Auto-generated method stub
+		btnSetBackgroundEnable(true);
+	}
 
-    /**
-     * Sets the background of DrawZones window and the VideoManager to the
-     * current cam. image at that instant.
-     */
-    public void btnSetbgAction() {
-	if (PManager.getDefault().state == ProgramState.STREAMING) {
-	    PManager.getDefault().drw_zns
-		    .setBackground(((OpenFieldExperimentModule) owner)
-			    .updateRGBBackground());
-	    ((SubtractorFilter) PManager.getDefault().getVideoManager()
-		    .getFilterManager().getFilterByName("SubtractionFilter"))
-		    .updateBG();
-	} else if (PManager.getDefault().state == ProgramState.TRACKING)
-	    PManager.getDefault().statusMgr.setStatus(
-		    "Background can't be taken while tracking.",
-		    StatusSeverity.ERROR);
-	else
-	    PManager.getDefault().statusMgr.setStatus(
-		    "Please start the camera first.", StatusSeverity.ERROR);
-    }
+	/*
+	 * (non-Javadoc)
+	 * @see PluggedGUI#inTrackingState()
+	 */
+	@Override
+	public void inTrackingState() {
+		btnSetBackgroundEnable(false);
+	}
 
 }
