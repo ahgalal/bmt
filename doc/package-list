@@ -5,6 +5,7 @@ modules.experiment
 modules.rearing
 modules.session
 modules.zones
+org.eclipse.wb.swt
 ui
 ui.box
 utils
