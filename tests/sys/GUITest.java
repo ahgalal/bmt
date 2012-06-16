@@ -1,7 +1,6 @@
 package sys;
 
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swtbot.swt.finder.SWTBot;
 import org.junit.After;
 import org.junit.Before;
 
@@ -10,13 +9,13 @@ import utils.PManager;
 public abstract class GUITest
 {
 
-	protected SWTBot bot;
+	//TODO: use windowtester| protected SWTBot bot;
 	protected PManager pm;
 
 	protected void initializeBot()
 	{
 		System.out.println("initializing bot..");
-		bot=new SWTBot();
+		//TODO: use windowtester| bot=new SWTBot();
 	}
 
 	protected void waitForGUIToLoad(int delay)

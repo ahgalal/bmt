@@ -22,10 +22,10 @@ public class SaveExperimentOLD extends GUITest
 	{
 		PManager.testingMode=true;
 		sleep(100);
-		bot.menu(ExternalStrings.get("MainGUI.Menu.Experiment")).menu(ExternalStrings.get("MainGUI.Menu.Exp.New")).click();
+		//TODO: use windowtester| bot.menu(ExternalStrings.get("MainGUI.Menu.Experiment")).menu(ExternalStrings.get("MainGUI.Menu.Exp.New")).click();
 		sleep(100);
 		new SWTBotRecorder();
-		bot.shell("Experiment Information").activate();
+		//TODO: use windowtester| bot.shell("Experiment Information").activate();
 /*		bot.button("Cancel").click();
 		bot.button("1").click();
 		bot.button("2").click();
@@ -41,9 +41,9 @@ public class SaveExperimentOLD extends GUITest
 		
 		
 		sleep(100000);
-		bot.text("TestName").setText("Test Experiment");
-		bot.text("TestNotes").setText("Test Notes");
-		bot.text("TestUser").setText("AGalal");
+		//TODO: use windowtester| bot.text("TestName").setText("Test Experiment");
+		//TODO: use windowtester| bot.text("TestNotes").setText("Test Notes");
+		//TODO: use windowtester| bot.text("TestUser").setText("AGalal");
 		//bot
 
 		
