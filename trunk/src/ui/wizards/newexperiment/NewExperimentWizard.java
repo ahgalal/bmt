@@ -17,7 +17,7 @@ public class NewExperimentWizard extends Wizard {
 
 	public NewExperimentWizard(final CtrlNewExperimentWizard controller) {
 		this.controller = controller;
-		setWindowTitle("Experiment indormation");
+		setWindowTitle("Experiment information");
 		expBasicInfoPage = new ExpBasicInfoPage("expInfo");
 		expBasicInfoPage.setTitle("Experiment information");
 		expBasicInfoPage
