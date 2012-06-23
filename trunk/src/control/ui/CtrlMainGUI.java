@@ -82,7 +82,7 @@ public class CtrlMainGUI extends ControllerUI<MainGUI> implements StateListener 
 	private final PManager	pm;						// @jve:decl-index=0:
 	private Thread			th_update_gui;				// @jve:decl-index=0:
 	private final MainGUI	ui;
-
+	private CtrlNewExperimentWizard ctrlNewExpWizard;
 	private boolean			ui_is_opened;
 
 	private final Shell		ui_shell;
@@ -99,6 +99,7 @@ public class CtrlMainGUI extends ControllerUI<MainGUI> implements StateListener 
 
 		pm.statusMgr.initialize(ui.getStatusLabel());
 		ctrl_about_box = new CtrlAbout();
+		ctrlNewExpWizard = new CtrlNewExperimentWizard();
 	}
 
 	/**
@@ -196,7 +197,7 @@ public class CtrlMainGUI extends ControllerUI<MainGUI> implements StateListener 
 	 * Handles the "Edit Experiment" menu item click action.
 	 */
 	public void mnuitmEditExpAction() {
-		PManager.getDefault().frm_exp.show(true);
+		ctrlNewExpWizard.show(ui_shell, false);
 	}
 
 	/**
@@ -254,8 +255,6 @@ public class CtrlMainGUI extends ControllerUI<MainGUI> implements StateListener 
 		final FileDialog fileDialog = new FileDialog(sShell, SWT.OPEN);
 		final String file_name = fileDialog.open();
 		if (file_name != null) {
-			PManager.getDefault().frm_exp.clearForm();
-			PManager.getDefault().frm_grps.clearForm();
 			PManager.main_gui.clearForm();
 			ExperimentManager.getDefault().unloadExperiment();
 			ExperimentManager.getDefault().loadInfoFromTXTFile(file_name);
@@ -269,11 +268,9 @@ public class CtrlMainGUI extends ControllerUI<MainGUI> implements StateListener 
 	 * Shows the new ExperimentForm and unloads the previous experiment.
 	 */
 	public void mnutmExperimentNewExpAction() {
-		PManager.getDefault().frm_exp.clearForm();
-		PManager.getDefault().frm_grps.clearForm();
 		PManager.main_gui.clearForm();
-		PManager.getDefault().frm_exp.show(true);
 		ExperimentManager.getDefault().unloadExperiment();
+		ctrlNewExpWizard.show(ui_shell,true);
 	}
 
 	/**
