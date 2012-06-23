@@ -31,8 +31,6 @@ import utils.video.filters.CommonFilterConfigs;
 import control.ui.CtrlAbout;
 import control.ui.CtrlCamOptions;
 import control.ui.CtrlDrawZones;
-import control.ui.CtrlExperimentForm;
-import control.ui.CtrlGroupsForm;
 import control.ui.CtrlMainGUI;
 import control.ui.CtrlOptionsWindow;
 import control.ui.CtrlRatInfoForm;
@@ -112,14 +110,6 @@ public class PManager {
 	 */
 	public ExcelEngine						excel_engine;
 	/**
-	 * Experiment form, used to Add/Edit experiment information.
-	 */
-	public CtrlExperimentForm				frm_exp;
-	/**
-	 * Groups form, used to Add/Edit groups of rats.
-	 */
-	public CtrlGroupsForm					frm_grps;
-	/**
 	 * Rat form, used to enter next rat number/group.
 	 */
 	public CtrlRatInfoForm					frm_rat;
@@ -157,8 +147,6 @@ public class PManager {
 
 		shape_controller = ShapeController.getDefault();
 		drw_zns = new CtrlDrawZones();
-		frm_exp = new CtrlExperimentForm();
-		frm_grps = new CtrlGroupsForm();
 		frm_rat = new CtrlRatInfoForm();
 		cam_options = new CtrlCamOptions();
 		options_window = new CtrlOptionsWindow();
@@ -302,8 +290,6 @@ public class PManager {
 
 	public void unloadGUI() {
 		drw_zns.unloadGUI();
-		frm_exp.unloadGUI();
-		frm_grps.unloadGUI();
 		frm_rat.unloadGUI();
 		cam_options.unloadGUI();
 		options_window.unloadGUI();

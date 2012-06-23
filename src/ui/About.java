@@ -14,7 +14,10 @@
 
 package ui;
 
+import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Button;
@@ -23,8 +26,10 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
+import ui.wizards.newexperiment.NewExperimentWizard;
 import control.ui.ControllerUI;
 import control.ui.CtrlAbout;
+import control.ui.CtrlNewExperimentWizard;
 
 /**
  * About dialog box, displays program description and credits.
@@ -39,7 +44,7 @@ public class About extends BaseUI {
 
 	private Group		grp_format		= null;
 	private Label		lbl_proj_desc	= null;
-	private Shell		sShell			= null; // @jve:decl-index=0:visual-constraint="4,7"
+	private Shell		sShell_1;
 	private Text		textArea		= null;
 	private Text		txt_owner_email	= null;
 	private Text		txt_owner_name	= null;
@@ -49,7 +54,7 @@ public class About extends BaseUI {
 	 */
 	public About() {
 		createSShell();
-		super.sShell = sShell;
+		super.sShell = sShell_1;
 	}
 
 	@Override
@@ -60,7 +65,7 @@ public class About extends BaseUI {
 	 * This method initializes grp_format.
 	 */
 	private void createGrpFormat() {
-		grp_format = new Group(sShell, SWT.NONE);
+		grp_format = new Group(sShell_1, SWT.NONE);
 		grp_format.setLayout(null);
 		grp_format.setText("Credits:");
 		grp_format.setBounds(new Rectangle(11, 165, 444, 105));
@@ -81,12 +86,12 @@ public class About extends BaseUI {
 	 * This method initializes sShell1.
 	 */
 	private void createSShell() {
-		sShell = new Shell(SWT.TITLE | SWT.APPLICATION_MODAL);
-		sShell.setLayout(null);
-		sShell.setText("About");
-		sShell.setMaximized(false);
-		sShell.setSize(new Point(467, 326));
-		btn_OK = new Button(sShell, SWT.NONE);
+		sShell_1 = new Shell(SWT.TITLE | SWT.APPLICATION_MODAL);
+		sShell_1.setLayout(null);
+		sShell_1.setText("About");
+		sShell_1.setMaximized(false);
+		sShell_1.setSize(new Point(467, 326));
+		btn_OK = new Button(sShell_1, SWT.NONE);
 		btn_OK.setBounds(new Rectangle(378, 271, 73, 25));
 		btn_OK.setText("OK");
 		btn_OK.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
@@ -96,12 +101,12 @@ public class About extends BaseUI {
 				sShell.setVisible(false);
 			}
 		});
-		lbl_proj_desc = new Label(sShell, SWT.NONE);
+		lbl_proj_desc = new Label(sShell_1, SWT.NONE);
 		lbl_proj_desc.setBounds(new Rectangle(11, 5, 112, 17));
 		lbl_proj_desc.setText("Project description:");
 
 		createGrpFormat();
-		textArea = new Text(sShell, SWT.MULTI | SWT.WRAP | SWT.V_SCROLL);
+		textArea = new Text(sShell_1, SWT.MULTI | SWT.WRAP | SWT.V_SCROLL);
 		textArea.setEditable(false);
 		textArea.setBounds(new Rectangle(11, 29, 443, 124));
 		textArea.setText("Behavioural Monitoring Tool ( Ein BMT ) : this software is used to record and analyse some behavioural expermients (open field , water maze , forced swimming)  in neuroscience. the program was developed in collaboration with neuropharmacology lab at Faculty of Medicine,,  Ain Shams University . The sofware has 3 modules , each module is concerned with one of the three experminets.\nEin BMT (Open Field Module):\na test arena is divided into a number of zones. a rat or mouse is put inside the arena. rat movements are recorded and a number of parameters (number of zones, time spent in central zones, rearing behaviour, distance travelled) are analysed.");
@@ -117,5 +122,4 @@ public class About extends BaseUI {
 		super.setController(controller);
 		this.controller = (CtrlAbout) controller;
 	}
-
 }

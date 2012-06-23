@@ -9,6 +9,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
 import modules.experiment.ExcelEngine;
+import modules.experiment.Exp2GUI;
 import modules.experiment.Experiment;
 import modules.experiment.ExperimentModule;
 import modules.experiment.ExperimentModuleConfigs;
@@ -53,6 +54,10 @@ public class ExperimentManager {
 
 	public int getCurrRatNumber() {
 		return currRatNumber;
+	}
+
+	public Exp2GUI getExpBasicInfo() {
+		return exp;
 	}
 
 	/**
@@ -154,7 +159,6 @@ public class ExperimentManager {
 		 * file_name, exp))
 		 */
 		if (exp != null) {
-			PManager.getDefault().frm_exp.fillForm(exp);
 			exp_is_set = true;
 			ModulesManager.getDefault().setupModulesAndFilters(exp);
 			setExperimantLoadedInGUI(true);
@@ -306,18 +310,6 @@ public class ExperimentManager {
 	}
 
 	/**
-	 * Updates the Groups GUI window with the latest groups information.
-	 */
-	public void updateGroupGUIData() {
-		PManager.getDefault().frm_grps.clearForm();
-		if (exp != null) {
-			final Grp2GUI[] arr_grps = new Grp2GUI[exp.getNoGroups()];
-			exp.getGroups().toArray(arr_grps);
-			PManager.getDefault().frm_grps.loadDataToForm(arr_grps);
-		}
-	}
-
-	/**
 	 * Saves group information, if the group exists, it is updated; else, a new
 	 * group is created.
 	 * 
@@ -340,6 +332,10 @@ public class ExperimentManager {
 			tmp_grp.setName(name);
 			tmp_grp.setNotes(notes);
 		}
+	}
+	
+	public Grp2GUI[] getExpGroupsInfo(){
+		return exp.getGroups().toArray(new Grp2GUI[0]);
 	}
 
 	/**
