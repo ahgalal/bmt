@@ -275,8 +275,7 @@ public class MainGUI extends BaseUI {
 		grpOptions.setBounds(985, 5, 159, 563);
 
 		expandBar = new ExpandBar(grpOptions, SWT.NONE);
-		expandBar.setBackground(SWTResourceManager
-				.getColor(SWT.COLOR_WIDGET_BACKGROUND));
+		expandBar.setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_WIDGET_BACKGROUND));
 		expandBar.setBounds(10, 21, 139, 532);
 
 		// ////////////////////////////////////////////
