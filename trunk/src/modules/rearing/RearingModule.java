@@ -17,7 +17,9 @@ package modules.rearing;
 import modules.Cargo;
 import modules.Module;
 import modules.ModuleConfigs;
+import modules.ModuleData;
 import modules.experiment.Constants;
+import modules.experiment.ExperimentType;
 
 import org.eclipse.swt.widgets.Shell;
 
@@ -35,6 +37,7 @@ public class RearingModule extends
 		Module<RearingModuleGUI, RearingModuleConfigs, RearingModuleData> {
 	private boolean				is_rearing;
 	private RearingFilterData	rearing_filter_data;
+	private String[]	expParams=new String[] { Constants.FILE_REARING_COUNTER };
 
 	/**
 	 * Initializes the module.
@@ -101,7 +104,10 @@ public class RearingModule extends
 		PManager.log.print("initializing..", this, Details.VERBOSE);
 		guiCargo = new Cargo(new String[] { Constants.GUI_REARING_COUNTER });
 		data.rearing_ctr = 0;
-		fileCargo = new Cargo(new String[] { Constants.FILE_REARING_COUNTER });
+		fileCargo = new Cargo(expParams);
+		data.parameters=expParams;
+		expType = new ExperimentType[]{ExperimentType.OPEN_FIELD};
+		//data.expType=expType;
 	}
 
 	@Override
@@ -120,7 +126,7 @@ public class RearingModule extends
 	}
 
 	@Override
-	public void registerModuleDataObject(final Data data) {
+	public void registerModuleDataObject(final ModuleData data) {
 		// TODO Auto-generated method stub
 	}
 

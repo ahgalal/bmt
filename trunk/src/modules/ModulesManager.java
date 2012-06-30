@@ -88,7 +88,7 @@ public class ModulesManager {
 	private int						height;
 
 	private final ArrayList<Module>	modules;
-	private final ArrayList<Data>	modules_data;
+	private final ArrayList<ModuleData>	modules_data;
 	private boolean					run_modules;
 	private RunnableModulesThread	runnable_modules;
 
@@ -102,7 +102,7 @@ public class ModulesManager {
 	public ModulesManager() {
 		me = this;
 		filters_data = new ArrayList<Data>();
-		modules_data = new ArrayList<Data>();
+		modules_data = new ArrayList<ModuleData>();
 		modules = new ArrayList<Module>();
 	}
 
@@ -155,7 +155,7 @@ public class ModulesManager {
 			modules_data.add(mo.getModuleData());
 
 		for (final Module mo : modules)
-			for (final Data data : modules_data)
+			for (final ModuleData data : modules_data)
 				mo.registerModuleDataObject(data);
 		PManager.log.print(
 				"finished registering modules data with each others", this,
@@ -467,7 +467,7 @@ public class ModulesManager {
 		final ExperimentModule expModule = ExperimentManager.getDefault()
 				.instantiateExperimentModule();
 		modules.add(expModule);
-
+		
 		final ModulesSet openFieldModulesSetup = new ModulesSet(new String[] {
 				"Rearing Module", "Zones Module", "Session Module" });
 
@@ -488,7 +488,7 @@ public class ModulesManager {
 	}
 
 	public void setupModulesAndFilters(final Experiment exp) {
-		ModulesManager.getDefault().setupModules(exp);
+		setupModules(exp);
 		PManager.getDefault().getVideoManager().initializeFilters(exp.type);
 		PManager.getDefault().signalProgramStateUpdate();
 	}

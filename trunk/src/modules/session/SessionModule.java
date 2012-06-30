@@ -17,7 +17,9 @@ package modules.session;
 import modules.Cargo;
 import modules.Module;
 import modules.ModuleConfigs;
+import modules.ModuleData;
 import modules.experiment.Constants;
+import modules.experiment.ExperimentType;
 
 import org.eclipse.swt.widgets.Shell;
 
@@ -33,6 +35,8 @@ import utils.video.filters.Data;
  */
 public class SessionModule extends
 		Module<PluggedGUI, SessionModuleConfigs, SessionModuleData> {
+	private final String[]	expParams	= new String[] { Constants.FILE_SESSION_TIME };
+
 	/**
 	 * Initializations of the module.
 	 * 
@@ -98,7 +102,10 @@ public class SessionModule extends
 
 		guiCargo = new Cargo(new String[] { Constants.GUI_SESSION_TIME });
 
-		fileCargo = new Cargo(new String[] { Constants.FILE_SESSION_TIME });
+		fileCargo = new Cargo(expParams);
+		data.parameters=expParams;
+		expType = new ExperimentType[] { ExperimentType.OPEN_FIELD };
+		// data.expType=expType;
 	}
 
 	@Override
@@ -115,7 +122,7 @@ public class SessionModule extends
 	}
 
 	@Override
-	public void registerModuleDataObject(final Data data) {
+	public void registerModuleDataObject(final ModuleData data) {
 		// TODO Auto-generated method stub
 	}
 

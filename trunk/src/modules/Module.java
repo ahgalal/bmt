@@ -16,6 +16,8 @@ package modules;
 
 import java.util.Hashtable;
 
+import modules.experiment.ExperimentType;
+
 import org.eclipse.swt.widgets.Shell;
 
 import ui.PluggedGUI;
@@ -26,18 +28,19 @@ import utils.video.filters.Data;
  * 
  * @author Creative
  */
-public abstract class Module<GUIType extends PluggedGUI, ConfigsType extends ModuleConfigs, DataType extends Data> // implements
+public abstract class Module<GUIType extends PluggedGUI, ConfigsType extends ModuleConfigs, DataType extends ModuleData> // implements
 // StateListener
 {
-	protected ConfigsType	configs;
-	protected DataType		data;
-	protected Cargo			fileCargo;
-	protected Data[]		filters_data;
+	protected ConfigsType		configs;
+	protected DataType			data;
+	protected ExperimentType[]	expType;
+	protected Cargo				fileCargo;
 
-	protected GUIType		gui;
-	protected Cargo			guiCargo;
-	protected Data[]		modules_data;
-	protected String		name;
+	protected Data[]			filters_data;
+	protected GUIType			gui;
+	protected Cargo				guiCargo;
+	protected Data[]			modules_data;
+	protected String			name;
 
 	/**
 	 * Initializes the module.
@@ -92,7 +95,7 @@ public abstract class Module<GUIType extends PluggedGUI, ConfigsType extends Mod
 	public PluggedGUI getGUI() {
 		return gui;
 	}
-
+	
 	/**
 	 * Gets the data cargo to be sent to GUI.
 	 * 
@@ -107,7 +110,7 @@ public abstract class Module<GUIType extends PluggedGUI, ConfigsType extends Mod
 	 * 
 	 * @return Data object containing the data of this module
 	 */
-	public Data getModuleData() {
+	public ModuleData getModuleData() {
 		return data;
 	}
 
@@ -118,6 +121,10 @@ public abstract class Module<GUIType extends PluggedGUI, ConfigsType extends Mod
 	 */
 	public String getName() {
 		return name;
+	}
+
+	public ExperimentType[] getSupportedExperiments() {
+		return expType;
 	}
 
 	/**
@@ -157,7 +164,7 @@ public abstract class Module<GUIType extends PluggedGUI, ConfigsType extends Mod
 	 * 
 	 * @param data
 	 */
-	public abstract void registerModuleDataObject(Data data);
+	public abstract void registerModuleDataObject(ModuleData data);
 
 	/**
 	 * Updates the configurations of the module.

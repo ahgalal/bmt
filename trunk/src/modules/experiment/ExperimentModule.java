@@ -18,6 +18,7 @@ import modules.Cargo;
 import modules.ExperimentManager;
 import modules.Module;
 import modules.ModuleConfigs;
+import modules.ModuleData;
 import modules.ModulesManager;
 
 import org.eclipse.swt.SWT;
@@ -152,9 +153,9 @@ public abstract class ExperimentModule
 	}
 
 	@Override
-	public void registerModuleDataObject(final Data data) {
-		// TODO Auto-generated method stub
-
+	public void registerModuleDataObject(final ModuleData data) {
+		if(data.parameters!=null)
+			ExperimentManager.getDefault().addExpParams(data.parameters);
 	}
 
 	@Override
