@@ -59,6 +59,7 @@ public class ExpBasicInfoPage extends WizardPage {
 		txt_user.setText(strArray[1]);
 		txt_notes.setText(strArray[2]);
 		lblExpDate.setText(strArray[3]);
+		cmboType.setText(strArray[4]);
 	}
 
 	@Override
