@@ -18,7 +18,7 @@ import java.awt.Point;
 import java.util.ArrayList;
 
 import modules.ModulesManager;
-import modules.experiment.Experiment.ExperimentType;
+import modules.experiment.ExperimentType;
 import modules.zones.ShapeController;
 import ui.PluggedGUI;
 import utils.Logger.Details;

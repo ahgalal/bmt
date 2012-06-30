@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import modules.Cargo;
 import modules.Module;
 import modules.ModuleConfigs;
+import modules.ModuleData;
+import modules.experiment.ExperimentType;
 
 import org.eclipse.swt.widgets.Shell;
 
@@ -14,12 +16,13 @@ import utils.video.filters.Data;
 import utils.video.filters.movementmeter.MovementMeterData;
 
 public class MovementMeterModule extends
-		Module<MovementMeterModuleGUI, ModuleConfigs, Data> {
+		Module<MovementMeterModuleGUI, ModuleConfigs, ModuleData> {
 	private final ArrayList<Integer>	energyData;
 	private MovementMeterData			movementMeterFilterData;
 	private final int					noEnergyLevels	= 5;
 	private int[]						sectorsData;
 	private int							time			= 0;
+	private String[]	expParams;
 
 	public MovementMeterModule(final String name, final ModuleConfigs config) {
 		super(name, config);
@@ -54,10 +57,14 @@ public class MovementMeterModule extends
 		PManager.log.print("initializing..", this, Details.VERBOSE);
 		guiCargo = new Cargo(new String[] { "Energy" });
 		energyData.clear();
-		final String[] energyLevelsNames = new String[noEnergyLevels];
+		expParams = new String[noEnergyLevels];
 		for (int i = 0; i < noEnergyLevels; i++)
-			energyLevelsNames[i] = "eLevel_" + i;
-		fileCargo = new Cargo(energyLevelsNames);
+			expParams[i] = "eLevel_" + i;
+		fileCargo = new Cargo(expParams);
+		
+		data.parameters=expParams;
+		
+		expType = new ExperimentType[]{ExperimentType.FORCED_SWIMMING};
 	}
 
 	@Override
@@ -74,7 +81,7 @@ public class MovementMeterModule extends
 	}
 
 	@Override
-	public void registerModuleDataObject(final Data data) {
+	public void registerModuleDataObject(final ModuleData data) {
 		// TODO Auto-generated method stub
 
 	}

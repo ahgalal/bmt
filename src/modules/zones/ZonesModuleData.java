@@ -14,14 +14,14 @@
 
 package modules.zones;
 
-import utils.video.filters.Data;
+import modules.ModuleData;
 
 /**
  * Data of the Zones Module.
  * 
  * @author Creative
  */
-public class ZonesModuleData extends Data {
+public class ZonesModuleData extends ModuleData {
 	public int				all_entrance, central_entrance;
 	public boolean			central_flag;
 	public int				central_zone_time;

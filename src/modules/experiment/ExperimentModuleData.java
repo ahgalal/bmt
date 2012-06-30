@@ -14,6 +14,7 @@
 
 package modules.experiment;
 
+import modules.ModuleData;
 import utils.video.filters.Data;
 
 /**
@@ -21,7 +22,7 @@ import utils.video.filters.Data;
  * 
  * @author Creative
  */
-public class ExperimentModuleData extends Data {
+public class ExperimentModuleData extends ModuleData {
 	/**
 	 * Initializes the Data.
 	 * 

@@ -14,7 +14,7 @@
 
 package utils.video;
 
-import modules.experiment.Experiment.ExperimentType;
+import modules.experiment.ExperimentType;
 import utils.Logger.Details;
 import utils.PManager;
 import utils.PManager.ProgramState;

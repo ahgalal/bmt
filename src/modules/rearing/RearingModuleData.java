@@ -14,6 +14,7 @@
 
 package modules.rearing;
 
+import modules.ModuleData;
 import utils.video.filters.Data;
 
 /**
@@ -21,7 +22,7 @@ import utils.video.filters.Data;
  * 
  * @author Creative
  */
-public class RearingModuleData extends Data {
+public class RearingModuleData extends ModuleData {
 	public int	rearing_ctr;
 
 	/**

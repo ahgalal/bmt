@@ -24,7 +24,9 @@ import java.util.ArrayList;
 import modules.Cargo;
 import modules.Module;
 import modules.ModuleConfigs;
+import modules.ModuleData;
 import modules.experiment.Constants;
+import modules.experiment.ExperimentType;
 import modules.zones.Zone.ZoneType;
 
 import org.eclipse.swt.widgets.Shell;
@@ -42,20 +44,26 @@ import utils.video.filters.ratfinder.RatFinderData;
  */
 public class ZonesModule extends
 		Module<ZonesModuleGUI, ZonesModuleConfigs, ZonesModuleData> {
-	private final ArrayList<Point>	arr_path;				// This array will
-															// hold the
+	private final ArrayList<Point>	arr_path;								// This
+																			// array
+																			// will
+																			// hold
+																			// the
 	// positions of
 	// the object through the whole
 	// experiment
 	private long					central_start_tmp;
 	private long					central_zone_time_tmp;
 	private Point					current_position;
+	private final String[]			expParams	= new String[] {
+			Constants.FILE_ALL_ENTRANCE, Constants.FILE_CENTRAL_ENTRANCE,
+			Constants.FILE_CENTRAL_TIME, Constants.FILE_TOTAL_DISTANCE };
 	private final Point				old_position;
 	private RatFinderData			rat_finder_data;
+
 	private final ShapeController	shape_controller;
 
 	private int						updated_zone_number;
-
 	private byte[]					zone_map;
 
 	/**
@@ -78,7 +86,8 @@ public class ZonesModule extends
 		shape_controller = ShapeController.getDefault();
 		initialize();
 		gui = new ZonesModuleGUI(this);
-
+		expType = new ExperimentType[] { ExperimentType.OPEN_FIELD };
+		// data.expType=expType;
 		// TODO: IMPORTANT update the width & height of the zone_mape when the
 		// user changes them.
 		// We can make a GLOBAL_CONFIGs object that is accessible everywhere,
@@ -244,10 +253,8 @@ public class ZonesModule extends
 				Constants.GUI_ALL_ENTRANCE, Constants.GUI_CENTRAL_ENTRANCE,
 				Constants.GUI_CENTRAL_TIME, Constants.GUI_TOTAL_DISTANCE });
 
-		fileCargo = new Cargo(new String[] { Constants.FILE_ALL_ENTRANCE,
-				Constants.FILE_CENTRAL_ENTRANCE, Constants.FILE_CENTRAL_TIME,
-				Constants.FILE_TOTAL_DISTANCE });
-
+		fileCargo = new Cargo(expParams);
+		data.parameters=expParams;
 		zone_map = new byte[configs.width * configs.height];
 		updateZoneMap();
 	}
@@ -297,7 +304,7 @@ public class ZonesModule extends
 	}
 
 	@Override
-	public void registerModuleDataObject(final Data data) {
+	public void registerModuleDataObject(final ModuleData data) {
 		// TODO Auto-generated method stub
 	}
 

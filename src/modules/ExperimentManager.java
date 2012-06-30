@@ -7,6 +7,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.util.ArrayList;
 
 import modules.experiment.ExcelEngine;
 import modules.experiment.Exp2GUI;
@@ -150,6 +151,7 @@ public class ExperimentManager {
 		} catch (final IOException e) {
 			e.printStackTrace();
 		} catch (final ClassNotFoundException e) {
+			e.printStackTrace();
 			System.err.println("incompatible experiment file!");
 		}
 
@@ -184,6 +186,17 @@ public class ExperimentManager {
 		}
 
 		// text_engine.writeExpInfoToTXTFile(FilePath, exp);
+	}
+	
+	public void addExpParams(String[] params){
+		ArrayList<String> allParams = new ArrayList<String>();
+		for(String param: exp.getExpParametersList())
+			allParams.add(param);
+		
+		for(String param: params)
+			allParams.add(param);
+		
+		exp.setParametersList(allParams.toArray(new String[0]));
 	}
 
 	/**
