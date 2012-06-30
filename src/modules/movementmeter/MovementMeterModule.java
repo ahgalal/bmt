@@ -18,18 +18,18 @@ import utils.video.filters.movementmeter.MovementMeterData;
 public class MovementMeterModule extends
 		Module<MovementMeterModuleGUI, ModuleConfigs, ModuleData> {
 	private final ArrayList<Integer>	energyData;
+	private String[]					expParams;
 	private MovementMeterData			movementMeterFilterData;
 	private final int					noEnergyLevels	= 5;
 	private int[]						sectorsData;
 	private int							time			= 0;
-	private String[]	expParams;
 
 	public MovementMeterModule(final String name, final ModuleConfigs config) {
 		super(name, config);
 		filters_data = new Data[1];
 		energyData = new ArrayList<Integer>();
 		gui = new MovementMeterModuleGUI(this);
-
+		data = new ModuleData("MovementMeter Module Data");
 		initialize();
 	}
 
@@ -61,10 +61,10 @@ public class MovementMeterModule extends
 		for (int i = 0; i < noEnergyLevels; i++)
 			expParams[i] = "eLevel_" + i;
 		fileCargo = new Cargo(expParams);
-		
-		data.parameters=expParams;
-		
-		expType = new ExperimentType[]{ExperimentType.FORCED_SWIMMING};
+
+		data.parameters = expParams;
+
+		expType = new ExperimentType[] { ExperimentType.FORCED_SWIMMING };
 	}
 
 	@Override

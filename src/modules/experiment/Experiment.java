@@ -244,4 +244,9 @@ public class Experiment implements Exp2GUI, Serializable {
 		this.user = user;
 	}
 
+	@Override
+	public String getType() {
+		return type.toString();
+	}
+
 }

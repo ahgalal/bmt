@@ -48,5 +48,7 @@ public interface Exp2GUI {
 	 * @return String containing the experiment's user name.
 	 */
 	String getUser();
+	
+	String getType();
 
 }
