@@ -15,7 +15,6 @@
 package modules.session;
 
 import modules.ModuleData;
-import utils.video.filters.Data;
 
 /**
  * Data of the Session Module.

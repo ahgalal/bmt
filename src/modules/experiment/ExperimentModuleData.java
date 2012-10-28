@@ -15,7 +15,6 @@
 package modules.experiment;
 
 import modules.ModuleData;
-import utils.video.filters.Data;
 
 /**
  * Data of the Experiment Module.

@@ -15,7 +15,6 @@
 package modules.rearing;
 
 import modules.ModuleData;
-import utils.video.filters.Data;
 
 /**
  * Data of the Rearing Module.
