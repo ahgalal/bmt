@@ -9,7 +9,6 @@ import org.eclipse.swt.layout.FormData;
 import org.eclipse.swt.layout.FormLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
@@ -20,46 +19,18 @@ public class ExpBasicInfoPage extends WizardPage {
 
 	private Combo		cmboType;
 	private FormData	fd_grp_info;
-	private Group grp_info_1;
-	private Label		lblExpDate	= null;
-	private Label		lbl_date			= null;
-	private Label		lbl_name			= null;
-	private Label		lbl_notes			= null;
-	private Label		lbl_username		= null;
-	private Text		txt_name			= null;
-	private Text		txt_notes			= null;
-	private Text		txt_user			= null;
+	private Group		grp_info_1;
+	private Label		lbl_date		= null;
+	private Label		lbl_name		= null;
+	private Label		lbl_notes		= null;
+	private Label		lbl_username	= null;
+	private Label		lblExpDate		= null;
+	private Text		txt_name		= null;
+	private Text		txt_notes		= null;
+	private Text		txt_user		= null;
 
 	protected ExpBasicInfoPage(final String pageName) {
 		super(pageName);
-	}
-	
-	public String getExpName(){
-		return txt_name.getText();
-	}
-
-	public String getUserName(){
-		return txt_user.getText();
-	}
-	
-	public String getExpDate(){
-		return lblExpDate.getText();
-	}
-	
-	public String getExpNotes(){
-		return txt_notes.getText();
-	}
-	
-	public String getExpType(){
-		return cmboType.getText();
-	}
-	
-	public void loadData(final String[] strArray) {
-		txt_name.setText(strArray[0]);
-		txt_user.setText(strArray[1]);
-		txt_notes.setText(strArray[2]);
-		lblExpDate.setText(strArray[3]);
-		cmboType.setText(strArray[4]);
 	}
 
 	@Override
@@ -130,6 +101,34 @@ public class ExpBasicInfoPage extends WizardPage {
 				false, 1, 1);
 		gd_txt_notes.heightHint = 124;
 		txt_notes.setLayoutData(gd_txt_notes);
+	}
+
+	public String getExpDate() {
+		return lblExpDate.getText();
+	}
+
+	public String getExpName() {
+		return txt_name.getText();
+	}
+
+	public String getExpNotes() {
+		return txt_notes.getText();
+	}
+
+	public String getExpType() {
+		return cmboType.getText();
+	}
+
+	public String getUserName() {
+		return txt_user.getText();
+	}
+
+	public void loadData(final String[] strArray) {
+		txt_name.setText(strArray[0]);
+		txt_user.setText(strArray[1]);
+		txt_notes.setText(strArray[2]);
+		lblExpDate.setText(strArray[3]);
+		cmboType.setText(strArray[4]);
 	}
 
 	/**
