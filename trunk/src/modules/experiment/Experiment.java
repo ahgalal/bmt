@@ -17,6 +17,9 @@ package modules.experiment;
 import java.io.Serializable;
 import java.util.ArrayList;
 
+import utils.PManager;
+import utils.Logger.Details;
+
 /**
  * Handles all the experiments info.
  * 
@@ -116,6 +119,9 @@ public class Experiment implements Exp2GUI, Serializable {
 	 * @return array of strings containing experiment's parameters
 	 */
 	public String[] getExpParametersList() {
+		if(params!=null)
+		for(String param:params)
+			PManager.log.print("Experimant param: "+ param, this, Details.NOTES);
 		return params;
 	}
 

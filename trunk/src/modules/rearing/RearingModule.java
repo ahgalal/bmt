@@ -106,7 +106,8 @@ public class RearingModule extends
 		guiCargo = new Cargo(new String[] { Constants.GUI_REARING_COUNTER });
 		data.rearing_ctr = 0;
 		fileCargo = new Cargo(expParams);
-		data.parameters=expParams;
+		for(String str:expParams)
+			data.addParameter(str);
 		expType = new ExperimentType[]{ExperimentType.OPEN_FIELD};
 		//data.expType=expType;
 	}

@@ -327,6 +327,9 @@ public class ModulesManager {
 	 */
 	public int getNumberOfFileParameters() {
 		constructCargoArray();
+		for(String fileCargoTag:file_names_array){
+			PManager.log.print("File Tag: "+ fileCargoTag, this, Details.NOTES);
+		}
 		return file_names_array.length;
 	}
 
