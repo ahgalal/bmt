@@ -14,6 +14,8 @@
 
 package modules.zones;
 
+import filters.Data;
+import filters.ratfinder.RatFinderData;
 import gfx_panel.OvalShape;
 import gfx_panel.RectangleShape;
 import gfx_panel.Shape;
@@ -34,8 +36,6 @@ import org.eclipse.swt.widgets.Shell;
 import utils.Logger.Details;
 import utils.PManager;
 import utils.StatusManager.StatusSeverity;
-import utils.video.filters.Data;
-import utils.video.filters.ratfinder.RatFinderData;
 
 /**
  * Manages zones counters (entrance counters, central time, etc..).

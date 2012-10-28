@@ -14,6 +14,7 @@
 
 package utils;
 
+import filters.CommonFilterConfigs;
 import gfx_panel.GfxPanel;
 
 import java.util.ArrayList;
@@ -27,7 +28,6 @@ import org.eclipse.swt.widgets.Display;
 import utils.Logger.Details;
 import utils.StatusManager.StatusSeverity;
 import utils.video.VideoManager;
-import utils.video.filters.CommonFilterConfigs;
 import control.ui.CtrlAbout;
 import control.ui.CtrlCamOptions;
 import control.ui.CtrlDrawZones;

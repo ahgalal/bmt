@@ -23,10 +23,11 @@ import modules.experiment.ExperimentType;
 
 import org.eclipse.swt.widgets.Shell;
 
+import filters.Data;
+
 import ui.PluggedGUI;
 import utils.Logger.Details;
 import utils.PManager;
-import utils.video.filters.Data;
 
 /**
  * Manages session's start/end time, etc..

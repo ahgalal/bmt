@@ -20,8 +20,9 @@ import modules.experiment.ExperimentType;
 
 import org.eclipse.swt.widgets.Shell;
 
+import filters.Data;
+
 import ui.PluggedGUI;
-import utils.video.filters.Data;
 
 /**
  * Parent of all modules classes.

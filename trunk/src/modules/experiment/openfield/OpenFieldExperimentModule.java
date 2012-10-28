@@ -9,8 +9,9 @@ import modules.experiment.ExperimentModuleData;
 
 import org.eclipse.swt.widgets.Shell;
 
-import utils.video.filters.Data;
-import utils.video.filters.source.SourceFilterData;
+import filters.Data;
+import filters.source.SourceFilterData;
+
 
 /**
  * @author Creative
