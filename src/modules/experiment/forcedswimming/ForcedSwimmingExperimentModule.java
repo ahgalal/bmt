@@ -14,6 +14,7 @@ public class ForcedSwimmingExperimentModule extends ExperimentModule {
 		super(name, config);
 		// gui = new ExperimentModuleGUI(this);
 		data = new ExperimentModuleData(name);
+		addDefaultModuleDataParams();
 		// data.exp=new Experiment();
 		// data.exp.type=ExperimentType.FORCED_SWIMMING;
 	}

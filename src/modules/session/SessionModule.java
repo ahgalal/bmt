@@ -104,7 +104,9 @@ public class SessionModule extends
 		guiCargo = new Cargo(new String[] { Constants.GUI_SESSION_TIME });
 
 		fileCargo = new Cargo(expParams);
-		data.parameters=expParams;
+		
+		for(String param:expParams)
+			data.addParameter(param);
 		expType = new ExperimentType[] { ExperimentType.OPEN_FIELD };
 		// data.expType=expType;
 	}

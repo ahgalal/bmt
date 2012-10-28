@@ -187,15 +187,16 @@ public class ExperimentManager {
 
 		// text_engine.writeExpInfoToTXTFile(FilePath, exp);
 	}
-	
-	public void addExpParams(String[] params){
+
+	public void addExpParams(ArrayList<String> arrayList){
 		ArrayList<String> allParams = new ArrayList<String>();
-		for(String param: exp.getExpParametersList())
+		if(exp.getExpParametersList()!=null)
+			for(String param: exp.getExpParametersList())
+				allParams.add(param);
+
+		for(String param: arrayList)
 			allParams.add(param);
-		
-		for(String param: params)
-			allParams.add(param);
-		
+
 		exp.setParametersList(allParams.toArray(new String[0]));
 	}
 

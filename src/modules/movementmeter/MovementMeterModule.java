@@ -10,18 +10,17 @@ import modules.experiment.ExperimentType;
 
 import org.eclipse.swt.widgets.Shell;
 
-import filters.Data;
-import filters.movementmeter.MovementMeterData;
-
 import utils.Logger.Details;
 import utils.PManager;
+import filters.Data;
+import filters.movementmeter.MovementMeterData;
 
 public class MovementMeterModule extends
 		Module<MovementMeterModuleGUI, ModuleConfigs, ModuleData> {
 	private final ArrayList<Integer>	energyData;
 	private String[]					expParams;
 	private MovementMeterData			movementMeterFilterData;
-	private final int					noEnergyLevels	= 5;
+	private final int					noEnergyLevels	= 3;
 	private int[]						sectorsData;
 	private int							time			= 0;
 
@@ -63,14 +62,26 @@ public class MovementMeterModule extends
 			expParams[i] = "eLevel_" + i;
 		fileCargo = new Cargo(expParams);
 
-		data.parameters = expParams;
+		for(String param:expParams)
+		data.addParameter(param);
 
 		expType = new ExperimentType[] { ExperimentType.FORCED_SWIMMING };
 	}
 
 	@Override
 	public void process() {
-		energyData.add(movementMeterFilterData.getWhiteSummation());
+		int newVal = movementMeterFilterData.getWhiteSummation();
+		if(energyData.size()>40){
+			int oldVal1 = energyData.get(energyData.size()-10);
+			int oldVal2 = energyData.get(energyData.size()-20);
+			int oldVal3 = energyData.get(energyData.size()-30);
+			if(Math.abs(newVal - oldVal2) > 1000000)
+				newVal = oldVal2;
+			else
+				newVal = (movementMeterFilterData.getWhiteSummation()+oldVal1+oldVal2)/3;
+		}
+			
+		energyData.add(newVal);
 	}
 
 	@Override
@@ -108,9 +119,12 @@ public class MovementMeterModule extends
 				if ((i < levels[j]) && (i > levels[j - 1]))
 					sectorsData[j - 1]++;
 
-		System.out.println("Sectors data:\n");
-		for (final int i : sectorsData)
-			System.out.println(i);
+		System.out.println("Sectors data:");
+/*		System.out.println("Max Energy: " + max);
+		System.out.println("Min Energy: " + min);
+		for()*/
+		for (int i=0;i<sectorsData.length;i++)
+			System.out.println("Level-"+i+ " " + sectorsData[i]);
 
 	}
 
@@ -138,9 +152,10 @@ public class MovementMeterModule extends
 
 	@Override
 	public void updateGUICargoData() {
+		int newData = energyData.get(energyData.size()-1);
 		guiCargo.setDataByIndex(0,
-				"" + movementMeterFilterData.getWhiteSummation());
-		gui.addPoint(time++, movementMeterFilterData.getWhiteSummation() / 2000);
+				"" + newData/*movementMeterFilterData.getWhiteSummation()*/);
+		gui.addPoint(time++, newData/*movementMeterFilterData.getWhiteSummation()*/ / 2000);
 	}
 
 }

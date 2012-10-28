@@ -37,10 +37,11 @@ import utils.PManager;
  * @author Creative
  */
 public abstract class ExperimentModule
-		extends
-		Module<ExperimentModuleGUI, ExperimentModuleConfigs, ExperimentModuleData> {
+extends
+Module<ExperimentModuleGUI, ExperimentModuleConfigs, ExperimentModuleData> {
 	private boolean	force_ready			= false;
-
+	private String[] expParams = new String[]{Constants.FILE_RAT_NUMBER,
+			Constants.FILE_GROUP_NAME };
 	private boolean	msgbox_pending		= true;
 
 	private boolean	rat_frm_is_shown	= false;
@@ -50,7 +51,10 @@ public abstract class ExperimentModule
 		super(name, config);
 		initialize();
 	}
-
+	protected void addDefaultModuleDataParams() {
+		for(String param:expParams)
+		data.addParameter(param);		
+	}
 	@Override
 	public boolean amIReady(final Shell shell) {
 		rat_frm_is_shown = false;
@@ -109,9 +113,9 @@ public abstract class ExperimentModule
 			} catch (final InterruptedException e) {
 				e.printStackTrace();
 			}
-		if (force_ready)
-			return true;
-		return waitForRatFrm();
+			if (force_ready)
+				return true;
+			return waitForRatFrm();
 	}
 
 	@Override
@@ -130,9 +134,8 @@ public abstract class ExperimentModule
 		guiCargo = new Cargo(new String[] { Constants.GUI_EXP_NAME,
 				Constants.GUI_GROUP_NAME, Constants.GUI_RAT_NUMBER,
 				Constants.GUI_EXP_TYPE });
-
-		fileCargo = new Cargo(new String[] { Constants.FILE_RAT_NUMBER,
-				Constants.FILE_GROUP_NAME });
+		
+		fileCargo = new Cargo(expParams);
 	}
 
 	/*	*//**
@@ -155,8 +158,8 @@ public abstract class ExperimentModule
 
 	@Override
 	public void registerModuleDataObject(final ModuleData data) {
-		if(data.parameters!=null)
-			ExperimentManager.getDefault().addExpParams(data.parameters);
+		if(data.getParameters().size()>0)
+			ExperimentManager.getDefault().addExpParams(data.getParameters());
 	}
 
 	@Override
@@ -196,10 +199,10 @@ public abstract class ExperimentModule
 			} catch (final InterruptedException e) {
 				e.printStackTrace();
 			}
-		if (PManager.getDefault().frm_rat.isValidRatEntered())
-			return true;
-		else
-			return false;
+			if (PManager.getDefault().frm_rat.isValidRatEntered())
+				return true;
+			else
+				return false;
 	}
 
 }

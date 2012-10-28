@@ -26,6 +26,7 @@ public class OpenFieldExperimentModule extends ExperimentModule {
 		super(name, config);
 		gui = new OpenFieldExperimentModuleGUI(this);
 		data = new ExperimentModuleData(name);
+		addDefaultModuleDataParams();
 	}
 
 	@Override

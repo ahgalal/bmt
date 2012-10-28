@@ -254,7 +254,8 @@ public class ZonesModule extends
 				Constants.GUI_CENTRAL_TIME, Constants.GUI_TOTAL_DISTANCE });
 
 		fileCargo = new Cargo(expParams);
-		data.parameters=expParams;
+		for(String param:expParams)
+			data.addParameter(param);
 		zone_map = new byte[configs.width * configs.height];
 		updateZoneMap();
 	}
