@@ -26,15 +26,16 @@ import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
 
+import filters.CommonFilterConfigs;
+import filters.FilterConfigs;
+import filters.screendrawer.ScreenDrawerConfigs;
+
 import ui.MainGUI;
 import ui.PluggedGUI;
 import utils.PManager;
 import utils.PManager.ProgramState;
 import utils.StateListener;
 import utils.StatusManager.StatusSeverity;
-import utils.video.filters.CommonFilterConfigs;
-import utils.video.filters.FilterConfigs;
-import utils.video.filters.screendrawer.ScreenDrawerConfigs;
 
 /**
  * Controller of the MainGUI window.

@@ -1,6 +1,6 @@
 package modules;
 
-import utils.video.filters.Data;
+import filters.Data;
 
 public class ModuleData extends Data {
 

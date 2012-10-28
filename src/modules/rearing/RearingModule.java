@@ -23,10 +23,11 @@ import modules.experiment.ExperimentType;
 
 import org.eclipse.swt.widgets.Shell;
 
+import filters.Data;
+import filters.rearingdetection.RearingFilterData;
+
 import utils.Logger.Details;
 import utils.PManager;
-import utils.video.filters.Data;
-import utils.video.filters.rearingdetection.RearingFilterData;
 
 /**
  * Rearing module, keeps record of number of rearings of the rat.

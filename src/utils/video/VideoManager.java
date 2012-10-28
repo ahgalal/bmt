@@ -14,15 +14,15 @@
 
 package utils.video;
 
+import filters.CommonFilterConfigs;
+import filters.FilterConfigs;
+import filters.FilterManager;
+import filters.VideoFilter;
 import modules.experiment.ExperimentType;
 import utils.Logger.Details;
 import utils.PManager;
 import utils.PManager.ProgramState;
 import utils.StatusManager.StatusSeverity;
-import utils.video.filters.CommonFilterConfigs;
-import utils.video.filters.FilterConfigs;
-import utils.video.filters.FilterManager;
-import utils.video.filters.VideoFilter;
 import utils.video.input.AGCamLibModule;
 import utils.video.input.AGVidLibConfigs;
 import utils.video.input.JMFModule;

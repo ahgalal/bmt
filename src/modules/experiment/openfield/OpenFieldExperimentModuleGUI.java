@@ -18,10 +18,11 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Shell;
 
+import filters.subtractionfilter.SubtractorFilter;
+
 import utils.PManager;
 import utils.PManager.ProgramState;
 import utils.StatusManager.StatusSeverity;
-import utils.video.filters.subtractionfilter.SubtractorFilter;
 
 /**
  * @author Creative

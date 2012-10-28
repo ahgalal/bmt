@@ -10,10 +10,11 @@ import modules.experiment.ExperimentType;
 
 import org.eclipse.swt.widgets.Shell;
 
+import filters.Data;
+import filters.movementmeter.MovementMeterData;
+
 import utils.Logger.Details;
 import utils.PManager;
-import utils.video.filters.Data;
-import utils.video.filters.movementmeter.MovementMeterData;
 
 public class MovementMeterModule extends
 		Module<MovementMeterModuleGUI, ModuleConfigs, ModuleData> {
