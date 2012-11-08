@@ -71,9 +71,9 @@ public class CtrlOptionsWindow extends ControllerUI<OptionsWindow> {
 
 	/**
 	 * Updates StatsController and VideoManager with the new values entered by
-	 * the user. note1: changing the scale of Subtraction Threshold is updated
+	 * the user.<br/>note1: changing the scale of Subtraction Threshold is updated
 	 * immediately, but other options (rearing & hyst.) are updated when OK is
-	 * pressed. note2: to achieve "note1", the GUI sends '-1' as a value for
+	 * pressed.<br/>note2: to achieve "note1", the GUI sends '-1' as a value for
 	 * (rearing & hyst.) so that their receivers (StatsController &
 	 * VideoManager) ignore this update, and the values of(rearing & hyst.) are
 	 * kept unchanged.

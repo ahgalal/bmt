@@ -107,22 +107,23 @@ public class MovementMeterModule extends
 				max = i;
 			else if (i < min)
 				min = i;
+		
+		System.out.println("Sectors: min: " + min + " max: "+ max);
 
 		final int[] levels = new int[noEnergyLevels];
 		final int levelHeight = (max - min) / noEnergyLevels;
 
-		for (int k = 0; k < noEnergyLevels; k++)
+		for (int k = 0; k < noEnergyLevels; k++){
 			levels[k] = levelHeight * k;
+			System.out.println("Level-"+k + " has min value: " + levels[k]);
+		}
 
 		for (final int i : energyData)
 			for (int j = 1; j < noEnergyLevels; j++)
 				if ((i < levels[j]) && (i > levels[j - 1]))
 					sectorsData[j - 1]++;
 
-		System.out.println("Sectors data:");
-/*		System.out.println("Max Energy: " + max);
-		System.out.println("Min Energy: " + min);
-		for()*/
+		System.out.println("[[[Sectors data:]]]");
 		for (int i=0;i<sectorsData.length;i++)
 			System.out.println("Level-"+i+ " " + sectorsData[i]);
 

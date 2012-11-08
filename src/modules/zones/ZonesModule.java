@@ -228,7 +228,9 @@ public class ZonesModule extends
 	 * @return zone's number located at the pixel of x,y
 	 */
 	private int getZone(final int x, final int y) {
-		return zone_map[x + y * configs.width];
+		if(x + y * configs.width < zone_map.length)
+			return zone_map[x + y * configs.width];
+		return -1;
 	}
 
 	/**
@@ -423,6 +425,7 @@ public class ZonesModule extends
 	private void updateZoneCounters() {
 		data.current_zone_num = updated_zone_number;
 		data.all_entrance++;
+		System.out.println("Moved to zone: " + updated_zone_number);
 		if (data.zones.getZoneByNumber(data.current_zone_num) != null)
 			if (data.zones.getZoneByNumber(data.current_zone_num).getZoneType() == ZoneType.CENTRAL_ZONE)
 				data.central_entrance++;
@@ -521,15 +524,20 @@ public class ZonesModule extends
 				zone_down_right = getZone(current_position.x
 						+ configs.hyst_value / 2, current_position.y
 						- configs.hyst_value / 2);
+				
 			} catch (final Exception e) {
 				PManager.log.print("Error fel index .. zoneHysteresis!", this,
 						StatusSeverity.ERROR);
 			}
+			
 			if ((zone_up_left != data.current_zone_num)
 					& (zone_up_right != data.current_zone_num)
 					& (zone_down_left != data.current_zone_num)
-					& (zone_down_right != data.current_zone_num))
+					& (zone_down_right != data.current_zone_num)){
 				updateZoneCounters();
+				
+			}
+
 		}
 	}
 

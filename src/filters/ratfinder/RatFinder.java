@@ -39,7 +39,7 @@ public class RatFinder extends
 	protected Marker		marker, marker2;
 
 	protected int[]			out_data;
-	private final int		searchSideLength	= 100;
+	private final int		searchSideLength	= 600;
 
 	private int				tmp_max;
 	int[]					vert_sum;
