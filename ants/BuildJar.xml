@@ -12,9 +12,9 @@
             Build and Release the BMT project
     </description>
 
-	<property name="bmt_version" value="0.3"/>
-	<property name="libs_version" value="0.3"/>
-	<property name="bin_libs_version" value="0.3"/>
+	<property name="bmt_version" value="0.35"/>
+	<property name="libs_version" value="0.35"/>
+	<property name="bin_libs_version" value="0.35"/>
 	<property name="jarfile" value="../output/release/BMT_v${bmt_version}.jar" />
 	<property name="jmf_libs" value="'C:/Program Files/JMF2.1.1e/lib/custom.jar' 'C:/Program Files/JMF2.1.1e/lib/jmf.jar' 'C:/Program Files/JMF2.1.1e/lib/mediaplayer.jar' 'C:/Program Files/JMF2.1.1e/lib/multiplayer.jar' 'C:/Program Files/JMF2.1.1e/lib/sound.jar'" />
 	<condition property="jmf_home_lib" value="C:/Program Files/JMF2.1.1e/lib" else="">
@@ -62,14 +62,22 @@
 	<fileset id="jmf_libs" dir="${jmf_home_lib}">
 		<include name="**/*.jar" />
 	</fileset>
+	<filelist id="jface_libs" dir="${eclipse.home}\plugins">
+		<file name="org.eclipse.core.commands_3.6.0.I20100512-1500.jar" />
+		<file name="org.eclipse.jface_3.6.2.M20110210-1200.jar" />
+		<file name="org.eclipse.ui.forms_3.5.2.r36_v20100702.jar" />
+		<file name="org.eclipse.ui.workbench_3.6.2.M20110210-1200.jar" />
+		<file name="org.eclipse.equinox.common_3.6.0.v20100503.jar" />
+	</filelist>
 
 	<!-- - - - - - - - - - - - - - - - - - 
           target: copy_libs                      
          - - - - - - - - - - - - - - - - - -->
 	<target name="copy_libs">
-		<copy flatten="true" todir="${libs_dir}">
-			<fileset refid="libs"/>
-			<fileset refid="jmf_libs"/>
+		<copy flatten="true" todir="${libs_dir}" verbose="true">
+			<fileset refid="libs" />
+			<fileset refid="jmf_libs" />
+			<filelist refid="jface_libs"/>
 		</copy>
 	</target>
 
@@ -147,9 +155,9 @@
          - - - - - - - - - - - - - - - - - -->
 	<target name="zip_pkg">
 		<zip destfile="${uploads_dir}/BMT_v${bmt_version}.zip" basedir="${release_dir}">
-			<fileset dir="../">
+			<!--fileset dir="../">
 				<include name="src/**"/>
-			</fileset>
+			</fileset-->
 		</zip>
 	</target>
 
@@ -207,22 +215,22 @@
 			</batchtest>
 		</junit>
 	</target>
-	
+
 	<!-- ================================= 
           target: create_runner              
          ================================= -->
-    <target name="create_runner">
-        <echo file="${release_dir}/run.bat"
+	<target name="create_runner">
+		<echo file="${release_dir}/run.bat"
         	message="java -jar BMT_v${bmt_version}.jar${line.separator}pause"
         />
-    </target>
+	</target>
 
 	<!-- ================================= 
           target: copy_license              
          ================================= -->
-    <target name="copy_license">
-        <copyfile dest="${release_dir}/license.txt" src="../license.txt"/>
-    </target>
+	<target name="copy_license">
+		<copy tofile="${release_dir}/license.txt" file="../deploy/license/license.txt"/>
+	</target>
 
 
 </project>
