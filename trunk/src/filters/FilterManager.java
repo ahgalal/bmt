@@ -210,7 +210,7 @@ public class FilterManager {
 		String[] filtersNames = null;
 		final FiltersSetup openFieldFiltersSetup = new FiltersSetup(
 				new String[] { "RatFinder", "RearingDetector", "Recorder",
-						"SubtractionFilter" });
+						"SubtractionFilter","Average Filter" });
 
 		final FiltersSetup forcedSwimmingFiltersSetup = new FiltersSetup(
 				new String[] { "Recorder", "Movement Meter" });
@@ -238,7 +238,7 @@ public class FilterManager {
 				// grey_link, null);
 						"ScreenDrawer", /* grey_link */
 						src_rgb_link/* avg_link */, /* marker_link */
-						grey_link,// TODO:marker_link,
+						/*grey_link,*/marker_link,
 						null);
 				filtersNames = openFieldFiltersSetup.getFiltersNames();
 				break;
@@ -314,7 +314,7 @@ public class FilterManager {
 			avgFilter = new AverageFilter("Average Filter", grey_link, avg_link);
 			// TODO: create a config class for avg filter
 			avgFilter.configure(source_configs);
-			// addFilter(avgFilter);
+			addFilter(avgFilter);
 		}
 		if (isWithinArray("Movement Meter", filtersNames)) {
 			movementMeter = new MovementMeter("Movement Meter", src_rgb_link,

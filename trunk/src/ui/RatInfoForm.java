@@ -90,6 +90,19 @@ public class RatInfoForm extends BaseUI {
 			@Override
 			public void widgetSelected(
 					final org.eclipse.swt.events.SelectionEvent e) {
+				
+				try {
+					if(txt_ratnumber.getText().equals("")){
+						throw new RuntimeException();
+					}
+					Integer.parseInt(txt_ratnumber.getText());
+					
+				} catch (RuntimeException e1) {
+					MsgBox.show(sShell, "Please enter valid rat number",
+							"Error", SWT.ERROR);
+					return;
+				}
+				
 				if (controller.setVars(new String[] { txt_ratnumber.getText(),
 						cmbo_grp_names.getText() }))
 					controller.btnOkAction();
