@@ -194,8 +194,15 @@ public class ExperimentManager {
 			for(String param: exp.getExpParametersList())
 				allParams.add(param);
 
-		for(String param: arrayList)
+		outer:
+		for(String param: arrayList){
+			for(String str: allParams){
+				if(param.equals(str)){
+					continue outer;
+				}
+			}
 			allParams.add(param);
+		}
 
 		exp.setParametersList(allParams.toArray(new String[0]));
 	}
