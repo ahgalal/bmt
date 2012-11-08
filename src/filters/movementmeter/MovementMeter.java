@@ -3,12 +3,12 @@
  */
 package filters.movementmeter;
 
-import filters.FilterConfigs;
-import filters.Link;
-import filters.VideoFilter;
 import utils.PManager.ProgramState;
 import utils.TimeCalculator;
 import utils.video.ImageManipulator;
+import filters.FilterConfigs;
+import filters.Link;
+import filters.VideoFilter;
 
 /**
  * @author Creative

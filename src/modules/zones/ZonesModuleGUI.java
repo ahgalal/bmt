@@ -24,6 +24,7 @@ import org.eclipse.swt.widgets.Shell;
 
 import ui.PluggedGUI;
 import utils.PManager;
+import utils.PManager.ProgramState;
 
 /**
  * GUI class for the ZonesModule.
@@ -43,12 +44,6 @@ public class ZonesModuleGUI extends PluggedGUI<ZonesModule> {
 
 	public ZonesModuleGUI(final ZonesModule owner) {
 		super(owner);
-	}
-
-	@Override
-	public void inIdleState() {
-		// TODO Auto-generated method stub
-
 	}
 
 	@Override
@@ -76,22 +71,22 @@ public class ZonesModuleGUI extends PluggedGUI<ZonesModule> {
 				});
 	}
 
-	@Override
-	public void inStreamingState() {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void inTrackingState() {
-		// TODO Auto-generated method stub
-
-	}
-
 	/**
 	 * Handles the "Zone editor" menu item click action.
 	 */
 	public void mnutmEditOpenZoneEditorAction() {
 		PManager.getDefault().drw_zns.show(true);
+	}
+
+	@Override
+	public void stateStreamChangeHandler(ProgramState state) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void stateGeneralChangeHandler(ProgramState state) {
+		// TODO Auto-generated method stub
+		
 	}
 }

@@ -25,6 +25,7 @@ public class SessionModuleData extends ModuleData {
 	public long		session_end_time;
 	public boolean	session_is_running;
 	public long		session_start_time;
+	public int accumulatedSessionTime=0;
 
 	/**
 	 * Initializes the Data.

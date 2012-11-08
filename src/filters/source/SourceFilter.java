@@ -14,10 +14,10 @@
 
 package filters.source;
 
+import utils.PManager.ProgramState;
 import filters.FilterConfigs;
 import filters.Link;
 import filters.VideoFilter;
-import utils.PManager.ProgramState;
 
 /**
  * Takes the data coming from the input device and puts it on its output link,

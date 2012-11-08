@@ -19,14 +19,13 @@ import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferInt;
 
+import utils.PManager;
+import utils.PManager.ProgramState;
+import utils.StatusManager.StatusSeverity;
 import filters.FilterConfigs;
 import filters.FilterData;
 import filters.Link;
 import filters.VideoFilter;
-
-import utils.PManager;
-import utils.PManager.ProgramState;
-import utils.StatusManager.StatusSeverity;
 
 /**
  * Draws the incoming data streams on Graphics objects.

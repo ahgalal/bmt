@@ -14,10 +14,10 @@
 
 package filters.rearingdetection;
 
+import utils.PManager.ProgramState;
 import filters.FilterConfigs;
 import filters.Link;
 import filters.VideoFilter;
-import utils.PManager.ProgramState;
 
 /**
  * Detects whether the rat is rearing or not.

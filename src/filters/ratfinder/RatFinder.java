@@ -17,14 +17,13 @@ package filters.ratfinder;
 import java.awt.Color;
 import java.awt.Point;
 
+import utils.PManager.ProgramState;
 import filters.FilterConfigs;
 import filters.Link;
 import filters.VideoFilter;
 import filters.ratfinder.markers.CrossMarker;
 import filters.ratfinder.markers.Marker;
 import filters.ratfinder.markers.RectangularMarker;
-
-import utils.PManager.ProgramState;
 
 /**
  * Finds the moving object's position.

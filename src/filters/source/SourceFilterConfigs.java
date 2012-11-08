@@ -14,11 +14,11 @@
 
 package filters.source;
 
-import filters.CommonFilterConfigs;
-import filters.FilterConfigs;
 import utils.PManager;
 import utils.StatusManager.StatusSeverity;
 import utils.video.FrameIntArray;
+import filters.CommonFilterConfigs;
+import filters.FilterConfigs;
 
 /**
  * Configuration of the SourceFilter.

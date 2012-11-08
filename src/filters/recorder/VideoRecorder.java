@@ -16,15 +16,15 @@ package filters.recorder;
 
 import java.io.File;
 
+import lib_avi.AVIOutputStream.VideoFormat;
+import utils.PManager;
+import utils.PManager.ProgramState;
+import utils.PManager.ProgramState.GeneralState;
+import utils.StatusManager.StatusSeverity;
 import filters.FilterConfigs;
 import filters.FilterData;
 import filters.Link;
 import filters.VideoFilter;
-
-import lib_avi.AVIOutputStream.VideoFormat;
-import utils.PManager;
-import utils.PManager.ProgramState;
-import utils.StatusManager.StatusSeverity;
 
 /**
  * Records video frames from the incoming data stream.
@@ -63,7 +63,7 @@ public class VideoRecorder extends VideoFilter<RecorderConfigs, FilterData> {
 	@Override
 	public boolean enable(final boolean enable) {
 		if (enable) {
-			if (pm.state == ProgramState.TRACKING) {
+			if (pm.getState().getGeneral() == GeneralState.TRACKING) {
 				avi_saver = new StreamToAVI();
 				avi_saver.initialize("video.avi", VideoFormat.JPG, 10,
 						configs.common_configs.width,

@@ -17,6 +17,14 @@ package filters;
 import java.awt.Point;
 import java.util.ArrayList;
 
+import modules.ModulesManager;
+import modules.experiment.ExperimentType;
+import modules.zones.ShapeController;
+import ui.PluggedGUI;
+import utils.Logger.Details;
+import utils.PManager;
+import utils.StatusManager.StatusSeverity;
+import utils.video.FrameIntArray;
 import filters.avg.AverageFilter;
 import filters.movementmeter.MovementMeter;
 import filters.ratfinder.RatFinder;
@@ -32,15 +40,6 @@ import filters.source.SourceFilter;
 import filters.source.SourceFilterConfigs;
 import filters.subtractionfilter.SubtractionConfigs;
 import filters.subtractionfilter.SubtractorFilter;
-
-import modules.ModulesManager;
-import modules.experiment.ExperimentType;
-import modules.zones.ShapeController;
-import ui.PluggedGUI;
-import utils.Logger.Details;
-import utils.PManager;
-import utils.StatusManager.StatusSeverity;
-import utils.video.FrameIntArray;
 
 /**
  * Manager of all filters, to enable, disable filters.

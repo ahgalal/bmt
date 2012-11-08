@@ -14,10 +14,10 @@
 
 package filters.recorder;
 
-import filters.CommonFilterConfigs;
-import filters.FilterConfigs;
 import utils.PManager;
 import utils.StatusManager.StatusSeverity;
+import filters.CommonFilterConfigs;
+import filters.FilterConfigs;
 
 /**
  * Configurations for the VideoRecorder filter.

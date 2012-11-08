@@ -15,7 +15,7 @@ public class RectangularMarker extends Marker {
 
 	@Override
 	public void draw(final int[] img, final int x, final int y) {
-		drawRect(img, x, y, width, height);
+		drawRect(img,x<0?0:x,y<0?0:y, width, height);
 	}
 
 }

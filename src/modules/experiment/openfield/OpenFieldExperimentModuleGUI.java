@@ -18,11 +18,12 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Shell;
 
-import filters.subtractionfilter.SubtractorFilter;
-
 import utils.PManager;
 import utils.PManager.ProgramState;
+import utils.PManager.ProgramState.GeneralState;
+import utils.PManager.ProgramState.StreamState;
 import utils.StatusManager.StatusSeverity;
+import filters.subtractionfilter.SubtractorFilter;
 
 /**
  * @author Creative
@@ -42,7 +43,6 @@ public class OpenFieldExperimentModuleGUI extends ExperimentModuleGUI {
 	 */
 	public void btnSetBackgroundEnable(final boolean enable) {
 		btnSetBackground.setEnabled(enable);
-
 	}
 
 	/**
@@ -50,30 +50,21 @@ public class OpenFieldExperimentModuleGUI extends ExperimentModuleGUI {
 	 * current cam. image at that instant.
 	 */
 	public void btnSetbgAction() {
-		if (PManager.getDefault().state == ProgramState.STREAMING) {
+		if (PManager.getDefault().getState().getStream() == StreamState.STREAMING ||
+				PManager.getDefault().getState().getStream() == StreamState.PAUSED) {
 			PManager.getDefault().drw_zns
 					.setBackground(((OpenFieldExperimentModule) owner)
 							.updateRGBBackground());
 			((SubtractorFilter) PManager.getDefault().getVideoManager()
 					.getFilterManager().getFilterByName("SubtractionFilter"))
 					.updateBG();
-		} else if (PManager.getDefault().state == ProgramState.TRACKING)
+		} else if (PManager.getDefault().getState().getGeneral() == GeneralState.TRACKING)
 			PManager.getDefault().statusMgr.setStatus(
 					"Background can't be taken while tracking.",
 					StatusSeverity.ERROR);
 		else
 			PManager.getDefault().statusMgr.setStatus(
 					"Please start the camera first.", StatusSeverity.ERROR);
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * @see PluggedGUI#inIdleState()
-	 */
-	@Override
-	public void inIdleState() {
-		// TODO Auto-generated method stub
-		btnSetBackgroundEnable(false);
 	}
 
 	/*
@@ -105,23 +96,30 @@ public class OpenFieldExperimentModuleGUI extends ExperimentModuleGUI {
 				SWT.DEFAULT, SWT.DEFAULT).y + 10);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see PluggedGUI#inStreamingState()
-	 */
+
 	@Override
-	public void inStreamingState() {
-		// TODO Auto-generated method stub
-		btnSetBackgroundEnable(true);
+	public void stateStreamChangeHandler(ProgramState state) {
+		switch (state.getStream()) {
+			case STREAMING:
+				if(state.getGeneral()!=GeneralState.TRACKING)
+					btnSetBackgroundEnable(true);
+				break;
+			case PAUSED:
+				if(state.getGeneral()!=GeneralState.TRACKING)
+					btnSetBackgroundEnable(true);
+				break;
+			case IDLE:
+				btnSetBackgroundEnable(false);
+				break;
+			default:
+				break;
+		}
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see PluggedGUI#inTrackingState()
-	 */
 	@Override
-	public void inTrackingState() {
-		btnSetBackgroundEnable(false);
+	public void stateGeneralChangeHandler(ProgramState state) {
+		if(state.getGeneral()==GeneralState.TRACKING)
+			btnSetBackgroundEnable(false);
 	}
 
 }

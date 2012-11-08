@@ -24,8 +24,19 @@ import utils.video.FrameIntArray;
 public abstract class VidInputter<ConfigsType extends VidSourceConfigs> {
 	protected ConfigsType	configs;
 	protected FrameIntArray	fia;
-	protected int			status;
-
+	protected SourceStatus			status;
+	protected boolean paused=false;
+	
+	public static enum SourceStatus{
+		STREAMING,PAUSED,UNINITIALIZED,ERROR;
+	}
+	
+	public static enum SourceType{
+		FILE,CAM;
+	}
+	
+	public abstract SourceType getType();
+	
 	/**
 	 * Shows additional cam settings (brightness/contrast/...).
 	 * 
@@ -52,7 +63,7 @@ public abstract class VidInputter<ConfigsType extends VidSourceConfigs> {
 	 * 
 	 * @return 1 means streaming
 	 */
-	public abstract int getStatus();
+	public abstract SourceStatus getStatus();
 
 	/**
 	 * Initializes the video library.
@@ -89,4 +100,7 @@ public abstract class VidInputter<ConfigsType extends VidSourceConfigs> {
 	 * Stops the video library and deinitializes it.
 	 */
 	public abstract void stopModule();
+	
+	public abstract void pauseStream();
+	public abstract void resumeStream();
 }

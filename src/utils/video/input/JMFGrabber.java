@@ -23,6 +23,7 @@ import javax.media.format.YUVFormat;
 
 import utils.video.FrameIntArray;
 import utils.video.ImageManipulator;
+import utils.video.input.VidInputter.SourceStatus;
 
 /**
  * JMF Effect for grabbing frames from the webcam buffer.
@@ -38,7 +39,7 @@ public class JMFGrabber implements Effect {
 	byte[]						null_data;
 	private final Format[]		outformats;
 	private Format				outformatt;
-	private int					status;
+	private SourceStatus					status;
 	int							width, height;
 
 	/**
@@ -86,7 +87,7 @@ public class JMFGrabber implements Effect {
 	 * 
 	 * @return 1: ready
 	 */
-	public int getStatus() {
+	public SourceStatus getStatus() {
 		return status;
 	}
 
@@ -158,7 +159,7 @@ public class JMFGrabber implements Effect {
 				fia.frame_data = ImageManipulator.flipImage(
 						curr_frame.getRGBIntArray(), width, height);
 			// System.out.print("Duration: "+(tstart) + "\n");
-			status = 1;
+			status = SourceStatus.STREAMING;
 
 		} catch (final Exception e) {
 			e.printStackTrace();

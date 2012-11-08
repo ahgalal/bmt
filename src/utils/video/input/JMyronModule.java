@@ -42,7 +42,7 @@ public class JMyronModule extends VidInputter<VidSourceConfigs> {
 				jmyron.update();
 				fia.frame_data = jmyron.image();
 
-				status = 1;
+				status = SourceStatus.STREAMING;
 			}
 		}
 
@@ -73,7 +73,7 @@ public class JMyronModule extends VidInputter<VidSourceConfigs> {
 	}
 
 	@Override
-	public int getStatus() {
+	public SourceStatus getStatus() {
 		return status;
 	}
 
@@ -120,5 +120,19 @@ public class JMyronModule extends VidInputter<VidSourceConfigs> {
 		th_jmyron_update_image = null;
 
 	}
+	
+	@Override
+	public void pauseStream() {
+		// this ia used as a cam module, no pause is supported for cams currently.
+	}
 
+	@Override
+	public void resumeStream() {
+		// TODO Auto-generated method stub
+	}
+	
+	@Override
+	public SourceType getType() {
+		return SourceType.CAM;
+	}
 }

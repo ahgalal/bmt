@@ -14,15 +14,15 @@
 
 package control.ui;
 
-import filters.FilterConfigs;
-import filters.rearingdetection.RearingDetector;
-import filters.rearingdetection.RearingFilterConfigs;
-import filters.subtractionfilter.SubtractionConfigs;
 import modules.ModuleConfigs;
 import modules.ModulesManager;
 import modules.zones.ZonesModuleConfigs;
 import ui.OptionsWindow;
 import utils.PManager;
+import filters.FilterConfigs;
+import filters.rearingdetection.RearingDetector;
+import filters.rearingdetection.RearingFilterConfigs;
+import filters.subtractionfilter.SubtractionConfigs;
 
 /**
  * Controller of the OptionsWindow GUI window.

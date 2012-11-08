@@ -31,6 +31,7 @@ import org.eclipse.swt.widgets.Shell;
 import ui.PluggedGUI;
 import utils.PManager;
 import utils.PManager.ProgramState;
+import utils.PManager.ProgramState.GeneralState;
 
 /**
  * GUI class for the rearing module.
@@ -60,7 +61,7 @@ public class RearingModuleGUI extends PluggedGUI<RearingModule> {
 	 * Handles the "Add Rearing" button click action.
 	 */
 	public void btnAddRearingAction() {
-		if (PManager.getDefault().state == ProgramState.TRACKING
+		if (PManager.getDefault().getState().getGeneral() == GeneralState.TRACKING
 		/* || PManager.getDefault().state == ProgramState.RECORDING */)
 			((RearingModule) ModulesManager.getDefault().getModuleByName(
 					"Rearing Module")).incrementRearingCounter();
@@ -70,16 +71,10 @@ public class RearingModuleGUI extends PluggedGUI<RearingModule> {
 	 * Handles the "Subtract Rearing" button click action.
 	 */
 	public void btnSubRearingAction() {
-		if (PManager.getDefault().state == ProgramState.TRACKING
+		if (PManager.getDefault().getState().getGeneral() == GeneralState.TRACKING
 		/* || PManager.getDefault().state == ProgramState.RECORDING */)
 			((RearingModule) ModulesManager.getDefault().getModuleByName(
 					"Rearing Module")).decrementRearingCounter();
-	}
-
-	@Override
-	public void inIdleState() {
-		btn_add_rearing.setEnabled(false);
-		btn_sub_rearing.setEnabled(false);
 	}
 
 	@Override
@@ -122,14 +117,25 @@ public class RearingModuleGUI extends PluggedGUI<RearingModule> {
 	}
 
 	@Override
-	public void inStreamingState() {
-		btn_add_rearing.setEnabled(false);
-		btn_sub_rearing.setEnabled(false);
+	public void stateStreamChangeHandler(ProgramState state) {
+		
 	}
 
 	@Override
-	public void inTrackingState() {
-		btn_add_rearing.setEnabled(true);
-		btn_sub_rearing.setEnabled(true);
+	public void stateGeneralChangeHandler(ProgramState state) {
+		switch (state.getGeneral()) {
+			case IDLE:
+				btn_add_rearing.setEnabled(false);
+				btn_sub_rearing.setEnabled(false);
+				break;
+			case TRACKING:
+				btn_add_rearing.setEnabled(true);
+				btn_sub_rearing.setEnabled(true);
+				break;
+			default:
+				btn_add_rearing.setEnabled(false);
+				btn_sub_rearing.setEnabled(false);
+				break;
+		}		
 	}
 }

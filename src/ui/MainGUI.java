@@ -57,6 +57,7 @@ public class MainGUI extends BaseUI {
 																// processed
 																// image
 	private Button		btnStartStream;
+	private Button btnPause;
 	private Button		btnStartTracking				= null;
 	private Button		btnStopStream;
 	private Button		btnStopTracking					= null;
@@ -149,6 +150,10 @@ public class MainGUI extends BaseUI {
 	 */
 	public void btnStopStreamingEnable(final boolean enable) {
 		btnStopStream.setEnabled(enable);
+	}
+	
+	public void btnPauseStreamingEnable(final boolean enable) {
+		btnPause.setEnabled(enable);
 	}
 
 	/**
@@ -305,7 +310,18 @@ public class MainGUI extends BaseUI {
 				controller.stopStreamingAction();
 			}
 		});
-		btnStopStream.setText(ExternalStrings.get("MainGUI.StopStream")); //$NON-NLS-1$
+		btnStopStream.setText(ExternalStrings.get("MainGUI.StopStream"));
+		
+		btnPause = new Button(cmpstStreaming, SWT.NONE);
+		btnPause.setLocation(10, 64);
+		btnPause.setSize(109, 25);
+		btnPause.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				controller.pauseResumeAction();
+			}
+		});
+		btnPause.setText("Pause/Resume");
 
 		xpndtmStreaming.setHeight(xpndtmStreaming.getControl().computeSize(
 				SWT.DEFAULT, SWT.DEFAULT).y + 10);

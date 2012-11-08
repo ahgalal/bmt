@@ -14,15 +14,15 @@
 
 package filters.subtractionfilter;
 
-import filters.FilterConfigs;
-import filters.FilterData;
-import filters.Link;
-import filters.VideoFilter;
 import utils.PManager;
 import utils.PManager.ProgramState;
 import utils.StatusManager.StatusSeverity;
 import utils.video.FrameIntArray;
 import utils.video.ImageManipulator;
+import filters.FilterConfigs;
+import filters.FilterData;
+import filters.Link;
+import filters.VideoFilter;
 
 /**
  * Subtracts the input image from a background image and produces an image of
