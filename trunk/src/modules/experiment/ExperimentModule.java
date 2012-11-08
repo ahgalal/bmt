@@ -26,10 +26,9 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
 
-import filters.Data;
-
 import utils.Logger.Details;
 import utils.PManager;
+import filters.Data;
 
 /**
  * Experiment Module, it saves, loads and updated experiment's data.

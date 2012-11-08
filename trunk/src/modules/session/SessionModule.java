@@ -23,11 +23,10 @@ import modules.experiment.ExperimentType;
 
 import org.eclipse.swt.widgets.Shell;
 
-import filters.Data;
-
 import ui.PluggedGUI;
 import utils.Logger.Details;
 import utils.PManager;
+import filters.Data;
 
 /**
  * Manages session's start/end time, etc..
@@ -35,8 +34,9 @@ import utils.PManager;
  * @author Creative
  */
 public class SessionModule extends
-		Module<PluggedGUI, SessionModuleConfigs, SessionModuleData> {
+Module<PluggedGUI, SessionModuleConfigs, SessionModuleData> {
 	private final String[]	expParams	= new String[] { Constants.FILE_SESSION_TIME };
+	private boolean	paused;
 
 	/**
 	 * Initializations of the module.
@@ -68,6 +68,17 @@ public class SessionModule extends
 
 	}
 
+	@Override
+	public void pause() {
+		paused=true;
+	}
+
+	@Override
+	public void resume() {
+		startSession();
+		paused=false;
+	}
+
 	/**
 	 * stops session timer.
 	 */
@@ -80,19 +91,8 @@ public class SessionModule extends
 	 * 
 	 * @return session's elapsed time till now
 	 */
-	private float getSessionTimeTillNow() {
-		final long time = (System.currentTimeMillis() - data.session_start_time) / (1000);
-		return time;
-	}
-
-	/**
-	 * Gets the total time of the session.
-	 * 
-	 * @return total time of the session
-	 */
-	public long getTotalSessionTime() {
-		final long totalTime = (data.session_end_time - data.session_start_time) / (1000);
-		return totalTime;
+	private long getSessionTimeTillNow() {
+		return data.accumulatedSessionTime/(1000);
 	}
 
 	@Override
@@ -104,7 +104,7 @@ public class SessionModule extends
 		guiCargo = new Cargo(new String[] { Constants.GUI_SESSION_TIME });
 
 		fileCargo = new Cargo(expParams);
-		
+
 		for(String param:expParams)
 			data.addParameter(param);
 		expType = new ExperimentType[] { ExperimentType.OPEN_FIELD };
@@ -116,6 +116,14 @@ public class SessionModule extends
 		if (!data.session_is_running) {
 			startSession();
 			data.session_is_running = true;
+		}
+		
+		if(paused==false){
+			data.session_end_time = System.currentTimeMillis();
+			data.accumulatedSessionTime+= (data.session_end_time - data.session_start_time);
+			if(data.session_start_time==0)
+				data.accumulatedSessionTime=0;
+			data.session_start_time = System.currentTimeMillis();
 		}
 	}
 
@@ -134,7 +142,6 @@ public class SessionModule extends
 	 * new session.
 	 */
 	private void startSession() {
-
 		startSessionTime();
 	}
 

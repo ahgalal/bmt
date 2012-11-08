@@ -14,14 +14,11 @@
 
 package utils.video;
 
-import filters.CommonFilterConfigs;
-import filters.FilterConfigs;
-import filters.FilterManager;
-import filters.VideoFilter;
 import modules.experiment.ExperimentType;
 import utils.Logger.Details;
 import utils.PManager;
-import utils.PManager.ProgramState;
+import utils.PManager.ProgramState.GeneralState;
+import utils.PManager.ProgramState.StreamState;
 import utils.StatusManager.StatusSeverity;
 import utils.video.input.AGCamLibModule;
 import utils.video.input.AGVidLibConfigs;
@@ -31,8 +28,14 @@ import utils.video.input.OpenCVConfigs;
 import utils.video.input.OpenCVModule;
 import utils.video.input.V4L2Module;
 import utils.video.input.VidInputter;
+import utils.video.input.VidInputter.SourceStatus;
+import utils.video.input.VidInputter.SourceType;
 import utils.video.input.VidSourceConfigs;
 import utils.video.input.VideoFileModule;
+import filters.CommonFilterConfigs;
+import filters.FilterConfigs;
+import filters.FilterManager;
+import filters.VideoFilter;
 
 /**
  * Main Video Manager, manages all video operations.
@@ -40,6 +43,8 @@ import utils.video.input.VideoFileModule;
  * @author Creative
  */
 public class VideoManager {
+	private boolean paused=false;
+	
 	/**
 	 * Runnable for grabbing image from the input library and pass it to all
 	 * filters.
@@ -59,9 +64,17 @@ public class VideoManager {
 			}
 
 			while (video_processor_enabled) {
+				synchronized (this) {
+					while(paused)
+						try {
+							this.wait();
+						} catch (InterruptedException e) {
+							PManager.log.print("Stream is Enabled", this);
+						}
+				}
 				counter = 0;
-				while ((v_in != null) && (v_in.getStatus() != 1)
-						&& (counter < 5))
+				while ((v_in != null) && (v_in.getStatus() == SourceStatus.ERROR)
+						&& (counter < 5)){
 					try {
 						Thread.sleep(1000);
 						PManager.log.print("Device is not Ready!", this,
@@ -70,8 +83,9 @@ public class VideoManager {
 					} catch (final InterruptedException e) {
 						e.printStackTrace();
 					}
+				}
 				// PManager.log.print("Device is not ready yet!", this);
-				if ((v_in != null) && (v_in.getStatus() == 1))
+				if ((v_in != null) && (v_in.getStatus() == SourceStatus.STREAMING))
 					for (final VideoFilter<?, ?> v : filter_mgr.getFilters())
 						v.process();
 
@@ -87,7 +101,7 @@ public class VideoManager {
 			// ////////////////////////////////
 
 			PManager.getDefault().stopTracking();
-			PManager.getDefault().state = ProgramState.IDLE;
+			PManager.getDefault().getState().setStream(StreamState.IDLE);
 			filter_mgr.disableAll();
 
 			PManager.log.print("Ended Video Streaming", this);
@@ -240,9 +254,10 @@ public class VideoManager {
 		filter_mgr.enableFilter("RatFinder", true);
 		filter_mgr.enableFilter("RearingDetector", true);
 		filter_mgr.enableFilter("Average Filter", true);
-		PManager.getDefault().state = ProgramState.TRACKING;
+		PManager.getDefault().getState().setGeneral(GeneralState.TRACKING);
 	}
 
+	private Thread th_main;
 	/**
 	 * Starts video streaming.
 	 */
@@ -252,10 +267,17 @@ public class VideoManager {
 			while (!v_in.startStream())
 				Thread.sleep(100);
 			filter_mgr.enableFilter("ScreenDrawer", true);
-			final Thread th_main = new Thread(new RunnableProcessor());
+			th_main = new Thread(new RunnableProcessor());
 			th_main.start();
-			PManager.getDefault().state = ProgramState.STREAMING;
+			PManager.getDefault().getState().setStream(StreamState.STREAMING);
 			filter_mgr.submitDataObjects();
+			
+			if(v_in.getType()==SourceType.FILE){
+				while(v_in.getStatus()!=SourceStatus.STREAMING)
+					Thread.sleep(100);
+				PManager.getDefault().pauseResume();
+			}
+			
 		} catch (final Exception e) {
 			e.printStackTrace();
 		}
@@ -269,7 +291,7 @@ public class VideoManager {
 		filter_mgr.enableFilter("RearingDetector", false);
 		filter_mgr.enableFilter("RatFinder", false);
 		filter_mgr.enableFilter("Average Filter", false);
-		PManager.getDefault().state = ProgramState.STREAMING;
+		//PManager.getDefault().getState().setStream(StreamState.STREAMING);
 	}
 
 	/**
@@ -320,6 +342,21 @@ public class VideoManager {
 		for (final FilterConfigs f_cfg : filters_configs) {
 			f_cfg.common_configs = commonConfigs;
 			filter_mgr.applyConfigsToFilter(f_cfg);
+		}
+	}
+
+	public void pauseStream() {
+		if(v_in!=null && v_in.getStatus()==SourceStatus.STREAMING){
+			paused=true;
+			v_in.pauseStream();
+		}
+	}
+	
+	public void resumeStream() {
+		if(v_in!=null && v_in.getStatus()==SourceStatus.PAUSED){
+			paused=false;
+			v_in.resumeStream();
+			th_main.interrupt();
 		}
 	}
 

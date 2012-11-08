@@ -44,7 +44,7 @@ public class AGCamLibModule extends VidInputter<VidSourceConfigs> {
 
 				fia.frame_data = ag_cam.grabIntRGBFrame();
 
-				status = 1;
+				status = SourceStatus.STREAMING;
 			}
 		}
 
@@ -72,7 +72,7 @@ public class AGCamLibModule extends VidInputter<VidSourceConfigs> {
 	}
 
 	@Override
-	public int getStatus() {
+	public SourceStatus getStatus() {
 		return status;
 	}
 
@@ -129,6 +129,22 @@ public class AGCamLibModule extends VidInputter<VidSourceConfigs> {
 		ag_cam = null;
 		th_update_image = null;
 
+	}
+
+	@Override
+	public void pauseStream() {
+		// this ia used as a cam module, no pause is supported for cams currently.
+	}
+
+	@Override
+	public void resumeStream() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public SourceType getType() {
+		return SourceType.CAM;
 	}
 
 }

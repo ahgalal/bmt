@@ -44,7 +44,7 @@ public class OpenCVModule extends VidInputter<OpenCVConfigs> {
 				cv.read();
 				fia.frame_data = cv.pixels();
 				if (fia.frame_data != null)
-					status = 1;
+					status = SourceStatus.STREAMING;
 			}
 		}
 
@@ -73,7 +73,7 @@ public class OpenCVModule extends VidInputter<OpenCVConfigs> {
 	}
 
 	@Override
-	public int getStatus() {
+	public SourceStatus getStatus() {
 		return status;
 	}
 
@@ -112,6 +112,21 @@ public class OpenCVModule extends VidInputter<OpenCVConfigs> {
 		cv.stop();
 		cv.dispose();
 		cv = null;
+	}
+	
+	@Override
+	public void pauseStream() {
+		// this ia used as a cam module, no pause is supported for cams currently.
+	}
+
+	@Override
+	public void resumeStream() {
+		// TODO Auto-generated method stub
+	}
+	
+	@Override
+	public SourceType getType() {
+		return SourceType.CAM;
 	}
 
 }

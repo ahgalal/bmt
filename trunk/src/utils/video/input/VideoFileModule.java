@@ -32,25 +32,39 @@ public class VideoFileModule extends VidInputter<AGVidLibConfigs> {
 		public void run() {
 			final Point dims = vidLib.getVideoDimensions();
 			fia.frame_data = new int[dims.x * dims.y];
-			try {
+/*			try {
 				Thread.sleep(1000);
 			} catch (final InterruptedException e1) {
 				e1.printStackTrace();
-			}
+			}*/
 			vidLib.play();
 			while (!stop_stream) {
+				synchronized (this) {
+					while (paused) {
+						try {
+							this.wait();
+						} catch (InterruptedException e) {
+						}
+					}	
+				}
+
+				// long l1 = System.currentTimeMillis();
+				fia.frame_data = vidLib.getCurrentFrameInt();
+				// long l2 = System.currentTimeMillis();
+				if (fia.frame_data != null)
+					status = SourceStatus.STREAMING;
+				else{
+					if(paused)
+						status = SourceStatus.PAUSED;
+					else
+						status=SourceStatus.ERROR;
+				}
+				
 				try {
 					Thread.sleep(30);
 				} catch (final InterruptedException e) {
 					e.printStackTrace();
 				}
-				// long l1 = System.currentTimeMillis();
-				fia.frame_data = vidLib.getCurrentFrameInt();
-				// long l2 = System.currentTimeMillis();
-				if (fia.frame_data != null)
-					status = 1;
-				else
-					status = 0;
 				// System.out.println(l2-l1 + "\n");
 			}
 		}
@@ -102,7 +116,9 @@ public class VideoFileModule extends VidInputter<AGVidLibConfigs> {
 	 * @see utils.video.input.VidInputter#getStatus()
 	 */
 	@Override
-	public int getStatus() {
+	public SourceStatus getStatus() {
+		if(paused)
+			status=SourceStatus.PAUSED;
 		return status;
 	}
 
@@ -135,7 +151,10 @@ public class VideoFileModule extends VidInputter<AGVidLibConfigs> {
 		stop_stream = false;
 		return true;
 	}
-
+	@Override
+	public utils.video.input.VidInputter.SourceType getType() {
+		return SourceType.FILE;
+	}
 	/*
 	 * (non-Javadoc)
 	 * @see utils.video.input.VidInputter#stopModule()
@@ -144,6 +163,19 @@ public class VideoFileModule extends VidInputter<AGVidLibConfigs> {
 	public void stopModule() {
 		stop_stream = true;
 		vidLib.stop();
+	}
+	
+	@Override
+	public void pauseStream() {
+		paused=true;
+		vidLib.pause();
+	}
+
+	@Override
+	public void resumeStream() {
+		paused=false;
+		vidLib.play();
+		th_update_image.interrupt();		
 	}
 
 }

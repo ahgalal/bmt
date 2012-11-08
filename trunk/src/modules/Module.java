@@ -20,9 +20,8 @@ import modules.experiment.ExperimentType;
 
 import org.eclipse.swt.widgets.Shell;
 
-import filters.Data;
-
 import ui.PluggedGUI;
+import filters.Data;
 
 /**
  * Parent of all modules classes.
@@ -59,6 +58,14 @@ public abstract class Module<GUIType extends PluggedGUI, ConfigsType extends Mod
 
 	public boolean allowTracking() {
 		return true;
+	}
+	
+	public void pause(){
+		// empty, overridden when needed
+	}
+	
+	public void resume(){
+		// empty, overridden when needed
 	}
 
 	/**

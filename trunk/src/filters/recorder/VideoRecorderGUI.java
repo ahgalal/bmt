@@ -32,6 +32,7 @@ import org.eclipse.swt.widgets.Shell;
 
 import ui.PluggedGUI;
 import utils.PManager;
+import utils.PManager.ProgramState;
 
 /**
  * GUI class for the video recorder filter.
@@ -49,15 +50,6 @@ public class VideoRecorderGUI extends PluggedGUI<VideoRecorder> {
 
 	public VideoRecorderGUI(final VideoRecorder owner) {
 		super(owner);
-	}
-
-	@Override
-	public void inIdleState() {
-		btnStartRecordingEBar.setEnabled(false);
-		btnStopRecordingEBar.setEnabled(false);
-
-		btnStartRecordingCBar.setEnabled(false);
-		btnStopRecordingCBar.setEnabled(false);
 	}
 
 	/**
@@ -146,42 +138,12 @@ public class VideoRecorderGUI extends PluggedGUI<VideoRecorder> {
 		cItemRecording.setSize(70, 30);
 	}
 
-	@Override
-	public void inStreamingState() {
-		btnStartRecordingEBar.setEnabled(false);
-		btnStopRecordingEBar.setEnabled(false);
-
-		btnStartRecordingCBar.setEnabled(false);
-		btnStopRecordingCBar.setEnabled(false);
-
-		if (isRecording == true) // was
-			// tracking
-			// then
-			// stopped
-			stopRecordAction();
-	}
-
-	@Override
-	public void inTrackingState() {
-		if (isRecording) {
-			btnStartRecordingEBar.setEnabled(false);
-			btnStopRecordingEBar.setEnabled(true);
-			btnStartRecordingCBar.setEnabled(false);
-			btnStopRecordingCBar.setEnabled(true);
-		} else {
-			btnStartRecordingEBar.setEnabled(true);
-			btnStopRecordingEBar.setEnabled(false);
-			btnStartRecordingCBar.setEnabled(true);
-			btnStopRecordingCBar.setEnabled(false);
-		}
-	}
-
 	/**
 	 * Starts recording frames, and saves the video file.
 	 */
 	private void startRecordAction() {
 		isRecording = true;
-		inTrackingState();
+		//inTrackingState();
 		PManager.getDefault().getVideoManager().getFilterManager()
 		.enableFilter("Recorder", true);
 	}
@@ -192,7 +154,7 @@ public class VideoRecorderGUI extends PluggedGUI<VideoRecorder> {
 	private void stopRecordAction() {
 		if (isRecording == true) {
 			isRecording = false;
-			inTrackingState();
+			//inTrackingState();
 			PManager.getDefault().getVideoManager().getFilterManager()
 			.enableFilter("Recorder", false);
 			final FileDialog fileDialog = new FileDialog(shell, SWT.SAVE);
@@ -203,5 +165,57 @@ public class VideoRecorderGUI extends PluggedGUI<VideoRecorder> {
 						.saveVideoFile(file_name);
 		}
 
+	}
+
+	@Override
+	public void stateStreamChangeHandler(ProgramState state) {
+		switch (state.getStream()) {
+			case IDLE:
+				btnStartRecordingEBar.setEnabled(false);
+				btnStopRecordingEBar.setEnabled(false);
+
+				btnStartRecordingCBar.setEnabled(false);
+				btnStopRecordingCBar.setEnabled(false);
+				break;
+
+			default:
+				break;
+		}
+		
+	}
+
+	@Override
+	public void stateGeneralChangeHandler(ProgramState state) {
+		switch (state.getGeneral()) {
+			case IDLE:
+				btnStartRecordingEBar.setEnabled(false);
+				btnStopRecordingEBar.setEnabled(false);
+
+				btnStartRecordingCBar.setEnabled(false);
+				btnStopRecordingCBar.setEnabled(false);
+
+				if (isRecording == true) // was
+					// tracking
+					// then
+					// stopped
+					stopRecordAction();
+				break;
+			case TRACKING:
+				if (isRecording) {
+					btnStartRecordingEBar.setEnabled(false);
+					btnStopRecordingEBar.setEnabled(true);
+					btnStartRecordingCBar.setEnabled(false);
+					btnStopRecordingCBar.setEnabled(true);
+				} else {
+					btnStartRecordingEBar.setEnabled(true);
+					btnStopRecordingEBar.setEnabled(false);
+					btnStartRecordingCBar.setEnabled(true);
+					btnStopRecordingCBar.setEnabled(false);
+				}
+				break;
+
+			default:
+				break;
+		}
 	}
 }

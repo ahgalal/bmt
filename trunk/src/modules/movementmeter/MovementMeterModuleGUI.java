@@ -10,6 +10,7 @@ import org.eclipse.swt.widgets.Shell;
 
 import plotter.Plotter;
 import ui.PluggedGUI;
+import utils.PManager.ProgramState;
 
 public class MovementMeterModuleGUI extends PluggedGUI<MovementMeterModule> {
 	private Composite	cmpstPlotter;
@@ -25,15 +26,8 @@ public class MovementMeterModuleGUI extends PluggedGUI<MovementMeterModule> {
 	}
 
 	@Override
-	public void inIdleState() {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
 	public void initialize(final Shell shell, final ExpandBar expandBar,
 			final Menu menuBar, final CoolBar coolBar, final Group grpGraphs) {
-		this.owner = owner;
 		cmpstPlotter = new Composite(grpGraphs, SWT.NONE);
 		cmpstPlotter.setBounds(10, 20, 232, 135);
 
@@ -42,15 +36,15 @@ public class MovementMeterModuleGUI extends PluggedGUI<MovementMeterModule> {
 	}
 
 	@Override
-	public void inStreamingState() {
+	public void stateStreamChangeHandler(ProgramState state) {
 		// TODO Auto-generated method stub
-
+		
 	}
 
 	@Override
-	public void inTrackingState() {
+	public void stateGeneralChangeHandler(ProgramState state) {
 		// TODO Auto-generated method stub
-
+		
 	}
 
 }

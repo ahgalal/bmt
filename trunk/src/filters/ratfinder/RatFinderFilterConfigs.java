@@ -14,10 +14,10 @@
 
 package filters.ratfinder;
 
-import filters.CommonFilterConfigs;
-import filters.FilterConfigs;
 import utils.PManager;
 import utils.StatusManager.StatusSeverity;
+import filters.CommonFilterConfigs;
+import filters.FilterConfigs;
 
 /**
  * Configurations for the RatFinder filter.

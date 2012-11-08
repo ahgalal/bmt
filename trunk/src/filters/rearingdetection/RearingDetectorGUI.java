@@ -29,6 +29,7 @@ import org.eclipse.swt.widgets.Shell;
 import ui.PluggedGUI;
 import utils.PManager;
 import utils.PManager.ProgramState;
+import utils.PManager.ProgramState.GeneralState;
 import utils.StatusManager.StatusSeverity;
 
 /**
@@ -64,12 +65,6 @@ public class RearingDetectorGUI extends PluggedGUI<RearingDetector> {
 	 */
 	public void btnRearingNowEnable(final boolean enable) {
 		btn_rearing_now.setEnabled(enable);
-	}
-
-	@Override
-	public void inIdleState() {
-		btn_not_rearing.setEnabled(false);
-		btn_rearing_now.setEnabled(false);
 	}
 
 	@Override
@@ -110,18 +105,6 @@ public class RearingDetectorGUI extends PluggedGUI<RearingDetector> {
 				SWT.DEFAULT, SWT.DEFAULT).y + 10);
 	}
 
-	@Override
-	public void inStreamingState() {
-		btn_not_rearing.setEnabled(false);
-		btn_rearing_now.setEnabled(false);
-	}
-
-	@Override
-	public void inTrackingState() {
-		btn_not_rearing.setEnabled(true);
-		btn_rearing_now.setEnabled(true);
-	}
-
 	/**
 	 * Notifies the VideoManager that the rat is (rearing/not rearing) in
 	 * reality, so that the VideoManager can start learning the rat's size when
@@ -131,12 +114,36 @@ public class RearingDetectorGUI extends PluggedGUI<RearingDetector> {
 	 *            is the rat rearing now?
 	 */
 	public void rearingNow(final boolean rearing) {
-		if (PManager.getDefault().state == ProgramState.TRACKING)
+		if (PManager.getDefault().getState().getGeneral() == GeneralState.TRACKING)
 			((RearingDetector) PManager.getDefault().getVideoManager()
 					.getFilterManager().getFilterByName("RearingDetector"))
 					.rearingNow(rearing);
 		else
 			PManager.getDefault().statusMgr.setStatus(
 					"Tracking is not running!", StatusSeverity.ERROR);
+	}
+
+	@Override
+	public void stateGeneralChangeHandler(final ProgramState state) {
+		switch (state.getGeneral()) {
+			case IDLE:
+				btn_not_rearing.setEnabled(false);
+				btn_rearing_now.setEnabled(false);
+				break;
+			case TRACKING:
+				btn_not_rearing.setEnabled(true);
+				btn_rearing_now.setEnabled(true);
+				break;
+			default:
+				btn_not_rearing.setEnabled(false);
+				btn_rearing_now.setEnabled(false);
+				break;
+		}
+	}
+
+	@Override
+	public void stateStreamChangeHandler(final ProgramState state) {
+		// TODO Auto-generated method stub
+
 	}
 }

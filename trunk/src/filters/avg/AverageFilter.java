@@ -3,10 +3,10 @@
  */
 package filters.avg;
 
-import filters.Link;
-import filters.VideoFilter;
 import utils.PManager.ProgramState;
 import utils.video.ImageManipulator;
+import filters.Link;
+import filters.VideoFilter;
 
 /**
  * @author Creative

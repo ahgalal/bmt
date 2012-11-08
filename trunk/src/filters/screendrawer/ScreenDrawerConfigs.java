@@ -16,12 +16,11 @@ package filters.screendrawer;
 
 import java.awt.Graphics;
 
-import filters.CommonFilterConfigs;
-import filters.FilterConfigs;
-
 import modules.zones.ShapeCollection;
 import utils.PManager;
 import utils.StatusManager.StatusSeverity;
+import filters.CommonFilterConfigs;
+import filters.FilterConfigs;
 
 /**
  * Configurations for the ScreenDrawer filter.

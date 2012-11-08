@@ -26,16 +26,17 @@ import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
 
-import filters.CommonFilterConfigs;
-import filters.FilterConfigs;
-import filters.screendrawer.ScreenDrawerConfigs;
-
 import ui.MainGUI;
 import ui.PluggedGUI;
 import utils.PManager;
 import utils.PManager.ProgramState;
+import utils.PManager.ProgramState.GeneralState;
+import utils.PManager.ProgramState.StreamState;
 import utils.StateListener;
 import utils.StatusManager.StatusSeverity;
+import filters.CommonFilterConfigs;
+import filters.FilterConfigs;
+import filters.screendrawer.ScreenDrawerConfigs;
 
 /**
  * Controller of the MainGUI window.
@@ -58,7 +59,7 @@ public class CtrlMainGUI extends ControllerUI<MainGUI> implements StateListener 
 		public void run() {
 
 			setTableNamesColumn();
-			while (pm.state == ProgramState.TRACKING) {
+			while (pm.getState().getGeneral() == GeneralState.TRACKING) {
 				try {
 					Thread.sleep(200);
 				} catch (final InterruptedException e) {
@@ -78,15 +79,15 @@ public class CtrlMainGUI extends ControllerUI<MainGUI> implements StateListener 
 		}
 	}
 
-	private final CtrlAbout	ctrl_about_box;
-	private String			file_name	= "FST.avi";
-	private final PManager	pm;						// @jve:decl-index=0:
-	private Thread			th_update_gui;				// @jve:decl-index=0:
-	private final MainGUI	ui;
-	private CtrlNewExperimentWizard ctrlNewExpWizard;
-	private boolean			ui_is_opened;
+	private final CtrlAbout					ctrl_about_box;
+	private final CtrlNewExperimentWizard	ctrlNewExpWizard;
+	private String							file_name	= "FST.avi";
+	private final PManager					pm;						// @jve:decl-index=0:
+	private Thread							th_update_gui;				// @jve:decl-index=0:
+	private final MainGUI					ui;
+	private boolean							ui_is_opened;
 
-	private final Shell		ui_shell;
+	private final Shell						ui_shell;
 
 	/**
 	 * Initializes class attributes
@@ -114,9 +115,9 @@ public class CtrlMainGUI extends ControllerUI<MainGUI> implements StateListener 
 	 * Stops all Program Activity and closes the GUI window.
 	 */
 	public void closeProgram() {
-		if (pm.state == ProgramState.TRACKING)
+		if (pm.getState().getGeneral() == GeneralState.TRACKING)
 			pm.stopTracking();
-		if (pm.state == ProgramState.STREAMING)
+		if (pm.getState().getStream() == StreamState.STREAMING)
 			pm.stopStreaming();
 		ui_is_opened = false;
 		try {
@@ -212,7 +213,7 @@ public class CtrlMainGUI extends ControllerUI<MainGUI> implements StateListener 
 	 * Starts the Streaming process, by initializing the VideoManager.
 	 */
 	public void mnutmCameraStartAction() {
-		if (pm.state == ProgramState.IDLE) {
+		if (pm.getState().getGeneral() == GeneralState.IDLE) {
 			final CommonFilterConfigs commonConfigs = new CommonFilterConfigs(
 					640, 480, 30, 0, "default", null);
 			ModulesManager.getDefault().setModulesWidthandHeight(
@@ -271,7 +272,7 @@ public class CtrlMainGUI extends ControllerUI<MainGUI> implements StateListener 
 	public void mnutmExperimentNewExpAction() {
 		PManager.main_gui.clearForm();
 		ExperimentManager.getDefault().unloadExperiment();
-		ctrlNewExpWizard.show(ui_shell,true);
+		ctrlNewExpWizard.show(ui_shell, true);
 	}
 
 	/**
@@ -279,6 +280,10 @@ public class CtrlMainGUI extends ControllerUI<MainGUI> implements StateListener 
 	 */
 	public void mnutmHelpAboutAction() {
 		ctrl_about_box.show(true);
+	}
+
+	public void pauseResumeAction() {
+		pm.pauseResume();
 	}
 
 	public void setActive() {
@@ -313,7 +318,7 @@ public class CtrlMainGUI extends ControllerUI<MainGUI> implements StateListener 
 		if ((file_name == null) || (new File(file_name).exists() == false))
 			file_name = fileDialog.open();
 		if (file_name != null)
-			if (pm.state == ProgramState.IDLE) {
+			if (pm.getState().getGeneral() == GeneralState.IDLE) {
 				final CommonFilterConfigs commonConfigs = new CommonFilterConfigs(
 						640, 480, 30, 0, "VideoFile", null);
 				ModulesManager.getDefault().setModulesWidthandHeight(
@@ -340,12 +345,14 @@ public class CtrlMainGUI extends ControllerUI<MainGUI> implements StateListener 
 			public void run() {
 				while (!ui_shell.isDisposed()) {
 					if (ExperimentManager.getDefault().isExperimentPresent()
-							&& (pm.state == ProgramState.IDLE))
+							&& (pm.getState().getStream() == StreamState.IDLE))
 						ui.btnStartStreamingEnable(true);
 					else
 						ui.btnStartStreamingEnable(false);
 					if (ModulesManager.getDefault().allowTracking()
-							&& (pm.state == ProgramState.STREAMING))
+							&& ((pm.getState().getStream() == StreamState.STREAMING) || (pm
+									.getState().getStream() == StreamState.PAUSED)) &&
+									pm.getState().getGeneral()!=GeneralState.TRACKING)
 						ui.btnStartTrackingEnable(true);
 					else
 						ui.btnStartTrackingEnable(false);
@@ -391,7 +398,8 @@ public class CtrlMainGUI extends ControllerUI<MainGUI> implements StateListener 
 
 			@Override
 			public void run() {
-				if (pm.state == ProgramState.STREAMING) {
+				if (pm.getState().getStream() == StreamState.STREAMING ||
+						pm.getState().getStream() == StreamState.PAUSED) {
 					if (ModulesManager.getDefault().areModulesReady(
 							ui.getShell())) {
 						final ExperimentModule tmp_exp_module = (ExperimentModule) ModulesManager
@@ -441,14 +449,7 @@ public class CtrlMainGUI extends ControllerUI<MainGUI> implements StateListener 
 	}
 
 	public void stopStreamingAction() {
-		if (pm.state == ProgramState.STREAMING) {
-			pm.stopStreaming();
-			pm.statusMgr.setStatus("Streaming is Stopped!",
-					StatusSeverity.WARNING);
-		} else if (pm.state == ProgramState.TRACKING)
-			pm.statusMgr.setStatus(
-					"Streaming Cannot be stopped while Tracking is running.",
-					StatusSeverity.ERROR);
+		pm.stopStreaming();
 	}
 
 	/**
@@ -465,23 +466,42 @@ public class CtrlMainGUI extends ControllerUI<MainGUI> implements StateListener 
 		Display.getDefault().asyncExec(new Runnable() {
 			@Override
 			public void run() {
-				switch (state) {
+				switch (state.getGeneral()) {
 					case IDLE:
 						ui.btnStopTrackingEnable(false);
 						// ui.btnStartStreamingEnable(true);
-						ui.btnStopStreamingEnable(false);
+						// ui.btnStopStreamingEnable(false);
 						ui.btnStartTrackingEnable(false);
+						// ui.btnPauseStreamingEnable(false);
 						break;
-					case STREAMING:
-						ui.btnStopTrackingEnable(false);
-						ui.btnStartStreamingEnable(false);
-						ui.btnStopStreamingEnable(true);
-						break;
+
 					case TRACKING:
 						ui.btnStartTrackingEnable(false);
 						ui.btnStopTrackingEnable(true);
-						ui.btnStartStreamingEnable(false);
+						// ui.btnPauseStreamingEnable(true);
+						// ui.btnStartStreamingEnable(false);
 						ui.btnStopStreamingEnable(false);
+						break;
+				}
+				switch (state.getStream()) {
+					case IDLE:
+						ui.btnStartStreamingEnable(true);
+						ui.btnStopStreamingEnable(false);
+						ui.btnPauseStreamingEnable(false);
+						break;
+					case STREAMING:
+						// ui.btnStopTrackingEnable(false);
+						ui.btnStartStreamingEnable(false);
+						ui.btnStopStreamingEnable(true);
+						ui.btnPauseStreamingEnable(true);
+						break;
+					case PAUSED:
+						// ui.btnStopTrackingEnable(false);
+						ui.btnStartStreamingEnable(false);
+						ui.btnStopStreamingEnable(true);
+						ui.btnPauseStreamingEnable(true);
+						break;
+					default:
 						break;
 				}
 			}

@@ -14,9 +14,6 @@
 
 package utils;
 
-import filters.CommonFilterConfigs;
-import gfx_panel.GfxPanel;
-
 import java.util.ArrayList;
 
 import modules.ModulesManager;
@@ -26,6 +23,8 @@ import modules.zones.ShapeController;
 import org.eclipse.swt.widgets.Display;
 
 import utils.Logger.Details;
+import utils.PManager.ProgramState.GeneralState;
+import utils.PManager.ProgramState.StreamState;
 import utils.StatusManager.StatusSeverity;
 import utils.video.VideoManager;
 import control.ui.CtrlAbout;
@@ -34,6 +33,8 @@ import control.ui.CtrlDrawZones;
 import control.ui.CtrlMainGUI;
 import control.ui.CtrlOptionsWindow;
 import control.ui.CtrlRatInfoForm;
+import filters.CommonFilterConfigs;
+import gfx_panel.GfxPanel;
 
 /**
  * Program Manager, contains the main function, creates GUI and Controllers.
@@ -41,19 +42,57 @@ import control.ui.CtrlRatInfoForm;
  * @author Creative
  */
 public class PManager {
-
-	/**
-	 * Defines program states.
-	 * 
-	 * @author Creative
-	 */
-	public enum ProgramState {
-		IDLE, /**
-		 * IDLE: doing nothing, STREAMING: displaying video frames on the
-		 * screen, TRACKING: tracking the object: STREAMING + TRACKING, video:
-		 * STREAMING + TRACKING.
+	public static class ProgramState {
+		/**
+		 * Defines program states.
+		 * 
+		 * @author Creative
 		 */
-		LAUNCHING, STREAMING, TRACKING;
+		public enum GeneralState {
+			IDLE, /**
+			 * IDLE: doing nothing, STREAMING: displaying video frames on
+			 * the screen, TRACKING: tracking the object: STREAMING + TRACKING,
+			 * video: STREAMING + TRACKING.
+			 */
+			LAUNCHING, TRACKING;
+		}
+
+		public enum StreamState {
+			DISABLED, IDLE, PAUSED, STREAMING;
+		}
+
+		private GeneralState	general;
+
+		private StreamState		stream;
+
+		public ProgramState(final StreamState stream, final GeneralState general) {
+			super();
+			this.stream = stream;
+			this.general = general;
+		}
+
+		public GeneralState getGeneral() {
+			return general;
+		}
+
+		public StreamState getStream() {
+			return stream;
+		}
+
+		public void setGeneral(final GeneralState general) {
+			//log.print("General state: " + general, this);
+			this.general = general;
+		}
+
+		public void setStream(final StreamState stream) {
+			//log.print("Stream state: " + stream, this);
+			this.stream = stream;
+		}
+
+		@Override
+		public String toString() {
+			return "General: " + general.name() + ", Stream: " + stream.name();
+		}
 	}
 
 	private static PManager		default_me;
@@ -126,7 +165,7 @@ public class PManager {
 	/**
 	 * Program's state, check the documentation of ProgramState enumeration.
 	 */
-	public ProgramState						state;
+	private final ProgramState				state;
 
 	/**
 	 * Status manager instance, manages the status label at the bottom of the
@@ -140,7 +179,7 @@ public class PManager {
 	 * Initializes GUI controllers, Model Controllers and Video Controller.
 	 */
 	public PManager() {
-		state = ProgramState.IDLE;
+		state = new ProgramState(StreamState.IDLE, GeneralState.IDLE);
 		excel_engine = new ExcelEngine();
 		default_me = this;
 		statusMgr = new StatusManager();
@@ -162,15 +201,18 @@ public class PManager {
 
 		// State watcher, when state changes, it notified all StateListsners
 		final Thread thStateChangedNotifier = new Thread(new Runnable() {
-			ProgramState	old_state	= ProgramState.LAUNCHING;
+			ProgramState	old_state	= new ProgramState(StreamState.IDLE,
+												GeneralState.LAUNCHING);
 
 			@Override
 			public void run() {
 				while (main_gui.isUIOpened()) {
-					if (old_state != state) {
+					if ((old_state.getGeneral() != getState().getGeneral())
+							|| (old_state.getStream() != getState().getStream())) {
 						notifyStateListeners();
-						old_state = state;
-						log.print("State is: " + state, this);
+						old_state.setGeneral(getState().getGeneral());
+						old_state.setStream(getState().getStream());
+						log.print("State is: " + getState(), this);
 					}
 					try {
 						Thread.sleep(100);
@@ -187,6 +229,10 @@ public class PManager {
 
 	public void addStateListener(final StateListener sListener) {
 		arrStateListsners.add(sListener);
+	}
+
+	public ProgramState getState() {
+		return state;
 	}
 
 	/**
@@ -225,7 +271,24 @@ public class PManager {
 
 	private void notifyStateListeners() {
 		for (final StateListener sl : arrStateListsners)
-			sl.updateProgramState(state);
+			sl.updateProgramState(getState());
+	}
+
+	public void pauseResume() {
+		switch (getState().getStream()) {
+			case STREAMING:
+				ModulesManager.getDefault().pauseModules();
+				getVideoManager().pauseStream();
+				getState().setStream(StreamState.PAUSED);
+				break;
+			case PAUSED:
+				ModulesManager.getDefault().resumeModules();
+				getVideoManager().resumeStream();
+				getState().setStream(StreamState.STREAMING);
+				break;
+			default:
+				break;
+		}
 	}
 
 	public void removeStateListener(final StateListener sListener) {
@@ -237,7 +300,8 @@ public class PManager {
 	}
 
 	public void startStreaming() {
-		if ((state == ProgramState.IDLE) && vidMgr.isInitialized())
+		if ((getState().getGeneral() == GeneralState.IDLE)
+				&& vidMgr.isInitialized())
 			// ModulesManager.getDefault().setupModules(forcedSwimmingModulesSetup);
 			vidMgr.startStreaming();
 		else
@@ -248,7 +312,8 @@ public class PManager {
 	}
 
 	public boolean startTracking() {
-		if (state == ProgramState.STREAMING) {
+		if (getState().getStream() == StreamState.STREAMING ||
+				getState().getStream() == StreamState.PAUSED) {
 			ModulesManager.getDefault().initialize();
 			vidMgr.startProcessing();
 			ModulesManager.getDefault().runModules(true);
@@ -264,20 +329,32 @@ public class PManager {
 	 * Unloads the Video Processor, used when switching video libraries..
 	 */
 	public void stopStreaming() {
-		if ((vidMgr != null) & (state != ProgramState.IDLE)) {
-			vidMgr.unloadLibrary();
-			state = ProgramState.IDLE;
-		} else
+		if ((getState().getStream() == StreamState.STREAMING)
+				|| (getState().getStream() == StreamState.PAUSED)) {
+			if (vidMgr != null){
+				if(getState().getGeneral() != GeneralState.TRACKING) {
+					vidMgr.unloadLibrary();
+					getState().setStream(StreamState.IDLE);
+					statusMgr.setStatus("Streaming is Stopped!", StatusSeverity.WARNING);
+				} else
+					statusMgr.setStatus(
+							"Streaming Cannot be stopped while Tracking is running.",
+							StatusSeverity.ERROR);
+			}else
+				statusMgr.setStatus(
+						"incorrect state, unable to unload video library",
+						StatusSeverity.ERROR);
+		}else
 			statusMgr.setStatus(
-					"incorrect state, unable to unload video library",
+					"incorrect state, was not in streaming/paused state",
 					StatusSeverity.ERROR);
 	}
 
 	public void stopTracking() {
-		if (state == ProgramState.TRACKING) {
+		if (getState().getGeneral() == GeneralState.TRACKING) {
 			ModulesManager.getDefault().runModules(false);
 			vidMgr.stopProcessing();
-			state = ProgramState.STREAMING;
+			getState().setGeneral(GeneralState.IDLE);
 		} else
 			Display.getDefault().asyncExec(new Runnable() {
 				@Override
@@ -294,5 +371,4 @@ public class PManager {
 		cam_options.unloadGUI();
 		options_window.unloadGUI();
 	}
-
 }

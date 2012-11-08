@@ -32,7 +32,7 @@ public class NewExperimentWizard extends Wizard {
 		final ImageDescriptor defaultPageImage = new ImageDescriptor() {
 			@Override
 			public ImageData getImageData() {
-				return new ImageData("F:\\eclipse\\icons\\sa_samplecube48.gif");
+				return new ImageData("images/wizards/sa_samplecube48.gif");
 			}
 		};
 		setDefaultPageImageDescriptor(defaultPageImage);

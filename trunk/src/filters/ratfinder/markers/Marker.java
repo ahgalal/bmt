@@ -70,7 +70,7 @@ public abstract class Marker {
 	 *            rectangle's height
 	 */
 	protected void drawRect(final int[] img, int x, int y, final int width,
-			final int height) {
+			int height) {
 		if (x < 0)
 			x = 0;
 		if (x + width >= img_width)
@@ -78,16 +78,19 @@ public abstract class Marker {
 		if (y < 0)
 			y = 0;
 		if (y + height >= img_height)
-			y = img_height - height - 1;
+			height = img_height - y - 1;
 
 		for (int i = x; i < x + width; i++) {
-			img[i + y * img_width] = color.getRGB();
-			img[i + (y + height) * img_width] = color.getRGB();
+			if(i + y * img_width<img.length)
+				img[i + y * img_width] = color.getRGB();
+			if(i + (y + height) * img_width<img.length)
+				img[i + (y + height) * img_width] = color.getRGB();
 		}
 
 		for (int j = y; j < y + height; j++) {
 			img[x + j * img_width] = color.getRGB();
-			img[x + width + j * img_width] = color.getRGB();
+			if(x + width + j * img_width<img.length)
+				img[x + width + j * img_width] = color.getRGB();
 		}
 	}
 

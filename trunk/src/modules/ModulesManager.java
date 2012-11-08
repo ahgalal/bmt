@@ -29,12 +29,11 @@ import modules.zones.ZonesModuleConfigs;
 
 import org.eclipse.swt.widgets.Shell;
 
-import filters.Data;
-
 import ui.PluggedGUI;
 import utils.Logger.Details;
 import utils.PManager;
 import utils.StatusManager.StatusSeverity;
+import filters.Data;
 
 @SuppressWarnings("rawtypes")
 /**
@@ -43,6 +42,7 @@ import utils.StatusManager.StatusSeverity;
  * @author Creative
  */
 public class ModulesManager {
+	
 	/**
 	 * Runnable for running Modules.
 	 * 
@@ -52,6 +52,14 @@ public class ModulesManager {
 		@Override
 		public void run() {
 			while (run_modules) {
+				synchronized (this) {
+					while (paused) {
+						try {
+							this.wait();
+						} catch (InterruptedException e) {
+						}
+					}	
+				}
 				try {
 					Thread.sleep(33);
 				} catch (final InterruptedException e) {
@@ -446,6 +454,20 @@ public class ModulesManager {
 				mo.deInitialize();
 			ExperimentManager.getDefault().saveRatInfo();
 		}
+	}
+	private boolean paused;
+	public void pauseModules(){
+		for(Module mod:modules)
+			mod.pause();
+		paused=true;
+	}
+
+	public void resumeModules(){
+		paused=false;
+		if(th_modules!=null)
+			th_modules.interrupt();
+		for(Module mod:modules)
+			mod.resume();
 	}
 
 	/**

@@ -56,7 +56,7 @@ public class V4L2Module extends VidInputter<VidSourceConfigs> implements
 	}
 
 	@Override
-	public int getStatus() {
+	public SourceStatus getStatus() {
 		return status;
 	}
 
@@ -104,7 +104,7 @@ public class V4L2Module extends VidInputter<VidSourceConfigs> implements
 		 */
 		fia.frame_data = ImageManipulator.byteBGR2IntRGB(vframe.getBytes());
 
-		status = 1;
+		status = SourceStatus.STREAMING;
 		vframe.recycle();
 		/* } */
 	}
@@ -135,6 +135,21 @@ public class V4L2Module extends VidInputter<VidSourceConfigs> implements
 
 		vfg.stopCapture();
 		vdevice.releaseFrameGrabber();
+	}
+	
+	@Override
+	public void pauseStream() {
+		
+	}
+
+	@Override
+	public void resumeStream() {
+		// TODO Auto-generated method stub
+	}
+	
+	@Override
+	public SourceType getType() {
+		return SourceType.CAM;
 	}
 
 }
