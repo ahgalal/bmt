@@ -29,7 +29,10 @@ import filters.subtractionfilter.SubtractorFilter;
  * @author Creative
  */
 public class OpenFieldExperimentModuleGUI extends ExperimentModuleGUI {
-	private Button	btnSetBackground	= null;
+	private Button		btnSetBackground	= null;
+	private Composite	cmpstOptions;
+
+	private ExpandItem	xpndtmOptions;
 
 	public OpenFieldExperimentModuleGUI(final OpenFieldExperimentModule owner) {
 		super(owner);
@@ -50,8 +53,8 @@ public class OpenFieldExperimentModuleGUI extends ExperimentModuleGUI {
 	 * current cam. image at that instant.
 	 */
 	public void btnSetbgAction() {
-		if (PManager.getDefault().getState().getStream() == StreamState.STREAMING ||
-				PManager.getDefault().getState().getStream() == StreamState.PAUSED) {
+		if ((PManager.getDefault().getState().getStream() == StreamState.STREAMING)
+				|| (PManager.getDefault().getState().getStream() == StreamState.PAUSED)) {
 			PManager.getDefault().drw_zns
 					.setBackground(((OpenFieldExperimentModule) owner)
 							.updateRGBBackground());
@@ -67,6 +70,12 @@ public class OpenFieldExperimentModuleGUI extends ExperimentModuleGUI {
 					"Please start the camera first.", StatusSeverity.ERROR);
 	}
 
+	@Override
+	public void deInitialize() {
+		cmpstOptions.dispose();
+		xpndtmOptions.dispose();
+	}
+
 	/*
 	 * (non-Javadoc)
 	 * @see PluggedGUI#initialize(org.eclipse.swt.widgets.Shell,
@@ -76,11 +85,11 @@ public class OpenFieldExperimentModuleGUI extends ExperimentModuleGUI {
 	@Override
 	public void initialize(final Shell shell, final ExpandBar expandBar,
 			final Menu menuBar, final CoolBar coolBar, final Group grpGraphs) {
-		final ExpandItem xpndtmOptions = new ExpandItem(expandBar, SWT.NONE);
+		xpndtmOptions = new ExpandItem(expandBar, SWT.NONE);
 		xpndtmOptions.setExpanded(true);
 		xpndtmOptions.setText("Open Field");
 
-		final Composite cmpstOptions = new Composite(expandBar, SWT.NONE);
+		cmpstOptions = new Composite(expandBar, SWT.NONE);
 		xpndtmOptions.setControl(cmpstOptions);
 		btnSetBackground = new Button(cmpstOptions, SWT.NONE);
 		btnSetBackground.setBounds(new Rectangle(10, 10, 109, 25));
@@ -96,16 +105,21 @@ public class OpenFieldExperimentModuleGUI extends ExperimentModuleGUI {
 				SWT.DEFAULT, SWT.DEFAULT).y + 10);
 	}
 
+	@Override
+	public void stateGeneralChangeHandler(final ProgramState state) {
+		if (state.getGeneral() == GeneralState.TRACKING)
+			btnSetBackgroundEnable(false);
+	}
 
 	@Override
-	public void stateStreamChangeHandler(ProgramState state) {
+	public void stateStreamChangeHandler(final ProgramState state) {
 		switch (state.getStream()) {
 			case STREAMING:
-				if(state.getGeneral()!=GeneralState.TRACKING)
+				if (state.getGeneral() != GeneralState.TRACKING)
 					btnSetBackgroundEnable(true);
 				break;
 			case PAUSED:
-				if(state.getGeneral()!=GeneralState.TRACKING)
+				if (state.getGeneral() != GeneralState.TRACKING)
 					btnSetBackgroundEnable(true);
 				break;
 			case IDLE:
@@ -114,12 +128,6 @@ public class OpenFieldExperimentModuleGUI extends ExperimentModuleGUI {
 			default:
 				break;
 		}
-	}
-
-	@Override
-	public void stateGeneralChangeHandler(ProgramState state) {
-		if(state.getGeneral()==GeneralState.TRACKING)
-			btnSetBackgroundEnable(false);
 	}
 
 }

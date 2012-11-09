@@ -228,6 +228,11 @@ public class PManager {
 	}
 
 	public void addStateListener(final StateListener sListener) {
+		for(StateListener sl:arrStateListsners)
+			if(sl==sListener){
+				log.print("Tried to add State Listener "+sl+" more than once", this, StatusSeverity.WARNING);
+				return;
+			}
 		arrStateListsners.add(sListener);
 	}
 

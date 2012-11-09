@@ -21,6 +21,7 @@ import modules.experiment.ExperimentType;
 import org.eclipse.swt.widgets.Shell;
 
 import ui.PluggedGUI;
+import utils.PManager;
 import filters.Data;
 
 /**
@@ -28,6 +29,7 @@ import filters.Data;
  * 
  * @author Creative
  */
+@SuppressWarnings("rawtypes")
 public abstract class Module<GUIType extends PluggedGUI, ConfigsType extends ModuleConfigs, DataType extends ModuleData> // implements
 // StateListener
 {
@@ -66,6 +68,26 @@ public abstract class Module<GUIType extends PluggedGUI, ConfigsType extends Mod
 	
 	public void resume(){
 		// empty, overridden when needed
+	}
+	
+	/**
+	 * Unloads module from memory, including GUI controls.
+	 */
+	public void unload(){
+		// unload data
+		modules_data=null;
+		filters_data=null;
+		guiCargo=null;
+		fileCargo=null;
+		data=null;
+		configs=null;
+		
+		// unload GUI
+		if(gui!=null){
+			PManager.getDefault().removeStateListener(gui);
+			PManager.log.print("Unloading GUI: "+ gui.getClass(), this);
+			gui.deInitialize();
+		}
 	}
 
 	/**

@@ -39,13 +39,13 @@ import utils.PManager.ProgramState.GeneralState;
  * @author Creative
  */
 public class RearingModuleGUI extends PluggedGUI<RearingModule> {
-	private Button	btn_add_rearing	= null;
+	private Button		btn_add_rearing	= null;
 
-	private Button	btn_sub_rearing	= null;
+	private Button		btn_sub_rearing	= null;
 
-	public RearingModuleGUI(final RearingModule owner) {
-		super(owner);
-	}
+	private Composite	cmpstManualRearing;
+
+	private ExpandItem	xpndtmManualRearing;
 
 	/**
 	 * Initializes/shows the GUI components.
@@ -56,6 +56,10 @@ public class RearingModuleGUI extends PluggedGUI<RearingModule> {
 	/*
 	 * public RearingModuleGUI(final Composite parent) { }
 	 */
+
+	public RearingModuleGUI(final RearingModule owner) {
+		super(owner);
+	}
 
 	/**
 	 * Handles the "Add Rearing" button click action.
@@ -78,14 +82,19 @@ public class RearingModuleGUI extends PluggedGUI<RearingModule> {
 	}
 
 	@Override
+	public void deInitialize() {
+		cmpstManualRearing.dispose();
+		xpndtmManualRearing.dispose();
+	}
+
+	@Override
 	public void initialize(final Shell shell, final ExpandBar expandBar,
 			final Menu menuBar, final CoolBar coolBar, final Group grpGraphs) {
-		final ExpandItem xpndtmManualRearing = new ExpandItem(expandBar,
-				SWT.NONE);
+		xpndtmManualRearing = new ExpandItem(expandBar, SWT.NONE);
 		xpndtmManualRearing.setExpanded(true);
 		xpndtmManualRearing.setText("Manual Rearing");
 
-		final Composite cmpstManualRearing = new Composite(expandBar, SWT.NONE);
+		cmpstManualRearing = new Composite(expandBar, SWT.NONE);
 		xpndtmManualRearing.setControl(cmpstManualRearing);
 
 		btn_sub_rearing = new Button(cmpstManualRearing, SWT.NONE);
@@ -117,12 +126,7 @@ public class RearingModuleGUI extends PluggedGUI<RearingModule> {
 	}
 
 	@Override
-	public void stateStreamChangeHandler(ProgramState state) {
-		
-	}
-
-	@Override
-	public void stateGeneralChangeHandler(ProgramState state) {
+	public void stateGeneralChangeHandler(final ProgramState state) {
 		switch (state.getGeneral()) {
 			case IDLE:
 				btn_add_rearing.setEnabled(false);
@@ -136,6 +140,11 @@ public class RearingModuleGUI extends PluggedGUI<RearingModule> {
 				btn_add_rearing.setEnabled(false);
 				btn_sub_rearing.setEnabled(false);
 				break;
-		}		
+		}
+	}
+
+	@Override
+	public void stateStreamChangeHandler(final ProgramState state) {
+
 	}
 }

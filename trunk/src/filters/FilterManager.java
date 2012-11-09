@@ -326,8 +326,6 @@ public class FilterManager {
 				Details.VERBOSE);
 		PManager.log.print("loading filters' GUI..", this, Details.VERBOSE);
 		PManager.main_gui.loadPluggedGUI(getFiltersGUI());
-		for (final PluggedGUI fgui : getFiltersGUI())
-			PManager.getDefault().addStateListener(fgui);
 
 		return validateFiltersConfigurations();
 	}
@@ -387,6 +385,20 @@ public class FilterManager {
 				return false;
 			}
 		return true;
+	}
+
+	/**
+	 * Unloads all filters.
+	 */
+	public void deInitialize() {
+		// unregister filters' PluggedGUI from listening to state changes
+		// and unload GUI
+		for(PluggedGUI pgui:getFiltersGUI()){
+			PManager.getDefault().removeStateListener(pgui);
+			pgui.deInitialize();
+		}
+		
+		// TODO: ??
 	}
 
 }

@@ -276,11 +276,11 @@ public class MainGUI extends BaseUI {
 	private void createExpandBar() {
 		final Group grpOptions = new Group(sShell, SWT.NONE);
 		grpOptions.setText("Controls");
-		grpOptions.setBounds(985, 5, 159, 563);
+		grpOptions.setBounds(985, 5, 159, 671);
 
 		expandBar = new ExpandBar(grpOptions, SWT.NONE);
 		expandBar.setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_WIDGET_BACKGROUND));
-		expandBar.setBounds(10, 21, 139, 532);
+		expandBar.setBounds(10, 21, 139, 629);
 
 		// ////////////////////////////////////////////
 		// Stream Controls

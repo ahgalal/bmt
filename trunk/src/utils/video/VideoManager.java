@@ -238,6 +238,9 @@ public class VideoManager {
 	}
 
 	public void initializeFilters(final ExperimentType expType) {
+		// unload old filter manager if exists
+		if(filter_mgr!=null)
+			filter_mgr.deInitialize();
 		filter_mgr = new FilterManager(commonConfigs, ref_fia, expType);
 	}
 

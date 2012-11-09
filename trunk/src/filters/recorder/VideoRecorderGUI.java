@@ -41,15 +41,30 @@ import utils.PManager.ProgramState;
  */
 public class VideoRecorderGUI extends PluggedGUI<VideoRecorder> {
 
-	private Button	btnStartRecordingCBar;
+	private Button		btnStartRecordingCBar;
 
-	private Button	btnStartRecordingEBar	= null;
-	private Button	btnStopRecordingCBar;
-	private Button	btnStopRecordingEBar	= null;
-	private boolean	isRecording				= false;
+	private Button		btnStartRecordingEBar	= null;
+	private Button		btnStopRecordingCBar;
+	private Button		btnStopRecordingEBar	= null;
+	private CoolItem	cItemRecording;
+
+	private Composite	cmpstRecordingCBar;
+	private Composite	cmpstRecordingEBar;
+
+	private boolean		isRecording				= false;
+
+	private ExpandItem	xpndtmRecorder;
 
 	public VideoRecorderGUI(final VideoRecorder owner) {
 		super(owner);
+	}
+
+	@Override
+	public void deInitialize() {
+		cmpstRecordingCBar.dispose();
+		cmpstRecordingEBar.dispose();
+		xpndtmRecorder.dispose();
+		cItemRecording.dispose();
 	}
 
 	/**
@@ -69,11 +84,11 @@ public class VideoRecorderGUI extends PluggedGUI<VideoRecorder> {
 		// //////////////////////////
 		// ExpandBar Stuff
 		// //////////////////////////
-		final ExpandItem xpndtmRecorder = new ExpandItem(expandBar, SWT.NONE);
+		xpndtmRecorder = new ExpandItem(expandBar, SWT.NONE);
 		xpndtmRecorder.setExpanded(true);
 		xpndtmRecorder.setText("Recording");
 
-		final Composite cmpstRecordingEBar = new Composite(expandBar, SWT.NONE);
+		cmpstRecordingEBar = new Composite(expandBar, SWT.NONE);
 		xpndtmRecorder.setControl(cmpstRecordingEBar);
 
 		btnStartRecordingEBar = new Button(cmpstRecordingEBar, SWT.NONE);
@@ -81,40 +96,40 @@ public class VideoRecorderGUI extends PluggedGUI<VideoRecorder> {
 		btnStartRecordingEBar.setSize(new Point(100, 25));
 		btnStartRecordingEBar.setLocation(new Point(10, 10));
 		btnStartRecordingEBar
-		.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
-			/**
-			 * Starts video recording.
-			 */
-			@Override
-			public void widgetSelected(
-					final org.eclipse.swt.events.SelectionEvent e) {
-				startRecordAction();
-			}
-		});
+				.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
+					/**
+					 * Starts video recording.
+					 */
+					@Override
+					public void widgetSelected(
+							final org.eclipse.swt.events.SelectionEvent e) {
+						startRecordAction();
+					}
+				});
 		btnStopRecordingEBar = new Button(cmpstRecordingEBar, SWT.NONE);
 		btnStopRecordingEBar.setText("Stop Recording");
 		btnStopRecordingEBar.setSize(new Point(100, 25));
 		btnStopRecordingEBar.setLocation(new Point(10, 35));
 		btnStopRecordingEBar
-		.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
-			/**
-			 * Stops video recording, and asks for a location to save
-			 * the video file.
-			 */
-			@Override
-			public void widgetSelected(
-					final org.eclipse.swt.events.SelectionEvent e) {
-				stopRecordAction();
-			}
-		});
+				.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
+					/**
+					 * Stops video recording, and asks for a location to save
+					 * the video file.
+					 */
+					@Override
+					public void widgetSelected(
+							final org.eclipse.swt.events.SelectionEvent e) {
+						stopRecordAction();
+					}
+				});
 		xpndtmRecorder.setHeight(xpndtmRecorder.getControl().computeSize(
 				SWT.DEFAULT, SWT.DEFAULT).y + 10);
 
 		// //////////////////////////
 		// CoolBar Stuff
 		// //////////////////////////
-		final CoolItem cItemRecording = new CoolItem(coolBar, SWT.NONE);
-		final Composite cmpstRecordingCBar = new Composite(coolBar, SWT.NONE);
+		cItemRecording = new CoolItem(coolBar, SWT.NONE);
+		cmpstRecordingCBar = new Composite(coolBar, SWT.NONE);
 		cItemRecording.setControl(cmpstRecordingCBar);
 		cmpstRecordingCBar.setLayout(new FillLayout(SWT.HORIZONTAL));
 
@@ -143,49 +158,13 @@ public class VideoRecorderGUI extends PluggedGUI<VideoRecorder> {
 	 */
 	private void startRecordAction() {
 		isRecording = true;
-		//inTrackingState();
+		// inTrackingState();
 		PManager.getDefault().getVideoManager().getFilterManager()
-		.enableFilter("Recorder", true);
-	}
-
-	/**
-	 * Stops recording frames, and saves the video file.
-	 */
-	private void stopRecordAction() {
-		if (isRecording == true) {
-			isRecording = false;
-			//inTrackingState();
-			PManager.getDefault().getVideoManager().getFilterManager()
-			.enableFilter("Recorder", false);
-			final FileDialog fileDialog = new FileDialog(shell, SWT.SAVE);
-			final String file_name = fileDialog.open();
-			if(file_name!=null)
-				((VideoRecorder) PManager.getDefault().getVideoManager()
-						.getFilterManager().getFilterByName("Recorder"))
-						.saveVideoFile(file_name);
-		}
-
+				.enableFilter("Recorder", true);
 	}
 
 	@Override
-	public void stateStreamChangeHandler(ProgramState state) {
-		switch (state.getStream()) {
-			case IDLE:
-				btnStartRecordingEBar.setEnabled(false);
-				btnStopRecordingEBar.setEnabled(false);
-
-				btnStartRecordingCBar.setEnabled(false);
-				btnStopRecordingCBar.setEnabled(false);
-				break;
-
-			default:
-				break;
-		}
-		
-	}
-
-	@Override
-	public void stateGeneralChangeHandler(ProgramState state) {
+	public void stateGeneralChangeHandler(final ProgramState state) {
 		switch (state.getGeneral()) {
 			case IDLE:
 				btnStartRecordingEBar.setEnabled(false);
@@ -217,5 +196,41 @@ public class VideoRecorderGUI extends PluggedGUI<VideoRecorder> {
 			default:
 				break;
 		}
+	}
+
+	@Override
+	public void stateStreamChangeHandler(final ProgramState state) {
+		switch (state.getStream()) {
+			case IDLE:
+				btnStartRecordingEBar.setEnabled(false);
+				btnStopRecordingEBar.setEnabled(false);
+
+				btnStartRecordingCBar.setEnabled(false);
+				btnStopRecordingCBar.setEnabled(false);
+				break;
+
+			default:
+				break;
+		}
+
+	}
+
+	/**
+	 * Stops recording frames, and saves the video file.
+	 */
+	private void stopRecordAction() {
+		if (isRecording == true) {
+			isRecording = false;
+			// inTrackingState();
+			PManager.getDefault().getVideoManager().getFilterManager()
+					.enableFilter("Recorder", false);
+			final FileDialog fileDialog = new FileDialog(shell, SWT.SAVE);
+			final String file_name = fileDialog.open();
+			if (file_name != null)
+				((VideoRecorder) PManager.getDefault().getVideoManager()
+						.getFilterManager().getFilterByName("Recorder"))
+						.saveVideoFile(file_name);
+		}
+
 	}
 }

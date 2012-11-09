@@ -26,6 +26,11 @@ public class MovementMeterModuleGUI extends PluggedGUI<MovementMeterModule> {
 	}
 
 	@Override
+	public void deInitialize() {
+		cmpstPlotter.dispose();
+	}
+
+	@Override
 	public void initialize(final Shell shell, final ExpandBar expandBar,
 			final Menu menuBar, final CoolBar coolBar, final Group grpGraphs) {
 		cmpstPlotter = new Composite(grpGraphs, SWT.NONE);
@@ -36,15 +41,15 @@ public class MovementMeterModuleGUI extends PluggedGUI<MovementMeterModule> {
 	}
 
 	@Override
-	public void stateStreamChangeHandler(ProgramState state) {
+	public void stateGeneralChangeHandler(final ProgramState state) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
-	public void stateGeneralChangeHandler(ProgramState state) {
+	public void stateStreamChangeHandler(final ProgramState state) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 }

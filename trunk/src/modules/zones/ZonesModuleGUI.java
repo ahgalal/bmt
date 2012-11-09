@@ -45,7 +45,7 @@ public class ZonesModuleGUI extends PluggedGUI<ZonesModule> {
 	public ZonesModuleGUI(final ZonesModule owner) {
 		super(owner);
 	}
-
+	private MenuItem mnutm_edit_openzoneeditor;
 	@Override
 	public void initialize(final Shell shell, final ExpandBar expandBar,
 			final Menu menuBar, final CoolBar coolBar, final Group grpGraphs) {
@@ -53,7 +53,7 @@ public class ZonesModuleGUI extends PluggedGUI<ZonesModule> {
 		for (final MenuItem miOut : menuBar.getItems())
 			if (miOut.getText().equals("Edit"))
 				mnu_edit = miOut.getMenu();
-		final MenuItem mnutm_edit_openzoneeditor = new MenuItem(mnu_edit,
+		mnutm_edit_openzoneeditor = new MenuItem(mnu_edit,
 				SWT.PUSH);
 		mnutm_edit_openzoneeditor.setText("Zone Editor ..");
 		mnutm_edit_openzoneeditor
@@ -88,5 +88,10 @@ public class ZonesModuleGUI extends PluggedGUI<ZonesModule> {
 	public void stateGeneralChangeHandler(ProgramState state) {
 		// TODO Auto-generated method stub
 		
+	}
+
+	@Override
+	public void deInitialize() {
+		mnutm_edit_openzoneeditor.dispose();		
 	}
 }

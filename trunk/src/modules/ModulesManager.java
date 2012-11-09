@@ -488,6 +488,14 @@ public class ModulesManager {
 	}
 
 	public void setupModules(final Experiment exp) {
+		// unload old modules
+		for(Module m:modules)
+			m.unload();
+		
+		// remove old modules
+		modules.clear();
+		modules_data.clear();
+		
 		// ////////////////////////////////
 		// Experiment Module
 		final ExperimentModule expModule = ExperimentManager.getDefault()
