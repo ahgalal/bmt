@@ -20,6 +20,7 @@ import modules.ModuleConfigs;
 import modules.ModuleData;
 import modules.experiment.Constants;
 import modules.experiment.ExperimentType;
+import modules.experiment.forcedswimming.ForcedSwimmingExperimentModule;
 
 import org.eclipse.swt.widgets.Shell;
 
@@ -100,14 +101,15 @@ Module<PluggedGUI, SessionModuleConfigs, SessionModuleData> {
 		PManager.log.print("initializing..", this, Details.VERBOSE);
 		data.session_start_time = 0;
 		data.session_end_time = 0;
-
+		data.accumulatedSessionTime=0;
+		
 		guiCargo = new Cargo(new String[] { Constants.GUI_SESSION_TIME });
 
 		fileCargo = new Cargo(expParams);
 
 		for(String param:expParams)
 			data.addParameter(param);
-		expType = new ExperimentType[] { ExperimentType.OPEN_FIELD };
+		expType = new ExperimentType[] { ExperimentType.OPEN_FIELD,ExperimentType.FORCED_SWIMMING };
 		// data.expType=expType;
 	}
 

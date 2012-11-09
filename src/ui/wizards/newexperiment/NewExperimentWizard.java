@@ -32,7 +32,13 @@ public class NewExperimentWizard extends Wizard {
 		final ImageDescriptor defaultPageImage = new ImageDescriptor() {
 			@Override
 			public ImageData getImageData() {
-				return new ImageData("images/wizards/sa_samplecube48.gif");
+				ImageData img;
+				try{
+					img=new ImageData("images/wizards/sa_samplecube48.gif");
+				}catch(Exception e){
+					img=new ImageData(this.getClass().getClassLoader().getResourceAsStream("images/wizards/sa_samplecube48.gif"));
+				}
+				return img;
 			}
 		};
 		setDefaultPageImageDescriptor(defaultPageImage);

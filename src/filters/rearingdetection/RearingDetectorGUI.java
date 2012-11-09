@@ -39,9 +39,13 @@ import utils.StatusManager.StatusSeverity;
  */
 
 public class RearingDetectorGUI extends PluggedGUI<RearingDetector> {
-	private Button	btn_not_rearing	= null;
+	private Button		btn_not_rearing	= null;
 
-	private Button	btn_rearing_now	= null;
+	private Button		btn_rearing_now	= null;
+
+	private Composite	cmpstRearing;
+
+	private ExpandItem	xpndtmRearing;
 
 	public RearingDetectorGUI(final RearingDetector owner) {
 		super(owner);
@@ -68,13 +72,19 @@ public class RearingDetectorGUI extends PluggedGUI<RearingDetector> {
 	}
 
 	@Override
+	public void deInitialize() {
+		cmpstRearing.dispose();
+		xpndtmRearing.dispose();
+	}
+
+	@Override
 	public void initialize(final Shell shell, final ExpandBar expandBar,
 			final Menu menuBar, final CoolBar coolBar, final Group grpGraphs) {
-		final ExpandItem xpndtmRearing = new ExpandItem(expandBar, SWT.NONE);
+		xpndtmRearing = new ExpandItem(expandBar, SWT.NONE);
 		xpndtmRearing.setExpanded(true);
 		xpndtmRearing.setText("Rearing Detector");
 
-		final Composite cmpstRearing = new Composite(expandBar, SWT.NONE);
+		cmpstRearing = new Composite(expandBar, SWT.NONE);
 		xpndtmRearing.setControl(cmpstRearing);
 
 		btn_rearing_now = new Button(cmpstRearing, SWT.NONE);

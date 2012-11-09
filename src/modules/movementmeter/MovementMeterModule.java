@@ -62,8 +62,8 @@ public class MovementMeterModule extends
 			expParams[i] = "eLevel_" + i;
 		fileCargo = new Cargo(expParams);
 
-		for(String param:expParams)
-		data.addParameter(param);
+		for (final String param : expParams)
+			data.addParameter(param);
 
 		expType = new ExperimentType[] { ExperimentType.FORCED_SWIMMING };
 	}
@@ -71,16 +71,16 @@ public class MovementMeterModule extends
 	@Override
 	public void process() {
 		int newVal = movementMeterFilterData.getWhiteSummation();
-		if(energyData.size()>40){
-			int oldVal1 = energyData.get(energyData.size()-10);
-			int oldVal2 = energyData.get(energyData.size()-20);
-			int oldVal3 = energyData.get(energyData.size()-30);
-			if(Math.abs(newVal - oldVal2) > 1000000)
+		if (energyData.size() > 40) {
+			final int oldVal1 = energyData.get(energyData.size() - 10);
+			final int oldVal2 = energyData.get(energyData.size() - 20);
+			final int oldVal3 = energyData.get(energyData.size() - 30);
+			if (Math.abs(newVal - oldVal2) > 1000000)
 				newVal = oldVal2;
 			else
-				newVal = (movementMeterFilterData.getWhiteSummation()+oldVal1+oldVal2)/3;
+				newVal = (movementMeterFilterData.getWhiteSummation() + oldVal1 + oldVal2) / 3;
 		}
-			
+
 		energyData.add(newVal);
 	}
 
@@ -107,15 +107,15 @@ public class MovementMeterModule extends
 				max = i;
 			else if (i < min)
 				min = i;
-		
-		System.out.println("Sectors: min: " + min + " max: "+ max);
+
+		System.out.println("Sectors: min: " + min + " max: " + max);
 
 		final int[] levels = new int[noEnergyLevels];
 		final int levelHeight = (max - min) / noEnergyLevels;
 
-		for (int k = 0; k < noEnergyLevels; k++){
+		for (int k = 0; k < noEnergyLevels; k++) {
 			levels[k] = levelHeight * k;
-			System.out.println("Level-"+k + " has min value: " + levels[k]);
+			System.out.println("Level-" + k + " has min value: " + levels[k]);
 		}
 
 		for (final int i : energyData)
@@ -124,8 +124,8 @@ public class MovementMeterModule extends
 					sectorsData[j - 1]++;
 
 		System.out.println("[[[Sectors data:]]]");
-		for (int i=0;i<sectorsData.length;i++)
-			System.out.println("Level-"+i+ " " + sectorsData[i]);
+		for (int i = 0; i < sectorsData.length; i++)
+			System.out.println("Level-" + i + " " + sectorsData[i]);
 
 	}
 
@@ -153,10 +153,11 @@ public class MovementMeterModule extends
 
 	@Override
 	public void updateGUICargoData() {
-		int newData = energyData.get(energyData.size()-1);
-		guiCargo.setDataByIndex(0,
-				"" + newData/*movementMeterFilterData.getWhiteSummation()*/);
-		gui.addPoint(time++, newData/*movementMeterFilterData.getWhiteSummation()*/ / 2000);
+		if (energyData.size() > 0) {
+			final int newData = energyData.get(energyData.size() - 1);
+			guiCargo.setDataByIndex(0, "" + newData);
+			gui.addPoint(time++, newData/ 2000);
+		}
 	}
 
 }

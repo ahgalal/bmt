@@ -12,10 +12,15 @@
             Build and Release the BMT project
     </description>
 
+	<property environment="env"/>
 	<property name="bmt_version" value="0.35"/>
 	<property name="libs_version" value="0.35"/>
 	<property name="bin_libs_version" value="0.35"/>
-	<property name="jarfile" value="../output/release/BMT_v${bmt_version}.jar" />
+	<property name="jarfile.name" value="BMT_v${bmt_version}.jar"/>
+	<property name="exefile.name" value="BMT_v${bmt_version}.exe"/>
+
+	<property name="jarfile" value="../output/release/${jarfile.name}" />
+	<property name="exefile" value="../output/release/${exefile.name}" />
 	<property name="jmf_libs" value="'C:/Program Files/JMF2.1.1e/lib/custom.jar' 'C:/Program Files/JMF2.1.1e/lib/jmf.jar' 'C:/Program Files/JMF2.1.1e/lib/mediaplayer.jar' 'C:/Program Files/JMF2.1.1e/lib/multiplayer.jar' 'C:/Program Files/JMF2.1.1e/lib/sound.jar'" />
 	<condition property="jmf_home_lib" value="C:/Program Files/JMF2.1.1e/lib" else="">
 		<os family="windows" />
@@ -25,6 +30,8 @@
 	<property name="release_dir" value="../output/release" />
 	<property name="uploads_dir" value="../output/uploads" />
 	<property name="libs_dir" value="${release_dir}/libs" />
+	<property name="launch4j.dir" value="${env.tools}/launch4j-3.0.2-win32/launch4j"/>
+
 
 
 
@@ -121,9 +128,36 @@
 				<attribute name="Class-Path" value=". ${jar.classpath}" />
 			</manifest>
 			<fileset dir="../bin" />
+			<fileset dir="../" includes="images/**" />
 		</jar>
 
 		<copy file="${jarfile}" todir="${uploads_dir}"/>
+	</target>
+
+
+	<!-- - - - - - - - - - - - - - - - - - 
+          target: build_exe                      
+         - - - - - - - - - - - - - - - - - -->
+	<target name="build_exe">
+		<delete file="${exefile}" />
+
+		<copy todir=".">
+			<fileset dir="buildexe">
+				<filename name="config_template.xml" />
+			</fileset>
+			<filterset>
+				<filter token="JAR_FILE" value="${jarfile.name}" />
+				<filter token="OUTPUT_FILE" value="${exefile}" />
+			</filterset>
+		</copy>
+		<move tofile="exe_config.xml" file="config_template.xml" />
+		
+		<taskdef name="launch4j" classname="net.sf.launch4j.ant.Launch4jTask" classpath="${launch4j.dir}/launch4j.jar
+			    :${launch4j.dir}/lib/xstream.jar" />
+		
+		<launch4j configFile="exe_config.xml" />
+		<delete file="exe_config.xml"/>
+
 	</target>
 
 	<!-- - - - - - - - - - - - - - - - - - 
