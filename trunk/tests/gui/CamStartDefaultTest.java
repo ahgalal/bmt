@@ -2,9 +2,10 @@ package gui;
 
 import org.junit.Test;
 
+import filters.Link;
+
 import sys.GUITest;
 import utils.PManager;
-import utils.video.filters.Link;
 
 public class CamStartDefaultTest extends GUITest {
 	@Override

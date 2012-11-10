@@ -1,8 +1,8 @@
 package gui;
 
+import filters.Link;
 import sys.GUITest;
 import utils.PManager;
-import utils.video.filters.Link;
 
 public class VideoFileTest extends GUITest {
 

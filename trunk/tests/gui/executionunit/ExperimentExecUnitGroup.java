@@ -1,6 +1,12 @@
 package gui.executionunit;
 
+import java.util.ArrayList;
+
+import modules.ExperimentManager;
+import modules.experiment.Experiment;
+import modules.experiment.ExperimentType;
 import utils.DialogBoxUtils;
+import utils.ReflectUtils;
 
 import com.windowtester.runtime.IUIContext;
 import com.windowtester.runtime.WidgetSearchException;
@@ -8,6 +14,7 @@ import com.windowtester.runtime.locator.XYLocator;
 import com.windowtester.runtime.swt.condition.shell.ShellDisposedCondition;
 import com.windowtester.runtime.swt.condition.shell.ShellShowingCondition;
 import com.windowtester.runtime.swt.locator.ButtonLocator;
+import com.windowtester.runtime.swt.locator.ComboItemLocator;
 import com.windowtester.runtime.swt.locator.LabeledTextLocator;
 import com.windowtester.runtime.swt.locator.MenuItemLocator;
 import com.windowtester.runtime.swt.locator.ShellLocator;
@@ -23,19 +30,24 @@ public class ExperimentExecUnitGroup extends ExecutionUnitGroup {
 	public ExperimentExecUnitGroup(final IUIContext ui) {
 		super(ui);
 	}
+	
 
 	/**
 	 * Creates a new Experiment and saved it to file.
 	 * 
 	 * @throws WidgetSearchException
 	 */
-	public void createNewExperiment() throws WidgetSearchException {
+	public static void createNewExperiment(ExperimentType expType) throws WidgetSearchException {
 		ui.click(new MenuItemLocator("Experiment/New Exp.."));
 		ui.wait(new ShellShowingCondition("Experiment information"));
 		ui.click(new LabeledTextLocator("Name:"));
 		ui.enterText("TestExperiment");
 		ui.click(new LabeledTextLocator("User:"));
 		ui.enterText("AGalal");
+		if(expType==ExperimentType.OPEN_FIELD)
+			ui.click(new ComboItemLocator("Open Field"));
+		else if(expType==ExperimentType.FORCED_SWIMMING)
+			ui.click(new ComboItemLocator("Forced Swimming"));
 		ui.click(new LabeledTextLocator("Additional Notes:"));
 		ui.enterText("This Note is for the Experiment.");
 		ui.click(new ButtonLocator("&Next >"));
@@ -53,6 +65,59 @@ public class ExperimentExecUnitGroup extends ExecutionUnitGroup {
 		ui.click(new ButtonLocator("&Finish"));
 		DialogBoxUtils.fillDialog("TestExp.bmt",ui);
 		ui.wait(new ShellDisposedCondition("Experiment information"));
+		// get the stored experiment object using reflection
+		Experiment saved = Reflections.getLoadedExperiment();
+		
+		// load the experiment saved in the file
+		Experiment loadedFromFile = ExperimentManager.readExperimentFromFile(saved.fileName);
+		
+		// compare the two experiments
+		assert(compareExperiments(saved, loadedFromFile)):"Experiments do not match!";
+	}
+	
+	public static boolean equalsOneOf(Object obj,Object[] arr){
+		for(Object o:arr)
+			if(o.equals(obj))
+				return true;
+		return false;
+	}
+	public static boolean equalsOneOf(Object obj,ArrayList<Object> arr){
+		for(Object o:arr)
+			if(o.equals(obj))
+				return true;
+		return false;
+	}
+	
+	public static boolean compareExperiments(Experiment exp1,Experiment exp2){
+		if(exp1.type!=exp2.type)
+			return false;
+		if(exp1.getDate().equals(exp2.getDate())==false)
+			return false;
+		if(exp1.getExpParametersList().length!=exp2.getExpParametersList().length)
+			return false;
+		for(String str1:exp1.getExpParametersList())
+			if(equalsOneOf(str1, exp2.getExpParametersList())==false)
+				return false;
+		
+		// TODO: check actual group data, not just number of groups
+		if(exp1.getGroups().size()!=exp2.getGroups().size())
+			return false;
+		if(exp1.getName().equals(exp2.getName())==false)
+			return false;
+		if(exp1.getNotes().equals(exp2.getNotes())==false)
+			return false;
+		if(exp1.getUser().equals(exp2.getUser())==false)
+			return false;
+		
+		return true;
+	}
+	
+	public static class Reflections{
+		public static Experiment getLoadedExperiment(){
+			Experiment exp=null;
+			exp=(Experiment) ReflectUtils.getField(ExperimentManager.getDefault(), "exp");
+			return exp;
+		}
 	}
 
 	/**
@@ -60,7 +125,7 @@ public class ExperimentExecUnitGroup extends ExecutionUnitGroup {
 	 * 
 	 * @throws Exception
 	 */
-	public void editExperiment() throws Exception {
+	public static void editExperiment() throws Exception {
 		ui.click(new MenuItemLocator("Experiment/Edit Exp."));
 		ui.wait(new ShellShowingCondition("Experiment information"));
 		ui.click(new XYLocator(new LabeledTextLocator("Name:"), 44, 8));
@@ -97,7 +162,7 @@ public class ExperimentExecUnitGroup extends ExecutionUnitGroup {
 	 * @param filePath
 	 * @throws Exception
 	 */
-	public void loadExperiment(final String filePath) throws Exception {
+	public static void loadExperiment(final String filePath) throws Exception {
 		String file;
 		if ((filePath != null) && (filePath != ""))
 			file = filePath;
@@ -110,7 +175,7 @@ public class ExperimentExecUnitGroup extends ExecutionUnitGroup {
 		DialogBoxUtils.fillDialog(file,ui);
 	}
 	
-	public void exportToExcel(String filePath) throws WidgetSearchException{
+	public static void exportToExcel(String filePath) throws WidgetSearchException{
 		String file;
 		if ((filePath != null) && (filePath != ""))
 			file = filePath;
