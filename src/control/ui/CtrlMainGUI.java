@@ -259,10 +259,9 @@ public class CtrlMainGUI extends ControllerUI<MainGUI> implements StateListener 
 		if (file_name != null) {
 			PManager.main_gui.clearForm();
 			ExperimentManager.getDefault().unloadExperiment();
-			ExperimentManager.getDefault().loadInfoFromTXTFile(file_name);
-			ExperimentManager.getDefault().setExpFileName(file_name);
+			ExperimentManager.getDefault().loadExperiment(ExperimentManager.readExperimentFromFile(file_name));
 			PManager.getDefault().statusMgr.setStatus(
-					"Experiment Loaded Successfully!", StatusSeverity.WARNING);
+					"Experiment is Loaded Successfully!", StatusSeverity.WARNING);
 		}
 	}
 

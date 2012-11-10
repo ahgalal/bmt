@@ -47,7 +47,6 @@ public class CtrlNewExperimentWizard {
 				}
 
 				ExperimentManager.getDefault().saveExperimentToFile(file_name);
-				ExperimentManager.getDefault().setExpFileName(file_name);
 			}
 
 		} catch (final NumberFormatException e1) {

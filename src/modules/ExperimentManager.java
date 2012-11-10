@@ -140,12 +140,14 @@ public class ExperimentManager {
 	 * @param file_name
 	 *            file name to load the experiment from
 	 */
-	public void loadInfoFromTXTFile(final String file_name) {
+	public static Experiment readExperimentFromFile(final String file_name) {
 		ObjectInputStream ois;
+		Experiment exp = null;
 		try {
 			ois = new ObjectInputStream(
 					new FileInputStream(new File(file_name)));
 			exp = (Experiment) ois.readObject();
+			exp.fileName=file_name;
 		} catch (final FileNotFoundException e) {
 			e.printStackTrace();
 		} catch (final IOException e) {
@@ -154,14 +156,13 @@ public class ExperimentManager {
 			e.printStackTrace();
 			System.err.println("incompatible experiment file!");
 		}
-
-		/*
-		 * exp = new Experiment(); if
-		 * (ExperimentManager.getDefault().text_engine.readExpInfoFromTXTFile(
-		 * file_name, exp))
-		 */
-		if (exp != null) {
+		return exp;
+	}
+	
+	public void loadExperiment(Experiment experiment){
+		if (experiment != null) {
 			exp_is_set = true;
+			this.exp=experiment;
 			ModulesManager.getDefault().setupModulesAndFilters(exp);
 			setExperimantLoadedInGUI(true);
 		}
@@ -178,6 +179,7 @@ public class ExperimentManager {
 			final ObjectOutputStream oos = new ObjectOutputStream(
 					new FileOutputStream(new File(FilePath)));
 			oos.writeObject(exp);
+			exp.fileName=FilePath;
 			oos.close();
 		} catch (final FileNotFoundException e) {
 			e.printStackTrace();
@@ -283,16 +285,6 @@ public class ExperimentManager {
 
 	public void setExperimantLoadedInGUI(final boolean b) {
 		PManager.main_gui.setExperimantLoaded(b);
-	}
-
-	/**
-	 * Sets the file name to save the experiment to.
-	 * 
-	 * @param f_name
-	 *            file name to save the experiment to
-	 */
-	public void setExpFileName(final String f_name) {
-		exp.fileName = f_name;
 	}
 
 	/**
