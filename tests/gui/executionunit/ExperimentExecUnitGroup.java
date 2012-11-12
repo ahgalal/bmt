@@ -1,7 +1,5 @@
 package gui.executionunit;
 
-import java.util.ArrayList;
-
 import modules.ExperimentManager;
 import modules.experiment.Experiment;
 import modules.experiment.ExperimentType;
@@ -65,67 +63,14 @@ public class ExperimentExecUnitGroup extends ExecutionUnitGroup {
 		ui.click(new ButtonLocator("&Finish"));
 		DialogBoxUtils.fillDialog("TestExp.bmt",ui);
 		ui.wait(new ShellDisposedCondition("Experiment information"));
-		// get the stored experiment object using reflection
-		Experiment saved = Reflections.getLoadedExperiment();
-		
-		// load the experiment saved in the file
-		Experiment loadedFromFile = ExperimentManager.readExperimentFromFile(saved.fileName);
-		
-		// compare the two experiments
-		assert(compareExperiments(saved, loadedFromFile)):"Experiments do not match!";
 	}
 	
-	public static boolean equalsOneOf(Object obj,Object[] arr){
-		for(Object o:arr)
-			if(o.equals(obj))
-				return true;
-		return false;
-	}
-	public static boolean equalsOneOf(Object obj,ArrayList<Object> arr){
-		for(Object o:arr)
-			if(o.equals(obj))
-				return true;
-		return false;
-	}
-	
-	public static boolean compareExperiments(Experiment exp1,Experiment exp2){
-		if(exp1.type!=exp2.type)
-			return false;
-		if(exp1.getDate().equals(exp2.getDate())==false)
-			return false;
-		if(exp1.getExpParametersList().length!=exp2.getExpParametersList().length)
-			return false;
-		for(String str1:exp1.getExpParametersList())
-			if(equalsOneOf(str1, exp2.getExpParametersList())==false)
-				return false;
-		
-		// TODO: check actual group data, not just number of groups
-		if(exp1.getGroups().size()!=exp2.getGroups().size())
-			return false;
-		if(exp1.getName().equals(exp2.getName())==false)
-			return false;
-		if(exp1.getNotes().equals(exp2.getNotes())==false)
-			return false;
-		if(exp1.getUser().equals(exp2.getUser())==false)
-			return false;
-		
-		return true;
-	}
-	
-	public static class Reflections{
-		public static Experiment getLoadedExperiment(){
-			Experiment exp=null;
-			exp=(Experiment) ReflectUtils.getField(ExperimentManager.getDefault(), "exp");
-			return exp;
-		}
-	}
-
 	/**
 	 * Changes values for basic info, and deletes a group and adds a new group.
 	 * 
 	 * @throws Exception
 	 */
-	public static void editExperiment() throws Exception {
+	public static void editExperiment(String saveFile) throws Exception {
 		ui.click(new MenuItemLocator("Experiment/Edit Exp."));
 		ui.wait(new ShellShowingCondition("Experiment information"));
 		ui.click(new XYLocator(new LabeledTextLocator("Name:"), 44, 8));
@@ -151,10 +96,10 @@ public class ExperimentExecUnitGroup extends ExecutionUnitGroup {
 		ui.click(new ButtonLocator("-"));
 		ui.click(new TabItemLocator("G_new"));
 		ui.click(new ButtonLocator("&Finish"));
-		DialogBoxUtils.fillDialog("TestExp_editted.bmt", ui);
+		DialogBoxUtils.fillDialog(saveFile, ui);
 		ui.wait(new ShellDisposedCondition("Experiment information"));
 	}
-
+	
 	/**
 	 * Loads experiment using the input filePath. if filePath is Null default
 	 * file is used.
@@ -167,7 +112,7 @@ public class ExperimentExecUnitGroup extends ExecutionUnitGroup {
 		if ((filePath != null) && (filePath != ""))
 			file = filePath;
 		else
-			file = "E:\\Documents\\eclipse\\Java\\BMT\\BMT\\ants\\test\\resources\\testExp.bmt";
+			throw new RuntimeException(filePath + " is not found!");
 		
 		ui.click(new XYLocator(new ShellLocator("Behavioral Monitoring Tool"),
 				127, 1));
