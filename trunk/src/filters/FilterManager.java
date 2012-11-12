@@ -260,7 +260,7 @@ public class FilterManager {
 
 		if (isWithinArray("RatFinder", filtersNames))
 			if (isWithinArray("SubtractionFilter", filtersNames)) {
-				rat_finder = new RatFinder("RatFinder", grey_link, marker_link);
+				rat_finder = new RatFinder("RatFinder", /*grey_link*/avg_link, marker_link);
 				/*
 				 * rat_finder = new RatFinder2( "RatFinder", grey_link,
 				 * marker_link);

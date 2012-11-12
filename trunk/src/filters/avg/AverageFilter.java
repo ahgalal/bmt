@@ -13,8 +13,8 @@ import filters.VideoFilter;
  */
 public class AverageFilter extends VideoFilter {
 
-	private final int	maskHeight	= 3;
-	private final int	maskWidth	= 3;
+	private final int	maskHeight	= 6;
+	private final int	maskWidth	= 6;
 	private final int	xStepping	= 2;
 	private final int	yStepping	= 2;
 
