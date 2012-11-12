@@ -50,6 +50,7 @@ public class RatInfoForm extends BaseUI {
 	public RatInfoForm() {
 		createSShell();
 		super.sShell = this.sShell;
+		sShell.setDefaultButton(btn_ok);
 	}
 
 	@Override
@@ -172,6 +173,8 @@ public class RatInfoForm extends BaseUI {
 	@Override
 	public void show(final boolean visibility) {
 		super.show(visibility);
+		if(visibility)
+			txt_ratnumber.setFocus();
 	}
 
 }
