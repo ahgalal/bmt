@@ -24,6 +24,7 @@ import utils.PManager;
 import utils.StatusManager.StatusSeverity;
 
 public class ExperimentManager {
+	public static final String	DELETED_GROUP_NAME	= "-";
 	private static ExperimentManager	me;
 
 	public static ExperimentManager getDefault() {
@@ -158,7 +159,7 @@ public class ExperimentManager {
 		}
 		return exp;
 	}
-	
+
 	public void loadExperiment(Experiment experiment){
 		if (experiment != null) {
 			exp_is_set = true;
@@ -197,14 +198,14 @@ public class ExperimentManager {
 				allParams.add(param);
 
 		outer:
-		for(String param: arrayList){
-			for(String str: allParams){
-				if(param.equals(str)){
-					continue outer;
+			for(String param: arrayList){
+				for(String str: allParams){
+					if(param.equals(str)){
+						continue outer;
+					}
 				}
+				allParams.add(param);
 			}
-			allParams.add(param);
-		}
 
 		exp.setParametersList(allParams.toArray(new String[0]));
 	}
@@ -222,19 +223,19 @@ public class ExperimentManager {
 			else if (getNumberOfExpParams() != ModulesManager.getDefault()
 					.getCodeNames().length) {
 				PManager.getDefault().statusMgr
-						.setStatus(
-								"Experiment file loaded has some modules which are not active in this session, can't save",
-								StatusSeverity.ERROR);
+				.setStatus(
+						"Experiment file loaded has some modules which are not active in this session, can't save",
+						StatusSeverity.ERROR);
 				return false;
 			}
 			final String[] params_list = exp.getExpParametersList();
 			final String[] data = ModulesManager.getDefault().getFileData();
 			final String[] code_names = ModulesManager.getDefault()
-					.getCodeNames();
+			.getCodeNames();
 			boolean override_rat = false;
 
 			Rat rat_tmp = this.exp.getGroupByName(getCurrGrpName())
-					.getRatByNumber(getCurrRatNumber());
+			.getRatByNumber(getCurrRatNumber());
 			if (rat_tmp == null)
 				// Create a new rat object, and set its params
 				rat_tmp = new Rat(params_list);
@@ -340,13 +341,17 @@ public class ExperimentManager {
 			final Group gp = new Group(grp_id, name, notes);
 			exp.addGroup(gp);
 		} else
-		// group is already existing ... edit it..
+			// group is already existing ... edit it..
 		{
-			tmp_grp.setName(name);
-			tmp_grp.setNotes(notes);
+			if(name.equals(DELETED_GROUP_NAME))
+				exp.getGroups().remove(tmp_grp);
+			else{
+				tmp_grp.setName(name);
+				tmp_grp.setNotes(notes);
+			}
 		}
 	}
-	
+
 	public Grp2GUI[] getExpGroupsInfo(){
 		return exp.getGroups().toArray(new Grp2GUI[0]);
 	}

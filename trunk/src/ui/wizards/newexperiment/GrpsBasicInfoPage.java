@@ -2,6 +2,7 @@ package ui.wizards.newexperiment;
 
 import java.util.ArrayList;
 
+import modules.ExperimentManager;
 import modules.experiment.Grp2GUI;
 
 import org.eclipse.jface.wizard.WizardPage;
@@ -241,7 +242,13 @@ public class GrpsBasicInfoPage extends WizardPage {
 	 * Deletes an existing tab.
 	 */
 	private void deleteTab() {
-		tabs_grps.getSelection()[0].dispose();
+		TabItem selectedTab=tabs_grps.getSelection()[0];
+		for (final TabContents tc : arr_tabs)
+			if(tc.tab==selectedTab){
+				tc.txt_name.setText(ExperimentManager.DELETED_GROUP_NAME);
+				break;
+			}
+		selectedTab.dispose();
 	}
 
 	public ArrayList<Grp2GUI> getGroups() {
