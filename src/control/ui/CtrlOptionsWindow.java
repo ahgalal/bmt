@@ -43,7 +43,7 @@ public class CtrlOptionsWindow extends ControllerUI<OptionsWindow> {
 		pm = PManager.getDefault();
 		ui = new OptionsWindow();
 		ui.setController(this);
-		ui.loadData(new String[] { "20", "40" });
+		ui.loadData(new String[] { "20", Integer.toString(SubtractionConfigs.defaultThreshold) });
 	}
 
 	/**

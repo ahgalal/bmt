@@ -304,7 +304,7 @@ public class FilterManager {
 					src_rgb_link, grey_link);
 
 			final SubtractionConfigs subtraction_configs = new SubtractionConfigs(
-					"SubtractionFilter", 40, common_configs);
+					"SubtractionFilter", SubtractionConfigs.defaultThreshold, common_configs);
 			subtractor_filter.configure(subtraction_configs);
 			addFilter(subtractor_filter);
 		}
