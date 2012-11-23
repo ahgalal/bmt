@@ -1,4 +1,4 @@
-package gui;
+/*package gui;
 
 import filters.Link;
 import sys.GUITest;
@@ -30,13 +30,14 @@ public class VideoFileTest extends GUITest {
 
 		// TODO: use windowtester| bot.button("Stop Stream").click();
 
-		/*
+		
 		 * Event e = new Event(); e.character=SWT.ESC; e.type=SWT.KeyDown;
 		 * Display.getDefault().post(e);
-		 */
+		 
 
 		sleep(3000);
 
 	}
 
 }
+*/

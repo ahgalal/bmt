@@ -1,4 +1,4 @@
-package gui;
+/*package gui;
 
 import org.junit.Test;
 
@@ -31,3 +31,4 @@ public class CamStartDefaultTest extends GUITest {
 		sleep(2000);
 	}
 }
+*/
