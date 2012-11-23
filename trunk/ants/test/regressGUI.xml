@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- ====================================================================== 
+     Feb 23, 2012                                                        
+
+     UML Modeler GUI Regression Runner
+                   
+     Creative                                                                
+     ====================================================================== -->
+<project name="BMTGUITests" default="umlTestGUI" basedir="../../../">
+	<description>
+            BMT GUI tests.
+    </description>
+
+	<property name="lib.dir" value="libs"/>
+	<property name="include1" value="gui/experiment/*Test.java"/>
+
+	<import file="./base/GUITests.xml" />
+
+	<!-- ================================= 
+          target: Test GUI              
+         ================================= -->
+	<target name="umlTestGUI">
+
+		<antcall target="testGUI"/>
+
+
+	</target>
+</project>
