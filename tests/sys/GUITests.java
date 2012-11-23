@@ -1,4 +1,4 @@
-package sys;
+/*package sys;
 
 import gui.CamStartDefaultTest;
 import gui.SetBackgroundTest;
@@ -63,11 +63,12 @@ public class GUITests {
 	public static void tearDownAfterClass() throws Exception {
 	}
 
-	/*
+	
 	 * public static Test suite() { TestSuite suite = new
 	 * TestSuite(GUITests.class.getName()); //$JUnit-BEGIN$
 	 * //suite.addTest(TestSuite.createTest(CamStartDefaultTest.class, "cam"));
 	 * //$JUnit-END$ return suite; }
-	 */
+	 
 
 }
+*/

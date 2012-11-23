@@ -1,10 +1,7 @@
 package gui.executionunit;
 
-import modules.ExperimentManager;
-import modules.experiment.Experiment;
 import modules.experiment.ExperimentType;
 import utils.DialogBoxUtils;
-import utils.ReflectUtils;
 
 import com.windowtester.runtime.IUIContext;
 import com.windowtester.runtime.WidgetSearchException;
@@ -125,7 +122,7 @@ public class ExperimentExecUnitGroup extends ExecutionUnitGroup {
 		if ((filePath != null) && (filePath != ""))
 			file = filePath;
 		else
-			file = "E:\\Documents\\eclipse\\Java\\BMT\\BMT\\ants\\test\\resources\\TestExp_excel.xlsx";
+			throw new RuntimeException("Can't find file: "+ filePath);
 		
 		ui.click(new MenuItemLocator("Experiment/Export to Excel"));
 		DialogBoxUtils.fillDialog(file, ui);

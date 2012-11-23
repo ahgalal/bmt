@@ -1,4 +1,4 @@
-package gui;
+/*package gui;
 
 import org.eclipse.swt.SWT;
 
@@ -30,3 +30,4 @@ public class RecordVideoTest extends GUITest {
 	}
 
 }
+*/

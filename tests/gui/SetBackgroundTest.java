@@ -1,4 +1,4 @@
-package gui;
+/*package gui;
 
 import sys.GUITest;
 
@@ -24,4 +24,4 @@ public class SetBackgroundTest extends GUITest {
 		sleep(1000);
 	}
 
-}
+}*/

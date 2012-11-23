@@ -20,9 +20,7 @@ public class CreateExperimentTest extends UITest {
 	public void testCreateExperimentOF() throws Exception {
 		ExperimentExecUnitGroup.createNewExperiment(ExperimentType.OPEN_FIELD);
 		checkExperimentCreated();
-	}
-	
-	public void testCreateExperimentFS() throws Exception {
+		
 		ExperimentExecUnitGroup.createNewExperiment(ExperimentType.FORCED_SWIMMING);
 		checkExperimentCreated();
 	}
