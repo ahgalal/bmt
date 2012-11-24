@@ -11,6 +11,7 @@
             BMT GUI tests.
     </description>
 
+	<!-- override default values in build.xml and common.xml -->
 	<property name="lib.dir" value="libs"/>
 	<property name="include1" value="gui/experiment/*Test.java"/>
 
