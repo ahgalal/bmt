@@ -80,14 +80,18 @@ public class ScreenDrawer extends VideoFilter<ScreenDrawerConfigs, FilterData> {
 								configs.common_configs.width,
 								configs.common_configs.height, null);
 						configs.ref_gfx_main_screen.setColor(Color.GREEN);
-						configs.ref_gfx_main_screen
-								.drawString(
-										"FPS="
-												+ 3000
-												/ (frameInterval[0]
-														+ frameInterval[1] + frameInterval[2]),
-										configs.common_configs.width - 60,
-										configs.common_configs.height - 10);
+						try {
+							configs.ref_gfx_main_screen
+									.drawString(
+											"FPS="
+													+ 3000
+													/ (frameInterval[0]
+															+ frameInterval[1] + frameInterval[2]),
+											configs.common_configs.width - 60,
+											configs.common_configs.height - 10);
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
 						if (configs.enable_sec_screen)
 							configs.ref_gfx_sec_screen.drawImage(buf_img_sec
 									.getScaledInstance(289, 214,

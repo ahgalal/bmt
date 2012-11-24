@@ -13,7 +13,8 @@
 
 	<!-- override default values in build.xml and common.xml -->
 	<property name="lib.dir" value="libs"/>
-	<property name="include1" value="gui/experiment/*Test.java"/>
+	<property name="include1" value="gui/**/*Test.java"/>
+	<property name="exclude1" value="gui/utils/*"/>
 
 	<import file="./base/GUITests.xml" />
 
