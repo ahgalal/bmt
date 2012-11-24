@@ -42,6 +42,7 @@ public class RatFinder extends
 
 	private int				tmp_max;
 	int[]					vert_sum;
+	private Point[] centroidHistory=new Point[2];
 
 	/**
 	 * Initializes the filter.
@@ -59,6 +60,7 @@ public class RatFinder extends
 		center_point = filterData.getCenterPoint();
 	}
 
+	int framesRemainingToEnableCentroidHistory=10;
 	@Override
 	public boolean configure(final FilterConfigs configs) {
 		this.configs = (RatFinderFilterConfigs) configs;
@@ -69,9 +71,12 @@ public class RatFinder extends
 		marker2 = new RectangularMarker(configs.common_configs.width,
 				configs.common_configs.height, searchSideLength,
 				searchSideLength, Color.RED);
-
+		
+		for(int i=0;i<centroidHistory.length;i++)
+			centroidHistory[i]=new Point(-1,-1);
+		framesRemainingToEnableCentroidHistory=10;
+		
 		// super's stuff:
-
 		out_data = new int[configs.common_configs.width
 				* configs.common_configs.height];
 		this.link_out.setData(out_data);
@@ -122,7 +127,8 @@ public class RatFinder extends
 	 *            input image
 	 */
 	protected void updateCentroid(final int[] binary_image) {
-		tmp_max = 0;
+		int smallestWhiteAreaSize=10;
+		tmp_max = smallestWhiteAreaSize;
 
 		int y1, y2;
 		if (center_point.y == 0) {
@@ -134,9 +140,7 @@ public class RatFinder extends
 			y2 = (center_point.y + searchSideLength) > configs.common_configs.height ? configs.common_configs.height
 					: center_point.y + searchSideLength;
 		}
-		for (int y = y1; y < y2; y++) // Horizontal
-		// Sum
-		{
+		for (int y = y1; y < y2; y++){ // Horizontal Sum
 			hori_sum[y] = 0;
 			for (int x = 0; x < configs.common_configs.width; x++)
 				hori_sum[y] += binary_image[y * configs.common_configs.width
@@ -147,7 +151,7 @@ public class RatFinder extends
 			}
 		}
 
-		tmp_max = 0;
+		tmp_max = smallestWhiteAreaSize;
 
 		int x1, x2;
 		if (center_point.x == 0) {
@@ -160,18 +164,52 @@ public class RatFinder extends
 					: center_point.x + searchSideLength;
 		}
 
-		for (int x = x1; x < x2; x++) // Vertical
-		// Sum
-		{
+		for (int x = x1; x < x2; x++){ // Vertical Sum
 			vert_sum[x] = 0;
 			for (int y = 0; y < configs.common_configs.height; y++)
 				vert_sum[x] += binary_image[y * configs.common_configs.width
-						+ x] & 0xff;
+				                            + x] & 0xff;
 			if (vert_sum[x] > tmp_max) {
 				center_point.x = x;
 				tmp_max = vert_sum[x];
 			}
 		}
+
+		// low pass filter on position
+		lowPassFilterCentroidPosition();
+	}
+
+	private void lowPassFilterCentroidPosition() {
+		
+		// history remains disabled till ex:10 frames elapse, this is to ensure
+		// the reliability of the centroid position (after ex:10 frames)
+		if(framesRemainingToEnableCentroidHistory==0){
+			if(centroidHistory[0].x==-1){ // history is not initialized yet
+				for(int i=0;i<centroidHistory.length-1;i++){
+					centroidHistory[i].x=center_point.x;
+					centroidHistory[i].y=center_point.y;
+				}
+			}else{
+				int sumX=0,sumY=0;
+				for(Point p:centroidHistory){
+					sumX+=p.x;
+					sumY+=p.y;
+				}
+				int factor=5;
+				center_point.x= (center_point.x*factor+sumX)/(centroidHistory.length+factor);
+				center_point.y= (center_point.y*factor+sumY)/(centroidHistory.length+factor);
+
+				// update history
+				for(int i=0;i<centroidHistory.length-1;i++){
+					centroidHistory[i].x=centroidHistory[i+1].x;
+					centroidHistory[i].y=centroidHistory[i+1].y;
+				}
+
+				centroidHistory[centroidHistory.length-1].x=center_point.x;
+				centroidHistory[centroidHistory.length-1].y=center_point.y;
+			}
+		}else
+			framesRemainingToEnableCentroidHistory--;
 	}
 
 	@Override

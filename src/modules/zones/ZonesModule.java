@@ -16,6 +16,7 @@ package modules.zones;
 
 import java.awt.Point;
 import java.util.ArrayList;
+import java.util.Iterator;
 
 import modules.Cargo;
 import modules.Module;
@@ -119,9 +120,7 @@ public class ZonesModule extends
 	 *            Current rat position
 	 */
 	private void addPointToPosArray(final Point pos) {
-		// TODO: implement to add the functionality of path recording.
-		// we need to add some tolerance due to noise
-		// path.add(new Point(pos.x,pos.y));
+		arr_path.add(new Point(pos.x,pos.y));
 	}
 
 	/**
@@ -146,7 +145,9 @@ public class ZonesModule extends
 
 	@Override
 	public void deInitialize() {
-
+		for (Point point : arr_path) {
+			//System.out.println(point.x+"\t"+point.y);	
+		}
 	}
 
 	/**

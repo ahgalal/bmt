@@ -24,6 +24,10 @@ import java.util.ArrayList;
  */
 public class Group implements Grp2GUI, Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long		serialVersionUID	= 9105205552189986153L;
 	private final ArrayList<Rat>	arr_rats;
 	private int						id;
 	private String					name;
@@ -111,7 +115,7 @@ public class Group implements Grp2GUI, Serializable {
 	 */
 	public Rat getRatByNumber(final int num) {
 		for (final Rat r_tmp : arr_rats)
-			if (Integer.parseInt(r_tmp.getValueByParameterName("Number")) == num)
+			if (Integer.parseInt(r_tmp.getValueByParameterName(Constants.FILE_RAT_NUMBER)) == num)
 				return r_tmp;
 		return null;
 	}

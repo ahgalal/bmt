@@ -33,6 +33,7 @@ import ui.PluggedGUI;
 import utils.Logger.Details;
 import utils.PManager;
 import utils.StatusManager.StatusSeverity;
+import utils.Utils;
 import filters.Data;
 
 @SuppressWarnings("rawtypes")
@@ -42,6 +43,8 @@ import filters.Data;
  * @author Creative
  */
 public class ModulesManager {
+	
+	private boolean doneProcessing=false;
 	
 	/**
 	 * Runnable for running Modules.
@@ -60,16 +63,13 @@ public class ModulesManager {
 						}
 					}	
 				}
-				try {
-					Thread.sleep(33);
-				} catch (final InterruptedException e) {
-					e.printStackTrace();
-				}
+				doneProcessing=false;
+				Utils.sleep(33);
 
 				for (final Module mo : modules)
-					// if(mo!=null)
 					mo.process();
 			}
+			doneProcessing=true;
 		}
 	}
 
@@ -449,6 +449,9 @@ public class ModulesManager {
 				e.printStackTrace();
 			}
 			th_modules = null;
+			
+			while(doneProcessing==false)
+				Utils.sleep(50);
 
 			for (final Module mo : modules)
 				mo.deInitialize();
