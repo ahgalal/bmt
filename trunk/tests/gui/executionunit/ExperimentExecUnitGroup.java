@@ -26,6 +26,22 @@ public class ExperimentExecUnitGroup extends ExecutionUnitGroup {
 		super(ui);
 	}
 	
+	public static void setBackground() throws WidgetSearchException{
+		ui.click(new ButtonLocator("Set Background"));
+	}
+	
+	public static void startTracking(String ratNumber) throws WidgetSearchException{
+		ui.click(new ButtonLocator("Start Tracking"));
+		ui.wait(new ShellShowingCondition("RatInfo"));
+		ui.click(new LabeledTextLocator("Group Name"));
+		ui.enterText(ratNumber);
+		ui.click(new ButtonLocator("OK"));
+	}
+	
+	public static void stopTracking() throws WidgetSearchException{
+		ui.click(new ButtonLocator("Stop Tracking"));
+	}
+	
 
 	/**
 	 * Creates a new Experiment and saved it to file.

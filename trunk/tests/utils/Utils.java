@@ -48,4 +48,12 @@ public class Utils {
 	public static String getResourcesDirPath(){
 		return EnvVar.getEnvVariableValue("BMT_WS")+"/BMT/ants/test/resources/".replace("/", File.separator);
 	}
+	
+	public static void sleep(int ms){
+		try {
+			Thread.sleep(ms);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+	}
 }

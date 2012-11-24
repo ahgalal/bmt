@@ -21,23 +21,21 @@ import jagvidlib.JAGVidLib;
 
 import java.awt.Point;
 
+import utils.Utils;
 import utils.video.FrameIntArray;
 
 /**
  * @author Creative
  */
 public class VideoFileModule extends VidInputter<AGVidLibConfigs> {
-	private class RunnableAGCamLib implements Runnable {
+	private class RunnableAGVidLib implements Runnable {
 		@Override
 		public void run() {
 			final Point dims = vidLib.getVideoDimensions();
 			fia.frame_data = new int[dims.x * dims.y];
-/*			try {
-				Thread.sleep(1000);
-			} catch (final InterruptedException e1) {
-				e1.printStackTrace();
-			}*/
+			
 			vidLib.play();
+			Utils.sleep(100);
 			while (!stop_stream) {
 				synchronized (this) {
 					while (paused) {
@@ -146,7 +144,7 @@ public class VideoFileModule extends VidInputter<AGVidLibConfigs> {
 	@Override
 	public boolean startStream() {
 		vidLib.initialize(configs.vidFile);
-		th_update_image = new Thread(new RunnableAGCamLib());
+		th_update_image = new Thread(new RunnableAGVidLib());
 		th_update_image.start();
 		stop_stream = false;
 		return true;

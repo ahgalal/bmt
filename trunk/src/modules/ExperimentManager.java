@@ -152,9 +152,8 @@ public class ExperimentManager {
 		} catch (final FileNotFoundException e) {
 			e.printStackTrace();
 		} catch (final IOException e) {
-			e.printStackTrace();
+			System.err.println("Experiment loading error, Experiment file may be corrupted");
 		} catch (final ClassNotFoundException e) {
-			e.printStackTrace();
 			System.err.println("incompatible experiment file!");
 		}
 		return exp;
