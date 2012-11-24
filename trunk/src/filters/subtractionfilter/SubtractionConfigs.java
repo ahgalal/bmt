@@ -26,7 +26,7 @@ import filters.FilterConfigs;
  */
 public class SubtractionConfigs extends FilterConfigs {
 
-	public static int defaultThreshold=40;
+	public static int defaultThreshold=20;
 	/**
 	 * subtraction threshold, pixel value> threshold will be white, while pixel
 	 * value < threshold will be black in the output image.
