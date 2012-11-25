@@ -48,7 +48,7 @@ public class ExperimentExecUnitGroup extends ExecutionUnitGroup {
 	 * 
 	 * @throws WidgetSearchException
 	 */
-	public static void createNewExperiment(ExperimentType expType) throws WidgetSearchException {
+	public static void createNewExperiment(ExperimentType expType,String fileName) throws WidgetSearchException {
 		ui.click(new MenuItemLocator("Experiment/New Exp.."));
 		ui.wait(new ShellShowingCondition("Experiment information"));
 		ui.click(new LabeledTextLocator("Name:"));
@@ -74,7 +74,7 @@ public class ExperimentExecUnitGroup extends ExecutionUnitGroup {
 		ui.click(new LabeledTextLocator("Additional Notes:"));
 		ui.enterText("This note is for Group2");
 		ui.click(new ButtonLocator("&Finish"));
-		DialogBoxUtils.fillDialog("TestExp.bmt",ui);
+		DialogBoxUtils.fillDialog(fileName,ui);
 		ui.wait(new ShellDisposedCondition("Experiment information"));
 	}
 	

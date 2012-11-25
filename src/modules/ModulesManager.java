@@ -32,6 +32,7 @@ import org.eclipse.swt.widgets.Shell;
 import ui.PluggedGUI;
 import utils.Logger.Details;
 import utils.PManager;
+import utils.PManager.ProgramState.StreamState;
 import utils.StatusManager.StatusSeverity;
 import utils.Utils;
 import filters.Data;
@@ -55,6 +56,12 @@ public class ModulesManager {
 		@Override
 		public void run() {
 			while (run_modules) {
+				doneProcessing=false;
+				Utils.sleep(33);
+
+				for (final Module mo : modules)
+					mo.process();
+				
 				synchronized (this) {
 					while (paused) {
 						try {
@@ -63,11 +70,6 @@ public class ModulesManager {
 						}
 					}	
 				}
-				doneProcessing=false;
-				Utils.sleep(33);
-
-				for (final Module mo : modules)
-					mo.process();
 			}
 			doneProcessing=true;
 		}
@@ -443,6 +445,11 @@ public class ModulesManager {
 			th_modules.start();
 		} else if (!run & run_modules) {
 			run_modules = false;
+			
+			// if paused, we need to resume to unlock the paused thread
+			if(PManager.getDefault().getState().getStream()==StreamState.PAUSED)
+				resumeModules();
+			
 			try {
 				Thread.sleep(33);
 			} catch (final InterruptedException e) {

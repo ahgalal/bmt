@@ -144,6 +144,7 @@ public class VideoFileModule extends VidInputter<AGVidLibConfigs> {
 	@Override
 	public boolean startStream() {
 		vidLib.initialize(configs.vidFile);
+		Utils.sleep(100);
 		th_update_image = new Thread(new RunnableAGVidLib());
 		th_update_image.start();
 		stop_stream = false;

@@ -4,6 +4,7 @@
 package gui.executionunit;
 
 import utils.DialogBoxUtils;
+import utils.Utils;
 
 import com.windowtester.runtime.IUIContext;
 import com.windowtester.runtime.WidgetSearchException;
@@ -27,6 +28,7 @@ public class ZonesExecUnitGroup extends ExecutionUnitGroup {
 		ui.click(new ButtonLocator("Load from File"));
 		DialogBoxUtils.fillDialog(zonesFile, ui);
 		ui.click(new ButtonLocator("Hide"));
+		Utils.sleep(200);
 	}
 
 	public static void setScale(final String scale)
@@ -34,7 +36,6 @@ public class ZonesExecUnitGroup extends ExecutionUnitGroup {
 		ui.click(new MenuItemLocator("Edit/Zone Editor .."));
 		ui.wait(new ShellShowingCondition("Zone Editor"));
 		ui.click(new ButtonLocator("Scaling"));
-		Thread.sleep(200);
 		DialogBoxUtils.fillDialog("", ui);
 		ui.click(new XYLocator(new ShellLocator("Zone Editor"), 124, 50));
 		ui.click(new XYLocator(new ShellLocator("Zone Editor"), 610, 50));

@@ -6,6 +6,8 @@ import gui.utils.UITest;
 import modules.ExperimentManager;
 import modules.experiment.Experiment;
 import modules.experiment.ExperimentType;
+import sys.utils.EnvVar;
+import sys.utils.Files;
 import utils.Utils;
 
 /**
@@ -16,12 +18,16 @@ import utils.Utils;
  *
  */
 public class CreateExperimentTest extends UITest {
+	
+	private String expFileName = Files.convertPathToPlatformPath(EnvVar
+			.getEnvVariableValue("BMT_WS")
+			+ "/BMT/ants/test/resources/TestExp.bmt");
 
 	public void testCreateExperimentOF() throws Exception {
-		ExperimentExecUnitGroup.createNewExperiment(ExperimentType.OPEN_FIELD);
+		ExperimentExecUnitGroup.createNewExperiment(ExperimentType.OPEN_FIELD,expFileName);
 		checkExperimentCreated();
 		
-		ExperimentExecUnitGroup.createNewExperiment(ExperimentType.FORCED_SWIMMING);
+		ExperimentExecUnitGroup.createNewExperiment(ExperimentType.FORCED_SWIMMING,expFileName);
 		checkExperimentCreated();
 	}
 	
@@ -34,6 +40,12 @@ public class CreateExperimentTest extends UITest {
 		
 		// compare the two experiments
 		assert(Utils.compareExperiments(saved, loadedFromFile)):"Experiments do not match!";
+	}
+	
+	@Override
+	protected void tearDown() throws Exception {
+		super.tearDown();
+		Files.deleteFile(expFileName);
 	}
 
 }

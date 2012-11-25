@@ -34,7 +34,7 @@ public class OpenCVModule extends VidInputter<OpenCVConfigs> {
 			if (configs.fileName == null)
 				cv.capture(configs.width, configs.height, configs.camIndex);
 			else
-				cv.movie("C:\\vid.avi");
+				cv.movie(configs.fileName);
 			while (!stop_stream & (th_update_image != null)) {
 				try {
 					Thread.sleep(30);

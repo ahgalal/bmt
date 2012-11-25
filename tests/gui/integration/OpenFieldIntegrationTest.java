@@ -8,6 +8,7 @@ import gui.utils.UITest;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.concurrent.CancellationException;
 
 import modules.experiment.Constants;
 import modules.experiment.Experiment;
@@ -16,8 +17,11 @@ import modules.experiment.Rat;
 
 import org.apache.tools.ant.util.FileUtils;
 
+import com.windowtester.runtime.WidgetSearchException;
+
 import sys.utils.EnvVar;
 import sys.utils.Files;
+import utils.PManager;
 import utils.Utils;
 
 /**
@@ -28,20 +32,39 @@ import utils.Utils;
  */
 public class OpenFieldIntegrationTest extends UITest {
 
-	private final String	expFileNameOF		= Files.convertPathToPlatformPath(EnvVar
-														.getEnvVariableValue("BMT_WS")
-														+ "/BMT/ants/test/resources/TestOpenField_copy.bmt");
+	protected int		allEntranceMax		= 23;
+	protected int		allEntranceMin		= 21;
+	protected int		centralEntranceMax	= 5;
+	protected int		centralEntranceMin	= 4;
+	protected int		centralTimeMax		= 3;
+	protected int		centralTimeMin		= 1;
+	private String		expFileNameOF;
+	protected String	expFileNameOF_orig;
+	protected String	groupName			= "Group1";
+	protected int		ratNumber			= 0;
+	protected String	scale				= "60";
+	protected int	sessionTimeMin			= 23;
+	protected int	sessionTimeMax			= 23;
+	protected int		sleepTime1			= 30;
+	protected int		sleepTime2			= 0;
+	protected int		sleepTime3			= 0;
+	protected int		totalDistanceMax	= 420;
+	protected int		totalDistanceMin	= 320;
+	protected String	videoFile;
+	protected String	zonesFile;
+	protected boolean terminateTest=false;
 
-	private final String	expFileNameOF_orig	= Files.convertPathToPlatformPath(EnvVar
-														.getEnvVariableValue("BMT_WS")
-														+ "/BMT/ants/test/resources/TestOpenField.bmt");
-	private final String	videoFile			= Files.convertPathToPlatformPath(EnvVar
-														.getEnvVariableValue("BMT_WS")
-														+ "/BMT/ants/test/resources/OF_basic_wmv2.avi");
-
-	private final String	zonesFile			= Files.convertPathToPlatformPath(EnvVar
-														.getEnvVariableValue("BMT_WS")
-														+ "/BMT/ants/test/resources/zones_test.bmt");
+	private void checkParamValue(final Rat rat, final String param,
+			final int valueMin, final int valueMax) {
+		final String actualStrValue = rat.getValueByParameterName(param);
+		final double actualDblValue = Double.parseDouble(actualStrValue);
+		assert ((actualDblValue <= valueMax) && (actualDblValue >= valueMin)) : "Unexpected param value for: "
+				+ param
+				+ " expected valueMin/Max: "
+				+ valueMin
+				+ "/"
+				+ valueMax + " ,actual value: " + actualStrValue;
+	}
 
 	private void checkParamValue(final Rat rat, final String param,
 			final String value) {
@@ -50,19 +73,82 @@ public class OpenFieldIntegrationTest extends UITest {
 				+ param + " expected value: " + value + " ,actual value: "
 				+ actualValue;
 	}
-	
-	private void checkParamValue(final Rat rat, final String param,
-			final int valueMin,int valueMax) {
-		final String actualStrValue = rat.getValueByParameterName(param);
-		int actualIntValue=Integer.parseInt(actualStrValue);
-		assert (actualIntValue<=valueMax && actualIntValue>=valueMin ) : "Unexpected param value for: "
-				+ param + " expected valueMin/Max: " + valueMin+"/"+valueMax + " ,actual value: "
-				+ actualStrValue;
+
+	/**
+	 * Executed before checking experiment's params' values.
+	 * @throws WidgetSearchException
+	 */
+	protected void preChecking()  throws WidgetSearchException{
+	}
+
+	/**
+	 * Executed before loading an experiment.
+	 * @throws WidgetSearchException
+	 */
+	protected void preLoadExperiment() throws WidgetSearchException {
+	}
+
+	/**
+	 * Executed before loading video file.
+	 * @throws WidgetSearchException
+	 */
+	protected void preLoadVideoFile() throws WidgetSearchException {
+	}
+
+	/**
+	 * Executed before loading zones file (before opening Zone Editor dialog).
+	 * @throws WidgetSearchException
+	 */
+	protected void preLoadZones() throws WidgetSearchException {
+	}
+
+	/**
+	 * Executed before setting background.
+	 * @throws WidgetSearchException
+	 */
+	protected void preSetBackground() throws WidgetSearchException {
+	}
+
+	/**
+	 * Executed before setting scale (before opening Zone Editor dialog).
+	 * @throws WidgetSearchException
+	 */
+	protected void preSetScale()  throws WidgetSearchException{
+	}
+
+	protected void preSleep1()  throws WidgetSearchException{
+	}
+
+	protected void preSleep2() throws WidgetSearchException {
+	}
+
+	protected void preSleep3() throws WidgetSearchException {
+	}
+
+	/**
+	 * Executed before starting tracking.
+	 * @throws WidgetSearchException
+	 * @throws Exception 
+	 */
+	protected void preStartTracking() throws Exception{
 	}
 
 	@Override
 	public void setUp() {
 		super.setUp();
+		expFileNameOF_orig = Files.convertPathToPlatformPath(EnvVar
+				.getEnvVariableValue("BMT_WS")
+				+ "/BMT/ants/test/resources/TestOpenField.bmt");
+		expFileNameOF = expFileNameOF_orig + "_tmp";
+
+		videoFile = Files.convertPathToPlatformPath(EnvVar
+				.getEnvVariableValue("BMT_WS")
+				+ "/BMT/ants/test/resources/OF_basic_wmv2.avi");
+
+		zonesFile = Files.convertPathToPlatformPath(EnvVar
+				.getEnvVariableValue("BMT_WS")
+				+ "/BMT/ants/test/resources/zones_test.bmt");
+
 		try {
 			// make a copy of the original file
 			FileUtils.getFileUtils().copyFile(new File(expFileNameOF_orig),
@@ -79,55 +165,117 @@ public class OpenFieldIntegrationTest extends UITest {
 	}
 
 	public void testIntegrationOF() throws Exception {
-		// load experiment
-		ExperimentExecUnitGroup.loadExperiment(expFileNameOF);
+		
+		try {
+			fullScenario();
+		} catch (CancellationException e) {
+			PManager.log.print("Test is explicitly terminated", this);
+		}
+	}
 
-		// load video file
+	protected void fullScenario() throws WidgetSearchException, Exception,
+			InterruptedException {
+		/************* load experiment ********/
+		preLoadExperiment();
+		ExperimentExecUnitGroup.loadExperiment(expFileNameOF);
+		
+		afterExperimentLoad();
+	}
+
+	protected void afterExperimentLoad() throws Exception {
+		/************* load video file ********/
+		preLoadVideoFile();
 		VideoExecUnitGroup.startStreamVideo(videoFile);
 
+		afterVideoLoad();
+	}
+
+	protected void afterVideoLoad() throws Exception {
+		/************* set background ********/
+		preSetBackground();
 		Utils.sleep(500);
-		// set background
 		ExperimentExecUnitGroup.setBackground();
-		
-		// load zones
+
+		afterSetBackground();
+	}
+
+	protected void afterSetBackground() throws Exception {
+		/************* load zones ********/
+		preLoadZones();
 		ZonesExecUnitGroup.loadZones(zonesFile);
 		
-		// set scale
-		ZonesExecUnitGroup.setScale("60");
-		
-		// resume streaming 
+		afterLoadZones();
+	}
+
+	protected void afterLoadZones() throws Exception {
+		/************* set scale ********/
+		preSetScale();
+		ZonesExecUnitGroup.setScale(scale);
+
+		afterSettingScale();
+	}
+
+	protected void afterSettingScale() throws Exception {
+		/************* resume streaming ********/
 		VideoExecUnitGroup.pauseResumeStream();
 		// wait till rat enters the arena
-		Utils.sleep(1000); 
+		Utils.sleep(1000);
 		// pause stream
 		VideoExecUnitGroup.pauseResumeStream();
 		// wait a while :D
 		Utils.sleep(200);
 
-		// start tracking
-		ExperimentExecUnitGroup.startTracking(Integer.toString(0));
+		/************* start tracking ********/
+		preStartTracking();
+		ExperimentExecUnitGroup.startTracking(Integer.toString(ratNumber));
 		Thread.sleep(1000);
 
-		// resume streaming
+		/************* resume streaming ********/
 		VideoExecUnitGroup.pauseResumeStream();
 
-		// sleep till stream ends
-		Thread.sleep(30000);
+		afterStartTracking();
+	}
 
-		// check recorder rat parameters
+	protected void afterStartTracking() throws WidgetSearchException {
+		/************* sleep ********/
+		sleepings();
+
+		/************* checking ********/
+		preChecking();
+		checks();
+	}
+
+	protected void sleepings() throws WidgetSearchException {
+		preSleep1();
+		Utils.sleep(sleepTime1*1000);
+		preSleep2();
+		Utils.sleep(sleepTime2*1000);
+		preSleep3();
+		Utils.sleep(sleepTime3*1000);
+	}
+
+	/**
+	 * Checks recorded rat parameters.
+	 */
+	protected void checks() {
 		final Experiment exp = Reflections.getLoadedExperiment();
-		final Group grp = exp.getGroupByName("Group1");
-		final Rat rat0 = grp.getRatByNumber(0);
 
-		checkParamValue(rat0, Constants.FILE_RAT_NUMBER, "0");
-		checkParamValue(rat0, Constants.FILE_GROUP_NAME, "Group1");
-		checkParamValue(rat0, Constants.FILE_SESSION_TIME, "23.0");
-		checkParamValue(rat0, Constants.FILE_ALL_ENTRANCE, 22,23);
-		checkParamValue(rat0, Constants.FILE_CENTRAL_ENTRANCE, "4");
-		checkParamValue(rat0, Constants.FILE_CENTRAL_TIME, 2,3);
-		checkParamValue(rat0, Constants.FILE_TOTAL_DISTANCE, 320, 420);
+		final Group grp = exp.getGroupByName(groupName);
+		final Rat rat0 = grp.getRatByNumber(ratNumber);
+
+		checkParamValue(rat0, Constants.FILE_RAT_NUMBER, ratNumber, ratNumber);
+		checkParamValue(rat0, Constants.FILE_GROUP_NAME, groupName);
+		checkParamValue(rat0, Constants.FILE_SESSION_TIME, sessionTimeMin,sessionTimeMax);
+		checkParamValue(rat0, Constants.FILE_ALL_ENTRANCE, allEntranceMin,
+				allEntranceMax);
+		checkParamValue(rat0, Constants.FILE_CENTRAL_ENTRANCE,
+				centralEntranceMin, centralEntranceMax);
+		checkParamValue(rat0, Constants.FILE_CENTRAL_TIME, centralTimeMin,
+				centralTimeMax);
+		checkParamValue(rat0, Constants.FILE_TOTAL_DISTANCE, totalDistanceMin,
+				totalDistanceMax);
 		// TODO: check rearing counter
-		//checkParamValue(rat0, Constants.FILE_REARING_COUNTER, "");
+		// checkParamValue(rat0, Constants.FILE_REARING_COUNTER, "");
 	}
 
 }

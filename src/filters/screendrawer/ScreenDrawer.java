@@ -22,6 +22,7 @@ import java.awt.image.DataBufferInt;
 import utils.PManager;
 import utils.PManager.ProgramState;
 import utils.StatusManager.StatusSeverity;
+import utils.Utils;
 import filters.FilterConfigs;
 import filters.FilterData;
 import filters.Link;
@@ -44,33 +45,22 @@ public class ScreenDrawer extends VideoFilter<ScreenDrawerConfigs, FilterData> {
 			int wait_count = 0;
 			while ((configs.ref_gfx_sec_screen == null)
 					|| (configs.ref_gfx_sec_screen == null))
-				try {
-					Thread.sleep(100);
-					wait_count++;
-					if (wait_count == 10)
-						PManager.log.print("Drawing Screen is NULL!", this,
-								StatusSeverity.ERROR);
-				} catch (final InterruptedException e2) {
-					e2.printStackTrace();
-				}
+				Utils.sleep(100);
+			wait_count++;
+			if (wait_count == 10)
+				PManager.log.print("Drawing Screen is NULL!", this,
+						StatusSeverity.ERROR);
 
 			try {
-				try {
-					Thread.sleep(100);
-				} catch (final InterruptedException e1) {
-					e1.printStackTrace();
-				}
+				Utils.sleep(100);
 
 				while (configs.enabled) {
 					configs.shape_controller
 							.drawaAllShapes(configs.ref_gfx_main_screen);
-					try {
-						Thread.sleep(1000 / configs.common_configs.frame_rate);
-					} catch (final InterruptedException e) {
-						e.printStackTrace();
-					}
+					Utils.sleep(1000 / configs.common_configs.frame_rate);
 
 					if (link_in.getData() != null) {
+						
 						System.arraycopy(link_in.getData(), 0,
 								data_main_screen, 0, link_in.getData().length);
 
@@ -89,7 +79,7 @@ public class ScreenDrawer extends VideoFilter<ScreenDrawerConfigs, FilterData> {
 															+ frameInterval[1] + frameInterval[2]),
 											configs.common_configs.width - 60,
 											configs.common_configs.height - 10);
-						} catch (Exception e) {
+						} catch (final Exception e) {
 							e.printStackTrace();
 						}
 						if (configs.enable_sec_screen)
