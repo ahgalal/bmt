@@ -22,7 +22,7 @@
           target: Test GUI              
          ================================= -->
 	<target name="umlTestGUI">
-
+		<copy todir="." file="libs/JAGVidLib/AGVidLib.dll" overwrite="true"/>
 		<antcall target="testGUI"/>
 
 
