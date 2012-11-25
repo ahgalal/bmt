@@ -86,8 +86,7 @@ public class Files {
 	public static void deleteFile(String fileName) {
 		File file = new File(fileName);
 		try {
-			if(file.exists())
-				file.delete();
+			file.delete();
 		} catch (Exception e) {
 			System.err.println("Cannot delete file: "+fileName);
 			e.printStackTrace();

@@ -87,7 +87,7 @@ public class CtrlCamOptions extends ControllerUI<CamOptions> {
 	@Override
 	public void show(final boolean visibility) {
 		ui.show(visibility);
-		(ui).setVidLibs(pm.getVideoManager().getAvailableVidLibs());
+		(ui).setVidLibs(pm.getVideoManager().getAvailableCamLibs());
 	}
 
 	/**

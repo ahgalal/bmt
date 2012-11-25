@@ -61,7 +61,7 @@ public abstract class VidInputter<ConfigsType extends VidSourceConfigs> {
 	/**
 	 * Returns the status of the video library.
 	 * 
-	 * @return 1 means streaming
+	 * @return
 	 */
 	public abstract SourceStatus getStatus();
 

@@ -16,7 +16,6 @@ package modules.zones;
 
 import java.awt.Point;
 import java.util.ArrayList;
-import java.util.Iterator;
 
 import modules.Cargo;
 import modules.Module;
@@ -368,7 +367,7 @@ public class ZonesModule extends
 				} else if ((data.zones.getZoneByNumber(data.current_zone_num)
 						.getZoneType() == ZoneType.CENTRAL_ZONE)
 						&& data.central_flag)
-					central_zone_time_tmp = ((System.currentTimeMillis() - central_start_tmp) / 1000);
+					central_zone_time_tmp = ((System.currentTimeMillis() - central_start_tmp) / 1000L);
 				else if ((data.zones.getZoneByNumber(data.current_zone_num)
 						.getZoneType() != ZoneType.CENTRAL_ZONE)
 						&& data.central_flag) {
