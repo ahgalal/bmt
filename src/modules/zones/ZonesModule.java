@@ -459,8 +459,8 @@ public class ZonesModule extends
 		int tmp_zone_number;
 		zone_map = new byte[configs.width * configs.height];
 		initializeZoneMap(-1);
-		for (int i = 0; i < data.zones.getNumberOfZones(); i++) {
-			tmp_zone_number = data.zones.getZoneByNumber(i).getZoneNumber();
+		for (Zone zone:data.zones.getAllZones()) {
+			tmp_zone_number = zone.getZoneNumber();
 			final Shape tmp_shp = shape_controller
 					.getShapeByNumber(tmp_zone_number);
 
