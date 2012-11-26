@@ -140,7 +140,11 @@ public abstract class VideoFilter<ConfigsType extends FilterConfigs, DataType ex
 	 *            configurations object for the filter
 	 */
 	public void updateConfigs(final FilterConfigs configs) {
-		this.configs.mergeConfigs(configs);
+		if(this.configs==null)
+			this.configs=(ConfigsType) configs;
+		else
+			this.configs.mergeConfigs(configs);
+		configure(getConfigs());
 	}
 
 }

@@ -143,10 +143,9 @@ public class CtrlMainGUI extends ControllerUI<MainGUI> implements StateListener 
 	 */
 	public void configureScreenDrawerFilter(final String name,
 			final CommonFilterConfigs configs, final boolean enable_sec_screen) {
-		pm.getVideoManager().updateFiltersConfigs(
-				new FilterConfigs[] { new ScreenDrawerConfigs(name, ui
-						.getAwtVideoMain().getGraphics(), ui.getAwtVideoSec()
-						.getGraphics(), configs, true, pm.shape_controller) });
+		pm.getVideoManager().getFilterManager().applyConfigsToFilter(new ScreenDrawerConfigs(name, ui
+				.getAwtVideoMain().getGraphics(), ui.getAwtVideoSec()
+				.getGraphics(), null, true, pm.shape_controller));
 	}
 
 	/**
@@ -219,7 +218,7 @@ public class CtrlMainGUI extends ControllerUI<MainGUI> implements StateListener 
 			ModulesManager.getDefault().setModulesWidthandHeight(
 					commonConfigs.width, commonConfigs.height);
 			pm.initializeVideoManager(commonConfigs, null);
-			configureScreenDrawerFilter("ScreenDrawer", commonConfigs, true);
+			configureScreenDrawerFilter("ScreenDrawer", null, true);
 			pm.statusMgr.setStatus("Camera is Starting..",
 					StatusSeverity.WARNING);
 		} else
@@ -325,10 +324,10 @@ public class CtrlMainGUI extends ControllerUI<MainGUI> implements StateListener 
 				pm.initializeVideoManager(commonConfigs, file_name);
 
 				configureScreenDrawerFilter("ScreenDrawer", commonConfigs, true);
-				pm.statusMgr.setStatus("Camera is Starting..",
+				pm.statusMgr.setStatus("Stream is Starting..",
 						StatusSeverity.WARNING);
 			} else
-				pm.statusMgr.setStatus("Camera is already started.",
+				pm.statusMgr.setStatus("Stream is already started.",
 						StatusSeverity.ERROR);
 		file_name = null;
 	}

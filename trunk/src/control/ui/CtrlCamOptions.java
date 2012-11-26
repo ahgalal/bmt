@@ -19,6 +19,7 @@ import modules.ModulesManager;
 import modules.zones.ZonesModuleConfigs;
 import ui.CamOptions;
 import utils.PManager;
+import utils.PManager.ProgramState.StreamState;
 import filters.CommonFilterConfigs;
 
 /**
@@ -94,15 +95,10 @@ public class CtrlCamOptions extends ControllerUI<CamOptions> {
 	 * Unloads VideoManager and then Initializes it.
 	 */
 	public void unloadAndLoadLibProcedures() {
-		pm.stopStreaming();
+		if(pm.getState().getStream()==StreamState.STREAMING)
+			pm.stopStreaming();
 		final CommonFilterConfigs common_configs = new CommonFilterConfigs(
 				width, height, frame_rate, cam_num, library, format);
 		pm.initializeVideoManager(common_configs, null);
-		pm.startStreaming();
-		PManager.main_gui.configureScreenDrawerFilter("ScreenDrawer", null,
-				true);
-		ModulesManager.getDefault().updateModuleConfigs(
-				new ModuleConfigs[] { new ZonesModuleConfigs("Zones Module",
-						-1, width, height) });
 	}
 }

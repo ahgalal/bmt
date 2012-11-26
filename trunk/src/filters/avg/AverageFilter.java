@@ -5,13 +5,15 @@ package filters.avg;
 
 import utils.PManager.ProgramState;
 import utils.video.ImageManipulator;
+import filters.FilterData;
 import filters.Link;
 import filters.VideoFilter;
+import filters.source.SourceFilterConfigs;
 
 /**
  * @author Creative
  */
-public class AverageFilter extends VideoFilter {
+public class AverageFilter extends VideoFilter<SourceFilterConfigs, FilterData> {
 
 	private final int	maskHeight	= 7;
 	private final int	maskWidth	= 7;
