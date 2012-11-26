@@ -14,6 +14,8 @@
 
 package utils.video;
 
+import modules.ModulesManager;
+import modules.experiment.Experiment;
 import modules.experiment.ExperimentType;
 import utils.Logger.Details;
 import utils.PManager;
@@ -131,6 +133,7 @@ public class VideoManager {
 		commonConfigs = new CommonFilterConfigs(640, 480, 30, 0, null, null);
 		video_processor_enabled = true;
 		ref_fia = new FrameIntArray();
+		filter_mgr = new FilterManager(commonConfigs, ref_fia/*, expType*/);
 		// filter_mgr = new FilterManager(common_configs, ref_fia);
 		// filter_mgr.configureFilters(common_configs, ref_fia);
 	}
@@ -187,7 +190,7 @@ public class VideoManager {
 	}
 
 	/**
-	 * Initialization of the video library and video filters.
+	 * Initialization of the video library.
 	 * 
 	 * @param ip_common_configs
 	 *            common configurations object, used by almost all filters
@@ -199,7 +202,9 @@ public class VideoManager {
 			final String vidFile) {
 		isInitialized = true;
 		updateCommonConfigs(ip_common_configs);
-
+		
+		filter_mgr.initializeConfigs(commonConfigs);
+		
 		String vid_lib = commonConfigs.vid_library;
 		if (vid_lib.equals("default"))
 			vid_lib = getDefaultVideoLibrary();
@@ -242,16 +247,26 @@ public class VideoManager {
 
 		return v_in.initialize(ref_fia, srcConfigs);
 	}
-
-	public void initializeFilters(final ExperimentType expType) {
-		// unload old filter manager if exists
+	
+	private void initFilters(final ExperimentType expType){
 		if (filter_mgr != null)
 			filter_mgr.deInitialize();
-		filter_mgr = new FilterManager(commonConfigs, ref_fia, expType);
+		filter_mgr.instantiateFilters(ref_fia, expType);
 	}
 
 	public boolean isInitialized() {
 		return isInitialized;
+	}
+	
+	/**
+	 * Initializes filters and Modules based on the input experiment type.
+	 * @param exp
+	 */
+	public void setupModulesAndFilters(Experiment exp){
+		filter_mgr.initializeConfigs(commonConfigs);
+		ModulesManager.getDefault().setupModules(exp);
+		initFilters(exp.type);
+		PManager.getDefault().signalProgramStateUpdate();
 	}
 
 	public void pauseStream() {

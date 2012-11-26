@@ -163,7 +163,7 @@ public class ExperimentManager {
 		if (experiment != null) {
 			exp_is_set = true;
 			this.exp=experiment;
-			ModulesManager.getDefault().setupModulesAndFilters(exp);
+			PManager.getDefault().getVideoManager().setupModulesAndFilters(exp);
 			setExperimantLoadedInGUI(true);
 		}
 	}
@@ -308,7 +308,7 @@ public class ExperimentManager {
 		exp_is_set = true;
 		setExperimantLoadedInGUI(true);
 
-		ModulesManager.getDefault().setupModulesAndFilters(exp);
+		PManager.getDefault().getVideoManager().setupModulesAndFilters(exp);
 	}
 
 	/**

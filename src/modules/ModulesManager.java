@@ -531,12 +531,6 @@ public class ModulesManager {
 		loadModulesGUI();
 	}
 
-	public void setupModulesAndFilters(final Experiment exp) {
-		setupModules(exp);
-		PManager.getDefault().getVideoManager().initializeFilters(exp.type);
-		PManager.getDefault().signalProgramStateUpdate();
-	}
-
 	/**
 	 * Updates the configurations of the modules.
 	 * 

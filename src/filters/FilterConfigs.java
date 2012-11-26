@@ -41,7 +41,8 @@ public abstract class FilterConfigs {
 	 */
 	public FilterConfigs(final String name,
 			final CommonFilterConfigs common_configs) {
-		this.common_configs = common_configs;
+		if(common_configs!=null)
+			this.common_configs = common_configs;
 		this.name = name;
 	}
 
@@ -71,4 +72,9 @@ public abstract class FilterConfigs {
 	 * @return true: success
 	 */
 	public abstract boolean validate();
+	
+	@Override
+	public String toString() {
+		return "Configuration: "+getConfigurablename();
+	}
 }
