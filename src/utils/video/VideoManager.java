@@ -14,6 +14,7 @@
 
 package utils.video;
 
+import jagvidlib.JAGVidLib.VideoLoadException;
 import modules.ModulesManager;
 import modules.experiment.Experiment;
 import modules.experiment.ExperimentType;
@@ -319,6 +320,8 @@ public class VideoManager {
 				PManager.getDefault().pauseResume();
 			}
 
+		}catch (VideoLoadException e) {
+			PManager.getDefault().statusMgr.setStatus(e.getMessage(), StatusSeverity.ERROR);
 		} catch (final Exception e) {
 			e.printStackTrace();
 		}
