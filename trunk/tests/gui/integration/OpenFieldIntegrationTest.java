@@ -44,7 +44,7 @@ public class OpenFieldIntegrationTest extends UITest {
 	protected int		ratNumber			= 0;
 	protected String	scale				= "60";
 	protected int	sessionTimeMin			= 23;
-	protected int	sessionTimeMax			= 23;
+	protected int	sessionTimeMax			= 24;
 	protected int		sleepTime1			= 30;
 	protected int		sleepTime2			= 0;
 	protected int		sleepTime3			= 0;
@@ -276,6 +276,7 @@ public class OpenFieldIntegrationTest extends UITest {
 				totalDistanceMax);
 		// TODO: check rearing counter
 		// checkParamValue(rat0, Constants.FILE_REARING_COUNTER, "");
+		PManager.log.print("Experiment info check: OK", this);
 	}
 
 }

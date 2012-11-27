@@ -21,6 +21,7 @@ import utils.PManager;
 import utils.PManager.ProgramState;
 import utils.PManager.ProgramState.GeneralState;
 import utils.StatusManager.StatusSeverity;
+import utils.Utils;
 import filters.FilterConfigs;
 import filters.FilterData;
 import filters.Link;
@@ -32,10 +33,13 @@ import filters.VideoFilter;
  * @author Creative
  */
 public class VideoRecorder extends VideoFilter<RecorderConfigs, FilterData> {
-	private StreamToAVI		avi_saver;
+	private long			accumulativeRecordTime	= 0;
 
-	private boolean			isRecording	= false;
+	private StreamToAVI		avi_saver;
+	private boolean			isRecording				= false;
+	private long			noFrames				= 0;
 	private final PManager	pm;
+	private long			prevSampleTime			= 0;
 
 	/**
 	 * Initializes the filter.
@@ -76,23 +80,34 @@ public class VideoRecorder extends VideoFilter<RecorderConfigs, FilterData> {
 						StatusSeverity.ERROR);
 			return false;
 		} else {
-			final Thread th_stop_recording = new Thread(new Runnable() {
-				@Override
-				public void run() {
-					configs.enabled = false;
-					try {
-						Thread.sleep(100);
-					} catch (final InterruptedException e) {
-						e.printStackTrace();
-					}
-					if (isRecording == true) {
+			if (isRecording == true) {
+				isRecording = false;
+				final Thread th_stop_recording = new Thread(new Runnable() {
+					@Override
+					public void run() {
+						configs.enabled = false;
+						Utils.sleep(100);
+
+						final int factor = 3;
+						final int timescale = (int) (Math
+								.round((30 / factor)
+										/ (1000 * noFrames / (double) accumulativeRecordTime)));
+						avi_saver.setTimeScale(timescale);
 						avi_saver.close();
 						avi_saver = null;
-						isRecording = false;
+
+						System.out.println("accRecordTime: "
+								+ accumulativeRecordTime + " timescale: "
+								+ timescale);
+						accumulativeRecordTime = 0;
+						
+						noFrames = 0;
+						prevSampleTime = 0;
+
 					}
-				}
-			});
-			th_stop_recording.start();
+				});
+				th_stop_recording.start();
+			}
 			return true;
 		}
 	}
@@ -104,25 +119,18 @@ public class VideoRecorder extends VideoFilter<RecorderConfigs, FilterData> {
 	@Override
 	public void process() {
 		if (configs.enabled) {
+
+			// calculate video time and number of frames
+			final long currentSampleTime = System.currentTimeMillis();
+			if (prevSampleTime != 0) {
+				final long deltaSamples = currentSampleTime - prevSampleTime;
+				accumulativeRecordTime += deltaSamples;
+				noFrames++;
+			}
+			prevSampleTime = currentSampleTime;
+
 			final int[] imageData = link_in.getData();
 			avi_saver.writeFrame(imageData);
-		}
-	}
-
-	/**
-	 * Renames the current video file to the given name.
-	 * 
-	 * @param file_name
-	 *            new name of the video file
-	 */
-	public void renameVideoFile(final String file_name) {
-		try {
-			final File tmp_file = new File("video.avi");
-			if (!tmp_file.renameTo(new File(file_name)))
-				throw new Exception();
-		} catch (final Exception e) {
-			PManager.log.print("Couldn't rename video file", this,
-					StatusSeverity.ERROR);
 		}
 	}
 
@@ -133,12 +141,20 @@ public class VideoRecorder extends VideoFilter<RecorderConfigs, FilterData> {
 	 *            name of the file to save data to
 	 */
 	public void saveVideoFile(final String fileName) {
-		renameVideoFile(fileName);
+		try {
+
+			final File tmp_file = new File("video.avi");
+			if (!tmp_file.renameTo(new File(fileName)))
+				throw new Exception();
+		} catch (final Exception e) {
+			PManager.log.print("Couldn't rename video file", this,
+					StatusSeverity.ERROR);
+		}
 	}
 
 	@Override
 	public void updateProgramState(final ProgramState state) {
-			
+
 	}
 
 }

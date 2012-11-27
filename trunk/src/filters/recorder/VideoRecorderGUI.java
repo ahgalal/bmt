@@ -161,6 +161,9 @@ public class VideoRecorderGUI extends PluggedGUI<VideoRecorder> {
 		// inTrackingState();
 		PManager.getDefault().getVideoManager().getFilterManager()
 				.enableFilter("Recorder", true);
+		
+		// need to update GUI controls according to the current tracking state
+		stateGeneralChangeHandler(programState);
 	}
 
 	@Override
@@ -212,7 +215,6 @@ public class VideoRecorderGUI extends PluggedGUI<VideoRecorder> {
 			default:
 				break;
 		}
-
 	}
 
 	/**
@@ -230,6 +232,9 @@ public class VideoRecorderGUI extends PluggedGUI<VideoRecorder> {
 				((VideoRecorder) PManager.getDefault().getVideoManager()
 						.getFilterManager().getFilterByName("Recorder"))
 						.saveVideoFile(file_name);
+			
+			// need to update GUI controls according to the current tracking state
+			stateGeneralChangeHandler(programState);
 		}
 
 	}

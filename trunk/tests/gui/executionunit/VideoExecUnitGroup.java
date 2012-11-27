@@ -32,5 +32,13 @@ public class VideoExecUnitGroup extends ExecutionUnitGroup {
 	public static void StopStream() throws WidgetSearchException{
 		ui.click(new ButtonLocator("Stop Stream"));
 	}
+	
+	public static void StartRecord() throws WidgetSearchException{
+		ui.click(new ButtonLocator("Start Recording"));
+	}
+	
+	public static void StopRecord() throws WidgetSearchException{
+		ui.click(new ButtonLocator("Stop Recording"));
+	}
 
 }
