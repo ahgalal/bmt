@@ -1,11 +1,10 @@
 package utils;
 
-import java.io.File;
 import java.util.ArrayList;
 
-import sys.utils.EnvVar;
-
 import modules.experiment.Experiment;
+import sys.utils.EnvVar;
+import sys.utils.Files;
 
 public class Utils {
 	public static boolean equalsOneOf(Object obj,Object[] arr){
@@ -46,7 +45,7 @@ public class Utils {
 	}
 	
 	public static String getResourcesDirPath(){
-		return EnvVar.getEnvVariableValue("BMT_WS")+"/BMT/ants/test/resources/".replace("/", File.separator);
+		return Files.convertPathToPlatformPath(EnvVar.getEnvVariableValue("BMT_WS")+"/BMT/ants/test/resources/");
 	}
 	
 	public static void sleep(int ms){

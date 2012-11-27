@@ -99,5 +99,14 @@ public class StreamToAVI {
 			}
 		}
 	}
+	
+	/**
+	 * Sets timescale of the video library, such that:</br></br>
+	 * samples per second = framerate/timescale
+	 * @param val
+	 */
+	public void setTimeScale(int val){
+		avi_op.setTimeScale(val);
+	}
 
 }

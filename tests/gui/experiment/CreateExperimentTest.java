@@ -21,7 +21,7 @@ public class CreateExperimentTest extends UITest {
 	
 	private String expFileName = Files.convertPathToPlatformPath(EnvVar
 			.getEnvVariableValue("BMT_WS")
-			+ "/BMT/ants/test/resources/TestExp.bmt");
+			+ Files.convertPathToPlatformPath("/BMT/ants/test/resources/TestExp.bmt"));
 
 	public void testCreateExperimentOF() throws Exception {
 		ExperimentExecUnitGroup.createNewExperiment(ExperimentType.OPEN_FIELD,expFileName);
