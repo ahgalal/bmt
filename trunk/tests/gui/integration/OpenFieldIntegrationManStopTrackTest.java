@@ -68,8 +68,8 @@ public class OpenFieldIntegrationManStopTrackTest extends
 		sleepTime2 = 5;
 		sessionTimeMin = 10;
 		sessionTimeMax = 10;
-		centralTimeMin = centralEntranceMax = 0;
-		centralEntranceMin = centralEntranceMax = 0;
+		centralTimeMin = 0;centralEntranceMax = 1;
+		centralEntranceMin = 0;centralEntranceMax = 1;
 		allEntranceMin = 10;
 		allEntranceMax = 12;
 		totalDistanceMin = 180;
