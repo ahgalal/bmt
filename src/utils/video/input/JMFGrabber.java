@@ -41,6 +41,7 @@ public class JMFGrabber implements Effect {
 	private Format				outformatt;
 	private SourceStatus					status;
 	int							width, height;
+	private boolean	paused;
 
 	/**
 	 * Initializes the Grabber.
@@ -151,15 +152,17 @@ public class JMFGrabber implements Effect {
 						height);
 			else
 				curr_frame.updateBufferData((byte[]) inbuf.getData());
-			if (inbuf.getFormat().getClass() == YUVFormat.class) {
-				final byte[] da = curr_frame.convertYUV2RGB(null);
-				fia.frame_data = ImageManipulator.flipImage(
-						ImageManipulator.byteRGB2IntRGB(da), width, height);
-			} else
-				fia.frame_data = ImageManipulator.flipImage(
-						curr_frame.getRGBIntArray(), width, height);
-			// System.out.print("Duration: "+(tstart) + "\n");
-			status = SourceStatus.STREAMING;
+			if(paused==false){
+				if (inbuf.getFormat().getClass() == YUVFormat.class) {
+					final byte[] da = curr_frame.convertYUV2RGB(null);
+					fia.frame_data = ImageManipulator.flipImage(
+							ImageManipulator.byteRGB2IntRGB(da), width, height);
+				} else
+					fia.frame_data = ImageManipulator.flipImage(
+							curr_frame.getRGBIntArray(), width, height);
+				// System.out.print("Duration: "+(tstart) + "\n");
+				status = SourceStatus.STREAMING;
+			}
 
 		} catch (final Exception e) {
 			e.printStackTrace();
@@ -173,6 +176,15 @@ public class JMFGrabber implements Effect {
 	@Override
 	public void reset() {
 
+	}
+	
+	public void pause(){
+		paused=true;
+		status=SourceStatus.PAUSED;
+	}
+	
+	public void resume(){
+		paused=false;
 	}
 
 	@Override

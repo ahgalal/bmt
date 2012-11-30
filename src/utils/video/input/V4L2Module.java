@@ -102,10 +102,12 @@ public class V4L2Module extends VidInputter<VidSourceConfigs> implements
 		 * try { Thread.sleep(30); } catch (final InterruptedException e) {
 		 * e.printStackTrace(); }
 		 */
-		fia.frame_data = ImageManipulator.byteBGR2IntRGB(vframe.getBytes());
+		if(paused==false){
+			fia.frame_data = ImageManipulator.byteBGR2IntRGB(vframe.getBytes());
 
-		status = SourceStatus.STREAMING;
-		vframe.recycle();
+			status = SourceStatus.STREAMING;
+			vframe.recycle();
+		}
 		/* } */
 	}
 
@@ -135,16 +137,6 @@ public class V4L2Module extends VidInputter<VidSourceConfigs> implements
 
 		vfg.stopCapture();
 		vdevice.releaseFrameGrabber();
-	}
-	
-	@Override
-	public void pauseStream() {
-		
-	}
-
-	@Override
-	public void resumeStream() {
-		// TODO Auto-generated method stub
 	}
 	
 	@Override

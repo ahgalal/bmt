@@ -16,6 +16,7 @@ package utils.video.input;
 
 import utils.PManager;
 import utils.StatusManager.StatusSeverity;
+import utils.Utils;
 import utils.video.FrameIntArray;
 import cam_lib.JAGCamLib;
 import cam_lib.ReturnValue;
@@ -36,15 +37,14 @@ public class AGCamLibModule extends VidInputter<VidSourceConfigs> {
 		@Override
 		public void run() {
 			while (!stop_stream && (th_update_image != null)) {
-				try {
-					Thread.sleep(30);
-				} catch (final InterruptedException e) {
-					e.printStackTrace();
+				Utils.sleep(30);
+				if(paused==false){
+					fia.frame_data = ag_cam.grabIntRGBFrame();
+					
+					if(fia.frame_data!=null){
+						status = SourceStatus.STREAMING;
+					}
 				}
-
-				fia.frame_data = ag_cam.grabIntRGBFrame();
-
-				status = SourceStatus.STREAMING;
 			}
 		}
 
@@ -133,13 +133,13 @@ public class AGCamLibModule extends VidInputter<VidSourceConfigs> {
 
 	@Override
 	public void pauseStream() {
-		// this ia used as a cam module, no pause is supported for cams currently.
+		paused=true;
+		status=SourceStatus.PAUSED;
 	}
 
 	@Override
 	public void resumeStream() {
-		// TODO Auto-generated method stub
-		
+		paused=false;
 	}
 
 	@Override

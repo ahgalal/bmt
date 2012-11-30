@@ -15,6 +15,7 @@
 package utils.video.input;
 
 import hypermedia.video.OpenCV;
+import utils.Utils;
 import utils.video.FrameIntArray;
 
 /**
@@ -36,15 +37,13 @@ public class OpenCVModule extends VidInputter<OpenCVConfigs> {
 			else
 				cv.movie(configs.fileName);
 			while (!stop_stream & (th_update_image != null)) {
-				try {
-					Thread.sleep(30);
-				} catch (final InterruptedException e) {
-					e.printStackTrace();
+				Utils.sleep(30);
+				if(paused==false){
+					cv.read();
+					fia.frame_data = cv.pixels();
+					if (fia.frame_data != null)
+						status = SourceStatus.STREAMING;
 				}
-				cv.read();
-				fia.frame_data = cv.pixels();
-				if (fia.frame_data != null)
-					status = SourceStatus.STREAMING;
 			}
 		}
 
@@ -112,16 +111,6 @@ public class OpenCVModule extends VidInputter<OpenCVConfigs> {
 		cv.stop();
 		cv.dispose();
 		cv = null;
-	}
-	
-	@Override
-	public void pauseStream() {
-		// this ia used as a cam module, no pause is supported for cams currently.
-	}
-
-	@Override
-	public void resumeStream() {
-		// TODO Auto-generated method stub
 	}
 	
 	@Override
