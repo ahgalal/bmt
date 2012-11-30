@@ -101,6 +101,12 @@ public abstract class VidInputter<ConfigsType extends VidSourceConfigs> {
 	 */
 	public abstract void stopModule();
 	
-	public abstract void pauseStream();
-	public abstract void resumeStream();
+	public void pauseStream() {
+		paused=true;
+		status=SourceStatus.PAUSED;
+	}
+
+	public void resumeStream() {
+		paused=false;
+	}
 }

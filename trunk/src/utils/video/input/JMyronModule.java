@@ -14,6 +14,7 @@
 
 package utils.video.input;
 
+import utils.Utils;
 import utils.video.FrameIntArray;
 import JMyron.JMyron;
 
@@ -33,16 +34,13 @@ public class JMyronModule extends VidInputter<VidSourceConfigs> {
 		@Override
 		public void run() {
 			while (!stop_stream && (th_jmyron_update_image != null)) {
-				try {
-					Thread.sleep(20);
-				} catch (final InterruptedException e) {
-					e.printStackTrace();
+				Utils.sleep(20);
+				if(paused==false){
+					jmyron.update();
+					fia.frame_data = jmyron.image();
+
+					status = SourceStatus.STREAMING;
 				}
-
-				jmyron.update();
-				fia.frame_data = jmyron.image();
-
-				status = SourceStatus.STREAMING;
 			}
 		}
 

@@ -78,6 +78,16 @@ public class JMFModule extends VidInputter<VidSourceConfigs> {
 	public SourceStatus getStatus() {
 		return ana_eff.getStatus();
 	}
+	
+	@Override
+	public void pauseStream() {
+		ana_eff.pause();
+	}
+	
+	@Override
+	public void resumeStream() {
+		ana_eff.resume();
+	}
 
 	@Override
 	public boolean initialize(final FrameIntArray frame_data,
@@ -371,17 +381,6 @@ public class JMFModule extends VidInputter<VidSourceConfigs> {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-	}
-
-	@Override
-	public void pauseStream() {
-		// this ia used as a cam module, no pause is supported for cams currently.
-	}
-
-	@Override
-	public void resumeStream() {
-		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
