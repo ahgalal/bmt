@@ -207,7 +207,7 @@ public class VideoManager {
 		filter_mgr.initializeConfigs(commonConfigs);
 		
 		String vid_lib = commonConfigs.vid_library;
-		if (vid_lib.equals("default"))
+		if (vid_lib==null ||vid_lib.equals("default"))
 			vid_lib = getDefaultVideoLibrary();
 
 		VidSourceConfigs srcConfigs = null;
