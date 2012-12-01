@@ -132,17 +132,6 @@ public class AGCamLibModule extends VidInputter<VidSourceConfigs> {
 	}
 
 	@Override
-	public void pauseStream() {
-		paused=true;
-		status=SourceStatus.PAUSED;
-	}
-
-	@Override
-	public void resumeStream() {
-		paused=false;
-	}
-
-	@Override
 	public SourceType getType() {
 		return SourceType.CAM;
 	}

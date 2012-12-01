@@ -15,6 +15,7 @@
 package utils.video.input;
 
 import hypermedia.video.OpenCV;
+import utils.PManager;
 import utils.Utils;
 import utils.video.FrameIntArray;
 
@@ -35,10 +36,11 @@ public class OpenCVModule extends VidInputter<OpenCVConfigs> {
 			if (configs.fileName == null)
 				cv.capture(configs.width, configs.height, configs.camIndex);
 			else
-				cv.movie(configs.fileName);
+				cv.movie(configs.fileName,640,480);
 			while (!stop_stream & (th_update_image != null)) {
 				Utils.sleep(30);
 				if(paused==false){
+					System.out.println("OpenCV, reading frame..");
 					cv.read();
 					fia.frame_data = cv.pixels();
 					if (fia.frame_data != null)
@@ -79,6 +81,7 @@ public class OpenCVModule extends VidInputter<OpenCVConfigs> {
 	@Override
 	public boolean initialize(final FrameIntArray frame_data,
 			final OpenCVConfigs configs) {
+		PManager.log.print("initializing..", this);
 		this.fia = frame_data;
 		this.configs = configs;
 		cv = new OpenCV();
@@ -102,11 +105,7 @@ public class OpenCVModule extends VidInputter<OpenCVConfigs> {
 	@Override
 	public void stopModule() {
 		stop_stream = true;
-		try {
-			Thread.sleep(30);
-		} catch (final InterruptedException e) {
-			e.printStackTrace();
-		}
+		Utils.sleep(30);
 		th_update_image = null;
 		cv.stop();
 		cv.dispose();

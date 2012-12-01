@@ -18,6 +18,7 @@ import java.util.List;
 
 import utils.PManager;
 import utils.StatusManager.StatusSeverity;
+import utils.Utils;
 import utils.video.FrameIntArray;
 import utils.video.ImageManipulator;
 import au.edu.jcu.v4l4j.CaptureCallback;
@@ -63,7 +64,9 @@ public class V4L2Module extends VidInputter<VidSourceConfigs> implements
 	@Override
 	public boolean initialize(final FrameIntArray frame_data,
 			final VidSourceConfigs configs) {
+		PManager.log.print("initializing..", this);
 		this.configs = configs;
+		fia=frame_data;
 		if (vdevice == null)
 			try {
 				vdevice = new VideoDevice("/dev/video" + configs.camIndex);
@@ -95,20 +98,13 @@ public class V4L2Module extends VidInputter<VidSourceConfigs> implements
 
 	@Override
 	public void nextFrame(final VideoFrame vframe) {
-		/*
-		 * if (!stop_stream && th_update_image != null) {
-		 */
-		/*
-		 * try { Thread.sleep(30); } catch (final InterruptedException e) {
-		 * e.printStackTrace(); }
-		 */
 		if(paused==false){
 			fia.frame_data = ImageManipulator.byteBGR2IntRGB(vframe.getBytes());
-
 			status = SourceStatus.STREAMING;
-			vframe.recycle();
 		}
-		/* } */
+		
+		// frame needs to be recycled whether we are paused or not
+		vframe.recycle();
 	}
 
 	@Override
@@ -129,12 +125,7 @@ public class V4L2Module extends VidInputter<VidSourceConfigs> implements
 
 	@Override
 	public void stopModule() {
-		try {
-			Thread.sleep(15);
-		} catch (final InterruptedException e) {
-			e.printStackTrace();
-		}
-
+		Utils.sleep(15);
 		vfg.stopCapture();
 		vdevice.releaseFrameGrabber();
 	}

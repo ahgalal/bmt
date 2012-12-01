@@ -214,7 +214,7 @@ public class CtrlMainGUI extends ControllerUI<MainGUI> implements StateListener 
 	public void mnutmCameraStartAction() {
 		if (pm.getState().getGeneral() == GeneralState.IDLE) {
 			final CommonFilterConfigs commonConfigs = new CommonFilterConfigs(
-					640, 480, 30, 0, "default", null);
+					640, 480, 30, 0, null, null);
 			ModulesManager.getDefault().setModulesWidthandHeight(
 					commonConfigs.width, commonConfigs.height);
 			pm.initializeVideoManager(commonConfigs, null);
