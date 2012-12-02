@@ -26,6 +26,7 @@ import utils.StatusManager.StatusSeverity;
 import utils.Utils;
 import utils.video.input.AGCamLibModule;
 import utils.video.input.AGVidLibConfigs;
+import utils.video.input.GStreamerModule;
 import utils.video.input.JMFModule;
 import utils.video.input.JMyronModule;
 import utils.video.input.OpenCVConfigs;
@@ -202,13 +203,16 @@ public class VideoManager {
 	public boolean initialize(final CommonFilterConfigs ip_common_configs,
 			final String vidFile) {
 		isInitialized = true;
-		updateCommonConfigs(ip_common_configs);
-		
-		filter_mgr.initializeConfigs(commonConfigs);
 		
 		String vid_lib = commonConfigs.vid_library;
 		if (vid_lib==null ||vid_lib.equals("default"))
 			vid_lib = getDefaultVideoLibrary();
+		
+		updateCommonConfigs(ip_common_configs);
+		
+		filter_mgr.initializeConfigs(commonConfigs);
+		
+
 
 		VidSourceConfigs srcConfigs = null;
 
@@ -235,9 +239,9 @@ public class VideoManager {
 					srcConfigs = new AGVidLibConfigs();
 					((AGVidLibConfigs) srcConfigs).vidFile = vidFile;
 				} else {
-					v_in = new OpenCVModule();
-					srcConfigs = new OpenCVConfigs();
-					((OpenCVConfigs) srcConfigs).fileName = vidFile;
+					v_in = new GStreamerModule();
+					srcConfigs = new VidSourceConfigs();
+					srcConfigs.videoFilePath= vidFile;
 				}
 
 		v_in.setFormat(commonConfigs.format);

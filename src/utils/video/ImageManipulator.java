@@ -339,4 +339,21 @@ public class ImageManipulator {
 		return rgbarr;
 	}
 
+	public static int[] bgrIntArray2rgbIntArray(int[] in) {
+		int r, g, b;
+		final int[] res = new int[in.length];
+		for (int i = 0; i < in.length; i++) {
+			/*
+			 * r = in[i] & (0x000000FF); g = (in[i] & (0x0000FF00)) >> 8; b =
+			 * (in[i] & (0x00FF0000)) >> 16; res[i] = (int) (0.2989 * r + 0.5870
+			 * * g + 0.1140 * b);
+			 */
+			r = (int) ((in[i] & (0x000000FF)));
+			g = (int) (((in[i] & (0x0000FF00)) >> 8));
+			b = (int) (((in[i] & (0x00FF0000)) >> 16));
+			res[i] = b | (g << 8) | (r << 16);
+		}
+		return res;
+	}
+
 }
