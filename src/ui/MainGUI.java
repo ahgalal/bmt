@@ -513,6 +513,7 @@ public class MainGUI extends BaseUI {
 		mnu_edit_item.setText(ExternalStrings.get("MainGUI.Menu.Edit")); //$NON-NLS-1$
 		mnu_edit = new Menu(mnu_edit_item);
 		mnu_edit_item.setMenu(mnu_edit);
+		mnu_edit_item.setEnabled(false);
 
 		final MenuItem mnutm_edit_options = new MenuItem(mnu_edit, SWT.PUSH);
 		mnutm_edit_options.setText(ExternalStrings.get("MainGUI.Menu.Options")); //$NON-NLS-1$
@@ -719,12 +720,8 @@ public class MainGUI extends BaseUI {
 	}
 
 	public void setExperimantLoaded(final boolean loaded) {
-		if (loaded) {
-			mnuitm_edt_exp.setEnabled(true);
-			mnutm_experiment_exporttoexcel.setEnabled(true);
-		} else {
-			mnuitm_edt_exp.setEnabled(false);
-			mnutm_experiment_exporttoexcel.setEnabled(false);
-		}
+		mnuitm_edt_exp.setEnabled(loaded);
+		mnutm_experiment_exporttoexcel.setEnabled(loaded);
+		mnu_edit_item.setEnabled(loaded);
 	}
 }

@@ -67,4 +67,9 @@ public class SubtractionConfigs extends FilterConfigs {
 		}
 		return true;
 	}
+	
+	@Override
+	public String toString() {
+		return super.toString()+", threshold: "+threshold;
+	}
 }

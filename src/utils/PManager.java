@@ -307,7 +307,6 @@ public class PManager {
 	public void startStreaming() {
 		if ((getState().getGeneral() == GeneralState.IDLE)
 				&& vidMgr.isInitialized())
-			// ModulesManager.getDefault().setupModules(forcedSwimmingModulesSetup);
 			vidMgr.startStreaming();
 		else
 			statusMgr

@@ -9,6 +9,8 @@ import modules.experiment.ExperimentModuleData;
 
 import org.eclipse.swt.widgets.Shell;
 
+import utils.Utils;
+
 import filters.Data;
 import filters.source.SourceFilterData;
 
@@ -69,6 +71,11 @@ public class OpenFieldExperimentModule extends ExperimentModule {
 	 */
 	public int[] updateRGBBackground() {
 		bg_image_rgb = rgbData.getData();
+		if(bg_image_rgb==null){
+			Utils.sleep(100);
+			bg_image_rgb = rgbData.getData();
+		}
+			
 		bg_is_set = true;
 		return bg_image_rgb;
 	}

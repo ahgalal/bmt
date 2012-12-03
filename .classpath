@@ -32,10 +32,16 @@
 			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="BMT/libs/V4L2"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="libs/JMF/jmf.jar"/>
+	<classpathentry kind="lib" path="libs/JMF/jmf.jar">
+		<attributes>
+			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="C:/Program Files/JMF2.1.1e/bin"/>
+		</attributes>
+	</classpathentry>
 	<classpathentry kind="lib" path="libs/JMF/mediaplayer.jar"/>
 	<classpathentry kind="lib" path="libs/JMF/multiplayer.jar"/>
 	<classpathentry kind="lib" path="libs/Utils/Utils.jar"/>
+	<classpathentry kind="lib" path="libs/gstreamer/gstreamer-java.jar"/>
+	<classpathentry kind="lib" path="libs/gstreamer/jna.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
 	<classpathentry kind="lib" path="libs/JAGVidLib/AGVidLib.jar">
 		<attributes>
@@ -50,6 +56,6 @@
 	<classpathentry exported="true" kind="var" path="ECLIPSE_HOME/plugins/org.eclipse.ui.forms_3.5.2.r36_v20100702.jar"/>
 	<classpathentry exported="true" kind="var" path="ECLIPSE_HOME/plugins/com.windowtester.swt.runtime.win32.win32.x86_6.0.0.r36x201009131510/wt-win32-win32-x86.jar"/>
 	<classpathentry kind="lib" path="dev_libs/test-utils/test-utils.jar"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/3.8.1"/>
+	<classpathentry kind="var" path="ECLIPSE_HOME/plugins/org.apache.ant_1.7.1.v20100518-1145/lib/ant.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

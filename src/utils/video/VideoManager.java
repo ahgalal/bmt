@@ -132,7 +132,7 @@ public class VideoManager {
 	 * Initialization.
 	 */
 	public VideoManager() {
-		commonConfigs = new CommonFilterConfigs(640, 480, 30, 0, null, null);
+		commonConfigs = new CommonFilterConfigs(640, 480, 30, 0, "VideoFile", null);
 		video_processor_enabled = true;
 		ref_fia = new FrameIntArray();
 		filter_mgr = new FilterManager(commonConfigs, ref_fia/*, expType*/);
@@ -177,9 +177,9 @@ public class VideoManager {
 	private String getOS() {
 		final String os = System.getProperty("os.name");
 		PManager.log.print("OS: " + os, this, Details.VERBOSE);
-		if (os.indexOf("Linux") != -1)
+		if (os.contains("Linux"))
 			return "Linux";
-		else if (os.indexOf("Windows") != -1)
+		else if (os.contains("Windows"))
 			return "Windows";
 
 		System.out.print("Unknown OS\n");
@@ -204,15 +204,12 @@ public class VideoManager {
 			final String vidFile) {
 		isInitialized = true;
 		
-		String vid_lib = commonConfigs.vid_library;
-		if (vid_lib==null ||vid_lib.equals("default"))
-			vid_lib = getDefaultVideoLibrary();
-		
 		updateCommonConfigs(ip_common_configs);
-		
-		filter_mgr.initializeConfigs(commonConfigs);
-		
+		String vid_lib = commonConfigs.vid_library;
+		if (vid_lib.equals("default"))
+			vid_lib = getDefaultVideoLibrary();
 
+		filter_mgr.initializeConfigs(commonConfigs);
 
 		VidSourceConfigs srcConfigs = null;
 
@@ -270,6 +267,7 @@ public class VideoManager {
 	public void setupModulesAndFilters(Experiment exp){
 		filter_mgr.initializeConfigs(commonConfigs);
 		ModulesManager.getDefault().setupModules(exp);
+		ModulesManager.getDefault().setModulesWidthandHeight(commonConfigs.width, commonConfigs.height);
 		initFilters(exp.type);
 		PManager.getDefault().signalProgramStateUpdate();
 	}
@@ -378,7 +376,7 @@ public class VideoManager {
 			this.commonConfigs.height = common_configs.height;
 		if (common_configs.width != -1)
 			this.commonConfigs.width = common_configs.width;
-		common_configs.validate();
+		this.commonConfigs.validate();
 	}
 
 	/**

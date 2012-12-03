@@ -31,10 +31,20 @@ public class RearingFilterConfigs extends FilterConfigs {
 	 * x-margin for white pixel counting (around the current location of the
 	 * object).
 	 */
-	public int		margin_x, margin_y;
+	public int		margin_x=200, margin_y=200;
 	/*
-	 * _________________________________ | | | | | | | y_margin | | | | | | |
-	 * |---x_margin----O----x_margin---| | | | | | | | y_margin | | | | | | |
+	 * _________________________________ 
+	 * | 			   |			   | 
+	 * | 			   |			   | 
+	 * | 		   y_margin			   | 
+	 * | 			   |			   | 
+	 * | 			   |		 	   |
+	 * |---x_margin----O----x_margin---| 
+	 * |			   |			   | 
+	 * | 			   |			   | 
+	 * | 		   y_margin 		   | 
+	 * | 			   |			   | 
+	 * | 			   |			   |
 	 * |-------------------------------| O: current position of the object.
 	 * count white pixels inside this area only (to save the processing power)
 	 */
@@ -99,6 +109,11 @@ public class RearingFilterConfigs extends FilterConfigs {
 			return false;
 		}
 		return true;
+	}
+	
+	@Override
+	public String toString() {
+		return super.toString()+", rearing thresh: "+ rearing_thresh;
 	}
 
 }

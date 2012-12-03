@@ -89,10 +89,10 @@ public class FilterManager {
 		if (existing != null) {
 			if (updateExisting) {
 				existing.mergeConfigs(cfgs);
-				return existing;
-			} else
-				throw new RuntimeException(
-						"Error adding an already existing filter configuration, try updating the existing configuration instead.");
+			} /*else
+				
+				throw new RuntimeException("Error adding an already existing filter configuration, try updating the existing configuration instead.");*/
+			return existing;
 		} else {
 			arrConfigs.add(cfgs);
 			return cfgs;
@@ -220,6 +220,7 @@ public class FilterManager {
 		return arr_filters;
 	}
 
+	@SuppressWarnings("rawtypes")
 	public PluggedGUI[] getFiltersGUI() {
 		int validGUIsNumber = 0;
 		for (final VideoFilter<?, ?> vf : arr_filters)
@@ -277,14 +278,14 @@ public class FilterManager {
 		final SourceFilterConfigs movementFilterConfigs = new SourceFilterConfigs(
 				"Movement Meter", common_configs, null);
 
-		addFilterConfiguration(source_configs, true);
-		addFilterConfiguration(scrn_drwr_cnfgs, true);
-		addFilterConfiguration(rat_finder_configs, true);
-		addFilterConfiguration(rearingConfigs, true);
-		addFilterConfiguration(vid_recorder_configs, true);
-		addFilterConfiguration(subtraction_configs, true);
-		addFilterConfiguration(avgFilterConfigs, true);
-		addFilterConfiguration(movementFilterConfigs, true);
+		addFilterConfiguration(source_configs, false);
+		addFilterConfiguration(scrn_drwr_cnfgs, false);
+		addFilterConfiguration(rat_finder_configs, false);
+		addFilterConfiguration(rearingConfigs, false);
+		addFilterConfiguration(vid_recorder_configs, false);
+		addFilterConfiguration(subtraction_configs, false);
+		addFilterConfiguration(avgFilterConfigs, false);
+		addFilterConfiguration(movementFilterConfigs, false);
 	}
 
 	/**
@@ -422,7 +423,8 @@ public class FilterManager {
 
 		System.out.println("Configurations available: =====");
 		for (final FilterConfigs configs : arrConfigs)
-			System.out.println(configs.getConfigurablename());
+			System.out.println(configs.toString());
+		System.out.println("===============================");
 
 		return validateFiltersConfigurations();
 	}
