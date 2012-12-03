@@ -79,6 +79,7 @@ public class ExpBasicInfoPage extends WizardPage {
 				1, 1));
 		cmboType.setItems(new String[] { "Open Field", "Forced Swimming" });
 		cmboType.setText("Open Field");
+		cmboType.setEnabled(false); // TODO: re-enable FS in v0.5
 		lbl_username = new Label(grp_info_1, SWT.NONE);
 		lbl_username.setText("User:");
 		txt_user = new Text(grp_info_1, SWT.BORDER);

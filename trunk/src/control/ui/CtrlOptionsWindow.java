@@ -86,10 +86,10 @@ public class CtrlOptionsWindow extends ControllerUI<OptionsWindow> {
 			final SubtractionConfigs subtraction_configs = new SubtractionConfigs(
 					"SubtractionFilter", subtraction_thresh, null);
 			final RearingFilterConfigs rearing_configs = new RearingFilterConfigs(
-					"RearingDetector", rearing_thresh, 200, // TODO: add set
+					"RearingDetector", rearing_thresh, -1, // TODO: add set
 					// margin option in
 					// GUI
-					200, // TODO: add set margin option in GUI
+					-1, // TODO: add set margin option in GUI
 					null, null);
 
 			final FilterConfigs[] filters_configs = new FilterConfigs[2];

@@ -375,8 +375,9 @@ public class ModulesManager {
 		// ////////////////////////////////
 		// Zones Module
 		if (isWithinArray("Zones Module", moduleNames)) {
+			
 			final ZonesModuleConfigs zonesConfigs = new ZonesModuleConfigs(
-					"Zones Module", 50, // TODO: change 50
+					"Zones Module", ZonesModule.DEFAULT_HYSTRISES_VALUE,
 					width, height);
 			final ZonesModule zones_module = new ZonesModule("Zones Module",
 					zonesConfigs);

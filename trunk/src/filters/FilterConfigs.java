@@ -75,6 +75,6 @@ public abstract class FilterConfigs {
 	
 	@Override
 	public String toString() {
-		return "Configuration: "+getConfigurablename();
+		return "name: "+getConfigurablename();
 	}
 }

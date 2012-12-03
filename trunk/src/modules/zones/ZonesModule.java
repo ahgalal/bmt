@@ -44,7 +44,7 @@ import gfx_panel.Shape;
 public class ZonesModule extends
 		Module<ZonesModuleGUI, ZonesModuleConfigs, ZonesModuleData> {
 	private final ArrayList<Point>	arr_path;								// This
-																			// array
+	public static final int DEFAULT_HYSTRISES_VALUE = 50;															// array
 																			// will
 																			// hold
 																			// the

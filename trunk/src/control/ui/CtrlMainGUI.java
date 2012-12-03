@@ -35,7 +35,6 @@ import utils.PManager.ProgramState.StreamState;
 import utils.StateListener;
 import utils.StatusManager.StatusSeverity;
 import filters.CommonFilterConfigs;
-import filters.FilterConfigs;
 import filters.screendrawer.ScreenDrawerConfigs;
 
 /**
@@ -214,9 +213,7 @@ public class CtrlMainGUI extends ControllerUI<MainGUI> implements StateListener 
 	public void mnutmCameraStartAction() {
 		if (pm.getState().getGeneral() == GeneralState.IDLE) {
 			final CommonFilterConfigs commonConfigs = new CommonFilterConfigs(
-					640, 480, 30, 0, null, null);
-			ModulesManager.getDefault().setModulesWidthandHeight(
-					commonConfigs.width, commonConfigs.height);
+					-1, -1, -1, -1, "default", null);
 			pm.initializeVideoManager(commonConfigs, null);
 			configureScreenDrawerFilter("ScreenDrawer", null, true);
 			pm.statusMgr.setStatus("Camera is Starting..",
@@ -318,9 +315,7 @@ public class CtrlMainGUI extends ControllerUI<MainGUI> implements StateListener 
 		if (file_name != null)
 			if (pm.getState().getGeneral() == GeneralState.IDLE) {
 				final CommonFilterConfigs commonConfigs = new CommonFilterConfigs(
-						640, 480, 30, 0, "VideoFile", null);
-				ModulesManager.getDefault().setModulesWidthandHeight(
-						commonConfigs.width, commonConfigs.height);
+						-1, -1, -1, -1, "VideoFile", null);
 				pm.initializeVideoManager(commonConfigs, file_name);
 
 				configureScreenDrawerFilter("ScreenDrawer", commonConfigs, true);
