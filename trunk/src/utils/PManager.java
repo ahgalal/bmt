@@ -285,11 +285,13 @@ public class PManager {
 				ModulesManager.getDefault().pauseModules();
 				getVideoManager().pauseStream();
 				getState().setStream(StreamState.PAUSED);
+				statusMgr.setStatus("PAUSED", StatusSeverity.WARNING);
 				break;
 			case PAUSED:
 				ModulesManager.getDefault().resumeModules();
 				getVideoManager().resumeStream();
 				getState().setStream(StreamState.STREAMING);
+				statusMgr.setStatus("RESUMED", StatusSeverity.WARNING);
 				break;
 			default:
 				break;
@@ -321,6 +323,7 @@ public class PManager {
 			ModulesManager.getDefault().initialize();
 			vidMgr.startProcessing();
 			ModulesManager.getDefault().runModules(true);
+			statusMgr.setStatus("Tracking is started", StatusSeverity.WARNING);
 			return true;
 		} else {
 			statusMgr.setStatus("Please start the camera first.",
@@ -339,7 +342,7 @@ public class PManager {
 				if(getState().getGeneral() != GeneralState.TRACKING) {
 					vidMgr.unloadLibrary();
 					getState().setStream(StreamState.IDLE);
-					statusMgr.setStatus("Streaming is Stopped!", StatusSeverity.WARNING);
+					statusMgr.setStatus("Streaming is stopped!", StatusSeverity.WARNING);
 				} else
 					statusMgr.setStatus(
 							"Streaming Cannot be stopped while Tracking is running.",
@@ -359,14 +362,10 @@ public class PManager {
 			ModulesManager.getDefault().runModules(false);
 			vidMgr.stopProcessing();
 			getState().setGeneral(GeneralState.IDLE);
+			statusMgr.setStatus("Tracking is stopped", StatusSeverity.WARNING);
 		} else
-			Display.getDefault().asyncExec(new Runnable() {
-				@Override
-				public void run() {
-					statusMgr.setStatus("Tracking is not running.",
-							StatusSeverity.ERROR);
-				}
-			});
+			statusMgr.setStatus("Tracking is not running.",
+					StatusSeverity.ERROR);
 	}
 
 	public void unloadGUI() {

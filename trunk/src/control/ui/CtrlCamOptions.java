@@ -14,9 +14,6 @@
 
 package control.ui;
 
-import modules.ModuleConfigs;
-import modules.ModulesManager;
-import modules.zones.ZonesModuleConfigs;
 import ui.CamOptions;
 import utils.PManager;
 import utils.PManager.ProgramState.StreamState;

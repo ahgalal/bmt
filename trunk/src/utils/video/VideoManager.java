@@ -56,11 +56,12 @@ public class VideoManager {
 	 */
 	private class RunnableProcessor implements Runnable {
 		private int	counter	= 0;
-
+		private final int MAX_COUNTER = 5;
 		protected void checkDeviceReady() {
 			counter = 0;
+			
 			while ((v_in != null) && (v_in.getStatus() == SourceStatus.ERROR)
-					&& (counter < 5)) {
+					&& (counter < MAX_COUNTER)) {
 				try {
 					Thread.sleep(1000);
 					PManager.log.print("Device is not Ready!", this,
@@ -70,7 +71,7 @@ public class VideoManager {
 					e.printStackTrace();
 				}
 			}
-			if (counter == 5)
+			if (counter == MAX_COUNTER)
 				unloadLibrary();
 		}
 
@@ -106,7 +107,9 @@ public class VideoManager {
 			// finish up opened filters/utils:
 			// ////////////////////////////////
 
-			PManager.getDefault().stopTracking();
+			// auto stop tracking if stream is terminated
+			if(counter==MAX_COUNTER && PManager.getDefault().getState().getGeneral()==GeneralState.TRACKING)
+				PManager.getDefault().stopTracking();
 			PManager.getDefault().getState().setStream(StreamState.IDLE);
 			filter_mgr.disableAll();
 
@@ -206,7 +209,7 @@ public class VideoManager {
 		
 		updateCommonConfigs(ip_common_configs);
 		String vid_lib = commonConfigs.vid_library;
-		if (vid_lib.equals("default"))
+		if (vid_lib==null || vid_lib.equals("default"))
 			vid_lib = getDefaultVideoLibrary();
 
 		filter_mgr.initializeConfigs(commonConfigs);
@@ -246,6 +249,8 @@ public class VideoManager {
 		srcConfigs.width = commonConfigs.width;
 		srcConfigs.height = commonConfigs.height;
 		srcConfigs.camIndex = commonConfigs.cam_index;
+		
+		PManager.log.print("Vid lib: "+ vid_lib, this);
 
 		return v_in.initialize(ref_fia, srcConfigs);
 	}

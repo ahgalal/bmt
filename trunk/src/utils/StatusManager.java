@@ -14,9 +14,10 @@
 
 package utils;
 
+import org.eclipse.swt.custom.StyleRange;
+import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Label;
 
 /**
  * Manages the status of an SWT Shell.
@@ -24,32 +25,6 @@ import org.eclipse.swt.widgets.Label;
  * @author Creative
  */
 public class StatusManager {
-
-	/**
-	 * Responsible for clearing the label after certain amount of time.
-	 * 
-	 * @author Creative
-	 */
-	private class RunnableResetFormStatus implements Runnable {
-
-		@Override
-		public void run() {
-			try {
-				Thread.sleep(4000);
-			} catch (final InterruptedException e) {
-				e.printStackTrace();
-			}
-			Display.getDefault().asyncExec(new Runnable() {
-
-				@Override
-				public void run() {
-					if (!lbl.isDisposed())
-						lbl.setText("");
-				}
-			});
-		}
-
-	}
 
 	/**
 	 * Enumeration of the severity of message.
@@ -65,19 +40,19 @@ public class StatusManager {
 
 	private Color	clr_black, clr_red, clr;
 
-	private Label	lbl;						// the label to display the
+	private StyledText	txt;						// the label to display the
 												// status
 
 	/**
 	 * Initialization.
 	 * 
-	 * @param lbl_status
+	 * @param styledText
 	 *            the label to display status
 	 */
-	public void initialize(final Label lbl_status) {
-		this.lbl = lbl_status;
-		clr_red = new Color(lbl_status.getDisplay(), 255, 0, 0);
-		clr_black = new Color(lbl_status.getDisplay(), 0, 0, 0);
+	public void initialize(final StyledText styledText) {
+		this.txt = styledText;
+		clr_red = new Color(styledText.getDisplay(), 255, 0, 0);
+		clr_black = new Color(styledText.getDisplay(), 0, 0, 0);
 	}
 
 	/**
@@ -89,19 +64,25 @@ public class StatusManager {
 	 *            severity of the message
 	 */
 	public void setStatus(final String msg, final StatusSeverity svrty) {
-		if (lbl != null) {
-			if (svrty == StatusSeverity.ERROR)
+		if (txt != null) {
+			if (svrty == StatusSeverity.ERROR)// ERROR-> RED
 				clr = clr_red;
-			else if (svrty == StatusSeverity.WARNING) // ERROR-> RED
+			else if (svrty == StatusSeverity.WARNING) 
+				clr = clr_black;
+			else
 				clr = clr_black;
 
-			lbl.setForeground(clr);
-			lbl.setText(msg);
-
-			final Thread th_reset_status = new Thread(
-					new RunnableResetFormStatus());
-
-			th_reset_status.start();
+			Display.getDefault().asyncExec(new Runnable() {
+				@Override
+				public void run() {
+					int start = txt.getText().length();
+					StyleRange styleRange=new StyleRange(start, msg.length(), clr, null);
+					
+					txt.append(msg+"\n");
+					txt.setStyleRange(styleRange);
+					txt.setTopIndex(txt.getLineCount() - 1);
+				}
+			});
 		}
 	}
 }

@@ -20,7 +20,6 @@ import modules.ModuleConfigs;
 import modules.ModuleData;
 import modules.experiment.Constants;
 import modules.experiment.ExperimentType;
-import modules.experiment.forcedswimming.ForcedSwimmingExperimentModule;
 
 import org.eclipse.swt.widgets.Shell;
 
