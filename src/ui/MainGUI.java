@@ -18,6 +18,7 @@ import java.awt.Frame;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.awt.SWT_AWT;
+import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Point;
@@ -102,6 +103,7 @@ public class MainGUI extends BaseUI {
 	private Shell		sShell;
 
 	private Table		tbl_data						= null;
+	private StyledText txtConsole;
 
 	/**
 	 * Creates GUI components, and links this Shell with the parent Shell.
@@ -109,6 +111,14 @@ public class MainGUI extends BaseUI {
 	public MainGUI() {
 		createSShell();
 		super.sShell = this.sShell;
+		grpGraphs = new Group(sShell, SWT.NONE);
+		grpGraphs.setText("Graphs");
+		grpGraphs.setBounds(10, 511, 969, 165);
+		grpGraphs.setVisible(false);
+		
+		txtConsole = new StyledText(sShell, SWT.BORDER | SWT.WRAP | SWT.V_SCROLL | SWT.MULTI);
+		txtConsole.setBounds(10, 511, 662, 82);
+		txtConsole.setEditable(false);
 
 	}
 
@@ -369,10 +379,6 @@ public class MainGUI extends BaseUI {
 	 * This method initializes grp_stats.
 	 */
 	private void createGrpGraphs() {
-		grpGraphs = new Group(sShell, SWT.NONE);
-		grpGraphs.setText("Graphs");
-		grpGraphs.setBounds(10, 511, 969, 165);
-		grpGraphs.setVisible(false);
 		/*
 		 * Button button = new Button(grpGraphs, SWT.NONE);
 		 * button.addSelectionListener(new SelectionAdapter() {
@@ -685,6 +691,10 @@ public class MainGUI extends BaseUI {
 	 */
 	public Label getStatusLabel() {
 		return lbl_status;
+	}
+	
+	public StyledText getConsoleText() {
+		return txtConsole;
 	}
 
 	@Override

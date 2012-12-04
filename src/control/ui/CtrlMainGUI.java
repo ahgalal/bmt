@@ -98,7 +98,7 @@ public class CtrlMainGUI extends ControllerUI<MainGUI> implements StateListener 
 		ui.setController(this);
 		th_update_gui = new Thread(new RunnableUpdateGUI());
 
-		pm.statusMgr.initialize(ui.getStatusLabel());
+		pm.statusMgr.initialize(ui.getConsoleText());
 		ctrl_about_box = new CtrlAbout();
 		ctrlNewExpWizard = new CtrlNewExperimentWizard();
 	}
@@ -213,7 +213,7 @@ public class CtrlMainGUI extends ControllerUI<MainGUI> implements StateListener 
 	public void mnutmCameraStartAction() {
 		if (pm.getState().getGeneral() == GeneralState.IDLE) {
 			final CommonFilterConfigs commonConfigs = new CommonFilterConfigs(
-					-1, -1, -1, -1, "default", null);
+					-1, -1, -1, -1, null, null);
 			pm.initializeVideoManager(commonConfigs, null);
 			configureScreenDrawerFilter("ScreenDrawer", null, true);
 			pm.statusMgr.setStatus("Camera is Starting..",
@@ -257,7 +257,7 @@ public class CtrlMainGUI extends ControllerUI<MainGUI> implements StateListener 
 			ExperimentManager.getDefault().unloadExperiment();
 			ExperimentManager.getDefault().loadExperiment(ExperimentManager.readExperimentFromFile(file_name));
 			PManager.getDefault().statusMgr.setStatus(
-					"Experiment is Loaded Successfully!", StatusSeverity.WARNING);
+					"Experiment is Loaded Successfully from file: "+file_name, StatusSeverity.WARNING);
 		}
 	}
 
@@ -317,9 +317,8 @@ public class CtrlMainGUI extends ControllerUI<MainGUI> implements StateListener 
 				final CommonFilterConfigs commonConfigs = new CommonFilterConfigs(
 						-1, -1, -1, -1, "VideoFile", null);
 				pm.initializeVideoManager(commonConfigs, file_name);
-
 				configureScreenDrawerFilter("ScreenDrawer", commonConfigs, true);
-				pm.statusMgr.setStatus("Stream is Starting..",
+				pm.statusMgr.setStatus("Stream is started from file: "+ file_name,
 						StatusSeverity.WARNING);
 			} else
 				pm.statusMgr.setStatus("Stream is already started.",
@@ -415,27 +414,15 @@ public class CtrlMainGUI extends ControllerUI<MainGUI> implements StateListener 
 								}
 							});
 					} else
-						Display.getDefault().asyncExec(new Runnable() {
-
-							@Override
-							public void run() {
 								pm.statusMgr.setStatus(
 										"Some Modules have problems.",
 										StatusSeverity.ERROR);
-							}
-						});
 
 				} else
-					Display.getDefault().asyncExec(new Runnable() {
-
-						@Override
-						public void run() {
 							pm.statusMgr
 									.setStatus(
 											"Please make sure the camera is running, you have set the background.",
 											StatusSeverity.ERROR);
-						}
-					});
 			}
 		});
 		th_start_gui_procedures.start();
