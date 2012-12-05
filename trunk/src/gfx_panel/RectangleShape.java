@@ -60,6 +60,7 @@ public class RectangleShape extends Shape {
 	public void draw(final Graphics g) {
 		g.setColor(new Color(rgb_color.red, rgb_color.green, rgb_color.blue));
 		g.drawRect(x, y, width, height);
+		g.drawString(""+getShapeNumber(), x+2, y+12);
 	}
 
 	/*

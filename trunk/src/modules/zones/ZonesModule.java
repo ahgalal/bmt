@@ -472,7 +472,7 @@ public class ZonesModule extends
 						for (int y = tmp_rect.getY(); y < tmp_rect.getY()
 								+ tmp_rect.getHeight(); y++)
 							if ((y > -1) & (y < configs.height))
-								zone_map[x + (configs.height - y)
+								zone_map[x + (/*configs.height - */y)
 										* configs.width] = (byte) tmp_zone_number;
 			} else if (tmp_shp instanceof OvalShape) {
 				tmp_oval = (OvalShape) tmp_shp;
