@@ -612,9 +612,9 @@ public class GfxPanel {
 		SnapResults snp_res;
 		snp_res = snapper.prepareSnapPosition(shp_selected, x, y,
 				cursor_pos_in_shp_x, cursor_pos_in_shp_y);
-		if (!snp_res.snapped_x)
+		if (snp_res==null || !snp_res.snapped_x)
 			shp.setX(x - cursor_pos_in_shp_x);
-		if (!snp_res.snapped_y)
+		if (snp_res==null || !snp_res.snapped_y)
 			shp.setY(y - cursor_pos_in_shp_y);
 		refreshDrawingArea();
 	}
@@ -757,7 +757,7 @@ public class GfxPanel {
 		final int w = shp.getWidth(), h = shp.getHeight();
 		SnapResults snp_res;
 		snp_res = snapper.prepareSnapSize(shp_selected, x, y);
-		if (!snp_res.snapped_x) {
+		if (snp_res==null || !snp_res.snapped_x) {
 			if (resizing_x_right)
 				shp.setWidth(x - sel_x);
 			if (resizing_x_left) {
@@ -765,7 +765,7 @@ public class GfxPanel {
 				shp.setWidth(w + sel_x - x);
 			}
 		}
-		if (!snp_res.snapped_y) {
+		if (snp_res==null || !snp_res.snapped_y) {
 			if (resizing_y_down)
 				shp.setHeight(y - sel_y);
 
