@@ -70,6 +70,7 @@ public class OvalShape extends Shape {
 	public void draw(final Graphics g) {
 		g.setColor(new Color(rgb_color.red, rgb_color.green, rgb_color.blue));
 		g.drawOval(x, y, diameter_x, diameter_y);
+		g.drawString(""+getShapeNumber(), x+diameter_x/2-5, y+diameter_y/2+5);
 	}
 
 	/*

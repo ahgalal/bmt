@@ -33,6 +33,7 @@ import modules.zones.Zone.ZoneType;
 import org.eclipse.swt.graphics.RGB;
 
 import utils.PManager;
+import utils.StatusManager.StatusSeverity;
 
 /**
  * Collection of zones, with the facilities to add, remove and get zones in an
@@ -148,54 +149,57 @@ public class ZonesCollection {
 		String data = readFromFile(path);
 		String tmp_line = "";
 		String shape_type = "";
-		while (data.length() != 0) {
-			tmp_line = data.substring(0, data.indexOf('\n'));
-			data = data.substring(data.indexOf('\n') + 1);
-			if (tmp_line.equals("Rectangle"))
-				shape_type = "Rectangle";
-			else if (tmp_line.equals("Oval"))
-				shape_type = "Oval";
+		try {
+			while (data.length() != 0) {
+				tmp_line = data.substring(0, data.indexOf('\n'));
+				data = data.substring(data.indexOf('\n') + 1);
+				if (tmp_line.equals("Rectangle"))
+					shape_type = "Rectangle";
+				else if (tmp_line.equals("Oval"))
+					shape_type = "Oval";
 
-			final int zone_number = Integer.parseInt(data.substring(0,
-					data.indexOf('\n')));
-			data = data.substring(data.indexOf('\n') + 1);
-			final int x = Integer
-					.parseInt(data.substring(0, data.indexOf('\n')));
-			data = data.substring(data.indexOf('\n') + 1);
-			final int y = Integer
-					.parseInt(data.substring(0, data.indexOf('\n')));
-			data = data.substring(data.indexOf('\n') + 1);
-			final int w = Integer
-					.parseInt(data.substring(0, data.indexOf('\n')));
-			data = data.substring(data.indexOf('\n') + 1);
-			final int h = Integer
-					.parseInt(data.substring(0, data.indexOf('\n')));
-			data = data.substring(data.indexOf('\n') + 1);
-			final int red = Integer.parseInt(data.substring(0,
-					data.indexOf('\n')));
-			data = data.substring(data.indexOf('\n') + 1);
-			final int green = Integer.parseInt(data.substring(0,
-					data.indexOf('\n')));
-			data = data.substring(data.indexOf('\n') + 1);
-			final int blue = Integer.parseInt(data.substring(0,
-					data.indexOf('\n')));
-			final RGB c = new RGB(red, green, blue);
-			data = data.substring(data.indexOf('\n') + 1);
-			final String zt = data.substring(0, data.indexOf('\n'));
-			final ZoneType ztype = ZoneType.string2ZoneType(zt);
+				final int zone_number = Integer.parseInt(data.substring(0,
+						data.indexOf('\n')));
+				data = data.substring(data.indexOf('\n') + 1);
+				final int x = Integer
+						.parseInt(data.substring(0, data.indexOf('\n')));
+				data = data.substring(data.indexOf('\n') + 1);
+				final int y = Integer
+						.parseInt(data.substring(0, data.indexOf('\n')));
+				data = data.substring(data.indexOf('\n') + 1);
+				final int w = Integer
+						.parseInt(data.substring(0, data.indexOf('\n')));
+				data = data.substring(data.indexOf('\n') + 1);
+				final int h = Integer
+						.parseInt(data.substring(0, data.indexOf('\n')));
+				data = data.substring(data.indexOf('\n') + 1);
+				final int red = Integer.parseInt(data.substring(0,
+						data.indexOf('\n')));
+				data = data.substring(data.indexOf('\n') + 1);
+				final int green = Integer.parseInt(data.substring(0,
+						data.indexOf('\n')));
+				data = data.substring(data.indexOf('\n') + 1);
+				final int blue = Integer.parseInt(data.substring(0,
+						data.indexOf('\n')));
+				final RGB c = new RGB(red, green, blue);
+				data = data.substring(data.indexOf('\n') + 1);
+				final String zt = data.substring(0, data.indexOf('\n'));
+				final ZoneType ztype = ZoneType.string2ZoneType(zt);
 
-			data = data.substring(data.indexOf('\n') + 1);
-			Shape tmp_shp = null;
-			if (shape_type.equals("Rectangle")) {
-				tmp_shp = new RectangleShape(x, y, w, h, c);
-				tmp_shp.setShapeNumber(zone_number);
-			} else if (shape_type.equals("Oval")) {
-				tmp_shp = new OvalShape(w, h, x, y, c);
-				tmp_shp.setShapeNumber(zone_number);
+				data = data.substring(data.indexOf('\n') + 1);
+				Shape tmp_shp = null;
+				if (shape_type.equals("Rectangle")) {
+					tmp_shp = new RectangleShape(x, y, w, h, c);
+					tmp_shp.setShapeNumber(zone_number);
+				} else if (shape_type.equals("Oval")) {
+					tmp_shp = new OvalShape(w, h, x, y, c);
+					tmp_shp.setShapeNumber(zone_number);
+				}
+				shape_controller.addShape(tmp_shp);
+				addZone(zone_number, ztype);
 			}
-			shape_controller.addShape(tmp_shp);
-			addZone(zone_number, ztype);
-
+		} catch (Exception e) {
+			PManager.getDefault().statusMgr.setStatus("Zones file may be corrupt: "+ path, StatusSeverity.ERROR);
 		}
 	}
 
