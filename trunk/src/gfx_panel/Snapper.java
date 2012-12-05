@@ -146,10 +146,14 @@ public class Snapper {
 
 					if (((shp_y >= tmp_y) & (shp_y < tmp_y + tmp_h))
 							| ((tmp_y > shp_y) & (tmp_y < shp_y + shp_h)))
-						/*
-						 * _______ ______ | | ______ | || shp | | | | ||_____| |
-						 * | | tmp | OR | tmp |_______ | | | || | |_____|
-						 * |_____|| shp | |_____|
+						/*        _______
+						 * ______ |     |     ______ 
+						 * |     || shp |     |     |
+						 * |     ||_____|     |     |
+						 * | tmp |        OR  | tmp |_______        
+						 * |     |            |     ||     |
+						 * |_____|            |_____|| shp |
+						 *                           |_____|
 						 */
 						if (edge_x > tmp_x + tmp_w) {
 							// shp is to the RIGHT of tmp
@@ -173,10 +177,16 @@ public class Snapper {
 
 					if (((shp_x >= tmp_x) & (shp_x < tmp_x + tmp_w))
 							| ((tmp_x > shp_x) & (tmp_x < shp_x + shp_w)))
-						/*
-						 * _______ _______ | | | | | shp | | shp | |_____|
-						 * |_____| ______ ______ | | | | | | | | | tmp | OR |
-						 * tmp | | | | | |_____| |_____|
+						/*   _______            _______
+						 *   |     |            |     |
+						 *   | shp |            | shp |
+						 *   |_____|            |_____|
+						 *       ______      ______ 
+						 *       |     |     |     |
+						 *       |     |     |     |
+						 *       | tmp | OR  | tmp |        
+						 *       |     |     |     |
+						 *       |_____|     |_____|
 						 */
 						if (edge_y > tmp_y + tmp_h) {
 							// shp is BELOW tmp
@@ -223,8 +233,9 @@ public class Snapper {
 						snap(snap_array_y.get(smaller_dist_idx));
 					}
 				}
+			return snp_results;
 		}
-		return snp_results;
+		return null;
 	}
 
 	/**
@@ -277,8 +288,9 @@ public class Snapper {
 							snp_results.snapped_y = true;
 						}
 				}
+			return snp_results;
 		}
-		return snp_results;
+		return null;
 	}
 
 	/**
