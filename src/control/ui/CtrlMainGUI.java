@@ -213,7 +213,7 @@ public class CtrlMainGUI extends ControllerUI<MainGUI> implements StateListener 
 	public void mnutmCameraStartAction() {
 		if (pm.getState().getGeneral() == GeneralState.IDLE) {
 			final CommonFilterConfigs commonConfigs = new CommonFilterConfigs(
-					-1, -1, -1, -1, null, null);
+					-1, -1, -1, -1, "Cam", null);
 			pm.initializeVideoManager(commonConfigs, null);
 			configureScreenDrawerFilter("ScreenDrawer", null, true);
 			pm.statusMgr.setStatus("Camera is Starting..",

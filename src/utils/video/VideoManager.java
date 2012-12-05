@@ -207,11 +207,18 @@ public class VideoManager {
 			final String vidFile) {
 		isInitialized = true;
 		
+		if(ip_common_configs.vid_library.equals("Cam")&&
+				commonConfigs.vid_library!=null && 
+				commonConfigs.vid_library.equals("VideoFile"))// cam lib is already set to VideoFile
+			ip_common_configs.vid_library=getDefaultVideoLibrary();
+		else if(ip_common_configs.vid_library.equals("Cam")&& commonConfigs.vid_library!=null && commonConfigs.vid_library.equals("VideoFile")==false)
+			ip_common_configs.vid_library=commonConfigs.vid_library;
+		
 		updateCommonConfigs(ip_common_configs);
 		String vid_lib = commonConfigs.vid_library;
 		if (vid_lib==null || vid_lib.equals("default"))
 			vid_lib = getDefaultVideoLibrary();
-
+		
 		filter_mgr.initializeConfigs(commonConfigs);
 
 		VidSourceConfigs srcConfigs = null;
