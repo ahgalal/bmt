@@ -32,30 +32,26 @@
 			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="BMT/libs/V4L2"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="libs/JMF/jmf.jar">
-		<attributes>
-			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="C:/Program Files/JMF2.1.1e/bin"/>
-		</attributes>
-	</classpathentry>
+	<classpathentry kind="lib" path="libs/JMF/jmf.jar"/>
 	<classpathentry kind="lib" path="libs/JMF/mediaplayer.jar"/>
 	<classpathentry kind="lib" path="libs/JMF/multiplayer.jar"/>
 	<classpathentry kind="lib" path="libs/Utils/Utils.jar"/>
-	<classpathentry kind="lib" path="libs/gstreamer/gstreamer-java.jar"/>
 	<classpathentry kind="lib" path="libs/gstreamer/jna.jar"/>
+	<classpathentry kind="lib" path="libs/SWT/org.eclipse.swt.gtk.linux.x86_3.6.2.v3659b.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
 	<classpathentry kind="lib" path="libs/JAGVidLib/AGVidLib.jar">
 		<attributes>
 			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="BMT/libs/JAGVidLib"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="libs/SWT/org.eclipse.swt.win32.win32.x86_3.6.2.v3659c.jar" sourcepath="libs/SWT/org.eclipse.swt.win32.win32.x86.source_3.6.2.v3659c.jar"/>
 	<classpathentry kind="con" path="com.windowtester.eclipse.ui.runtimeClasspathContainer"/>
 	<classpathentry exported="true" kind="var" path="ECLIPSE_HOME/plugins/org.eclipse.jface_3.6.2.M20110210-1200.jar" sourcepath="/ECLIPSE_HOME/plugins/org.eclipse.jface.source_3.6.2.M20110210-1200.jar"/>
 	<classpathentry exported="true" kind="var" path="ECLIPSE_HOME/plugins/org.eclipse.ui.workbench_3.6.2.M20110210-1200.jar"/>
 	<classpathentry exported="true" kind="var" path="ECLIPSE_HOME/plugins/org.eclipse.core.commands_3.6.0.I20100512-1500.jar"/>
 	<classpathentry exported="true" kind="var" path="ECLIPSE_HOME/plugins/org.eclipse.ui.forms_3.5.2.r36_v20100702.jar"/>
-	<classpathentry exported="true" kind="var" path="ECLIPSE_HOME/plugins/com.windowtester.swt.runtime.win32.win32.x86_6.0.0.r36x201009131510/wt-win32-win32-x86.jar"/>
 	<classpathentry kind="lib" path="dev_libs/test-utils/test-utils.jar"/>
 	<classpathentry kind="var" path="ECLIPSE_HOME/plugins/org.apache.ant_1.7.1.v20100518-1145/lib/ant.jar"/>
+	<classpathentry kind="lib" path="libs/gstreamer/gstreamer-java.jar"/>
+	<classpathentry kind="var" path="ECLIPSE_HOME/plugins/com.windowtester.swt.runtime.linux.gtk.x86_6.0.0.r36x201009131510/wt-linux-gtk-x86.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
