@@ -331,6 +331,7 @@ public class VideoManager {
 			if (v_in.getType() == SourceType.FILE) {
 				while (v_in.getStatus() != SourceStatus.STREAMING)
 					Thread.sleep(200);
+				Thread.sleep(200);
 				PManager.getDefault().pauseResume();
 			}
 

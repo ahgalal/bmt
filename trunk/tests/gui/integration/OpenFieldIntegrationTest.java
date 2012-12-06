@@ -16,6 +16,8 @@ import modules.experiment.Group;
 import modules.experiment.Rat;
 
 import org.apache.tools.ant.util.FileUtils;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Shell;
 
 import com.windowtester.runtime.WidgetSearchException;
 
@@ -44,7 +46,7 @@ public class OpenFieldIntegrationTest extends UITest {
 	protected int		ratNumber			= 0;
 	protected String	scale				= "60";
 	protected int	sessionTimeMin			= 23;
-	protected int	sessionTimeMax			= 24;
+	protected int	sessionTimeMax			= 25;
 	protected int		sleepTime1			= 30;
 	protected int		sleepTime2			= 0;
 	protected int		sleepTime3			= 0;
@@ -229,9 +231,19 @@ public class OpenFieldIntegrationTest extends UITest {
 		preStartTracking();
 		ExperimentExecUnitGroup.startTracking(Integer.toString(ratNumber));
 		Thread.sleep(1000);
-
+		
+		System.out.println("1");
+		Display.getDefault().syncExec(new Runnable() {
+			
+			@Override
+			public void run() {
+				((Shell)getUI().getActiveWindow()).setActive();		
+			}
+		});
 		/************* resume streaming ********/
 		VideoExecUnitGroup.pauseResumeStream();
+		
+		System.out.println("2");
 
 		afterStartTracking();
 	}

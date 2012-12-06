@@ -415,8 +415,8 @@ public class CtrlMainGUI extends ControllerUI<MainGUI> implements StateListener 
 							});
 					} else
 								pm.statusMgr.setStatus(
-										"Some Modules have problems.",
-										StatusSeverity.ERROR);
+										"Tracking is cancelled",
+										StatusSeverity.WARNING);
 
 				} else
 							pm.statusMgr
