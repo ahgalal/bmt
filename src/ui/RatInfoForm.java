@@ -19,7 +19,9 @@ import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
+import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
@@ -72,10 +74,19 @@ public class RatInfoForm extends BaseUI {
 	 * This method initializes sShell.
 	 */
 	private void createSShell() {
-		sShell = new Shell(SWT.APPLICATION_MODAL | SWT.ON_TOP | SWT.TITLE);
+		sShell = new Shell(SWT.APPLICATION_MODAL/* | SWT.ON_TOP*/ | SWT.DIALOG_TRIM);
 		sShell.setText("RatInfo");
 		sShell.setLayout(null);
 		sShell.setSize(new Point(201, 138));
+		sShell.addListener (SWT.Close, new Listener() {
+			
+			@Override
+			public void handleEvent(Event arg0) {
+				controller.cancelAction();
+				arg0.doit=false;
+			}
+		});
+			
 		lbl_ratnumber = new Label(sShell, SWT.NONE);
 		lbl_ratnumber.setText("Rat Number");
 		lbl_ratnumber.setBounds(new Rectangle(10, 18, 86, 15));

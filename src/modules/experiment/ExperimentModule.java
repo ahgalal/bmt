@@ -28,6 +28,7 @@ import org.eclipse.swt.widgets.Shell;
 
 import utils.Logger.Details;
 import utils.PManager;
+import utils.Utils;
 import filters.Data;
 
 /**
@@ -193,15 +194,13 @@ Module<ExperimentModuleGUI, ExperimentModuleConfigs, ExperimentModuleData> {
 		while (rat_frm_is_shown
 				&& (!PManager.getDefault().frm_rat.isValidRatEntered() && !PManager
 						.getDefault().frm_rat.isCancelled()))
-			try {
-				Thread.sleep(200);
-			} catch (final InterruptedException e) {
-				e.printStackTrace();
-			}
-			if (PManager.getDefault().frm_rat.isValidRatEntered())
-				return true;
-			else
-				return false;
+			//System.out.println("sleeping ..1");
+		Utils.sleep(200);
+		//System.out.println("sleeping ..2");
+		if (PManager.getDefault().frm_rat.isValidRatEntered())
+			return true;
+		else
+			return false;
 	}
 
 }

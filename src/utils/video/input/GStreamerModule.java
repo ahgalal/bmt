@@ -19,6 +19,7 @@ import java.nio.IntBuffer;
 
 import org.gstreamer.Gst;
 import org.gstreamer.PlayBin;
+import org.gstreamer.State;
 import org.gstreamer.elements.RGBDataSink;
 import org.gstreamer.elements.RGBDataSink.Listener;
 
@@ -46,9 +47,15 @@ public class GStreamerModule extends VidInputter<VidSourceConfigs> {
 
 	@Override
 	public SourceStatus getStatus() {
+		if(dataSink!=null){
+			//System.out.println("Duration: "+dataSink.getDuration().longValue()+" Position: "+dataSink.getPosition().longValue());
+			if((playBin.getState()==State.PLAYING || playBin.getState()==State.PAUSED) &&dataSink.getDuration().longValue()<=dataSink.getPosition().longValue())
+				status=SourceStatus.ERROR;
+		}
 		return status;
 	}
 	private PlayBin playBin;
+	private RGBDataSink dataSink;
 	@Override
 	public boolean initialize(final FrameIntArray frame_data,
 			final VidSourceConfigs configs) {
@@ -59,13 +66,14 @@ public class GStreamerModule extends VidInputter<VidSourceConfigs> {
 		playBin.setInputFile(new File(configs.videoFilePath));
 		fia=frame_data;
 
-		RGBDataSink dataSink=new RGBDataSink("rgb", new Listener() {
+		dataSink=new RGBDataSink("rgb", new Listener() {
 
 			@Override
 			public void rgbFrame(int arg0, int arg1, IntBuffer buf) {
 				if(paused==false){
-					fia.frame_data = ImageManipulator.bgrIntArray2rgbIntArray(buf.array()); //ImageManipulator.byteBGR2IntRGB(buf.getBytes());
-					status = SourceStatus.STREAMING;
+						fia.frame_data = ImageManipulator.bgrIntArray2rgbIntArray(buf.array()); //ImageManipulator.byteBGR2IntRGB(buf.getBytes());
+						status = SourceStatus.STREAMING;
+						
 				}
 			}
 		});
