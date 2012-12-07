@@ -13,9 +13,9 @@
     </description>
 
 	<property environment="env"/>
-	<property name="bmt_version" value="0.4_RC"/>
-	<property name="libs_version" value="0.4_RC"/>
-	<property name="bin_libs_version" value="0.0.4_RC"/>
+	<property name="bmt_version" value="0.4"/>
+	<property name="libs_version" value="0.4"/>
+	<property name="bin_libs_version" value="0.4"/>
 	<property name="jarfile.name" value="BMT_v${bmt_version}.jar"/>
 	<property name="exefile.name" value="BMT_v${bmt_version}.exe"/>
 
@@ -29,10 +29,13 @@
 	<property name="output_dir" value="../output/" />
 	<property name="release_dir" value="../output/release" />
 	<property name="uploads_dir" value="../output/uploads" />
-	<property name="libs_dir" value="${release_dir}/libs" />
+	<property name="libs_dir.name" value="libs" />
+	<property name="libs_dir" value="${release_dir}/${libs_dir.name}" />
 	<property name="launch4j.dir" value="${env.tools}/launch4j-3.0.2-win32/launch4j"/>
-
-
+	<property name="dir.bin" value="../bin" />
+	<property name="dir.src" value="../src" />
+	<property name="dir.tests" value="../tests" />
+	
 
 
 	<!-- ================================= 
@@ -49,7 +52,7 @@
 	<target name="release" depends="
 		buildall,
 		copy_license,
-		create_runner,
+		create_runners,
 		zip_all">
 
 	</target>
@@ -65,6 +68,7 @@
 
 	<fileset id="libs" dir="../libs">
 		<include name="**/*.jar" />
+		<include name="**/*.txt" />
 	</fileset>
 	<fileset id="jmf_libs" dir="${jmf_home_lib}">
 		<include name="**/*.jar" />
@@ -90,7 +94,7 @@
 
 	<fileset id="bin_libs" dir="../libs">
 		<include name="**/*.dll" />
-		<include name="**/*.so" />
+		<include name="**/*.so*" />
 		<include name="**/*.jnilib" />
 	</fileset>
 
@@ -117,6 +121,7 @@
 			<classpath>
 				<fileset dir="${libs_dir}">
 					<include name="**/*.jar" />
+					<exclude name="*swt*.jar"/>
 				</fileset>
 			</classpath>
 		</manifestclasspath>
@@ -127,11 +132,33 @@
 				<attribute name="Main-Class" value="utils.PManager" />
 				<attribute name="Class-Path" value=". ${jar.classpath}" />
 			</manifest>
-			<fileset dir="../bin" />
+			<fileset dir="${dir.bin}" />
 			<fileset dir="../" includes="images/**" />
 		</jar>
 
 		<copy file="${jarfile}" todir="${uploads_dir}"/>
+	</target>
+	
+	
+	<import file="test/base/build.xml" />
+
+	<target name="compile" depends="init">
+		<property name="binloctmp" value="${dir.bin}" />
+		
+		<echo message="${java.runtime.version}" />
+
+		<delete dir="${binloctmp}" />
+		<mkdir dir="${binloctmp}" />
+
+		<javac destdir="${binloctmp}" debug="on" source="1.6" target="1.6">
+			<src path="${dir.src}" />
+			<src path="${dir.tests}" />
+			<classpath>
+				<path refid="classpath.main" />
+				<path refid="classpath.windowtester" />
+				<path location="." />
+			</classpath>
+		</javac>
 	</target>
 
 
@@ -151,10 +178,10 @@
 			</filterset>
 		</copy>
 		<move tofile="exe_config.xml" file="config_template.xml" />
-		
+
 		<taskdef name="launch4j" classname="net.sf.launch4j.ant.Launch4jTask" classpath="${launch4j.dir}/launch4j.jar
 			    :${launch4j.dir}/lib/xstream.jar" />
-		
+
 		<launch4j configFile="exe_config.xml" />
 		<delete file="exe_config.xml"/>
 
@@ -225,37 +252,25 @@
 	</target>
 
 	<path id="classpath.main">
-		<pathelement path="../bin"/>
+		<pathelement path="${dir.bin}"/>
+		<path refid="classpath.swt" />
+		<path refid="classpath.junit" />
 		<fileset dir="../libs">
 			<include name="**/*.jar" />
 		</fileset>
 	</path>
 
-	<target name="test">
-		<property name="myclasspath" refid="classpath.main"/>
-		<echo message="Classpath = ${myclasspath}"/>
-		<junit printsummary="yes" haltonfailure="no" failureproperty="yes" showoutput="yes">
-			<classpath>
-				<path refid="classpath.main" />
-				<pathelement location="../tests/gui" />
-				<pathelement location="F:\eclipse\eclipseJEE\plugins\org.hamcrest.core_1.1.0.v20090501071000.jar" />
-				<pathelement location="F:\eclipse\eclipseJEE\plugins\org.eclipse.swtbot.swt.finder_2.0.5.20111003_1754-3676ac8-dev-e36.jar" />
-			</classpath>
-			<!-- must fork, to run each test on a separate VM -->
-			<batchtest fork="yes" todir="../tests/reports">
-				<!-- will search "dir" for all java files and run them! -->
-				<fileset dir="../tests"/>
-				<formatter type="xml"/>
-			</batchtest>
-		</junit>
-	</target>
-
 	<!-- ================================= 
           target: create_runner              
          ================================= -->
-	<target name="create_runner">
+	<target name="create_runners">
+		<property name="swt.jar.linux" value="org.eclipse.swt.gtk.linux.x86_3.6.2.v3659b.jar"/>
+		<property name="swt.jar.win" value="org.eclipse.swt.win32.win32.x86_3.6.2.v3659c.jar"/>
 		<echo file="${release_dir}/run.bat"
-        	message="java -jar BMT_v${bmt_version}.jar${line.separator}pause"
+			message="java -classpath ${libs_dir.name}\${swt.jar.win};libs\*;BMT_v${bmt_version}.jar utils.PManager${line.separator}pause"
+        />
+		<echo file="${release_dir}/run.sh"
+			message="export LD_LIBRARY_PATH=.:$LD_LIBRARY_PATH ${line.separator}java -classpath ${libs_dir.name}\${swt.jar.linux};libs\*;BMT_v${bmt_version}.jar utils.PManager"
         />
 	</target>
 
