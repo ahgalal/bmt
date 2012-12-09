@@ -13,9 +13,9 @@
     </description>
 
 	<property environment="env"/>
-	<property name="bmt_version" value="0.4"/>
-	<property name="libs_version" value="0.4"/>
-	<property name="bin_libs_version" value="0.4"/>
+	<property name="bmt_version" value="0.5_pre"/>
+	<property name="libs_version" value="0.5_pre"/>
+	<property name="bin_libs_version" value="0.5_pre"/>
 	<property name="jarfile.name" value="BMT_v${bmt_version}.jar"/>
 	<property name="exefile.name" value="BMT_v${bmt_version}.exe"/>
 

@@ -114,11 +114,12 @@ public class MainGUI extends BaseUI {
 		grpGraphs = new Group(sShell, SWT.NONE);
 		grpGraphs.setText("Graphs");
 		grpGraphs.setBounds(10, 511, 969, 165);
-		grpGraphs.setVisible(false);
+		//grpGraphs.setVisible(false);
 		
 		txtConsole = new StyledText(sShell, SWT.BORDER | SWT.WRAP | SWT.V_SCROLL | SWT.MULTI);
 		txtConsole.setBounds(10, 511, 662, 82);
 		txtConsole.setEditable(false);
+		txtConsole.setVisible(false); // TODO: reenable console when graphs are in a separate window
 
 	}
 
@@ -286,11 +287,11 @@ public class MainGUI extends BaseUI {
 	private void createExpandBar() {
 		final Group grpOptions = new Group(sShell, SWT.NONE);
 		grpOptions.setText("Controls");
-		grpOptions.setBounds(985, 5, 159, 596);
+		grpOptions.setBounds(985, 5, 159, 671);
 
 		expandBar = new ExpandBar(grpOptions, SWT.NONE);
 		expandBar.setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_WIDGET_BACKGROUND));
-		expandBar.setBounds(10, 21, 139, 567);
+		expandBar.setBounds(10, 21, 139, 640);
 
 		// ////////////////////////////////////////////
 		// Stream Controls
@@ -401,12 +402,12 @@ public class MainGUI extends BaseUI {
 		grp_stats.setLayout(null);
 		grp_stats.setText("Analysis:");
 		createCmpstSecondary();
-		grp_stats.setBounds(new Rectangle(678, 5, 301, 596));
+		grp_stats.setBounds(new Rectangle(678, 5, 301, 500));
 
 		tbl_data = new Table(grp_stats, SWT.BORDER);
 		tbl_data.setHeaderVisible(true);
 		tbl_data.setLinesVisible(true);
-		tbl_data.setBounds(new Rectangle(9, 243, 284, 350));
+		tbl_data.setBounds(new Rectangle(9, 243, 284, 251));
 		final TableColumn tableColumn = new TableColumn(tbl_data, SWT.NONE);
 		tableColumn.setWidth(140);
 		tableColumn.setText("Name");
@@ -459,7 +460,7 @@ public class MainGUI extends BaseUI {
 		createGrpVideo();
 		createGrpStats();
 		createGrpGraphs();
-		sShell.setSize(new Point(1160, 652));
+		sShell.setSize(new Point(1160, 733));
 		sShell.setLayout(null);
 		lbl_status = new Label(getShell(), SWT.NONE);
 		lbl_status.setBounds(new Rectangle(10, 672, 656, 20));
