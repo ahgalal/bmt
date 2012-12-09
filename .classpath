@@ -52,6 +52,5 @@
 	<classpathentry kind="lib" path="dev_libs/test-utils/test-utils.jar"/>
 	<classpathentry kind="var" path="ECLIPSE_HOME/plugins/org.apache.ant_1.7.1.v20100518-1145/lib/ant.jar"/>
 	<classpathentry kind="lib" path="libs/gstreamer/gstreamer-java.jar"/>
-	<classpathentry kind="var" path="ECLIPSE_HOME/plugins/com.windowtester.swt.runtime.linux.gtk.x86_6.0.0.r36x201009131510/wt-linux-gtk-x86.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
