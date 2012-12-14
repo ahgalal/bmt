@@ -9,7 +9,7 @@ import org.xml.sax.helpers.DefaultHandler;
 
 public class XMLWrapper {
 	protected DefaultHandler handler;
-	SAXParserFactory factory;
+	private SAXParserFactory factory;
 	protected SAXParser saxParser;
 	public XMLWrapper() throws ParserConfigurationException, SAXException {
 		factory = SAXParserFactory.newInstance();

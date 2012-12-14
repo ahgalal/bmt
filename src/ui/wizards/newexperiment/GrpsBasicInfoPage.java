@@ -59,87 +59,87 @@ public class GrpsBasicInfoPage extends WizardPage {
 	 */
 	public class TabContents {
 		public Composite	cmpst;
-		public int			grp_id;
-		public Label		lbl_name, lbl_no_rats_data, lbl_no_rats,
-				lbl_rats_numbering, lbl_notes;
+		public int			grpId;
+		public Label		lblName, lblNoRatsData, lblNoRats,
+				lblRatsNumbering, lblNotes;
 		public TabItem		tab;
-		public Text			txt_name, txt_rats_numbers, txt_notes;
+		public Text			txtName, txtRatsNumbers, txtNotes;
 
-		public void createGUI(final String name, final String no_rats,
-				final String rat_numbers, final String notes, final int id) {
-			cmpst = new Composite(tabs_grps, SWT.NONE);
+		public void createGUI(final String name, final String noRats,
+				final String ratNumbers, final String notes, final int id) {
+			cmpst = new Composite(tabsGrps, SWT.NONE);
 			cmpst.setBounds(new Rectangle(4, 24, 328, 358));
-			final GridLayout gl_cmpst = new GridLayout(2, false);
-			gl_cmpst.verticalSpacing = 15;
-			cmpst.setLayout(gl_cmpst);
-			lbl_name = new Label(cmpst, SWT.NONE);
-			lbl_name.setText("Name:");
-			txt_name = new Text(cmpst, SWT.BORDER);
-			final GridData gd_txt_name = new GridData(SWT.FILL, SWT.CENTER,
+			final GridLayout glCmpst = new GridLayout(2, false);
+			glCmpst.verticalSpacing = 15;
+			cmpst.setLayout(glCmpst);
+			lblName = new Label(cmpst, SWT.NONE);
+			lblName.setText("Name:");
+			txtName = new Text(cmpst, SWT.BORDER);
+			final GridData gdTxtName = new GridData(SWT.FILL, SWT.CENTER,
 					true, false, 1, 1);
-			gd_txt_name.widthHint = 140;
-			txt_name.setLayoutData(gd_txt_name);
-			txt_name.setText(name);
-			txt_name.addModifyListener(new ModifyListener() {
+			gdTxtName.widthHint = 140;
+			txtName.setLayoutData(gdTxtName);
+			txtName.setText(name);
+			txtName.addModifyListener(new ModifyListener() {
 				@Override
 				public void modifyText(final ModifyEvent e) {
-					tab.setText(txt_name.getText());
+					tab.setText(txtName.getText());
 				}
 			});
-			lbl_no_rats = new Label(cmpst, SWT.NONE);
-			lbl_no_rats.setText("Number of Rats:");
-			lbl_no_rats_data = new Label(cmpst, SWT.NONE);
-			lbl_no_rats_data.setLayoutData(new GridData(SWT.FILL, SWT.CENTER,
+			lblNoRats = new Label(cmpst, SWT.NONE);
+			lblNoRats.setText("Number of Rats:");
+			lblNoRatsData = new Label(cmpst, SWT.NONE);
+			lblNoRatsData.setLayoutData(new GridData(SWT.FILL, SWT.CENTER,
 					true, false, 1, 1));
-			lbl_no_rats_data.setText(no_rats);
-			lbl_rats_numbering = new Label(cmpst, SWT.NONE);
-			lbl_rats_numbering.setText("Rats Numbers:");
-			txt_rats_numbers = new Text(cmpst, SWT.BORDER);
-			txt_rats_numbers.setLayoutData(new GridData(SWT.FILL, SWT.CENTER,
+			lblNoRatsData.setText(noRats);
+			lblRatsNumbering = new Label(cmpst, SWT.NONE);
+			lblRatsNumbering.setText("Rats Numbers:");
+			txtRatsNumbers = new Text(cmpst, SWT.BORDER);
+			txtRatsNumbers.setLayoutData(new GridData(SWT.FILL, SWT.CENTER,
 					true, false, 1, 1));
-			txt_rats_numbers.setText(rat_numbers);
-			txt_rats_numbers.setEditable(false);
-			lbl_notes = new Label(cmpst, SWT.NONE);
-			final GridData gd_lbl_notes = new GridData(SWT.LEFT, SWT.TOP,
+			txtRatsNumbers.setText(ratNumbers);
+			txtRatsNumbers.setEditable(false);
+			lblNotes = new Label(cmpst, SWT.NONE);
+			final GridData gdLblNotes = new GridData(SWT.LEFT, SWT.TOP,
 					false, false, 1, 1);
-			gd_lbl_notes.widthHint = 129;
-			lbl_notes.setLayoutData(gd_lbl_notes);
-			lbl_notes.setText("Additional Notes:");
-			txt_notes = new Text(cmpst, SWT.BORDER | SWT.MULTI);
-			final GridData gd_txt_notes = new GridData(SWT.FILL, SWT.CENTER,
+			gdLblNotes.widthHint = 129;
+			lblNotes.setLayoutData(gdLblNotes);
+			lblNotes.setText("Additional Notes:");
+			txtNotes = new Text(cmpst, SWT.BORDER | SWT.MULTI);
+			final GridData gdTxtNotes = new GridData(SWT.FILL, SWT.CENTER,
 					true, false, 1, 1);
-			gd_txt_notes.heightHint = 100;
-			txt_notes.setLayoutData(gd_txt_notes);
-			txt_notes.setText(notes);
-			tab = new TabItem(tabs_grps, SWT.NONE);
+			gdTxtNotes.heightHint = 100;
+			txtNotes.setLayoutData(gdTxtNotes);
+			txtNotes.setText(notes);
+			tab = new TabItem(tabsGrps, SWT.NONE);
 			if (name.equals(""))
 				tab.setText("new Group");
 			else
 				tab.setText(name);
 			tab.setControl(cmpst);
 			if (id == -1)
-				grp_id = latest_grp_id;
+				grpId = latestGrpId;
 			else
-				grp_id = id;
+				grpId = id;
 		}
 	}
 
-	private final ArrayList<TabContents>	arr_tabs;				// array of
+	private final ArrayList<TabContents>	tabs;				// array of
 	// TabContents
 	// to
-	private Button							btn_add_tab		= null;
-	private Button							btn_del_tab		= null;
-	private org.eclipse.swt.widgets.Group	grp_grps_info	= null;
+	private Button							btnAddTab		= null;
+	private Button							btnDelTab		= null;
+	private org.eclipse.swt.widgets.Group	grpGrpsInfo	= null;
 	// private Composite cmpst_tab = null; //DO NOT DELETE!!!
-	private int								latest_grp_id;
+	private int								latestGrpId;
 
 	// store
 	// all the form's tabs' data
-	private TabFolder						tabs_grps		= null;
+	private TabFolder						tabsGrps		= null;
 
 	protected GrpsBasicInfoPage(final String pageName) {
 		super(pageName);
-		arr_tabs = new ArrayList<TabContents>();
+		tabs = new ArrayList<TabContents>();
 	}
 
 	/**
@@ -157,35 +157,35 @@ public class GrpsBasicInfoPage extends WizardPage {
 	 *            group id
 	 * @param name
 	 *            group name
-	 * @param no_rats
+	 * @param noRats
 	 *            number of rats
-	 * @param rat_numbers
+	 * @param ratNumbers
 	 *            numbers of rats
 	 * @param notes
 	 *            any additional notes
 	 */
 	public void addNewTab(final int id, final String name,
-			final String no_rats, final String rat_numbers, final String notes) {
-		final TabContents tmp_tab = new TabContents();
-		tmp_tab.createGUI(name, no_rats, rat_numbers, notes, id);
-		latest_grp_id++;
-		arr_tabs.add(tmp_tab);
+			final String noRats, final String ratNumbers, final String notes) {
+		final TabContents tmpTab = new TabContents();
+		tmpTab.createGUI(name, noRats, ratNumbers, notes, id);
+		latestGrpId++;
+		tabs.add(tmpTab);
 	}
 
 	public void clearForm() {
-		for (final TabContents tc : arr_tabs)
+		for (final TabContents tc : tabs)
 			tc.tab.dispose();
-		arr_tabs.clear();
+		tabs.clear();
 	}
 
 	@Override
 	public void createControl(final Composite parent) {
 		final Composite cmpstPage = new Composite(parent, 0);
 		createGrpsInfo(cmpstPage);
-		btn_add_tab = new Button(cmpstPage, SWT.NONE);
-		btn_add_tab.setBounds(new Rectangle(15, 282, 29, 27));
-		btn_add_tab.setText("+");
-		btn_add_tab
+		btnAddTab = new Button(cmpstPage, SWT.NONE);
+		btnAddTab.setBounds(new Rectangle(15, 282, 29, 27));
+		btnAddTab.setText("+");
+		btnAddTab
 				.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
 					@Override
 					public void widgetSelected(
@@ -193,10 +193,10 @@ public class GrpsBasicInfoPage extends WizardPage {
 						addNewTab();
 					}
 				});
-		btn_del_tab = new Button(cmpstPage, SWT.NONE);
-		btn_del_tab.setBounds(new Rectangle(49, 282, 29, 27));
-		btn_del_tab.setText("-");
-		btn_del_tab
+		btnDelTab = new Button(cmpstPage, SWT.NONE);
+		btnDelTab.setBounds(new Rectangle(49, 282, 29, 27));
+		btnDelTab.setText("-");
+		btnDelTab
 				.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
 					@Override
 					public void widgetSelected(
@@ -212,10 +212,10 @@ public class GrpsBasicInfoPage extends WizardPage {
 	 */
 	private void createGrpsInfo(final Composite cmpstPage) {
 
-		grp_grps_info = new org.eclipse.swt.widgets.Group(cmpstPage, SWT.NONE);
-		grp_grps_info.setLayout(null);
-		grp_grps_info.setText("Information:");
-		grp_grps_info.setBounds(new Rectangle(5, 5, 559, 273));
+		grpGrpsInfo = new org.eclipse.swt.widgets.Group(cmpstPage, SWT.NONE);
+		grpGrpsInfo.setLayout(null);
+		grpGrpsInfo.setText("Information:");
+		grpGrpsInfo.setBounds(new Rectangle(5, 5, 559, 273));
 		createTabsGrps();
 	}
 
@@ -223,29 +223,18 @@ public class GrpsBasicInfoPage extends WizardPage {
 	 * This method initializes tabs_grps.
 	 */
 	private void createTabsGrps() {
-		tabs_grps = new TabFolder(grp_grps_info, SWT.NONE);
-		tabs_grps.setBounds(new Rectangle(8, 20, 541, 246));
-		// createCmpst_tabs(tabs_no);
-		// addNewTab();
-		/*
-		 * TabItem tabItem = new TabItem(tabs_grps, SWT.NONE);
-		 * tabItem.setText("Grppp"); tabItem.setControl(cmpst_tab);
-		 */
-		/*
-		 * String name=""; String no_rats=""; String rat_numbers=""; String
-		 * notes=""; int id=0;
-		 */
-
+		tabsGrps = new TabFolder(grpGrpsInfo, SWT.NONE);
+		tabsGrps.setBounds(new Rectangle(8, 20, 541, 246));
 	}
 
 	/**
 	 * Deletes an existing tab.
 	 */
 	private void deleteTab() {
-		TabItem selectedTab=tabs_grps.getSelection()[0];
-		for (final TabContents tc : arr_tabs)
+		TabItem selectedTab=tabsGrps.getSelection()[0];
+		for (final TabContents tc : tabs)
 			if(tc.tab==selectedTab){
-				tc.txt_name.setText(ExperimentManager.DELETED_GROUP_NAME);
+				tc.txtName.setText(ExperimentManager.DELETED_GROUP_NAME);
 				break;
 			}
 		selectedTab.dispose();
@@ -253,13 +242,13 @@ public class GrpsBasicInfoPage extends WizardPage {
 
 	public ArrayList<Grp2GUI> getGroups() {
 		final ArrayList<Grp2GUI> groups = new ArrayList<Grp2GUI>();
-		for (final TabContents tc : arr_tabs) {
+		for (final TabContents tc : tabs) {
 			final Group grp = new Group();
-			grp.id = tc.grp_id;
-			grp.ratsNumbering = tc.txt_rats_numbers.getText();
-			grp.notes = tc.txt_notes.getText();
-			grp.name = tc.txt_name.getText();
-			grp.noRats = Integer.parseInt(tc.lbl_no_rats_data.getText());
+			grp.id = tc.grpId;
+			grp.ratsNumbering = tc.txtRatsNumbers.getText();
+			grp.notes = tc.txtNotes.getText();
+			grp.name = tc.txtName.getText();
+			grp.noRats = Integer.parseInt(tc.lblNoRatsData.getText());
 			groups.add(grp);
 		}
 		return groups;

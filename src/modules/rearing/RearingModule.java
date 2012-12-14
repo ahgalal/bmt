@@ -35,8 +35,8 @@ import filters.rearingdetection.RearingFilterData;
  */
 public class RearingModule extends
 		Module<RearingModuleGUI, RearingModuleConfigs, RearingModuleData> {
-	private boolean				is_rearing;
-	private RearingFilterData	rearing_filter_data;
+	private boolean				rearing;
+	private RearingFilterData	rearingFilterData;
 	private String[]	expParams=new String[] { Constants.FILE_REARING_COUNTER };
 
 	/**
@@ -50,14 +50,14 @@ public class RearingModule extends
 	public RearingModule(final String name, final RearingModuleConfigs configs) {
 		super(name, configs);
 		data = new RearingModuleData("Rearing Module Data");
-		filters_data = new Data[1];
+		filtersData = new Data[1];
 		initialize();
 		gui = new RearingModuleGUI(this);
 	}
 
 	@Override
 	public boolean amIReady(final Shell shell) {
-		if (rearing_filter_data != null)
+		if (rearingFilterData != null)
 			return true;
 		return false;
 	}
@@ -67,7 +67,7 @@ public class RearingModule extends
 	 * detection is active.
 	 */
 	public void decrementRearingCounter() {
-		data.rearing_ctr--;
+		data.setRearingCtr(data.getRearingCtr() - 1);
 	}
 
 	@Override
@@ -77,9 +77,9 @@ public class RearingModule extends
 
 	@Override
 	public void deRegisterDataObject(final Data data) {
-		if (rearing_filter_data == data)
-			rearing_filter_data = null;
-		this.filters_data[0] = null;
+		if (rearingFilterData == data)
+			rearingFilterData = null;
+		this.filtersData[0] = null;
 	}
 
 	/**
@@ -88,7 +88,7 @@ public class RearingModule extends
 	 * @return number of rearings till now.
 	 */
 	public int getRearingCounter() {
-		return data.rearing_ctr;
+		return data.getRearingCtr();
 	}
 
 	/**
@@ -96,14 +96,14 @@ public class RearingModule extends
 	 * detection is active.
 	 */
 	public void incrementRearingCounter() {
-		data.rearing_ctr++;
+		data.setRearingCtr(data.getRearingCtr() + 1);
 	}
 
 	@Override
 	public void initialize() {
 		PManager.log.print("initializing..", this, Details.VERBOSE);
 		guiCargo = new Cargo(new String[] { Constants.GUI_REARING_COUNTER });
-		data.rearing_ctr = 0;
+		data.setRearingCtr(0);
 		fileCargo = new Cargo(expParams);
 		for(String str:expParams)
 			data.addParameter(str);
@@ -113,16 +113,16 @@ public class RearingModule extends
 
 	@Override
 	public void process() {
-		if (!is_rearing & rearing_filter_data.isRearing()) // it is rearing
-			data.rearing_ctr++;
-		is_rearing = rearing_filter_data.isRearing();
+		if (!rearing & rearingFilterData.isRearing()) // it is rearing
+			data.setRearingCtr(data.getRearingCtr() + 1);
+		rearing = rearingFilterData.isRearing();
 	}
 
 	@Override
 	public void registerFilterDataObject(final Data data) {
 		if (data instanceof RearingFilterData) {
-			rearing_filter_data = (RearingFilterData) data;
-			this.filters_data[0] = rearing_filter_data;
+			rearingFilterData = (RearingFilterData) data;
+			this.filtersData[0] = rearingFilterData;
 		}
 	}
 
@@ -139,12 +139,12 @@ public class RearingModule extends
 	@Override
 	public void updateFileCargoData() {
 		fileCargo.setDataByTag(Constants.FILE_REARING_COUNTER,
-				Integer.toString(data.rearing_ctr));
+				Integer.toString(data.getRearingCtr()));
 	}
 
 	@Override
 	public void updateGUICargoData() {
 		guiCargo.setDataByTag(Constants.GUI_REARING_COUNTER,
-				Integer.toString(data.rearing_ctr));
+				Integer.toString(data.getRearingCtr()));
 	}
 }

@@ -39,9 +39,9 @@ import utils.StatusManager.StatusSeverity;
  */
 
 public class RearingDetectorGUI extends PluggedGUI<RearingDetector> {
-	private Button		btn_not_rearing	= null;
+	private Button		btnNotRearing	= null;
 
-	private Button		btn_rearing_now	= null;
+	private Button		btnRearingNow	= null;
 
 	private Composite	cmpstRearing;
 
@@ -58,7 +58,7 @@ public class RearingDetectorGUI extends PluggedGUI<RearingDetector> {
 	 *            true/false
 	 */
 	public void btnNotRearingEnable(final boolean enable) {
-		btn_not_rearing.setEnabled(enable);
+		btnNotRearing.setEnabled(enable);
 	}
 
 	/**
@@ -68,7 +68,7 @@ public class RearingDetectorGUI extends PluggedGUI<RearingDetector> {
 	 *            true/false
 	 */
 	public void btnRearingNowEnable(final boolean enable) {
-		btn_rearing_now.setEnabled(enable);
+		btnRearingNow.setEnabled(enable);
 	}
 
 	@Override
@@ -87,15 +87,15 @@ public class RearingDetectorGUI extends PluggedGUI<RearingDetector> {
 		cmpstRearing = new Composite(expandBar, SWT.NONE);
 		xpndtmRearing.setControl(cmpstRearing);
 
-		btn_rearing_now = new Button(cmpstRearing, SWT.NONE);
-		btn_rearing_now.setText("Rearing NOW");
-		btn_rearing_now.setSize(new Point(100, 25));
-		btn_rearing_now.setLocation(new Point(10, 10));
-		btn_not_rearing = new Button(cmpstRearing, SWT.NONE);
-		btn_not_rearing.setBounds(new Rectangle(10, 35, 101, 25));
-		btn_not_rearing.setText("Not Rearing");
+		btnRearingNow = new Button(cmpstRearing, SWT.NONE);
+		btnRearingNow.setText("Rearing NOW");
+		btnRearingNow.setSize(new Point(100, 25));
+		btnRearingNow.setLocation(new Point(10, 10));
+		btnNotRearing = new Button(cmpstRearing, SWT.NONE);
+		btnNotRearing.setBounds(new Rectangle(10, 35, 101, 25));
+		btnNotRearing.setText("Not Rearing");
 
-		btn_not_rearing
+		btnNotRearing
 				.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
 					@Override
 					public void widgetSelected(
@@ -103,7 +103,7 @@ public class RearingDetectorGUI extends PluggedGUI<RearingDetector> {
 						rearingNow(false);
 					}
 				});
-		btn_rearing_now
+		btnRearingNow
 				.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
 					@Override
 					public void widgetSelected(
@@ -129,7 +129,7 @@ public class RearingDetectorGUI extends PluggedGUI<RearingDetector> {
 					.getFilterManager().getFilterByName("RearingDetector"))
 					.rearingNow(rearing);
 		else
-			PManager.getDefault().statusMgr.setStatus(
+			PManager.getDefault().getStatusMgr().setStatus(
 					"Tracking is not running!", StatusSeverity.ERROR);
 	}
 
@@ -137,16 +137,16 @@ public class RearingDetectorGUI extends PluggedGUI<RearingDetector> {
 	public void stateGeneralChangeHandler(final ProgramState state) {
 		switch (state.getGeneral()) {
 			case IDLE:
-				btn_not_rearing.setEnabled(false);
-				btn_rearing_now.setEnabled(false);
+				btnNotRearing.setEnabled(false);
+				btnRearingNow.setEnabled(false);
 				break;
 			case TRACKING:
-				btn_not_rearing.setEnabled(true);
-				btn_rearing_now.setEnabled(true);
+				btnNotRearing.setEnabled(true);
+				btnRearingNow.setEnabled(true);
 				break;
 			default:
-				btn_not_rearing.setEnabled(false);
-				btn_rearing_now.setEnabled(false);
+				btnNotRearing.setEnabled(false);
+				btnRearingNow.setEnabled(false);
 				break;
 		}
 	}

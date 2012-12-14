@@ -36,8 +36,8 @@ public class RatFinder2 extends RatFinder {
 		}
 	}
 
-	int							border_color	= Color.RED.getRGB();
-	int							botash_found	= 0;
+	private int							borderColor	= Color.RED.getRGB();
+	private int							botashFound	= 0;
 	protected ArrayList<Point>	coveredGrid;
 
 	public RatFinder2(final String name, final Link linkIn, final Link linkOut) {
@@ -46,13 +46,13 @@ public class RatFinder2 extends RatFinder {
 		// TODO Auto-generated constructor stub
 	}
 
-	protected int contourEdge(final int[] img, final int x_start,
-			final int y_start, final int width, final int height) {
+	protected int contourEdge(final int[] img, final int xStart,
+			final int yStart, final int width, final int height) {
 		final int area;
-		int pivot_x = 0, pivot_y = 0;
-		int pivot_x_old = x_start, pivot_y_old = y_start;
+		int pivotX = 0, pivotY = 0;
+		int pivotXOld = xStart, pivotYOld = yStart;
 
-		int start_i = -1;
+		int startI = -1;
 
 		for (int j = 7; j >= 0; j--) // initial pivot
 		{
@@ -62,66 +62,65 @@ public class RatFinder2 extends RatFinder {
 			x2 = (int) (Math.cos(0.785 * (j - 1 + 8) % 8) * 1.5);
 			y2 = (int) (Math.sin(0.785 * (j - 1 + 8) % 8) * -1.5);
 
-			if ((x_start + x1 < 0) || (x_start + x1 >= width)
-					|| (y_start + y1 < 0) || (y_start + y1 >= height)
-					|| (x_start + x2 < 0) || (x_start + x2 >= width)
-					|| (y_start + y2 < 0) || (y_start + y2 >= height))
+			if ((xStart + x1 < 0) || (xStart + x1 >= width)
+					|| (yStart + y1 < 0) || (yStart + y1 >= height)
+					|| (xStart + x2 < 0) || (xStart + x2 >= width)
+					|| (yStart + y2 < 0) || (yStart + y2 >= height))
 				continue;
 
-			if ((img[x_start + x2 + width * (y2 + y_start)] == 0xFFFFFF)
-					&& (img[x_start + x1 + width * (y1 + y_start)] == 0)) {
-				pivot_x = x_start + x2;
-				pivot_y = y_start + y2;
-				// img[x_start+x2+width*(y2+y_start)]= border_color;
+			if ((img[xStart + x2 + width * (y2 + yStart)] == 0xFFFFFF)
+					&& (img[xStart + x1 + width * (y1 + yStart)] == 0)) {
+				pivotX = xStart + x2;
+				pivotY = yStart + y2;
 			}
 		}
 
 		int x = 0, y = 0;
-		while ((pivot_x != x_start) || (pivot_y != y_start)) {
+		while ((pivotX != xStart) || (pivotY != yStart)) {
 			/*
 			 * Selecting the start angle "i"
 			 */
-			if (pivot_x - pivot_x_old == 1) {
-				if (pivot_y - pivot_y_old == -1)
-					start_i = 4;
-				else if (pivot_y - pivot_y_old == 0)
-					start_i = 3;
-				else if (pivot_y - pivot_y_old == 1)
-					start_i = 2;
-			} else if (pivot_x - pivot_x_old == 0) {
-				if (pivot_y - pivot_y_old == -1)
-					start_i = 5;
-				else if (pivot_y - pivot_y_old == 1)
-					start_i = 1;
-			} else if (pivot_x - pivot_x_old == -1)
-				if (pivot_y - pivot_y_old == -1)
-					start_i = 3;
-				else if (pivot_y - pivot_y_old == 0)
-					start_i = 7;
-				else if (pivot_y - pivot_y_old == 1)
-					start_i = 0;
+			if (pivotX - pivotXOld == 1) {
+				if (pivotY - pivotYOld == -1)
+					startI = 4;
+				else if (pivotY - pivotYOld == 0)
+					startI = 3;
+				else if (pivotY - pivotYOld == 1)
+					startI = 2;
+			} else if (pivotX - pivotXOld == 0) {
+				if (pivotY - pivotYOld == -1)
+					startI = 5;
+				else if (pivotY - pivotYOld == 1)
+					startI = 1;
+			} else if (pivotX - pivotXOld == -1)
+				if (pivotY - pivotYOld == -1)
+					startI = 3;
+				else if (pivotY - pivotYOld == 0)
+					startI = 7;
+				else if (pivotY - pivotYOld == 1)
+					startI = 0;
 
 			/*
 			 * Selecting the next pivot point
 			 */
 
 			int trials = 0;
-			for (int i = (start_i) % 8; i != (start_i + 1) % 8; i = (i - 1 + 8) % 8) {
+			for (int i = (startI) % 8; i != (startI + 1) % 8; i = (i - 1 + 8) % 8) {
 				trials++;
 				x = (int) (Math.cos(0.785 * i) * 1.5);
 				y = (int) (Math.sin(0.785 * i) * -1.5);
 
-				if ((pivot_x + x < 0) || (pivot_x + x >= width)
-						|| (pivot_y + y < 0) || (pivot_y + y >= height))
+				if ((pivotX + x < 0) || (pivotX + x >= width)
+						|| (pivotY + y < 0) || (pivotY + y >= height))
 					continue;
-				else if ((img[pivot_x + x + width * (y + pivot_y)] == 0xFFFFFF)
-						|| ((pivot_x + x == x_start) && (pivot_y + y == y_start))) {
+				else if ((img[pivotX + x + width * (y + pivotY)] == 0xFFFFFF)
+						|| ((pivotX + x == xStart) && (pivotY + y == yStart))) {
 
-					pivot_x_old = pivot_x;
-					pivot_y_old = pivot_y;
-					img[pivot_x + x + width * (y + pivot_y)] = border_color; // border
-					pivot_x += x;
-					pivot_y += y;
+					pivotXOld = pivotX;
+					pivotYOld = pivotY;
+					img[pivotX + x + width * (y + pivotY)] = borderColor; // border
+					pivotX += x;
+					pivotY += y;
 					break;
 				}
 			}
@@ -159,20 +158,20 @@ public class RatFinder2 extends RatFinder {
 	 */
 	@Override
 	protected void updateCentroid(final int[] binaryImage) {
-		System.arraycopy(binaryImage, 0, out_data, 0, binaryImage.length);
+		System.arraycopy(binaryImage, 0, outData, 0, binaryImage.length);
 		// walking on y, step=5
-		y_loop: for (int y = 0; y < configs.common_configs.height; y += 5)
+		yLoop: for (int y = 0; y < configs.getCommonConfigs().getHeight(); y += 5)
 			// walking on x, step=1
-			x_loop: for (int x = 0; x < configs.common_configs.width; x++)
+			xLoop: for (int x = 0; x < configs.getCommonConfigs().getWidth(); x++)
 				// if white ...
-				if (out_data[x + y * configs.common_configs.width] == 0xFFFFFF) {
-					contourEdge(out_data, x, y, configs.common_configs.width,
-							configs.common_configs.height);
-					botash_found++;
-				} else if (out_data[x + y * configs.common_configs.width] == border_color)
-					continue y_loop;
-		System.out.print(botash_found + "\n");
-		botash_found = 0;
+				if (outData[x + y * configs.getCommonConfigs().getWidth()] == 0xFFFFFF) {
+					contourEdge(outData, x, y, configs.getCommonConfigs().getWidth(),
+							configs.getCommonConfigs().getHeight());
+					botashFound++;
+				} else if (outData[x + y * configs.getCommonConfigs().getWidth()] == borderColor)
+					continue yLoop;
+		System.out.print(botashFound + "\n");
+		botashFound = 0;
 	}
 
 	public void writeImageToFile(final int[] img, final int width,

@@ -18,13 +18,13 @@ public class MovementMeter extends
 	private int[]	greyData, prevGreyData;
 	private int[]	outputData, prevOutputData;
 	private int		summation;
-	TimeCalculator	tc	= new TimeCalculator();
+	private TimeCalculator	tc	= new TimeCalculator();
 
 	private int		x1, x2, y1, y2;
 
-	public MovementMeter(final String name, final Link link_in,
-			final Link link_out) {
-		super(name, link_in, link_out);
+	public MovementMeter(final String name, final Link linkIn,
+			final Link linkOut) {
+		super(name, linkIn, linkOut);
 		filterData = new MovementMeterData("Movement Meter Data");
 	}
 
@@ -32,19 +32,19 @@ public class MovementMeter extends
 		int sum = 0;
 		for (int x = x1; x < x2; x++)
 			for (int y = y1; y < y2; y++) {
-				sum += arr[x + y * configs.common_configs.width] & 0x000000FF;
+				sum += arr[x + y * configs.getCommonConfigs().getWidth()] & 0x000000FF;
 				if ((x == x1) || (x == x2 - 1))
-					arr[x + y * configs.common_configs.width] = 0x000000FF;
+					arr[x + y * configs.getCommonConfigs().getWidth()] = 0x000000FF;
 			}
 		return sum;
 	}
 
 	@Override
 	public boolean configure(final FilterConfigs configs) {
-		prevGreyData = new int[configs.common_configs.width
-				* configs.common_configs.height];
-		prevOutputData = new int[configs.common_configs.width
-				* configs.common_configs.height];
+		prevGreyData = new int[configs.getCommonConfigs().getWidth()
+				* configs.getCommonConfigs().getHeight()];
+		prevOutputData = new int[configs.getCommonConfigs().getWidth()
+				* configs.getCommonConfigs().getHeight()];
 		final boolean ret = super.configure(configs);
 		initializeSearchBounds();
 		return ret;
@@ -52,13 +52,13 @@ public class MovementMeter extends
 
 	private void getInterestingAreaBounds(final int[] arr, final int threshold) {
 		initializeSearchBounds();
-		for (int y = 10; y < configs.common_configs.height; y += 3)
-			for (int x1 = 10; x1 < configs.common_configs.width; x1 += 3)
-				if ((arr[x1 + y * configs.common_configs.width] & 0x000000FF) > threshold) {
+		for (int y = 10; y < configs.getCommonConfigs().getHeight(); y += 3)
+			for (int x1 = 10; x1 < configs.getCommonConfigs().getWidth(); x1 += 3)
+				if ((arr[x1 + y * configs.getCommonConfigs().getWidth()] & 0x000000FF) > threshold) {
 					if (x1 < this.x1)
 						this.x1 = x1;
-					for (int x2 = configs.common_configs.width - 11; x2 > x1; x2 -= 3)
-						if ((arr[x2 + y * configs.common_configs.width] & 0x000000FF) > threshold)
+					for (int x2 = configs.getCommonConfigs().getWidth() - 11; x2 > x1; x2 -= 3)
+						if ((arr[x2 + y * configs.getCommonConfigs().getWidth()] & 0x000000FF) > threshold)
 							if (x2 > this.x2)
 								this.x2 = x2;
 					break;
@@ -66,10 +66,10 @@ public class MovementMeter extends
 	}
 
 	private void initializeSearchBounds() {
-		x1 = configs.common_configs.width;
+		x1 = configs.getCommonConfigs().getWidth();
 		y1 = 0;
 		x2 = 0;
-		y2 = configs.common_configs.height;
+		y2 = configs.getCommonConfigs().getHeight();
 	}
 
 	/*
@@ -78,9 +78,9 @@ public class MovementMeter extends
 	 */
 	@Override
 	public void process() {
-		if (link_in.getData()[640 * 100] == 0)
-			System.out.println("link_in has 0");
-		greyData = ImageManipulator.rgbIntArray2GrayIntArray(link_in.getData());
+		if (linkIn.getData()[640 * 100] == 0)
+			System.out.println("linkIn has 0");
+		greyData = ImageManipulator.rgbIntArray2GrayIntArray(linkIn.getData());
 		if (greyData[640 * 100] == 0)
 			System.out.println("greyData has 0");
 		outputData = ImageManipulator.subtractGreyImage(greyData, prevGreyData);
@@ -91,11 +91,10 @@ public class MovementMeter extends
 
 		final int tmp = addAllPixelsValues(outputData);
 		if (tmp == 0)
-			link_out.setData(prevOutputData);
-		// link_out.setData(outputData);
+			linkOut.setData(prevOutputData);
 		else {
 			summation = tmp;
-			link_out.setData(outputData);
+			linkOut.setData(outputData);
 
 			prevOutputData = outputData;
 		}

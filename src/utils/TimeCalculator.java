@@ -1,7 +1,7 @@
 package utils;
 
 public class TimeCalculator {
-	long	t1, t2;
+	private long	t1, t2;
 
 	public long end() {
 		t2 = System.currentTimeMillis();

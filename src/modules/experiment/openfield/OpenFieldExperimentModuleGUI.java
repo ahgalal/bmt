@@ -55,18 +55,18 @@ public class OpenFieldExperimentModuleGUI extends ExperimentModuleGUI {
 	public void btnSetbgAction() {
 		if ((PManager.getDefault().getState().getStream() == StreamState.STREAMING)
 				|| (PManager.getDefault().getState().getStream() == StreamState.PAUSED)) {
-			PManager.getDefault().drw_zns
+			PManager.getDefault().getDrawZns()
 					.setBackground(((OpenFieldExperimentModule) owner)
 							.updateRGBBackground());
 			((SubtractorFilter) PManager.getDefault().getVideoManager()
 					.getFilterManager().getFilterByName("SubtractionFilter"))
 					.updateBG();
 		} else if (PManager.getDefault().getState().getGeneral() == GeneralState.TRACKING)
-			PManager.getDefault().statusMgr.setStatus(
+			PManager.getDefault().getStatusMgr().setStatus(
 					"Background can't be taken while tracking.",
 					StatusSeverity.ERROR);
 		else
-			PManager.getDefault().statusMgr.setStatus(
+			PManager.getDefault().getStatusMgr().setStatus(
 					"Please start the camera first.", StatusSeverity.ERROR);
 	}
 

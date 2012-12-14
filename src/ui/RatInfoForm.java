@@ -36,15 +36,15 @@ import control.ui.CtrlRatInfoForm;
  * @author Creative
  */
 public class RatInfoForm extends BaseUI {
-	private Button			btn_cancel		= null;
+	private Button			btnCancel		= null;
 
-	private Button			btn_ok			= null;
-	private Combo			cmbo_grp_names	= null;
+	private Button			btnOk			= null;
+	private Combo			cmboGrpNames	= null;
 	private CtrlRatInfoForm	controller;			// @jve:decl-index=0:
-	private Label			lbl_groupname	= null;
-	private Label			lbl_ratnumber	= null;
+	private Label			lblGroupname	= null;
+	private Label			lblRatnumber	= null;
 	private Shell			sShell			= null; // @jve:decl-index=0:visual-constraint="13,18"
-	private Text			txt_ratnumber	= null;
+	private Text			txtRatnumber	= null;
 
 	/**
 	 * Creates GUI components, and links this Shell with the parent Shell.
@@ -52,13 +52,13 @@ public class RatInfoForm extends BaseUI {
 	public RatInfoForm() {
 		createSShell();
 		super.sShell = this.sShell;
-		sShell.setDefaultButton(btn_ok);
+		sShell.setDefaultButton(btnOk);
 	}
 
 	@Override
 	public void clearForm() {
-		txt_ratnumber.setText("");
-		cmbo_grp_names.removeAll();
+		txtRatnumber.setText("");
+		cmboGrpNames.removeAll();
 	}
 
 	/**
@@ -66,8 +66,8 @@ public class RatInfoForm extends BaseUI {
 	 */
 
 	private void createCmboGrpNames() {
-		cmbo_grp_names = new Combo(sShell, SWT.READ_ONLY);
-		cmbo_grp_names.setBounds(new Rectangle(115, 45, 73, 23));
+		cmboGrpNames = new Combo(sShell, SWT.READ_ONLY);
+		cmboGrpNames.setBounds(new Rectangle(115, 45, 73, 23));
 	}
 
 	/**
@@ -87,27 +87,27 @@ public class RatInfoForm extends BaseUI {
 			}
 		});
 			
-		lbl_ratnumber = new Label(sShell, SWT.NONE);
-		lbl_ratnumber.setText("Rat Number");
-		lbl_ratnumber.setBounds(new Rectangle(10, 18, 86, 15));
-		lbl_groupname = new Label(sShell, SWT.NONE);
-		lbl_groupname.setBounds(new Rectangle(10, 50, 86, 15));
-		lbl_groupname.setText("Group Name");
-		txt_ratnumber = new Text(sShell, SWT.BORDER);
-		txt_ratnumber.setBounds(new Rectangle(113, 14, 73, 21));
-		btn_ok = new Button(sShell, SWT.NONE);
-		btn_ok.setBounds(new Rectangle(13, 79, 82, 24));
-		btn_ok.setText("OK");
-		btn_ok.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
+		lblRatnumber = new Label(sShell, SWT.NONE);
+		lblRatnumber.setText("Rat Number");
+		lblRatnumber.setBounds(new Rectangle(10, 18, 86, 15));
+		lblGroupname = new Label(sShell, SWT.NONE);
+		lblGroupname.setBounds(new Rectangle(10, 50, 86, 15));
+		lblGroupname.setText("Group Name");
+		txtRatnumber = new Text(sShell, SWT.BORDER);
+		txtRatnumber.setBounds(new Rectangle(113, 14, 73, 21));
+		btnOk = new Button(sShell, SWT.NONE);
+		btnOk.setBounds(new Rectangle(13, 79, 82, 24));
+		btnOk.setText("OK");
+		btnOk.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
 			@Override
 			public void widgetSelected(
 					final org.eclipse.swt.events.SelectionEvent e) {
 				
 				try {
-					if(txt_ratnumber.getText().equals("")){
+					if(txtRatnumber.getText().equals("")){
 						throw new RuntimeException();
 					}
-					Integer.parseInt(txt_ratnumber.getText());
+					Integer.parseInt(txtRatnumber.getText());
 					
 				} catch (RuntimeException e1) {
 					MsgBox.show(sShell, "Please enter valid rat number",
@@ -115,19 +115,19 @@ public class RatInfoForm extends BaseUI {
 					return;
 				}
 				
-				if (controller.setVars(new String[] { txt_ratnumber.getText(),
-						cmbo_grp_names.getText() }))
+				if (controller.setVars(new String[] { txtRatnumber.getText(),
+						cmboGrpNames.getText() }))
 					controller.btnOkAction();
 				else
 					MsgBox.show(sShell, "Please enter valid rat number",
 							"Error", SWT.ERROR);
 			}
 		});
-		btn_cancel = new Button(sShell, SWT.NONE);
-		btn_cancel.setBounds(new Rectangle(104, 79, 82, 24));
-		btn_cancel.setText("Cancel");
+		btnCancel = new Button(sShell, SWT.NONE);
+		btnCancel.setBounds(new Rectangle(104, 79, 82, 24));
+		btnCancel.setText("Cancel");
 		createCmboGrpNames();
-		btn_cancel
+		btnCancel
 				.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
 					@Override
 					public void widgetSelected(
@@ -148,7 +148,7 @@ public class RatInfoForm extends BaseUI {
 
 	@Override
 	public void loadData(final String[] strArray) {
-		txt_ratnumber.setText(strArray[0]);
+		txtRatnumber.setText(strArray[0]);
 		final String[] grps = new String[strArray.length - 1];
 		for (int i = 1; i < strArray.length; i++)
 			grps[i - 1] = strArray[i];
@@ -159,13 +159,13 @@ public class RatInfoForm extends BaseUI {
 	 * Loads grps_names(groups names) it has(entered before) to the
 	 * cmbo_grp_names(Combo).
 	 * 
-	 * @param grps_names
+	 * @param grpsNames
 	 *            names of the groups to load into the combobox
 	 */
-	private void loadGroupsToCombo(final String[] grps_names) {
-		for (int i = 0; i < grps_names.length; i++)
-			cmbo_grp_names.add(grps_names[i]);
-		cmbo_grp_names.select(0);
+	private void loadGroupsToCombo(final String[] grpsNames) {
+		for (int i = 0; i < grpsNames.length; i++)
+			cmboGrpNames.add(grpsNames[i]);
+		cmboGrpNames.select(0);
 	}
 
 	@SuppressWarnings("rawtypes")
@@ -185,7 +185,7 @@ public class RatInfoForm extends BaseUI {
 	public void show(final boolean visibility) {
 		super.show(visibility);
 		if(visibility)
-			txt_ratnumber.setFocus();
+			txtRatnumber.setFocus();
 	}
 
 }

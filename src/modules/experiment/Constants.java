@@ -52,25 +52,25 @@ public class Constants {
 	/**
 	 * Experiment Headers:.
 	 */
-	public static final String	h_exp					= "[Experiment Info]";
-	public static final String	h_exp_date				= "Date: ";
+	public static final String	H_EXP					= "[Experiment Info]";
+	public static final String	H_EXP_DATE				= "Date: ";
 
-	public static final String	h_exp_name				= "Name: ";
-	public static final String	h_exp_notes				= "Notes: ";
-	public static final String	h_exp_type				= "Type: ";
-	public static final String	h_exp_user				= "User Name: ";
+	public static final String	H_EXP_NAME				= "Name: ";
+	public static final String	H_EXP_NOTES				= "Notes: ";
+	public static final String	H_EXP_TYPES				= "Type: ";
+	public static final String	H_EXP_USER				= "User Name: ";
 	/**
 	 * Group Headers:.
 	 */
-	public static final String	h_grp					= "[Group Info]";
-	public static final String	h_grp_id				= "ID: ";
-	public static final String	h_grp_name				= "Name: ";
-	public static final String	h_grp_no_rats			= "Number of Rats: ";
-	public static final String	h_grp_notes				= "Notes: ";
-	public static final String	h_grp_rats_numbers		= "Rats' Numbers: ";
+	public static final String	H_GRP					= "[Group Info]";
+	public static final String	H_GRP_ID				= "ID: ";
+	public static final String	H_GRP_NAME				= "Name: ";
+	public static final String	H_GRP_NO_RATS			= "Number of Rats: ";
+	public static final String	H_GRP_NOTES				= "Notes: ";
+	public static final String	H_GRP_RATS_NUMBERS		= "Rats' Numbers: ";
 	/**
 	 * Rat Header:.
 	 */
-	public static final String	h_rat					= "[Rat Info]";
+	public static final String	H_RAT					= "[Rat Info]";
 
 }

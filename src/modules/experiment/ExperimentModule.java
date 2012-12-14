@@ -39,12 +39,12 @@ import filters.Data;
 public abstract class ExperimentModule
 extends
 Module<ExperimentModuleGUI, ExperimentModuleConfigs, ExperimentModuleData> {
-	private boolean	force_ready			= false;
+	private boolean	forceReady			= false;
 	private String[] expParams = new String[]{Constants.FILE_RAT_NUMBER,
 			Constants.FILE_GROUP_NAME };
-	private boolean	msgbox_pending		= true;
+	private boolean	msgboxPending		= true;
 
-	private boolean	rat_frm_is_shown	= false;
+	private boolean	ratFrmShown	= false;
 
 	public ExperimentModule(final String name,
 			final ExperimentModuleConfigs config) {
@@ -57,9 +57,9 @@ Module<ExperimentModuleGUI, ExperimentModuleConfigs, ExperimentModuleData> {
 	}
 	@Override
 	public boolean amIReady(final Shell shell) {
-		rat_frm_is_shown = false;
-		msgbox_pending = true;
-		force_ready = false;
+		ratFrmShown = false;
+		msgboxPending = true;
+		forceReady = false;
 		if (ExperimentManager.getDefault().isExperimentPresent()) {
 			// if we had an empty experiment (no parameters), we assign the
 			// set of parameters from the module manager to the exp.
@@ -79,17 +79,17 @@ Module<ExperimentModuleGUI, ExperimentModuleConfigs, ExperimentModuleData> {
 								+ " experiment when done!, Continue?");
 						mbox.setText("Continue?");
 						if (mbox.open() == SWT.YES) {
-							PManager.getDefault().frm_rat.show(true);
-							rat_frm_is_shown = true;
-							msgbox_pending = false;
+							PManager.getDefault().getFrmRat().show(true);
+							ratFrmShown = true;
+							msgboxPending = false;
 						} else
-							msgbox_pending = false;
+							msgboxPending = false;
 					}
 				});
 			else {
-				PManager.getDefault().frm_rat.show(true);
-				rat_frm_is_shown = true;
-				msgbox_pending = false;
+				PManager.getDefault().getFrmRat().show(true);
+				ratFrmShown = true;
+				msgboxPending = false;
 			}
 
 		} else
@@ -101,19 +101,19 @@ Module<ExperimentModuleGUI, ExperimentModuleConfigs, ExperimentModuleData> {
 					mbox.setMessage("No experiment is loaded!, Continue?");
 					mbox.setText("Continue?");
 					if (mbox.open() == SWT.YES)
-						force_ready = true;
+						forceReady = true;
 					else
-						force_ready = false;
-					msgbox_pending = false;
+						forceReady = false;
+					msgboxPending = false;
 				}
 			});
-		while (msgbox_pending)
+		while (msgboxPending)
 			try {
 				Thread.sleep(200);
 			} catch (final InterruptedException e) {
 				e.printStackTrace();
 			}
-			if (force_ready)
+			if (forceReady)
 				return true;
 			return waitForRatFrm();
 	}
@@ -191,13 +191,13 @@ Module<ExperimentModuleGUI, ExperimentModuleConfigs, ExperimentModuleData> {
 	 * @return true: a valid rat is entered, false: cancel is pressed
 	 */
 	private boolean waitForRatFrm() {
-		while (rat_frm_is_shown
-				&& (!PManager.getDefault().frm_rat.isValidRatEntered() && !PManager
-						.getDefault().frm_rat.isCancelled()))
+		while (ratFrmShown
+				&& (!PManager.getDefault().getFrmRat().isValidRatEntered() && !PManager
+						.getDefault().getFrmRat().isCancelled()))
 			//System.out.println("sleeping ..1");
 		Utils.sleep(200);
 		//System.out.println("sleeping ..2");
-		if (PManager.getDefault().frm_rat.isValidRatEntered())
+		if (PManager.getDefault().getFrmRat().isValidRatEntered())
 			return true;
 		else
 			return false;

@@ -41,81 +41,80 @@ public class TextEngine {
 	/**
 	 * Loads Experiment's data from a Text file to an Experiment object.
 	 * 
-	 * @param file_name
+	 * @param fileName
 	 *            file path to the text file containing the experiment's
 	 *            information
 	 * @param exp
 	 *            Experiment object to load the information to
 	 * @return true: success, false: failure
 	 */
-	public boolean readExpInfoFromTXTFile(final String file_name,
+	public boolean readExpInfoFromTXTFile(final String fileName,
 			final Experiment exp) {
 		try {
-			String tmp_line = null;
-			String[] line_data;
-			fis = new FileInputStream(file_name);
+			String tmpLine = null;
+			String[] lineData;
+			fis = new FileInputStream(fileName);
 			bis = new BufferedInputStream(fis);
 
-			final BufferedReader buf_rdr = new BufferedReader(
+			final BufferedReader bufReader = new BufferedReader(
 					new InputStreamReader(bis));
-			boolean group_rats_are_loaded = false;
-			Group grp_tmp = null;
-			while (buf_rdr.ready()) {
-				if (!group_rats_are_loaded)
-					tmp_line = buf_rdr.readLine();
-				group_rats_are_loaded = false;
-				if (tmp_line.equals(Constants.h_exp)) { // load exp. info
-					final String tmp_name = buf_rdr.readLine().substring(
-							Constants.h_exp_name.length());
-					final String tmp_type = buf_rdr.readLine().substring(
-							Constants.h_exp_type.length());
-					final String tmp_user = buf_rdr.readLine().substring(
-							Constants.h_exp_user.length());
-					final String tmp_date = buf_rdr.readLine().substring(
-							Constants.h_exp_date.length());
-					final String tmp_notes = buf_rdr.readLine().substring(
-							Constants.h_exp_notes.length());
+			boolean groupRatsLoaded = false;
+			Group grpTmp = null;
+			while (bufReader.ready()) {
+				if (!groupRatsLoaded)
+					tmpLine = bufReader.readLine();
+				groupRatsLoaded = false;
+				if (tmpLine.equals(Constants.H_EXP)) { // load exp. info
+					final String tmpName = bufReader.readLine().substring(
+							Constants.H_EXP_NAME.length());
+					final String tmpType = bufReader.readLine().substring(
+							Constants.H_EXP_TYPES.length());
+					final String tmpUser = bufReader.readLine().substring(
+							Constants.H_EXP_USER.length());
+					final String tmpDate = bufReader.readLine().substring(
+							Constants.H_EXP_DATE.length());
+					final String tmpNotes = bufReader.readLine().substring(
+							Constants.H_EXP_NOTES.length());
 					// TODO: Minor Bug: if the notes or any string of the above
 					// is
 					// multi-line, the second line and all next lines will not
 					// be
 					// loaded!!
 					// as a fix: think of Object Serialization/Deserialization.
-					exp.setExperimentInfo(tmp_name, tmp_user, tmp_date,
-							tmp_notes, tmp_type);
-				} else if (tmp_line.equals(Constants.h_grp)) { // load grp. info
-					final int tmp_id = Integer.parseInt(buf_rdr.readLine()
-							.substring(Constants.h_grp_id.length()));
-					final String tmp_name = buf_rdr.readLine().substring(
-							Constants.h_grp_name.length());
-					// int tmp_no_rats =
-					Integer.parseInt(buf_rdr.readLine().substring(
-							Constants.h_grp_no_rats.length()));
+					exp.setExperimentInfo(tmpName, tmpUser, tmpDate,
+							tmpNotes, tmpType);
+				} else if (tmpLine.equals(Constants.H_GRP)) { // load grp. info
+					final int tmpId = Integer.parseInt(bufReader.readLine()
+							.substring(Constants.H_GRP_ID.length()));
+					final String tmpName = bufReader.readLine().substring(
+							Constants.H_GRP_NAME.length());
+					Integer.parseInt(bufReader.readLine().substring(
+							Constants.H_GRP_NO_RATS.length()));
 					/*
 					 * Just a holder to skip the Rats' numbers line, we can know
 					 * their numbers later (no need to read, parse etc..)
 					 */
-					buf_rdr.readLine();
-					final String tmp_notes = buf_rdr.readLine().substring(
-							Constants.h_grp_notes.length());
-					grp_tmp = new Group(tmp_id, tmp_name, tmp_notes);
-					exp.addGroup(grp_tmp);
-				} else if (tmp_line.equals(Constants.h_rat)) {
-					tmp_line = buf_rdr.readLine();
-					line_data = readLineData(tmp_line);
-					exp.setParametersList(line_data);
-					while (buf_rdr.ready())
-						if (!(tmp_line = buf_rdr.readLine()).substring(0, 1)
+					bufReader.readLine();
+					final String tmpNotes = bufReader.readLine().substring(
+							Constants.H_GRP_NOTES.length());
+					grpTmp = new Group(tmpId, tmpName, tmpNotes);
+					exp.addGroup(grpTmp);
+				} else if (tmpLine.equals(Constants.H_RAT)) {
+					tmpLine = bufReader.readLine();
+					lineData = readLineData(tmpLine);
+					exp.setParametersList(lineData);
+					while (bufReader.ready())
+						if (!(tmpLine = bufReader.readLine()).substring(0, 1)
 								.equals("[")) {
-							line_data = readLineData(tmp_line);
-							for (int i = 0; i < line_data.length; i++)
-								line_data[i] = line_data[i].trim();
-							final Rat tmp_rat = new Rat(
-									exp.getExpParametersList(), line_data);
-							grp_tmp.addRat(tmp_rat);
+							lineData = readLineData(tmpLine);
+							for (int i = 0; i < lineData.length; i++)
+								lineData[i] = lineData[i].trim();
+							final Rat tmpRat = new Rat(
+									exp.getExpParametersList(), lineData);
+							grpTmp.addRat(tmpRat);
 						} else
 							break;
-					group_rats_are_loaded = true;
+					groupRatsLoaded = true;
 				}
 			}
 			fis.close();

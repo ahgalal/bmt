@@ -31,9 +31,9 @@ import utils.StatusManager.StatusSeverity;
  */
 public class CtrlRatInfoForm extends ControllerUI<RatInfoForm> {
 	private boolean	cancelled;
-	private String	grp_name;
-	private boolean	iamready;
-	private int		rat_num;
+	private String	grpName;
+	private boolean	ready;
+	private int		ratNum;
 
 	/**
 	 * Initializes class attributes (RatInfoForm ,InfoController and PManager).
@@ -49,7 +49,7 @@ public class CtrlRatInfoForm extends ControllerUI<RatInfoForm> {
 	 */
 	public void btnOkAction() {
 		if (checkAndSubmitData()) {
-			iamready = true;
+			ready = true;
 			ui.show(false);
 		}
 	}
@@ -73,29 +73,29 @@ public class CtrlRatInfoForm extends ControllerUI<RatInfoForm> {
 	public boolean checkAndSubmitData() {
 		try {
 
-			final int tmp_confirmation = ExperimentManager.getDefault()
-					.validateRatAndGroup(rat_num, grp_name);
-			if (tmp_confirmation == 0) {
-				ExperimentManager.getDefault().setCurrentRatAndGroup(rat_num,
-						grp_name);
+			final int tmpConfirmation = ExperimentManager.getDefault()
+					.validateRatAndGroup(ratNum, grpName);
+			if (tmpConfirmation == 0) {
+				ExperimentManager.getDefault().setCurrentRatAndGroup(ratNum,
+						grpName);
 				return true;
-			} else if (tmp_confirmation == 1) { // Rat already exists
+			} else if (tmpConfirmation == 1) { // Rat already exists
 				final MessageBox msg = new MessageBox(ui.getShell(),
 						SWT.ICON_QUESTION | SWT.YES | SWT.NO);
 				msg.setText("Confirmation");
-				msg.setMessage("Rat '" + rat_num
+				msg.setMessage("Rat '" + ratNum
 						+ "' already exists, replace it?");
 				final int res = msg.open();
 				if (res == SWT.YES) {
 					ExperimentManager.getDefault().setCurrentRatAndGroup(
-							rat_num, grp_name);
+							ratNum, grpName);
 					return true;
 				}
-			} else if (tmp_confirmation == -1) // Group not found
-				pm.statusMgr.setStatus("Please select a group.",
+			} else if (tmpConfirmation == -1) // Group not found
+				pm.getStatusMgr().setStatus("Please select a group.",
 						StatusSeverity.ERROR);
 		} catch (final NumberFormatException e1) {
-			pm.statusMgr.setStatus("Please enter a valid Rat number.",
+			pm.getStatusMgr().setStatus("Please enter a valid Rat number.",
 					StatusSeverity.ERROR);
 		}
 		return false;
@@ -117,14 +117,14 @@ public class CtrlRatInfoForm extends ControllerUI<RatInfoForm> {
 	 * @return true: valid rat, false: invalid rat or user hasn't selected a rat
 	 */
 	public boolean isValidRatEntered() {
-		return iamready;
+		return ready;
 	}
 
 	@Override
 	public boolean setVars(final String[] strs) {
 		if (!strs[0].isEmpty()) {
-			rat_num = Integer.parseInt(strs[0]);
-			grp_name = strs[1];
+			ratNum = Integer.parseInt(strs[0]);
+			grpName = strs[1];
 			return true;
 		}
 		return false;
@@ -134,7 +134,7 @@ public class CtrlRatInfoForm extends ControllerUI<RatInfoForm> {
 	public void show(final boolean visibility) {
 		final String[] grps = ExperimentManager.getDefault().getGroupsNames();
 		final String[] params = new String[grps.length + 1];
-		iamready = false;
+		ready = false;
 		cancelled = false;
 		params[0] = "";
 		for (int i = 0; i < grps.length; i++)

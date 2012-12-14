@@ -30,10 +30,10 @@ import filters.subtractionfilter.SubtractionConfigs;
  * @author Creative
  */
 public class CtrlOptionsWindow extends ControllerUI<OptionsWindow> {
-	private boolean	enable_auto_rearing;
+	private boolean	enableAutoRearing;
 	private int		hyst;
-	private int		rearing_thresh;
-	private int		subtraction_thresh;
+	private int		rearingThresh;
+	private int		subtractionThresh;
 
 	/**
 	 * Initializes class attributes (OptionsWindow and PManager) and then loads
@@ -57,9 +57,9 @@ public class CtrlOptionsWindow extends ControllerUI<OptionsWindow> {
 	@Override
 	public boolean setVars(final String[] strs) {
 		hyst = Integer.parseInt(strs[0]);
-		rearing_thresh = Integer.parseInt(strs[1]);
-		subtraction_thresh = Integer.parseInt(strs[2]);
-		enable_auto_rearing = Boolean.valueOf(strs[3].substring(0, 0)
+		rearingThresh = Integer.parseInt(strs[1]);
+		subtractionThresh = Integer.parseInt(strs[2]);
+		enableAutoRearing = Boolean.valueOf(strs[3].substring(0, 0)
 				.toUpperCase());
 		return true;
 	}
@@ -78,34 +78,34 @@ public class CtrlOptionsWindow extends ControllerUI<OptionsWindow> {
 	 * VideoManager) ignore this update, and the values of(rearing & hyst.) are
 	 * kept unchanged.
 	 * 
-	 * @param show_window
+	 * @param showWindow
 	 *            Show/hide the options window
 	 */
-	public void updateOptions(final boolean show_window) {
+	public void updateOptions(final boolean showWindow) {
 		try {
-			final SubtractionConfigs subtraction_configs = new SubtractionConfigs(
-					"SubtractionFilter", subtraction_thresh, null);
-			final RearingFilterConfigs rearing_configs = new RearingFilterConfigs(
-					"RearingDetector", rearing_thresh, -1, // TODO: add set
+			final SubtractionConfigs subtractionCconfigs = new SubtractionConfigs(
+					"SubtractionFilter", subtractionThresh, null);
+			final RearingFilterConfigs rearingConfigs = new RearingFilterConfigs(
+					"RearingDetector", rearingThresh, -1, // TODO: add set
 					// margin option in
 					// GUI
 					-1, // TODO: add set margin option in GUI
 					null, null);
 
-			final FilterConfigs[] filters_configs = new FilterConfigs[2];
-			filters_configs[0] = subtraction_configs;
-			filters_configs[1] = rearing_configs;
+			final FilterConfigs[] filtersConfigs = new FilterConfigs[2];
+			filtersConfigs[0] = subtractionCconfigs;
+			filtersConfigs[1] = rearingConfigs;
 
-			pm.getVideoManager().updateFiltersConfigs(filters_configs);
-			final ZonesModuleConfigs zones_configs = new ZonesModuleConfigs(
+			pm.getVideoManager().updateFiltersConfigs(filtersConfigs);
+			final ZonesModuleConfigs zonesConfigs = new ZonesModuleConfigs(
 					"Zones Module", hyst, -1, -1);
 
 			ModulesManager.getDefault().updateModuleConfigs(
-					new ModuleConfigs[] { zones_configs });
+					new ModuleConfigs[] { zonesConfigs });
 
 			pm.getVideoManager().getFilterManager()
-					.enableFilter(RearingDetector.class, enable_auto_rearing);
-			show(show_window);
+					.enableFilter(RearingDetector.class, enableAutoRearing);
+			show(showWindow);
 		} catch (final NumberFormatException e1) {
 			System.out.print("Error in user input ... aborting !\n");
 		}

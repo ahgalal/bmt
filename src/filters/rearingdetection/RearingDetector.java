@@ -32,33 +32,33 @@ public class RearingDetector extends
 	 * @author Creative
 	 */
 	private class NormalRatAreaThread implements Runnable {
-		private static final long	rat_area_training_time	= 3;
+		private static final long	ratAreaTrainingTime	= 3;
 
 		@Override
 		public void run() {
-			final long timer_start = (System.currentTimeMillis() / 1000);
-			int tmp_rat_area_sum = 0, num_samples = 0;
-			while (!rearing_now
-					&& ((System.currentTimeMillis() / 1000) - timer_start < rat_area_training_time)) {
-				num_samples++;
-				tmp_rat_area_sum += current_rat_area;
+			final long timerStart = (System.currentTimeMillis() / 1000);
+			int tmpRatAreaSum = 0, numSamples = 0;
+			while (!rearingNow
+					&& ((System.currentTimeMillis() / 1000) - timerStart < ratAreaTrainingTime)) {
+				numSamples++;
+				tmpRatAreaSum += currentRatArea;
 
 				try {
 					Thread.sleep(400);
 				} catch (final InterruptedException e) {
 				}
 			}
-			rearing_now = false;
-			normal_rat_area = tmp_rat_area_sum / num_samples;
-			System.out.print("normal rat area: " + normal_rat_area + "\n");
+			rearingNow = false;
+			normalRatArea = tmpRatAreaSum / numSamples;
+			System.out.print("normal rat area: " + normalRatArea + "\n");
 		}
 	}
 
-	private int		current_rat_area;
+	private int		currentRatArea;
 
-	private boolean	is_rearing;
-	private int		normal_rat_area;
-	private boolean	rearing_now;
+	private boolean	isRearing;
+	private int		normalRatArea;
+	private boolean	rearingNow;
 
 	/**
 	 * Initializes the filter.
@@ -73,7 +73,6 @@ public class RearingDetector extends
 	public RearingDetector(final String name, final Link linkIn,
 			final Link linkOut) {
 		super(name, linkIn, linkOut);
-		configs = configs;
 		filterData = new RearingFilterData("Rearing Data");
 
 		// super's stuff:
@@ -89,29 +88,29 @@ public class RearingDetector extends
 
 	@Override
 	public void process() {
-		final int[] imageData = link_in.getData();
-		if (configs.enabled)
+		final int[] imageData = linkIn.getData();
+		if (configs.isEnabled())
 			if (imageData != null) {
-				int white_area = 0;
-				for (int x = configs.ref_center_point.x
-						- (configs.margin_x / 2); x < configs.ref_center_point.x
-						+ (configs.margin_x / 2); x++)
-					for (int y = configs.ref_center_point.y
-							- (configs.margin_y / 2); y < configs.ref_center_point.y
-							+ (configs.margin_y / 2); y++)
-						if ((x < configs.common_configs.width) & (x >= 0)
-								& (y < configs.common_configs.height)
+				int whiteArea = 0;
+				for (int x = configs.getCenterPoint().x
+						- (configs.getMarginX() / 2); x < configs.getCenterPoint().x
+						+ (configs.getMarginX() / 2); x++)
+					for (int y = configs.getCenterPoint().y
+							- (configs.getMarginY() / 2); y < configs.getCenterPoint().y
+							+ (configs.getMarginY() / 2); y++)
+						if ((x < configs.getCommonConfigs().getWidth()) & (x >= 0)
+								& (y < configs.getCommonConfigs().getHeight())
 								& (y >= 0))
-							if (imageData[x + y * configs.common_configs.width] == 0x00FFFFFF)
-								white_area++;
+							if (imageData[x + y * configs.getCommonConfigs().getWidth()] == 0x00FFFFFF)
+								whiteArea++;
 
-				current_rat_area = white_area;
-				if (current_rat_area < configs.rearing_thresh)
-					is_rearing = true;
+				currentRatArea = whiteArea;
+				if (currentRatArea < configs.getRearingThresh())
+					isRearing = true;
 				else
-					is_rearing = false;
+					isRearing = false;
 			}
-		filterData.setRearing(is_rearing);
+		filterData.setRearing(isRearing);
 	}
 
 	/**
@@ -124,14 +123,14 @@ public class RearingDetector extends
 	public void rearingNow(final boolean rearing) {
 
 		if (rearing) {
-			rearing_now = true;
-			configs.rearing_thresh = (normal_rat_area + current_rat_area) / 2;
-			System.out.print("Rearing threshold: " + configs.rearing_thresh
+			rearingNow = true;
+			configs.setRearingThresh((normalRatArea + currentRatArea) / 2);
+			System.out.print("Rearing threshold: " + configs.getRearingThresh()
 					+ "\n");
 		} else {
-			rearing_now = false;
-			final Thread th_rearing = new Thread(new NormalRatAreaThread());
-			th_rearing.start();
+			rearingNow = false;
+			final Thread thRearing = new Thread(new NormalRatAreaThread());
+			thRearing.start();
 			System.out.print("Rearing Training Started" + "\n");
 		}
 

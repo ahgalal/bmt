@@ -35,36 +35,36 @@ public class Rat implements Serializable {
 	/**
 	 * Initializes the rat object.
 	 * 
-	 * @param paramaters_list
+	 * @param paramatersList
 	 *            list of parameters measured in the experiment for each rat
 	 */
-	public Rat(final String[] paramaters_list) {
-		info = new Cargo(paramaters_list);
+	public Rat(final String[] paramatersList) {
+		info = new Cargo(paramatersList);
 	}
 
 	/**
 	 * Initializes the rat object.
 	 * 
-	 * @param paramaters_list
+	 * @param paramatersList
 	 *            list of parameters measured in the experiment for each rat
 	 * @param values
 	 *            values of the parameters in the list
 	 */
-	public Rat(final String[] paramaters_list, final String[] values) {
-		this(paramaters_list);
+	public Rat(final String[] paramatersList, final String[] values) {
+		this(paramatersList);
 		info.setData(values);
 	}
 
 	/**
 	 * Gets the value of the parameter, using parameter's name.
 	 * 
-	 * @param parameter_name
+	 * @param parameterName
 	 *            name of the parameter to get the value corresponding to it
 	 * @return String containing the value corresponding to the parameter
 	 *         specified
 	 */
-	public String getValueByParameterName(final String parameter_name) {
-		return info.getDataByTag(parameter_name);
+	public String getValueByParameterName(final String parameterName) {
+		return info.getDataByTag(parameterName);
 	}
 
 	/**
@@ -84,26 +84,26 @@ public class Rat implements Serializable {
 	 */
 	public String rat2String() {
 		// String values = " ";
-		final StringBuffer values_buf = new StringBuffer();
+		final StringBuffer valuesBuf = new StringBuffer();
 		for (final String s : getValues())
-			values_buf.append(s + '\t'); // TODO:tab after the last item ??!!
-		values_buf.append(System.getProperty("line.separator"));
-		return values_buf.toString();
+			valuesBuf.append(s + '\t'); // TODO:tab after the last item ??!!
+		valuesBuf.append(System.getProperty("line.separator"));
+		return valuesBuf.toString();
 	}
 
 	/**
 	 * Sets the value of a parameter using the parameter name.
 	 * 
-	 * @param parameter_name
+	 * @param parameterName
 	 *            name of the parameter to set its value
 	 * @param value
 	 *            new value of the parameter
 	 * @return success: true
 	 */
-	public boolean setValueByParameterName(final String parameter_name,
+	public boolean setValueByParameterName(final String parameterName,
 			final String value) {
 		try {
-			info.setDataByTag(parameter_name, value);
+			info.setDataByTag(parameterName, value);
 		} catch (final Exception e) {
 			PManager.log.print("Error in parameter name!", this,
 					StatusSeverity.ERROR);

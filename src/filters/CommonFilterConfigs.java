@@ -27,12 +27,20 @@ public class CommonFilterConfigs {
 	/**
 	 * Check the documentation of the constructor.
 	 */
-	public String	vid_library, format;
+	private String	vidLibrary;
+
+	private String	format;
 
 	/**
 	 * Check the documentation of the constructor.
 	 */
-	public int		width, height, frame_rate, cam_index;
+	private int		width;
+
+	private int	height;
+
+	private int	frameRate;
+
+	private int	camIndex;
 
 	/**
 	 * Initializations.
@@ -54,12 +62,12 @@ public class CommonFilterConfigs {
 			final int frameRate, final int camIndex, final String vidLibrary,
 			final String format) {
 		super();
-		this.width = width;
-		this.height = height;
-		frame_rate = frameRate;
-		cam_index = camIndex;
-		vid_library = vidLibrary;
-		this.format = format;
+		this.setWidth(width);
+		this.setHeight(height);
+		this.setFrameRate(frameRate);
+		this.setCamIndex(camIndex);
+		this.setVidLibrary(vidLibrary);
+		this.setFormat(format);
 	}
 
 	/**
@@ -69,8 +77,8 @@ public class CommonFilterConfigs {
 	 * @return true: success
 	 */
 	public boolean validate() {
-		if ((width <= 0) || (height <= 0) || (frame_rate <= 0)
-				|| (cam_index < 0) || (vid_library == null)
+		if ((getWidth() <= 0) || (getHeight() <= 0) || (getFrameRate() <= 0)
+				|| (getCamIndex() < 0) || (getVidLibrary() == null)
 		/* || format == null */) // Ignoring format check as it is optional
 		{
 			PManager.log.print("Common Configs are not completely configured!",
@@ -78,6 +86,54 @@ public class CommonFilterConfigs {
 			return false;
 		}
 		return true;
+	}
+
+	public void setFormat(String format) {
+		this.format = format;
+	}
+
+	public String getFormat() {
+		return format;
+	}
+
+	public void setVidLibrary(String vidLibrary) {
+		this.vidLibrary = vidLibrary;
+	}
+
+	public String getVidLibrary() {
+		return vidLibrary;
+	}
+
+	public void setWidth(int width) {
+		this.width = width;
+	}
+
+	public int getWidth() {
+		return width;
+	}
+
+	public void setHeight(int height) {
+		this.height = height;
+	}
+
+	public int getHeight() {
+		return height;
+	}
+
+	public void setFrameRate(int frameRate) {
+		this.frameRate = frameRate;
+	}
+
+	public int getFrameRate() {
+		return frameRate;
+	}
+
+	public void setCamIndex(int camIndex) {
+		this.camIndex = camIndex;
+	}
+
+	public int getCamIndex() {
+		return camIndex;
 	}
 
 }

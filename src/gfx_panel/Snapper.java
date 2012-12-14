@@ -41,24 +41,24 @@ public class Snapper {
 		/**
 		 * Shapes involved in the process.
 		 */
-		public Shape		shp_snap_to, shp_snap;
+		public Shape		shpSnapTo, shpSnap;
 
 		/**
 		 * Initializes the snap information.
 		 * 
-		 * @param shp_to_snap
+		 * @param shpToSnap
 		 *            Shape to snap (moving)
-		 * @param shp_to_snap_to
+		 * @param shpToSnapTo
 		 *            Shape to snap to (still)
 		 * @param direction
 		 *            direction of the snap
 		 * @param distance
 		 *            distance to snap
 		 */
-		public SnapInfo(final Shape shp_to_snap, final Shape shp_to_snap_to,
+		public SnapInfo(final Shape shpToSnap, final Shape shpToSnapTo,
 				final Direction direction, final int distance) {
-			this.shp_snap = shp_to_snap;
-			this.shp_snap_to = shp_to_snap_to;
+			this.shpSnap = shpToSnap;
+			this.shpSnapTo = shpToSnapTo;
 			this.direction = direction;
 			this.distance = distance;
 		}
@@ -73,24 +73,42 @@ public class Snapper {
 		/**
 		 * Did we snap in the x direction? y direction?
 		 */
-		public boolean	snapped_x, snapped_y;
+		private boolean	snappedX;
+		private boolean	snappedY;
+
+		public boolean setSnappedY(boolean snappedY) {
+			this.snappedY = snappedY;
+			return snappedY;
+		}
+
+		public boolean isSnappedY() {
+			return snappedY;
+		}
+
+		public void setSnappedX(boolean snappedX) {
+			this.snappedX = snappedX;
+		}
+
+		public boolean isSnappedX() {
+			return snappedX;
+		}
 	}
 
-	private final ArrayList<Shape>	arr_shp;
+	private final ArrayList<Shape>	shapes;
 
-	private boolean					enable_snap;
+	private boolean					enableSnap;
 
-	private final SnapResults		snp_results;
+	private final SnapResults		snpResults;
 
 	/**
 	 * Initializes the Snapper.
 	 * 
-	 * @param arr_shp
+	 * @param arrShapes
 	 *            array of shapes to snap
 	 */
-	public Snapper(final ArrayList<Shape> arr_shp) {
-		snp_results = new SnapResults();
-		this.arr_shp = arr_shp;
+	public Snapper(final ArrayList<Shape> arrShapes) {
+		snpResults = new SnapResults();
+		this.shapes = arrShapes;
 	}
 
 	/**
@@ -100,7 +118,7 @@ public class Snapper {
 	 *            true/false
 	 */
 	public void enableSnap(final boolean enable) {
-		enable_snap = enable;
+		enableSnap = enable;
 	}
 
 	/**
@@ -108,44 +126,44 @@ public class Snapper {
 	 * 
 	 * @param shp
 	 *            shape to snap
-	 * @param cur_x
+	 * @param curX
 	 *            cursor position x
-	 * @param cur_y
+	 * @param curY
 	 *            cursor position y
-	 * @param cursor_pos_in_shp_x
+	 * @param cursorPosInShpX
 	 *            cursor's position relative to the top-left of the selected
 	 *            shape on the x axis
-	 * @param cursor_pos_in_shp_y
+	 * @param cursorPosInShpY
 	 *            cursor's position relative to the top-left of the selected
 	 *            shape on the y axis
 	 * @return SnapResults indicating the direction of the snap if performed
 	 */
-	public SnapResults prepareSnapPosition(final Shape shp, final int cur_x,
-			final int cur_y, final int cursor_pos_in_shp_x,
-			final int cursor_pos_in_shp_y) {
-		if (enable_snap) {
-			snp_results.snapped_x = snp_results.snapped_y = false;
-			final int edge_x = cur_x - cursor_pos_in_shp_x, edge_y = cur_y
-					- cursor_pos_in_shp_y;
-			int dist_to_tmpshp_x, dist_to_tmpshp_y;
-			final int shp_x = shp.getX(), shp_y = shp.getY(), shp_w = shp
-					.getWidth(), shp_h = shp.getHeight();
-			int tmp_x, tmp_y, tmp_w, tmp_h;
-			for (final Shape tmp_sh : arr_shp)
-				if (tmp_sh != shp) {
-					tmp_x = tmp_sh.getX();
-					tmp_y = tmp_sh.getY();
-					tmp_w = tmp_sh.getWidth();
-					tmp_h = tmp_sh.getHeight();
+	public SnapResults prepareSnapPosition(final Shape shp, final int curX,
+			final int curY, final int cursorPosInShpX,
+			final int cursorPosInShpY) {
+		if (enableSnap) {
+			snpResults.setSnappedX(snpResults.setSnappedY(false));
+			final int edgeX = curX - cursorPosInShpX, edgeY = curY
+					- cursorPosInShpY;
+			int distToTmpshpX, distToTmpshpY;
+			final int shpX = shp.getX(), shpY = shp.getY(), shpW = shp
+					.getWidth(), shpH = shp.getHeight();
+			int tmpX, tmpY, tmpW, tmpH;
+			for (final Shape tmpSh : shapes)
+				if (tmpSh != shp) {
+					tmpX = tmpSh.getX();
+					tmpY = tmpSh.getY();
+					tmpW = tmpSh.getWidth();
+					tmpH = tmpSh.getHeight();
 
-					dist_to_tmpshp_x = edge_x - tmp_x - tmp_w;
-					dist_to_tmpshp_y = edge_y - tmp_y - tmp_h;
+					distToTmpshpX = edgeX - tmpX - tmpW;
+					distToTmpshpY = edgeY - tmpY - tmpH;
 
-					final ArrayList<SnapInfo> snap_array_x = new ArrayList<SnapInfo>();
-					final ArrayList<SnapInfo> snap_array_y = new ArrayList<SnapInfo>();
+					final ArrayList<SnapInfo> snapArrayX = new ArrayList<SnapInfo>();
+					final ArrayList<SnapInfo> snapArrayY = new ArrayList<SnapInfo>();
 
-					if (((shp_y >= tmp_y) & (shp_y < tmp_y + tmp_h))
-							| ((tmp_y > shp_y) & (tmp_y < shp_y + shp_h)))
+					if (((shpY >= tmpY) & (shpY < tmpY + tmpH))
+							| ((tmpY > shpY) & (tmpY < shpY + shpH)))
 						/*        _______
 						 * ______ |     |     ______ 
 						 * |     || shp |     |     |
@@ -155,28 +173,28 @@ public class Snapper {
 						 * |_____|            |_____|| shp |
 						 *                           |_____|
 						 */
-						if (edge_x > tmp_x + tmp_w) {
+						if (edgeX > tmpX + tmpW) {
 							// shp is to the RIGHT of tmp
-							if ((dist_to_tmpshp_x < 10)
-									& (dist_to_tmpshp_x > 0))
-								snap_array_x.add(new SnapInfo(shp, tmp_sh,
-										Direction.RIGHT, dist_to_tmpshp_x));
-						} else if (edge_x + shp_w < tmp_x) {
+							if ((distToTmpshpX < 10)
+									& (distToTmpshpX > 0))
+								snapArrayX.add(new SnapInfo(shp, tmpSh,
+										Direction.RIGHT, distToTmpshpX));
+						} else if (edgeX + shpW < tmpX) {
 							// shp is to the LEFT of tmp
-							dist_to_tmpshp_x = tmp_x - edge_x - shp_w;
-							if ((dist_to_tmpshp_x < 10)
-									& (dist_to_tmpshp_x > 0))
-								snap_array_x.add(new SnapInfo(shp, tmp_sh,
-										Direction.LEFT, dist_to_tmpshp_x));
+							distToTmpshpX = tmpX - edgeX - shpW;
+							if ((distToTmpshpX < 10)
+									& (distToTmpshpX > 0))
+								snapArrayX.add(new SnapInfo(shp, tmpSh,
+										Direction.LEFT, distToTmpshpX));
 						} else
 							/*
 							 * cursor is in the middle of tmp, we must set
 							 * snapped_x to disable moving shp
 							 */
-							snp_results.snapped_x = true;
+							snpResults.setSnappedX(true);
 
-					if (((shp_x >= tmp_x) & (shp_x < tmp_x + tmp_w))
-							| ((tmp_x > shp_x) & (tmp_x < shp_x + shp_w)))
+					if (((shpX >= tmpX) & (shpX < tmpX + tmpW))
+							| ((tmpX > shpX) & (tmpX < shpX + shpW)))
 						/*   _______            _______
 						 *   |     |            |     |
 						 *   | shp |            | shp |
@@ -188,52 +206,52 @@ public class Snapper {
 						 *       |     |     |     |
 						 *       |_____|     |_____|
 						 */
-						if (edge_y > tmp_y + tmp_h) {
+						if (edgeY > tmpY + tmpH) {
 							// shp is BELOW tmp
-							if ((dist_to_tmpshp_y < 10)
-									& (dist_to_tmpshp_y > 0))
-								snap_array_y.add(new SnapInfo(shp, tmp_sh,
-										Direction.DOWN, dist_to_tmpshp_y));
-						} else if (edge_y + shp_h < tmp_y) {
+							if ((distToTmpshpY < 10)
+									& (distToTmpshpY > 0))
+								snapArrayY.add(new SnapInfo(shp, tmpSh,
+										Direction.DOWN, distToTmpshpY));
+						} else if (edgeY + shpH < tmpY) {
 							// shp is ONTOP of tmp
-							dist_to_tmpshp_y = tmp_y - edge_y - shp_h;
-							if ((dist_to_tmpshp_y < 10)
-									& (dist_to_tmpshp_y > 0))
-								snap_array_y.add(new SnapInfo(shp, tmp_sh,
-										Direction.UP, dist_to_tmpshp_y));
+							distToTmpshpY = tmpY - edgeY - shpH;
+							if ((distToTmpshpY < 10)
+									& (distToTmpshpY > 0))
+								snapArrayY.add(new SnapInfo(shp, tmpSh,
+										Direction.UP, distToTmpshpY));
 						} else
 							/*
 							 * cursor is in the middle of tmp, we must set
 							 * snapped_y to disable moving shp
 							 */
-							snp_results.snapped_y = true;
-					int smaller_dist = 1000, smaller_dist_idx = 0, dist;
-					if (snap_array_x.size() > 0) {
+							snpResults.setSnappedY(true);
+					int smallerDist = 1000, smallerDistIdx = 0, dist;
+					if (snapArrayX.size() > 0) {
 						// SNAP_X:
-						for (int i = 0; i < snap_array_x.size(); i++) {
-							dist = snap_array_x.get(i).distance;
-							if (dist < smaller_dist) {
-								smaller_dist = dist;
-								smaller_dist_idx = i;
+						for (int i = 0; i < snapArrayX.size(); i++) {
+							dist = snapArrayX.get(i).distance;
+							if (dist < smallerDist) {
+								smallerDist = dist;
+								smallerDistIdx = i;
 							}
 						}
-						snap(snap_array_x.get(smaller_dist_idx));
+						snap(snapArrayX.get(smallerDistIdx));
 					}
-					if (snap_array_y.size() > 0) {
+					if (snapArrayY.size() > 0) {
 						// SNAP_Y:
-						smaller_dist = 1000;
-						smaller_dist_idx = 0;
-						for (int i = 0; i < snap_array_y.size(); i++) {
-							dist = snap_array_y.get(i).distance;
-							if (dist < smaller_dist) {
-								smaller_dist = dist;
-								smaller_dist_idx = i;
+						smallerDist = 1000;
+						smallerDistIdx = 0;
+						for (int i = 0; i < snapArrayY.size(); i++) {
+							dist = snapArrayY.get(i).distance;
+							if (dist < smallerDist) {
+								smallerDist = dist;
+								smallerDistIdx = i;
 							}
 						}
-						snap(snap_array_y.get(smaller_dist_idx));
+						snap(snapArrayY.get(smallerDistIdx));
 					}
 				}
-			return snp_results;
+			return snpResults;
 		}
 		return null;
 	}
@@ -250,45 +268,45 @@ public class Snapper {
 	 * @return SnapResults indicating the direction of the snap if performed
 	 */
 	public SnapResults prepareSnapSize(final Shape shp, final int x, final int y) {
-		if (enable_snap) {
-			snp_results.snapped_x = snp_results.snapped_y = false;
-			final int shp_x = shp.getX(), shp_y = shp.getY(), shp_w = shp
-					.getWidth(), shp_h = shp.getHeight();
-			int tmp_x, tmp_y, tmp_w, tmp_h;
-			for (final Shape tmp_sh : arr_shp)
-				if (tmp_sh != shp) {
-					tmp_x = tmp_sh.getX();
-					tmp_y = tmp_sh.getY();
-					tmp_w = tmp_sh.getWidth();
-					tmp_h = tmp_sh.getHeight();
+		if (enableSnap) {
+			snpResults.setSnappedX(snpResults.setSnappedY(false));
+			final int shpX = shp.getX(), shpY = shp.getY(), shpW = shp
+					.getWidth(), shpH = shp.getHeight();
+			int tmpX, tmpY, tmpW, tmpH;
+			for (final Shape tmpSh : shapes)
+				if (tmpSh != shp) {
+					tmpX = tmpSh.getX();
+					tmpY = tmpSh.getY();
+					tmpW = tmpSh.getWidth();
+					tmpH = tmpSh.getHeight();
 
 					// RESIZE_SNAP_X:
-					if (((shp_y >= tmp_y) & (shp_y < tmp_y + tmp_h))
-							| ((tmp_y > shp_y) & (tmp_y < shp_y + shp_h)))
-						if ((tmp_x - x < 10) & (tmp_x - x >= 0)) {
-							shp.setWidth(tmp_x - shp_x);
-							snp_results.snapped_x = true;
-						} else if ((x - tmp_x - tmp_w < 10)
-								& (x - tmp_x - tmp_w >= 0)) {
-							shp.setX(tmp_x + tmp_w);
-							shp.setWidth(shp_w + shp_x - tmp_x - tmp_w);
-							snp_results.snapped_x = true;
+					if (((shpY >= tmpY) & (shpY < tmpY + tmpH))
+							| ((tmpY > shpY) & (tmpY < shpY + shpH)))
+						if ((tmpX - x < 10) & (tmpX - x >= 0)) {
+							shp.setWidth(tmpX - shpX);
+							snpResults.setSnappedX(true);
+						} else if ((x - tmpX - tmpW < 10)
+								& (x - tmpX - tmpW >= 0)) {
+							shp.setX(tmpX + tmpW);
+							shp.setWidth(shpW + shpX - tmpX - tmpW);
+							snpResults.setSnappedX(true);
 						}
 
 					// RESIZE_SNAP_Y:
-					if (((shp_x >= tmp_x) & (shp_x < tmp_x + tmp_w))
-							| ((tmp_x > shp_x) & (tmp_x < shp_x + shp_w)))
-						if ((tmp_y - y < 10) & (tmp_y - y >= 0)) {
-							shp.setHeight(tmp_y - shp_y);
-							snp_results.snapped_y = true;
-						} else if ((y - tmp_y - tmp_h < 10)
-								& (y - tmp_y - tmp_h >= 0)) {
-							shp.setY(tmp_y + tmp_h);
-							shp.setHeight(shp_h + shp_y - tmp_y - tmp_h);
-							snp_results.snapped_y = true;
+					if (((shpX >= tmpX) & (shpX < tmpX + tmpW))
+							| ((tmpX > shpX) & (tmpX < shpX + shpW)))
+						if ((tmpY - y < 10) & (tmpY - y >= 0)) {
+							shp.setHeight(tmpY - shpY);
+							snpResults.setSnappedY(true);
+						} else if ((y - tmpY - tmpH < 10)
+								& (y - tmpY - tmpH >= 0)) {
+							shp.setY(tmpY + tmpH);
+							shp.setHeight(shpH + shpY - tmpY - tmpH);
+							snpResults.setSnappedY(true);
 						}
 				}
-			return snp_results;
+			return snpResults;
 		}
 		return null;
 	}
@@ -301,26 +319,26 @@ public class Snapper {
 	 * @return SnapResults indicating the direction of the snap if performed
 	 */
 	public SnapResults snap(final SnapInfo snapInfo) {
-		final Shape shp_snap_to = snapInfo.shp_snap_to, shp_snap = snapInfo.shp_snap;
+		final Shape shpSnapTo = snapInfo.shpSnapTo, shpSnap = snapInfo.shpSnap;
 
 		switch (snapInfo.direction) {
 			case RIGHT:
-				shp_snap.setX(shp_snap_to.getX() + shp_snap_to.getWidth());
-				snp_results.snapped_x = true;
+				shpSnap.setX(shpSnapTo.getX() + shpSnapTo.getWidth());
+				snpResults.setSnappedX(true);
 				break;
 			case LEFT:
-				shp_snap.setX(shp_snap_to.getX() - shp_snap.getWidth());
-				snp_results.snapped_x = true;
+				shpSnap.setX(shpSnapTo.getX() - shpSnap.getWidth());
+				snpResults.setSnappedX(true);
 				break;
 			case DOWN:
-				shp_snap.setY(shp_snap_to.getY() + shp_snap_to.getHeight());
-				snp_results.snapped_y = true;
+				shpSnap.setY(shpSnapTo.getY() + shpSnapTo.getHeight());
+				snpResults.setSnappedY(true);
 				break;
 			case UP:
-				shp_snap.setY(shp_snap_to.getY() - shp_snap.getHeight());
-				snp_results.snapped_y = true;
+				shpSnap.setY(shpSnapTo.getY() - shpSnap.getHeight());
+				snpResults.setSnappedY(true);
 				break;
 		}
-		return snp_results;
+		return snpResults;
 	}
 }

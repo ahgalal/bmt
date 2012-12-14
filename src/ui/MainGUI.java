@@ -50,10 +50,10 @@ import control.ui.CtrlMainGUI;
  * @author Creative
  */
 public class MainGUI extends BaseUI {
-	private Frame		awt_video_main;						// awt frame to
+	private Frame		awtVideoMain;						// awt frame to
 																// display main
 																// screen data
-	private Frame		awt_video_sec;							// awt frame to
+	private Frame		awtVideoSec;							// awt frame to
 																// display the
 																// processed
 																// image
@@ -62,39 +62,39 @@ public class MainGUI extends BaseUI {
 	private Button		btnStartTracking				= null;
 	private Button		btnStopStream;
 	private Button		btnStopTracking					= null;
-	private Composite	cmpst_main						= null;
-	private Composite	cmpst_secondary					= null;
+	private Composite	cmpstMain						= null;
+	private Composite	cmpstSecondary					= null;
 	private Composite	cmpstStreaming;
 	private Composite	cmpstTracking;
 
 	private CtrlMainGUI	controller;
 	private CoolBar		coolBar;
 	private ExpandBar	expandBar;
-	private Group		grp_stats						= null;
+	private Group		grpStats						= null;
 
-	private Group		grp_video						= null;
+	private Group		grpVideo						= null;
 	private Group		grpGraphs;
-	private Label		lbl_status						= null;
+	private Label		lblStatus						= null;
 
 	private Menu		menuBar							= null;
 	private MenuItem	mntmCameraSubMenu;
 	private MenuItem	mntmVideoFile;
 	// data
-	private Menu		mnu_edit						= null;
-	private MenuItem	mnu_edit_item					= null;
+	private Menu		mnuEdit						= null;
+	private MenuItem	mnuEditItem					= null;
 
-	private Menu		mnu_experiment					= null;
-	private MenuItem	mnu_experiment_item				= null;
-	private Menu		mnu_file						= null;
-	private MenuItem	mnu_file_item					= null;
-	private Menu		mnu_help						= null;
+	private Menu		mnuExperiment					= null;
+	private MenuItem	mnuExperimentItem				= null;
+	private Menu		mnuFile						= null;
+	private MenuItem	mnuFileItem					= null;
+	private Menu		mnuHelp						= null;
 
-	private MenuItem	mnu_help_item					= null;
-	private MenuItem	mnuitm_edt_exp;
-	private MenuItem	mnutm_experiment_exporttoexcel	= null;
-	private MenuItem	mnutm_experiment_loadexp		= null;
-	private MenuItem	mnutm_experiment_newexp;
-	private MenuItem	mnutm_file_exit					= null;
+	private MenuItem	mnuHelpItem					= null;
+	private MenuItem	mnuitmEditExp;
+	private MenuItem	mnutmExperimentExporttoexcel	= null;
+	private MenuItem	mnutmExperimentLoadexp		= null;
+	private MenuItem	mnutmExperimentNewexp;
+	private MenuItem	mnutmFileExit					= null;
 
 	private Menu		mnuVideo;
 
@@ -102,7 +102,7 @@ public class MainGUI extends BaseUI {
 
 	private Shell		sShell;
 
-	private Table		tbl_data						= null;
+	private Table		tblData						= null;
 	private StyledText txtConsole;
 
 	/**
@@ -183,7 +183,7 @@ public class MainGUI extends BaseUI {
 
 			@Override
 			public void run() {
-				tbl_data.removeAll();
+				tblData.removeAll();
 			}
 		});
 	}
@@ -196,8 +196,8 @@ public class MainGUI extends BaseUI {
 			getAwtVideoMain().dispose();
 		if (getAwtVideoSec() != null)
 			getAwtVideoSec().dispose();
-		cmpst_secondary.dispose();
-		cmpst_main.dispose();
+		cmpstSecondary.dispose();
+		cmpstMain.dispose();
 		coolBar.dispose();
 		expandBar.dispose();
 		sShell.dispose();
@@ -207,10 +207,10 @@ public class MainGUI extends BaseUI {
 	 * This method initializes cmpst_main.
 	 */
 	private void createCmpstMain() {
-		cmpst_main = new Composite(grp_video, SWT.EMBEDDED | SWT.BORDER);
-		cmpst_main.setLayout(new GridLayout());
-		cmpst_main.setLocation(new Point(5, 15));
-		cmpst_main.setSize(new Point(640, 480));
+		cmpstMain = new Composite(grpVideo, SWT.EMBEDDED | SWT.BORDER);
+		cmpstMain.setLayout(new GridLayout());
+		cmpstMain.setLocation(new Point(5, 15));
+		cmpstMain.setSize(new Point(640, 480));
 		createMainAWTFrame();
 	}
 
@@ -218,9 +218,9 @@ public class MainGUI extends BaseUI {
 	 * This method initializes cmpst_secondary.
 	 */
 	private void createCmpstSecondary() {
-		cmpst_secondary = new Composite(grp_stats, SWT.EMBEDDED | SWT.BORDER);
-		cmpst_secondary.setLayout(new GridLayout());
-		cmpst_secondary.setBounds(new Rectangle(8, 20, 289, 214));
+		cmpstSecondary = new Composite(grpStats, SWT.EMBEDDED | SWT.BORDER);
+		cmpstSecondary.setLayout(new GridLayout());
+		cmpstSecondary.setBounds(new Rectangle(8, 20, 289, 214));
 		createSecAWTFrame();
 	}
 
@@ -398,20 +398,20 @@ public class MainGUI extends BaseUI {
 	 * This method initializes grp_stats.
 	 */
 	private void createGrpStats() {
-		grp_stats = new Group(sShell, SWT.NONE);
-		grp_stats.setLayout(null);
-		grp_stats.setText("Analysis:");
+		grpStats = new Group(sShell, SWT.NONE);
+		grpStats.setLayout(null);
+		grpStats.setText("Analysis:");
 		createCmpstSecondary();
-		grp_stats.setBounds(new Rectangle(678, 5, 301, 500));
+		grpStats.setBounds(new Rectangle(678, 5, 301, 500));
 
-		tbl_data = new Table(grp_stats, SWT.BORDER);
-		tbl_data.setHeaderVisible(true);
-		tbl_data.setLinesVisible(true);
-		tbl_data.setBounds(new Rectangle(9, 243, 284, 251));
-		final TableColumn tableColumn = new TableColumn(tbl_data, SWT.NONE);
+		tblData = new Table(grpStats, SWT.BORDER);
+		tblData.setHeaderVisible(true);
+		tblData.setLinesVisible(true);
+		tblData.setBounds(new Rectangle(9, 243, 284, 251));
+		final TableColumn tableColumn = new TableColumn(tblData, SWT.NONE);
 		tableColumn.setWidth(140);
 		tableColumn.setText("Name");
-		final TableColumn tableColumn1 = new TableColumn(tbl_data, SWT.NONE);
+		final TableColumn tableColumn1 = new TableColumn(tblData, SWT.NONE);
 		tableColumn1.setWidth(140);
 		tableColumn1.setText("Value");
 
@@ -421,11 +421,11 @@ public class MainGUI extends BaseUI {
 	 * This method initializes grp_video.
 	 */
 	private void createGrpVideo() {
-		grp_video = new Group(sShell, SWT.NONE);
-		grp_video.setLayout(null);
-		grp_video.setText("Video:");
+		grpVideo = new Group(sShell, SWT.NONE);
+		grpVideo.setLayout(null);
+		grpVideo.setText("Video:");
 
-		grp_video.setBounds(new Rectangle(10, 5, 665, 500));
+		grpVideo.setBounds(new Rectangle(10, 5, 665, 500));
 		createCmpstMain();
 	}
 
@@ -433,20 +433,20 @@ public class MainGUI extends BaseUI {
 	 * Creates the Main screen's AWT frame.
 	 */
 	private void createMainAWTFrame() {
-		awt_video_main = SWT_AWT.new_Frame(cmpst_main);
+		awtVideoMain = SWT_AWT.new_Frame(cmpstMain);
 		getAwtVideoMain().setVisible(true);
-		getAwtVideoMain().setSize(cmpst_main.getSize().x,
-				cmpst_main.getSize().y);
+		getAwtVideoMain().setSize(cmpstMain.getSize().x,
+				cmpstMain.getSize().y);
 	}
 
 	/**
 	 * Creates the Secondary screen's AWT frame.
 	 */
 	private void createSecAWTFrame() {
-		awt_video_sec = SWT_AWT.new_Frame(cmpst_secondary);
+		awtVideoSec = SWT_AWT.new_Frame(cmpstSecondary);
 		getAwtVideoSec().setVisible(true);
-		getAwtVideoSec().setSize(cmpst_secondary.getSize().x,
-				cmpst_secondary.getSize().y);
+		getAwtVideoSec().setSize(cmpstSecondary.getSize().x,
+				cmpstSecondary.getSize().y);
 	}
 
 	/**
@@ -462,21 +462,21 @@ public class MainGUI extends BaseUI {
 		createGrpGraphs();
 		sShell.setSize(new Point(1160, 733));
 		sShell.setLayout(null);
-		lbl_status = new Label(getShell(), SWT.NONE);
-		lbl_status.setBounds(new Rectangle(10, 672, 656, 20));
-		lbl_status.setText("");
+		lblStatus = new Label(getShell(), SWT.NONE);
+		lblStatus.setBounds(new Rectangle(10, 672, 656, 20));
+		lblStatus.setText("");
 
 		menuBar = new Menu(sShell, SWT.BAR);
 		sShell.setMenuBar(menuBar);
 
-		mnu_file_item = new MenuItem(menuBar, SWT.CASCADE); // file
-		mnu_edit_item = new MenuItem(menuBar, SWT.CASCADE); // edit
-		mnu_file_item.setText(ExternalStrings.get("MainGUI.Menu.File")); //$NON-NLS-1$
-		mnu_file = new Menu(mnu_file_item);
-		mnu_file_item.setMenu(mnu_file);
-		mnutm_file_exit = new MenuItem(mnu_file, 0);
-		mnutm_file_exit.setText(ExternalStrings.get("MainGUI.Menu.File.Exit")); //$NON-NLS-1$
-		mnutm_file_exit
+		mnuFileItem = new MenuItem(menuBar, SWT.CASCADE); // file
+		mnuEditItem = new MenuItem(menuBar, SWT.CASCADE); // edit
+		mnuFileItem.setText(ExternalStrings.get("MainGUI.Menu.File")); //$NON-NLS-1$
+		mnuFile = new Menu(mnuFileItem);
+		mnuFileItem.setMenu(mnuFile);
+		mnutmFileExit = new MenuItem(mnuFile, 0);
+		mnutmFileExit.setText(ExternalStrings.get("MainGUI.Menu.File.Exit")); //$NON-NLS-1$
+		mnutmFileExit
 				.addSelectionListener(new org.eclipse.swt.events.SelectionListener() {
 					@Override
 					public void widgetDefaultSelected(final SelectionEvent arg0) {
@@ -517,14 +517,14 @@ public class MainGUI extends BaseUI {
 		mntmVidOptions.setText(ExternalStrings
 				.get("MainGUI.Menu.Video.Source.Options")); //$NON-NLS-1$
 
-		mnu_edit_item.setText(ExternalStrings.get("MainGUI.Menu.Edit")); //$NON-NLS-1$
-		mnu_edit = new Menu(mnu_edit_item);
-		mnu_edit_item.setMenu(mnu_edit);
-		mnu_edit_item.setEnabled(false);
+		mnuEditItem.setText(ExternalStrings.get("MainGUI.Menu.Edit")); //$NON-NLS-1$
+		mnuEdit = new Menu(mnuEditItem);
+		mnuEditItem.setMenu(mnuEdit);
+		mnuEditItem.setEnabled(false);
 
-		final MenuItem mnutm_edit_options = new MenuItem(mnu_edit, SWT.PUSH);
-		mnutm_edit_options.setText(ExternalStrings.get("MainGUI.Menu.Options")); //$NON-NLS-1$
-		mnutm_edit_options.addSelectionListener(new SelectionAdapter() {
+		final MenuItem mnutmEditOptions = new MenuItem(mnuEdit, SWT.PUSH);
+		mnutmEditOptions.setText(ExternalStrings.get("MainGUI.Menu.Options")); //$NON-NLS-1$
+		mnutmEditOptions.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(final SelectionEvent e) {
 				controller.mnutmEditOptionsAction();
@@ -538,23 +538,23 @@ public class MainGUI extends BaseUI {
 			}
 		});
 
-		mnu_experiment_item = new MenuItem(menuBar, SWT.CASCADE); // experiment
-		mnu_experiment_item.setText(ExternalStrings
+		mnuExperimentItem = new MenuItem(menuBar, SWT.CASCADE); // experiment
+		mnuExperimentItem.setText(ExternalStrings
 				.get("MainGUI.Menu.Experiment")); //$NON-NLS-1$
-		mnu_experiment = new Menu(mnu_experiment_item);
-		mnu_experiment_item.setMenu(mnu_experiment);
-		mnutm_experiment_newexp = new MenuItem(mnu_experiment, SWT.PUSH);
-		mnutm_experiment_loadexp = new MenuItem(mnu_experiment, 0);
-		mnutm_experiment_loadexp.setText(ExternalStrings
+		mnuExperiment = new Menu(mnuExperimentItem);
+		mnuExperimentItem.setMenu(mnuExperiment);
+		mnutmExperimentNewexp = new MenuItem(mnuExperiment, SWT.PUSH);
+		mnutmExperimentLoadexp = new MenuItem(mnuExperiment, 0);
+		mnutmExperimentLoadexp.setText(ExternalStrings
 				.get("MainGUI.Menu.Exp.Load")); //$NON-NLS-1$
-		mnutm_experiment_loadexp.setEnabled(true);
-		mnuitm_edt_exp = new MenuItem(mnu_experiment, SWT.PUSH);
-		mnuitm_edt_exp.setEnabled(false);
-		mnutm_experiment_exporttoexcel = new MenuItem(mnu_experiment, 0);
-		mnutm_experiment_exporttoexcel.setText(ExternalStrings
+		mnutmExperimentLoadexp.setEnabled(true);
+		mnuitmEditExp = new MenuItem(mnuExperiment, SWT.PUSH);
+		mnuitmEditExp.setEnabled(false);
+		mnutmExperimentExporttoexcel = new MenuItem(mnuExperiment, 0);
+		mnutmExperimentExporttoexcel.setText(ExternalStrings
 				.get("MainGUI.Menu.Exp.ExporttoExcel")); //$NON-NLS-1$
-		mnutm_experiment_exporttoexcel.setEnabled(false);
-		mnutm_experiment_exporttoexcel
+		mnutmExperimentExporttoexcel.setEnabled(false);
+		mnutmExperimentExporttoexcel
 				.addSelectionListener(new org.eclipse.swt.events.SelectionListener() {
 					@Override
 					public void widgetDefaultSelected(
@@ -567,11 +567,11 @@ public class MainGUI extends BaseUI {
 						controller.mnutmExperimentExportToExcelAction();
 					}
 				});
-		mnutm_experiment_newexp.setText(ExternalStrings
+		mnutmExperimentNewexp.setText(ExternalStrings
 				.get("MainGUI.Menu.Exp.New")); //$NON-NLS-1$
 
-		mnuitm_edt_exp.setText(ExternalStrings.get("MainGUI.Menu.Exp.Edit")); //$NON-NLS-1$
-		mnuitm_edt_exp
+		mnuitmEditExp.setText(ExternalStrings.get("MainGUI.Menu.Exp.Edit")); //$NON-NLS-1$
+		mnuitmEditExp
 				.addSelectionListener(new org.eclipse.swt.events.SelectionListener() {
 					@Override
 					public void widgetDefaultSelected(
@@ -584,7 +584,7 @@ public class MainGUI extends BaseUI {
 						controller.mnuitmEditExpAction();
 					}
 				});
-		mnutm_experiment_newexp
+		mnutmExperimentNewexp
 				.addSelectionListener(new org.eclipse.swt.events.SelectionListener() {
 					@Override
 					public void widgetDefaultSelected(
@@ -598,7 +598,7 @@ public class MainGUI extends BaseUI {
 					}
 				});
 
-		mnutm_experiment_loadexp
+		mnutmExperimentLoadexp
 				.addSelectionListener(new org.eclipse.swt.events.SelectionListener() {
 					@Override
 					public void widgetDefaultSelected(final SelectionEvent arg0) {
@@ -611,14 +611,14 @@ public class MainGUI extends BaseUI {
 					}
 				});
 
-		mnu_help_item = new MenuItem(menuBar, SWT.CASCADE); // help
-		mnu_help_item.setText(ExternalStrings.get("MainGUI.Menu.Help")); //$NON-NLS-1$
-		mnu_help = new Menu(mnu_help_item);
-		mnu_help_item.setMenu(mnu_help);
-		final MenuItem mnutm_help_about = new MenuItem(mnu_help, SWT.PUSH);
-		mnutm_help_about.setText(ExternalStrings.get("MainGUI.Menu.About")); //$NON-NLS-1$
-		mnutm_help_about.setEnabled(true);
-		mnutm_help_about.addSelectionListener(new SelectionAdapter() {
+		mnuHelpItem = new MenuItem(menuBar, SWT.CASCADE); // help
+		mnuHelpItem.setText(ExternalStrings.get("MainGUI.Menu.Help")); //$NON-NLS-1$
+		mnuHelp = new Menu(mnuHelpItem);
+		mnuHelpItem.setMenu(mnuHelp);
+		final MenuItem mnutmHelpAbout = new MenuItem(mnuHelp, SWT.PUSH);
+		mnutmHelpAbout.setText(ExternalStrings.get("MainGUI.Menu.About")); //$NON-NLS-1$
+		mnutmHelpAbout.setEnabled(true);
+		mnutmHelpAbout.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(
 					final org.eclipse.swt.events.SelectionEvent e) {
@@ -640,14 +640,14 @@ public class MainGUI extends BaseUI {
 	public void fillDataTable(final String[] names, final String[] values) {
 		if (names != null)
 			for (int i = 0; i < names.length; i++) {
-				final TableItem ti = new TableItem(tbl_data, 0);
+				final TableItem ti = new TableItem(tblData, 0);
 				ti.setText(names[i]);
 			}
 
 		if (values != null)
 			for (int i = 0; i < values.length; i++)
 				if (values[i] != null)
-					tbl_data.getItem(i).setText(1, values[i]);
+					tblData.getItem(i).setText(1, values[i]);
 	}
 
 	/**
@@ -656,7 +656,7 @@ public class MainGUI extends BaseUI {
 	 * @return AWT frame of the main screen
 	 */
 	public Frame getAwtVideoMain() {
-		return awt_video_main;
+		return awtVideoMain;
 	}
 
 	/**
@@ -665,7 +665,7 @@ public class MainGUI extends BaseUI {
 	 * @return AWT frame of the Secondary screen
 	 */
 	public Frame getAwtVideoSec() {
-		return awt_video_sec;
+		return awtVideoSec;
 	}
 
 	public String getSelectedInputMode() {
@@ -691,7 +691,7 @@ public class MainGUI extends BaseUI {
 	 * @return Label that displays status messages of the GUI
 	 */
 	public Label getStatusLabel() {
-		return lbl_status;
+		return lblStatus;
 	}
 	
 	public StyledText getConsoleText() {
@@ -731,8 +731,8 @@ public class MainGUI extends BaseUI {
 	}
 
 	public void setExperimantLoaded(final boolean loaded) {
-		mnuitm_edt_exp.setEnabled(loaded);
-		mnutm_experiment_exporttoexcel.setEnabled(loaded);
-		mnu_edit_item.setEnabled(loaded);
+		mnuitmEditExp.setEnabled(loaded);
+		mnutmExperimentExporttoexcel.setEnabled(loaded);
+		mnuEditItem.setEnabled(loaded);
 	}
 }

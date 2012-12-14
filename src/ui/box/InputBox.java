@@ -30,10 +30,10 @@ import org.eclipse.swt.widgets.Text;
  */
 public class InputBox {
 
-	private Button			btn_cancel	= null;
-	private Button			btn_ok		= null;
-	private final boolean	enable_cancel;
-	private Label			lbl_msg		= null;
+	private Button			btnCancel	= null;
+	private Button			btnOk		= null;
+	private final boolean	enableCancel;
+	private Label			lblMsg		= null;
 
 	private final String	msg, title;
 
@@ -41,8 +41,8 @@ public class InputBox {
 	private final Shell		parent;
 
 	private Shell			sShell		= null; // @jve:decl-index=0:visual-constraint="10,10"
-	private String			str_input;
-	private Text			txt_input	= null;
+	private String			strInput;
+	private Text			txtInput	= null;
 
 	/**
 	 * Initialization of the object.
@@ -53,13 +53,13 @@ public class InputBox {
 	 *            box title
 	 * @param message
 	 *            box message
-	 * @param enable_cancel
+	 * @param enableCancel
 	 *            show cancel button
 	 */
 	public InputBox(final Shell parent, final String title,
-			final String message, final boolean enable_cancel) {
+			final String message, final boolean enableCancel) {
 		msg = message;
-		this.enable_cancel = enable_cancel;
+		this.enableCancel = enableCancel;
 		this.title = title;
 		this.parent = parent;
 	}
@@ -68,7 +68,7 @@ public class InputBox {
 	 * This method initializes sShell.
 	 */
 	private void createSShell() {
-		if (enable_cancel)
+		if (enableCancel)
 			sShell = new Shell(SWT.APPLICATION_MODAL | SWT.DIALOG_TRIM
 					| SWT.ON_TOP);
 		else
@@ -77,27 +77,27 @@ public class InputBox {
 		sShell.setText(title);
 		sShell.setSize(new Point(405, 154));
 		sShell.setLayout(null);
-		lbl_msg = new Label(sShell, SWT.NONE);
-		lbl_msg.setBounds(new Rectangle(8, 10, 387, 46));
-		lbl_msg.setText(msg);
-		txt_input = new Text(sShell, SWT.BORDER);
-		txt_input.setBounds(new Rectangle(11, 64, 384, 24));
-		btn_ok = new Button(sShell, SWT.NONE);
-		btn_ok.setBounds(new Rectangle(226, 96, 84, 26));
-		btn_ok.setText("OK");
-		btn_ok.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
+		lblMsg = new Label(sShell, SWT.NONE);
+		lblMsg.setBounds(new Rectangle(8, 10, 387, 46));
+		lblMsg.setText(msg);
+		txtInput = new Text(sShell, SWT.BORDER);
+		txtInput.setBounds(new Rectangle(11, 64, 384, 24));
+		btnOk = new Button(sShell, SWT.NONE);
+		btnOk.setBounds(new Rectangle(226, 96, 84, 26));
+		btnOk.setText("OK");
+		btnOk.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
 			@Override
 			public void widgetSelected(
 					final org.eclipse.swt.events.SelectionEvent e) {
-				str_input = txt_input.getText();
+				strInput = txtInput.getText();
 				sShell.dispose();
 			}
 		});
-		if (enable_cancel) {
-			btn_cancel = new Button(sShell, SWT.NONE);
-			btn_cancel.setBounds(new Rectangle(314, 96, 84, 26));
-			btn_cancel.setText("Cancel");
-			btn_cancel
+		if (enableCancel) {
+			btnCancel = new Button(sShell, SWT.NONE);
+			btnCancel.setBounds(new Rectangle(314, 96, 84, 26));
+			btnCancel.setText("Cancel");
+			btnCancel
 					.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
 						@Override
 						public void widgetSelected(
@@ -121,7 +121,7 @@ public class InputBox {
 			if (!display.readAndDispatch())
 				display.sleep();
 
-		return str_input;
+		return strInput;
 	}
 
 }

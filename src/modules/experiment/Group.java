@@ -28,7 +28,7 @@ public class Group implements Grp2GUI, Serializable {
 	 * 
 	 */
 	private static final long		serialVersionUID	= 9105205552189986153L;
-	private final ArrayList<Rat>	arr_rats;
+	private final ArrayList<Rat>	rats;
 	private int						id;
 	private String					name;
 	private String					notes;
@@ -47,17 +47,17 @@ public class Group implements Grp2GUI, Serializable {
 		this.name = name;
 		this.notes = notes;
 		this.id = id;
-		arr_rats = new ArrayList<Rat>();
+		rats = new ArrayList<Rat>();
 	}
 
 	/**
 	 * Adds new rat to a group.
 	 * 
-	 * @param new_rat
+	 * @param newRat
 	 *            reference to a new rat object
 	 */
-	public void addRat(final Rat new_rat) {
-		arr_rats.add(new_rat);
+	public void addRat(final Rat newRat) {
+		rats.add(newRat);
 	}
 
 	/**
@@ -66,7 +66,7 @@ public class Group implements Grp2GUI, Serializable {
 	 * @return ArrayList of rats
 	 */
 	public ArrayList<Rat> getAllRats() {
-		return arr_rats;
+		return rats;
 	}
 
 	/*
@@ -93,7 +93,7 @@ public class Group implements Grp2GUI, Serializable {
 	 */
 	@Override
 	public int getNoRats() {
-		return arr_rats.size();
+		return rats.size();
 	}
 
 	/*
@@ -114,9 +114,9 @@ public class Group implements Grp2GUI, Serializable {
 	 *         return null
 	 */
 	public Rat getRatByNumber(final int num) {
-		for (final Rat r_tmp : arr_rats)
-			if (Integer.parseInt(r_tmp.getValueByParameterName(Constants.FILE_RAT_NUMBER)) == num)
-				return r_tmp;
+		for (final Rat ratTmp : rats)
+			if (Integer.parseInt(ratTmp.getValueByParameterName(Constants.FILE_RAT_NUMBER)) == num)
+				return ratTmp;
 		return null;
 	}
 
@@ -126,12 +126,12 @@ public class Group implements Grp2GUI, Serializable {
 	 */
 	@Override
 	public String getRatsNumbering() {
-		final StringBuffer str_buf = new StringBuffer();
-		for (final Rat rat : arr_rats)
-			str_buf.append(rat
+		final StringBuffer strBuf = new StringBuffer();
+		for (final Rat rat : rats)
+			strBuf.append(rat
 					.getValueByParameterName(Constants.FILE_RAT_NUMBER) + ", ");
-		if (str_buf.length() > 0)
-			return str_buf.substring(0, str_buf.length() - 2);
+		if (strBuf.length() > 0)
+			return strBuf.substring(0, strBuf.length() - 2);
 		else
 			return "";
 	}
@@ -139,39 +139,38 @@ public class Group implements Grp2GUI, Serializable {
 	/**
 	 * Gets the group's info in the form of a string.
 	 * 
-	 * @param parameters_list
+	 * @param parametersList
 	 *            list of parameters for rats
 	 * @return String containing all the group's information
 	 */
-	public String grp2String(final String[] parameters_list) {
-		// String str_ret = "";
-		final StringBuffer str_ret_buf = new StringBuffer();
-		str_ret_buf.append(Constants.h_grp
+	public String grp2String(final String[] parametersList) {
+		final StringBuffer strRetBuf = new StringBuffer();
+		strRetBuf.append(Constants.H_GRP
 				+ System.getProperty("line.separator"));
-		str_ret_buf.append(Constants.h_grp_id + getId()
+		strRetBuf.append(Constants.H_GRP_ID + getId()
 				+ System.getProperty("line.separator"));
-		str_ret_buf.append(Constants.h_grp_name + getName()
+		strRetBuf.append(Constants.H_GRP_NAME + getName()
 				+ System.getProperty("line.separator"));
-		str_ret_buf.append(Constants.h_grp_no_rats + getNoRats()
+		strRetBuf.append(Constants.H_GRP_NO_RATS + getNoRats()
 				+ System.getProperty("line.separator"));
-		str_ret_buf.append(Constants.h_grp_rats_numbers + getRatsNumbering()
+		strRetBuf.append(Constants.H_GRP_RATS_NUMBERS + getRatsNumbering()
 				+ System.getProperty("line.separator"));
-		str_ret_buf.append(Constants.h_grp_notes + getNotes()
+		strRetBuf.append(Constants.H_GRP_NOTES + getNotes()
 				+ System.getProperty("line.separator"));
-		str_ret_buf.append("" + System.getProperty("line.separator"));
+		strRetBuf.append("" + System.getProperty("line.separator"));
 		if (getNoRats() > 0) {
-			str_ret_buf.append(Constants.h_rat
+			strRetBuf.append(Constants.H_RAT
 					+ System.getProperty("line.separator"));
-			final StringBuffer tags_buf = new StringBuffer();
-			for (final String s : parameters_list)
-				tags_buf.append(s + '\t'); // TODO:tab after the last item ??!!
-			str_ret_buf.append(tags_buf.toString()
+			final StringBuffer tagsBuf = new StringBuffer();
+			for (final String s : parametersList)
+				tagsBuf.append(s + '\t'); // TODO:tab after the last item ??!!
+			strRetBuf.append(tagsBuf.toString()
 					+ System.getProperty("line.separator"));
 
-			for (final Rat rat_tmp : getAllRats())
-				str_ret_buf.append(rat_tmp.rat2String());
+			for (final Rat ratTmp : getAllRats())
+				strRetBuf.append(ratTmp.rat2String());
 		}
-		return str_ret_buf.toString();
+		return strRetBuf.toString();
 	}
 
 	/**

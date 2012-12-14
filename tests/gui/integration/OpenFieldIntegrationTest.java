@@ -41,7 +41,7 @@ public class OpenFieldIntegrationTest extends UITest {
 	private String		expFileNameOF;
 	protected String	expFileNameOF_orig;
 	protected String	groupName			= "Group1";
-	protected int		ratNumber			= 0;
+	protected int		ratNumber			= 1;
 	protected String	scale				= "60";
 	protected int	sessionTimeMin			= 23;
 	protected int	sessionTimeMax			= 25;

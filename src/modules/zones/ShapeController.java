@@ -35,7 +35,7 @@ import utils.PManager;
  * @author Creative
  */
 public class ShapeController implements GfxPanelNotifiee, ShapeCollection {
-	static ShapeController	default_controller;
+	private static ShapeController	defaultController;
 
 	/**
 	 * Gets the singleton instance.
@@ -43,15 +43,15 @@ public class ShapeController implements GfxPanelNotifiee, ShapeCollection {
 	 * @return singleton instance
 	 */
 	public static ShapeController getDefault() {
-		if (default_controller == null)
-			default_controller = new ShapeController();
-		return default_controller;
+		if (defaultController == null)
+			defaultController = new ShapeController();
+		return defaultController;
 	}
 
-	private GfxPanel			gfx_panel;
+	private GfxPanel			gfxPanel;
 	private final PManager		pm;
-	private boolean				setting_scale;
-	private ArrayList<Shape>	shp_arr;
+	private boolean				settingScale;
+	private ArrayList<Shape>	shapes;
 
 	/**
 	 * just initialize the PManager instance.
@@ -69,15 +69,15 @@ public class ShapeController implements GfxPanelNotifiee, ShapeCollection {
 	 *            the shape to be added
 	 */
 	public void addShape(final Shape tmpRect) {
-		shp_arr.add(tmpRect);
-		gfx_panel.refreshDrawingArea();
+		shapes.add(tmpRect);
+		gfxPanel.refreshDrawingArea();
 	}
 
 	/**
 	 * Clears all shapes stored.
 	 */
 	public void clearAllShapes() {
-		shp_arr.clear();
+		shapes.clear();
 	}
 
 	@Override
@@ -92,7 +92,7 @@ public class ShapeController implements GfxPanelNotifiee, ShapeCollection {
 	public void drawaAllShapes(final Graphics gfx) {
 		int i = 0;
 		for (i = 0; i < this.getNumberOfShapes(); i++)
-			this.shp_arr.get(i).draw(gfx);
+			this.shapes.get(i).draw(gfx);
 	}
 
 	/**
@@ -101,7 +101,7 @@ public class ShapeController implements GfxPanelNotifiee, ShapeCollection {
 	 * @return integer representing the number of shapes
 	 */
 	public int getNumberOfShapes() {
-		return shp_arr.size();
+		return shapes.size();
 	}
 
 	/**
@@ -110,7 +110,7 @@ public class ShapeController implements GfxPanelNotifiee, ShapeCollection {
 	 * @return the shape instance corresponding to the given index
 	 */
 	public Shape getShapeByIndex(final int index) {
-		return shp_arr.get(index);
+		return shapes.get(index);
 	}
 
 	/**
@@ -119,7 +119,7 @@ public class ShapeController implements GfxPanelNotifiee, ShapeCollection {
 	 * @return instance of the shape having the given shapenumber
 	 */
 	public Shape getShapeByNumber(final int shapenumber) {
-		return gfx_panel.getShapeByNumber(shapenumber);
+		return gfxPanel.getShapeByNumber(shapenumber);
 	}
 
 	/**
@@ -127,14 +127,14 @@ public class ShapeController implements GfxPanelNotifiee, ShapeCollection {
 	 * instance (from PManager) PManager calls this method to give the
 	 * ShapeController the instance of GfxPanel.
 	 * 
-	 * @param gfx_panel
+	 * @param gfxPanel
 	 *            instance of GfxPanel class , instantiated in the
 	 *            Ctrl_DrawZones class
 	 */
-	public void linkWithGFXPanel(final GfxPanel gfx_panel) {
-		this.gfx_panel = gfx_panel;
-		shp_arr = gfx_panel.getShapeArray();
-		gfx_panel.registerForNotifications(this);
+	public void linkWithGFXPanel(final GfxPanel gfxPanel) {
+		this.gfxPanel = gfxPanel;
+		shapes = gfxPanel.getShapeArray();
+		gfxPanel.registerForNotifications(this);
 	}
 
 	/*
@@ -143,8 +143,8 @@ public class ShapeController implements GfxPanelNotifiee, ShapeCollection {
 	 */
 	@Override
 	public void mouseClicked(final Point pos) {
-		if (setting_scale)
-			pm.drw_zns.addMeasurePoint(pos);
+		if (settingScale)
+			pm.getDrawZns().addMeasurePoint(pos);
 	}
 
 	/**
@@ -154,7 +154,7 @@ public class ShapeController implements GfxPanelNotifiee, ShapeCollection {
 	 *            true: yes, false: no
 	 */
 	public void setSettingScale(final boolean settingScale) {
-		setting_scale = settingScale;
+		this.settingScale = settingScale;
 	}
 
 	/*
@@ -167,8 +167,8 @@ public class ShapeController implements GfxPanelNotifiee, ShapeCollection {
 
 			@Override
 			public void run() {
-				final FormZoneType frm_zn_type = new FormZoneType();
-				frm_zn_type.open(shapeNumber);
+				final FormZoneType frmZpneType = new FormZoneType();
+				frmZpneType.open(shapeNumber);
 			}
 		});
 	}

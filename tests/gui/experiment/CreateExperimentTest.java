@@ -36,7 +36,7 @@ public class CreateExperimentTest extends UITest {
 		Experiment saved = Reflections.getLoadedExperiment();
 		
 		// load the experiment saved in the file
-		Experiment loadedFromFile = ExperimentManager.readExperimentFromFile(saved.fileName);
+		Experiment loadedFromFile = ExperimentManager.readExperimentFromFile(saved.getFileName());
 		
 		// compare the two experiments
 		assert(Utils.compareExperiments(saved, loadedFromFile)):"Experiments do not match!";

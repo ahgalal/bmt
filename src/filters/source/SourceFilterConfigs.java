@@ -29,7 +29,7 @@ public class SourceFilterConfigs extends FilterConfigs {
 	/**
 	 * image data container.
 	 */
-	public FrameIntArray	fia;
+	private FrameIntArray	fia;
 
 	/**
 	 * @param name
@@ -42,26 +42,34 @@ public class SourceFilterConfigs extends FilterConfigs {
 	public SourceFilterConfigs(final String name,
 			final CommonFilterConfigs commonConfigs, final FrameIntArray fia) {
 		super(name, commonConfigs);
-		this.fia = fia;
+		this.setFrameIntArray(fia);
 	}
 
 	@Override
 	public void mergeConfigs(final FilterConfigs configs) {
-		final SourceFilterConfigs tmp_srcfilter_configs = (SourceFilterConfigs) configs;
-		if (tmp_srcfilter_configs.common_configs != null)
-			common_configs = tmp_srcfilter_configs.common_configs;
-		if (tmp_srcfilter_configs.fia != null)
-			this.fia = tmp_srcfilter_configs.fia;
+		final SourceFilterConfigs tmpSrcfilterConfigs = (SourceFilterConfigs) configs;
+		if (tmpSrcfilterConfigs.getCommonConfigs() != null)
+			setCommonConfigs(tmpSrcfilterConfigs.getCommonConfigs());
+		if (tmpSrcfilterConfigs.getFrameIntArray() != null)
+			this.setFrameIntArray(tmpSrcfilterConfigs.getFrameIntArray());
 	}
 
 	@Override
 	public boolean validate() {
-		if ((common_configs == null) || (fia == null)) {
+		if ((getCommonConfigs() == null) || (getFrameIntArray() == null)) {
 			PManager.log.print("Configs are not completely configured!", this,
 					StatusSeverity.ERROR);
 			return false;
 		}
 		return true;
+	}
+
+	public void setFrameIntArray(FrameIntArray fia) {
+		this.fia = fia;
+	}
+
+	public FrameIntArray getFrameIntArray() {
+		return fia;
 	}
 
 }

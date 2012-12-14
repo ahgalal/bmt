@@ -37,7 +37,7 @@ public class StreamToAVI {
 		INITIALIZED
 	}
 
-	private AVIOutputStream	avi_op;
+	private AVIOutputStream	aviOp;
 	private int[]			data;
 	private BufferedImage	image;
 
@@ -48,7 +48,7 @@ public class StreamToAVI {
 	 */
 	public void close() {
 		try {
-			avi_op.close();
+			aviOp.close();
 		} catch (final IOException e) {
 			e.printStackTrace();
 		}
@@ -71,9 +71,9 @@ public class StreamToAVI {
 	public void initialize(final String filename, final VideoFormat format,
 			final int framerate, final int width, final int height) {
 		try {
-			avi_op = new AVIOutputStream(new File(filename), format);
-			avi_op.setFrameRate(framerate);
-			avi_op.setVideoDimension(width, height);
+			aviOp = new AVIOutputStream(new File(filename), format);
+			aviOp.setFrameRate(framerate);
+			aviOp.setVideoDimension(width, height);
 			image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
 			data = ((DataBufferInt) (image.getRaster().getDataBuffer()))
 					.getData();
@@ -86,14 +86,14 @@ public class StreamToAVI {
 	/**
 	 * Writes video frame to the video file.
 	 * 
-	 * @param frame_data
+	 * @param frameData
 	 *            video frame image
 	 */
-	public void writeFrame(final int[] frame_data) {
+	public void writeFrame(final int[] frameData) {
 		if (state == State.INITIALIZED) {
-			System.arraycopy(frame_data, 0, data, 0, frame_data.length);
+			System.arraycopy(frameData, 0, data, 0, frameData.length);
 			try {
-				avi_op.writeFrame(image);
+				aviOp.writeFrame(image);
 			} catch (final IOException e) {
 				e.printStackTrace();
 			}
@@ -106,7 +106,7 @@ public class StreamToAVI {
 	 * @param val
 	 */
 	public void setTimeScale(int val){
-		avi_op.setTimeScale(val);
+		aviOp.setTimeScale(val);
 	}
 
 }

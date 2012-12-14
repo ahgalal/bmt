@@ -57,21 +57,21 @@ public class GStreamerModule extends VidInputter<VidSourceConfigs> {
 	private PlayBin playBin;
 	private RGBDataSink dataSink;
 	@Override
-	public boolean initialize(final FrameIntArray frame_data,
+	public boolean initialize(final FrameIntArray frameData,
 			final VidSourceConfigs configs) {
 		this.configs = configs;
 		Gst.init("GSMovie",new String[0]);
 		playBin=new PlayBin("PlayerBin");
-		PManager.log.print("initializing video file: "+configs.videoFilePath, this);
-		playBin.setInputFile(new File(configs.videoFilePath));
-		fia=frame_data;
+		PManager.log.print("initializing video file: "+configs.getVideoFilePath(), this);
+		playBin.setInputFile(new File(configs.getVideoFilePath()));
+		fia=frameData;
 
 		dataSink=new RGBDataSink("rgb", new Listener() {
 
 			@Override
 			public void rgbFrame(int arg0, int arg1, IntBuffer buf) {
 				if(paused==false){
-						fia.frame_data = ImageManipulator.bgrIntArray2rgbIntArray(buf.array()); //ImageManipulator.byteBGR2IntRGB(buf.getBytes());
+						fia.setFrameData(ImageManipulator.bgrIntArray2rgbIntArray(buf.array())); //ImageManipulator.byteBGR2IntRGB(buf.getBytes());
 						status = SourceStatus.STREAMING;
 						
 				}

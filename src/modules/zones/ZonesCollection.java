@@ -43,7 +43,7 @@ import utils.StatusManager.StatusSeverity;
  */
 public class ZonesCollection {
 
-	private final ShapeController	shape_controller;
+	private final ShapeController	shapeController;
 	private final ArrayList<Zone>	zones;
 
 	/**
@@ -51,24 +51,24 @@ public class ZonesCollection {
 	 */
 	public ZonesCollection() {
 		zones = new ArrayList<Zone>();
-		shape_controller = ShapeController.getDefault();
+		shapeController = ShapeController.getDefault();
 	}
 
 	/**
 	 * Adds a new zone to the collection.
 	 * 
-	 * @param zone_number
+	 * @param zoneNumber
 	 *            new zone's number
 	 * @param type
 	 *            new zone's type
 	 */
-	public void addZone(final int zone_number, final ZoneType type) {
-		Zone tmp = new Zone(zone_number, type);
+	public void addZone(final int zoneNumber, final ZoneType type) {
+		Zone tmp = new Zone(zoneNumber, type);
 		zones.add(tmp);
-		PManager.getDefault().drw_zns.addZoneToTable(
-				Integer.toString(zone_number),
-				Shape.color2String(shape_controller.getShapeByNumber(
-						zone_number).getColor()),
+		PManager.getDefault().getDrawZns().addZoneToTable(
+				Integer.toString(zoneNumber),
+				Shape.color2String(shapeController.getShapeByNumber(
+						zoneNumber).getColor()),
 				ZoneType.zoneType2String(type));
 		tmp = null;
 	}
@@ -96,8 +96,8 @@ public class ZonesCollection {
 	public void editZone(final int zonenumber, final ZoneType zonetype) {
 		final Zone z = getZoneByNumber(zonenumber);
 		z.setZoneType(zonetype);
-		PManager.getDefault().drw_zns.editZoneDataInTable(zonenumber, Shape
-				.color2String(shape_controller.getShapeByNumber(zonenumber)
+		PManager.getDefault().getDrawZns().editZoneDataInTable(zonenumber, Shape
+				.color2String(shapeController.getShapeByNumber(zonenumber)
 						.getColor()), ZoneType.zoneType2String(zonetype));
 	}
 
@@ -107,9 +107,9 @@ public class ZonesCollection {
 	 * @return array of zones
 	 */
 	public Zone[] getAllZones() {
-		final Zone[] tmp_znz_array = new Zone[getNumberOfZones()];
-		zones.toArray(tmp_znz_array);
-		return tmp_znz_array;
+		final Zone[] tmpZnzArray = new Zone[getNumberOfZones()];
+		zones.toArray(tmpZnzArray);
+		return tmpZnzArray;
 	}
 
 	/**
@@ -124,13 +124,13 @@ public class ZonesCollection {
 	/**
 	 * Gets the zone instance given the zone number.
 	 * 
-	 * @param zone_number
+	 * @param zoneNumber
 	 *            Number of zone to return
 	 * @return Zone instance having the zone number given
 	 */
-	public Zone getZoneByNumber(final int zone_number) {
+	public Zone getZoneByNumber(final int zoneNumber) {
 		for (final Zone z : zones)
-			if (z.getZoneNumber() == zone_number)
+			if (z.getZoneNumber() == zoneNumber)
 				return z;
 		return null;
 	}
@@ -144,21 +144,21 @@ public class ZonesCollection {
 	public void loadZonesFromFile(final String path) // THINK of XML =D
 	{
 		zones.clear();
-		shape_controller.clearAllShapes();
-		PManager.getDefault().drw_zns.clearTable();
+		shapeController.clearAllShapes();
+		PManager.getDefault().getDrawZns().clearTable();
 		String data = readFromFile(path);
-		String tmp_line = "";
-		String shape_type = "";
+		String tmpLine = "";
+		String shapeType = "";
 		try {
 			while (data.length() != 0) {
-				tmp_line = data.substring(0, data.indexOf('\n'));
+				tmpLine = data.substring(0, data.indexOf('\n'));
 				data = data.substring(data.indexOf('\n') + 1);
-				if (tmp_line.equals("Rectangle"))
-					shape_type = "Rectangle";
-				else if (tmp_line.equals("Oval"))
-					shape_type = "Oval";
+				if (tmpLine.equals("Rectangle"))
+					shapeType = "Rectangle";
+				else if (tmpLine.equals("Oval"))
+					shapeType = "Oval";
 
-				final int zone_number = Integer.parseInt(data.substring(0,
+				final int zoneNumber = Integer.parseInt(data.substring(0,
 						data.indexOf('\n')));
 				data = data.substring(data.indexOf('\n') + 1);
 				final int x = Integer
@@ -187,19 +187,19 @@ public class ZonesCollection {
 				final ZoneType ztype = ZoneType.string2ZoneType(zt);
 
 				data = data.substring(data.indexOf('\n') + 1);
-				Shape tmp_shp = null;
-				if (shape_type.equals("Rectangle")) {
-					tmp_shp = new RectangleShape(x, y, w, h, c);
-					tmp_shp.setShapeNumber(zone_number);
-				} else if (shape_type.equals("Oval")) {
-					tmp_shp = new OvalShape(w, h, x, y, c);
-					tmp_shp.setShapeNumber(zone_number);
+				Shape tmpShp = null;
+				if (shapeType.equals("Rectangle")) {
+					tmpShp = new RectangleShape(x, y, w, h, c);
+					tmpShp.setShapeNumber(zoneNumber);
+				} else if (shapeType.equals("Oval")) {
+					tmpShp = new OvalShape(w, h, x, y, c);
+					tmpShp.setShapeNumber(zoneNumber);
 				}
-				shape_controller.addShape(tmp_shp);
-				addZone(zone_number, ztype);
+				shapeController.addShape(tmpShp);
+				addZone(zoneNumber, ztype);
 			}
 		} catch (Exception e) {
-			PManager.getDefault().statusMgr.setStatus("Zones file may be corrupt: "+ path, StatusSeverity.ERROR);
+			PManager.getDefault().getStatusMgr().setStatus("Zones file may be corrupt: "+ path, StatusSeverity.ERROR);
 		}
 	}
 
@@ -211,44 +211,44 @@ public class ZonesCollection {
 	 */
 	private String prepareShapesZonesDescription() {
 		// String res = "";
-		final StringBuffer res_buf = new StringBuffer();
-		RectangleShape tmp_rect = null;
-		OvalShape tmp_oval = null;
-		Shape tmp_shp = null;
-		String width_diameterx = "", height_diametery = "";
-		for (int i = 0; i < shape_controller.getNumberOfShapes(); i++) {
-			tmp_shp = shape_controller.getShapeByIndex(i);
-			if (tmp_shp instanceof RectangleShape) {
-				tmp_rect = (RectangleShape) tmp_shp;
+		final StringBuffer resBuf = new StringBuffer();
+		RectangleShape tmpRect = null;
+		OvalShape tmpOval = null;
+		Shape tmpShp = null;
+		String widthDiameterX = "", heightDiameterY = "";
+		for (int i = 0; i < shapeController.getNumberOfShapes(); i++) {
+			tmpShp = shapeController.getShapeByIndex(i);
+			if (tmpShp instanceof RectangleShape) {
+				tmpRect = (RectangleShape) tmpShp;
 				// res += "Rectangle" + System.getProperty("line.separator");
-				res_buf.append("Rectangle"
+				resBuf.append("Rectangle"
 						+ System.getProperty("line.separator"));
-				width_diameterx = String.valueOf(tmp_rect.getWidth());
-				height_diametery = String.valueOf(tmp_rect.getHeight());
-			} else if (tmp_shp instanceof OvalShape) {
-				tmp_oval = (OvalShape) tmp_shp;
+				widthDiameterX = String.valueOf(tmpRect.getWidth());
+				heightDiameterY = String.valueOf(tmpRect.getHeight());
+			} else if (tmpShp instanceof OvalShape) {
+				tmpOval = (OvalShape) tmpShp;
 				// res += "Oval" + System.getProperty("line.separator");
-				res_buf.append("Oval" + System.getProperty("line.separator"));
-				width_diameterx = String.valueOf(tmp_oval.getWidth());
-				height_diametery = String.valueOf(tmp_oval.getHeight());
+				resBuf.append("Oval" + System.getProperty("line.separator"));
+				widthDiameterX = String.valueOf(tmpOval.getWidth());
+				heightDiameterY = String.valueOf(tmpOval.getHeight());
 			}
-			res_buf.append(tmp_shp.getShapeNumber()
+			resBuf.append(tmpShp.getShapeNumber()
 					+ System.getProperty("line.separator")
-					+ tmp_shp.getX()
+					+ tmpShp.getX()
 					+ System.getProperty("line.separator")
-					+ tmp_shp.getY()
+					+ tmpShp.getY()
 					+ System.getProperty("line.separator")
-					+ width_diameterx
+					+ widthDiameterX
 					+ System.getProperty("line.separator")
-					+ height_diametery
+					+ heightDiameterY
 					+ System.getProperty("line.separator")
-					+ Shape.color2String(tmp_shp.getColor())
+					+ Shape.color2String(tmpShp.getColor())
 					+ System.getProperty("line.separator")
 					+ ZoneType.zoneType2String(getZoneByNumber(
-							tmp_shp.getShapeNumber()).getZoneType())
+							tmpShp.getShapeNumber()).getZoneType())
 					+ System.getProperty("line.separator"));
 		}
-		return res_buf.toString();
+		return resBuf.toString();
 	}
 
 	/**
@@ -261,7 +261,7 @@ public class ZonesCollection {
 	@SuppressWarnings("deprecation")
 	private String readFromFile(final String path) {
 		// String res = "";
-		final StringBuffer res_buf = new StringBuffer();
+		final StringBuffer resBuf = new StringBuffer();
 		final File file = new File(path);
 		FileInputStream fis = null;
 		BufferedInputStream bis = null;
@@ -274,7 +274,7 @@ public class ZonesCollection {
 
 			while (dis.available() != 0)
 				// res += dis.readLine() + "\n";
-				res_buf.append(dis.readLine() + "\n");
+				resBuf.append(dis.readLine() + "\n");
 			fis.close();
 			bis.close();
 			dis.close();
@@ -284,17 +284,17 @@ public class ZonesCollection {
 		} catch (final IOException e) {
 			e.printStackTrace();
 		}
-		return res_buf.toString();
+		return resBuf.toString();
 	}
 
 	/**
 	 * Saves zones & shapes information to a file, to be loaded later.
 	 * 
-	 * @param file_path
+	 * @param filePath
 	 *            File path to save the information to.
 	 */
-	public void saveZonesToFile(final String file_path) {
-		write2file(file_path, prepareShapesZonesDescription());
+	public void saveZonesToFile(final String filePath) {
+		write2file(filePath, prepareShapesZonesDescription());
 	}
 
 	/**

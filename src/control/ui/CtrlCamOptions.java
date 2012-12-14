@@ -25,14 +25,11 @@ import filters.CommonFilterConfigs;
  * @author Creative
  */
 public class CtrlCamOptions extends ControllerUI<CamOptions> {
-	private int		cam_num		= 0;
-	// private String prev_library="";
+	private int		camNum		= 0;
 	private String	format		= "YUV";	// @jve:decl-index=0:
-	private int		frame_rate	= 30;
+	private int		frameRate	= 30;
 	private String	library		= "JMF";	// @jve:decl-index=0:
 	private int		width		= 640, height = 480;
-
-	// private boolean lib_is_already_created;
 
 	/**
 	 * Initializes class attributes (CamOptions and PManager).
@@ -75,10 +72,10 @@ public class CtrlCamOptions extends ControllerUI<CamOptions> {
 	public boolean setVars(final String[] strs) {
 		width = Integer.parseInt(strs[0]);
 		height = Integer.parseInt(strs[1]);
-		this.frame_rate = Integer.parseInt(strs[2]);
+		this.frameRate = Integer.parseInt(strs[2]);
 		this.library = strs[3];
 		this.format = strs[4];
-		this.cam_num = Integer.parseInt(strs[5]);
+		this.camNum = Integer.parseInt(strs[5]);
 		return true;
 	}
 
@@ -94,8 +91,8 @@ public class CtrlCamOptions extends ControllerUI<CamOptions> {
 	public void unloadAndLoadLibProcedures() {
 		if(pm.getState().getStream()==StreamState.STREAMING)
 			pm.stopStreaming();
-		final CommonFilterConfigs common_configs = new CommonFilterConfigs(
-				width, height, frame_rate, cam_num, library, format);
-		pm.initializeVideoManager(common_configs, null);
+		final CommonFilterConfigs commonConfigs = new CommonFilterConfigs(
+				width, height, frameRate, camNum, library, format);
+		pm.initializeVideoManager(commonConfigs, null);
 	}
 }

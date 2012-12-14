@@ -24,11 +24,11 @@ public abstract class FilterConfigs {
 	 * Needed by all filters, contains properties like: image width,height ..
 	 * etc.
 	 */
-	public CommonFilterConfigs	common_configs;
+	private CommonFilterConfigs	commonConfigs;
 	/**
 	 * is the filter enable.
 	 */
-	public boolean				enabled;
+	private boolean				enabled;
 	private final String		name;
 
 	/**
@@ -36,13 +36,13 @@ public abstract class FilterConfigs {
 	 * 
 	 * @param name
 	 *            name of the filter these configurations are intended for.
-	 * @param common_configs
+	 * @param commonConfigs
 	 *            CommonFilterConfigs object, needed by almost all filters
 	 */
 	public FilterConfigs(final String name,
-			final CommonFilterConfigs common_configs) {
-		if(common_configs!=null)
-			this.common_configs = common_configs;
+			final CommonFilterConfigs commonConfigs) {
+		if(commonConfigs!=null)
+			this.setCommonConfigs(commonConfigs);
 		this.name = name;
 	}
 
@@ -76,5 +76,21 @@ public abstract class FilterConfigs {
 	@Override
 	public String toString() {
 		return "name: "+getConfigurablename();
+	}
+
+	public void setEnabled(boolean enabled) {
+		this.enabled = enabled;
+	}
+
+	public boolean isEnabled() {
+		return enabled;
+	}
+
+	public void setCommonConfigs(CommonFilterConfigs commonConfigs) {
+		this.commonConfigs = commonConfigs;
+	}
+
+	public CommonFilterConfigs getCommonConfigs() {
+		return commonConfigs;
 	}
 }

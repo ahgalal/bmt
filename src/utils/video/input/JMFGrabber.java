@@ -31,16 +31,16 @@ import utils.video.input.VidInputter.SourceStatus;
  * @author Creative
  */
 public class JMFGrabber implements Effect {
-	JMFCamFrame					curr_frame	= null;
+	private JMFCamFrame					currFrame	= null;
 	private final FrameIntArray	fia;
 	private final Format[]		informats;
 	@SuppressWarnings("unused")
 	private Format				informatt;
-	byte[]						null_data;
+	private byte[]						nullData;
 	private final Format[]		outformats;
 	private Format				outformatt;
 	private SourceStatus					status;
-	int							width, height;
+	private int							width, height;
 	private boolean	paused;
 
 	/**
@@ -59,9 +59,9 @@ public class JMFGrabber implements Effect {
 		outformats = new Format[1];
 		this.width = width;
 		this.height = height;
-		null_data = new byte[width * height * 3];
-		for (int j = 0; j < null_data.length; j++)
-			null_data[j] = (byte) 0xFF;
+		nullData = new byte[width * height * 3];
+		for (int j = 0; j < nullData.length; j++)
+			nullData[j] = (byte) 0xFF;
 	}
 
 	@Override
@@ -145,21 +145,21 @@ public class JMFGrabber implements Effect {
 			outbuf.setLength(outputDataLength);
 			outbuf.setFormat(outformatt);
 			outbuf.setFlags(inbuf.getFlags());
-			outbuf.setData(null_data);
+			outbuf.setData(nullData);
 			// Initialize Current Frame
-			if (curr_frame == null)
-				curr_frame = new JMFCamFrame((byte[]) inbuf.getData(), width,
+			if (currFrame == null)
+				currFrame = new JMFCamFrame((byte[]) inbuf.getData(), width,
 						height);
 			else
-				curr_frame.updateBufferData((byte[]) inbuf.getData());
+				currFrame.updateBufferData((byte[]) inbuf.getData());
 			if(paused==false){
 				if (inbuf.getFormat().getClass() == YUVFormat.class) {
-					final byte[] da = curr_frame.convertYUV2RGB(null);
-					fia.frame_data = ImageManipulator.flipImage(
-							ImageManipulator.byteRGB2IntRGB(da), width, height);
+					final byte[] da = currFrame.convertYUV2RGB();
+					fia.setFrameData(ImageManipulator.flipImage(
+							ImageManipulator.byteRGB2IntRGB(da), width, height));
 				} else
-					fia.frame_data = ImageManipulator.flipImage(
-							curr_frame.getRGBIntArray(), width, height);
+					fia.setFrameData(ImageManipulator.flipImage(
+							currFrame.getRGBIntArray(), width, height));
 				// System.out.print("Duration: "+(tstart) + "\n");
 				status = SourceStatus.STREAMING;
 			}

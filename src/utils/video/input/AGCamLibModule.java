@@ -36,12 +36,12 @@ public class AGCamLibModule extends VidInputter<VidSourceConfigs> {
 	private class RunnableAGCamLib implements Runnable {
 		@Override
 		public void run() {
-			while (!stop_stream && (th_update_image != null)) {
+			while (!stopStream && (thUpdateImage != null)) {
 				Utils.sleep(30);
 				if(paused==false){
-					fia.frame_data = ag_cam.grabIntRGBFrame();
+					fia.setFrameData(agCam.grabIntRGBFrame());
 					
-					if(fia.frame_data!=null){
+					if(fia.getFrameData()!=null){
 						status = SourceStatus.STREAMING;
 					}
 				}
@@ -50,10 +50,10 @@ public class AGCamLibModule extends VidInputter<VidSourceConfigs> {
 
 	}
 
-	private JAGCamLib	ag_cam;
-	private boolean		stop_stream;
+	private JAGCamLib	agCam;
+	private boolean		stopStream;
 
-	private Thread		th_update_image;
+	private Thread		thUpdateImage;
 
 	@Override
 	public int displayMoreSettings() {
@@ -79,12 +79,12 @@ public class AGCamLibModule extends VidInputter<VidSourceConfigs> {
 	@Override
 	public boolean initialize(final FrameIntArray frameData,
 			final VidSourceConfigs configs) {
-		if (ag_cam == null)
-			ag_cam = new JAGCamLib();
+		if (agCam == null)
+			agCam = new JAGCamLib();
 		this.configs = configs;
 		fia = frameData;
 
-		if (ag_cam.initialize(configs.width, configs.height, configs.camIndex) == ReturnValue.SUCCESS)
+		if (agCam.initialize(configs.getWidth(), configs.getHeight(), configs.getCamIndex()) == ReturnValue.SUCCESS)
 			return true;
 		else {
 			PManager.log.print("Error initializing the Webcam!", this,
@@ -103,9 +103,9 @@ public class AGCamLibModule extends VidInputter<VidSourceConfigs> {
 
 	@Override
 	public boolean startStream() {
-		if (ag_cam.start() == ReturnValue.SUCCESS) {
-			th_update_image = new Thread(new RunnableAGCamLib());
-			th_update_image.start();
+		if (agCam.start() == ReturnValue.SUCCESS) {
+			thUpdateImage = new Thread(new RunnableAGCamLib());
+			thUpdateImage.start();
 
 			return true;
 		} else {
@@ -117,17 +117,17 @@ public class AGCamLibModule extends VidInputter<VidSourceConfigs> {
 
 	@Override
 	public void stopModule() {
-		stop_stream = true;
+		stopStream = true;
 		try {
 			Thread.sleep(15);
 		} catch (final InterruptedException e) {
 			e.printStackTrace();
 		}
 
-		ag_cam.stop();
-		ag_cam.deInitialize();
-		ag_cam = null;
-		th_update_image = null;
+		agCam.stop();
+		agCam.deInitialize();
+		agCam = null;
+		thUpdateImage = null;
 
 	}
 

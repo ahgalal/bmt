@@ -18,16 +18,16 @@ import org.eclipse.swt.widgets.Text;
 public class ExpBasicInfoPage extends WizardPage {
 
 	private Combo		cmboType;
-	private FormData	fd_grp_info;
-	private Group		grp_info_1;
-	private Label		lbl_date		= null;
-	private Label		lbl_name		= null;
-	private Label		lbl_notes		= null;
-	private Label		lbl_username	= null;
+	private FormData	fdGrpInfo;
+	private Group		grpInfo1;
+	private Label		lblDate		= null;
+	private Label		lblName		= null;
+	private Label		lblNotes		= null;
+	private Label		lblUsername	= null;
 	private Label		lblExpDate		= null;
-	private Text		txt_name		= null;
-	private Text		txt_notes		= null;
-	private Text		txt_user		= null;
+	private Text		txtName		= null;
+	private Text		txtNotes		= null;
+	private Text		txtUser		= null;
 
 	protected ExpBasicInfoPage(final String pageName) {
 		super(pageName);
@@ -37,13 +37,13 @@ public class ExpBasicInfoPage extends WizardPage {
 	public void createControl(final Composite parent) {
 		final Composite cmpstPage = new Composite(parent, 0);
 		createGrpInfo(cmpstPage);
-		final FormData fd_btn_save = new FormData();
-		fd_btn_save.top = new FormAttachment(grp_info_1, 6);
-		fd_btn_save.right = new FormAttachment(100, -117);
-		fd_btn_save.left = new FormAttachment(0, 144);
-		final FormData fd_btn_cancel = new FormData();
-		fd_btn_cancel.top = new FormAttachment(grp_info_1, 6);
-		fd_btn_cancel.right = new FormAttachment(100, -10);
+		final FormData fdBtnSave = new FormData();
+		fdBtnSave.top = new FormAttachment(grpInfo1, 6);
+		fdBtnSave.right = new FormAttachment(100, -117);
+		fdBtnSave.left = new FormAttachment(0, 144);
+		final FormData fdBtnCancel = new FormData();
+		fdBtnCancel.top = new FormAttachment(grpInfo1, 6);
+		fdBtnCancel.right = new FormAttachment(100, -10);
 		setLabelToDate();
 
 		setControl(cmpstPage);
@@ -54,53 +54,53 @@ public class ExpBasicInfoPage extends WizardPage {
 	 */
 	private void createGrpInfo(final Composite parent) {
 		parent.setLayout(new FormLayout());
-		grp_info_1 = new Group(parent, SWT.NONE);
-		grp_info_1.setLayout(new GridLayout(2, false));
-		fd_grp_info = new FormData();
-		fd_grp_info.right = new FormAttachment(0, 564);
-		fd_grp_info.left = new FormAttachment(0, 5);
-		fd_grp_info.bottom = new FormAttachment(0, 276);
-		fd_grp_info.top = new FormAttachment(0, 5);
-		grp_info_1.setLayoutData(fd_grp_info);
-		grp_info_1.setText("Information:");
-		lbl_name = new Label(grp_info_1, SWT.NONE);
-		lbl_name.setText("Name:");
-		txt_name = new Text(grp_info_1, SWT.BORDER);
-		final GridData gd_txt_name = new GridData(SWT.FILL, SWT.CENTER, true,
+		grpInfo1 = new Group(parent, SWT.NONE);
+		grpInfo1.setLayout(new GridLayout(2, false));
+		fdGrpInfo = new FormData();
+		fdGrpInfo.right = new FormAttachment(0, 564);
+		fdGrpInfo.left = new FormAttachment(0, 5);
+		fdGrpInfo.bottom = new FormAttachment(0, 276);
+		fdGrpInfo.top = new FormAttachment(0, 5);
+		grpInfo1.setLayoutData(fdGrpInfo);
+		grpInfo1.setText("Information:");
+		lblName = new Label(grpInfo1, SWT.NONE);
+		lblName.setText("Name:");
+		txtName = new Text(grpInfo1, SWT.BORDER);
+		final GridData gdTxtName = new GridData(SWT.FILL, SWT.CENTER, true,
 				false, 1, 1);
-		gd_txt_name.widthHint = 125;
-		txt_name.setLayoutData(gd_txt_name);
+		gdTxtName.widthHint = 125;
+		txtName.setLayoutData(gdTxtName);
 
-		final Label lblType = new Label(grp_info_1, SWT.NONE);
+		final Label lblType = new Label(grpInfo1, SWT.NONE);
 		lblType.setText("Type");
 
-		cmboType = new Combo(grp_info_1, SWT.READ_ONLY);
+		cmboType = new Combo(grpInfo1, SWT.READ_ONLY);
 		cmboType.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, true, false,
 				1, 1));
 		cmboType.setItems(new String[] { "Open Field", "Forced Swimming" });
 		cmboType.setText("Open Field");
-		lbl_username = new Label(grp_info_1, SWT.NONE);
-		lbl_username.setText("User:");
-		txt_user = new Text(grp_info_1, SWT.BORDER);
-		txt_user.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false,
+		lblUsername = new Label(grpInfo1, SWT.NONE);
+		lblUsername.setText("User:");
+		txtUser = new Text(grpInfo1, SWT.BORDER);
+		txtUser.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false,
 				1, 1));
-		lbl_date = new Label(grp_info_1, SWT.NONE);
-		lbl_date.setText("Date:");
-		lblExpDate = new Label(grp_info_1, SWT.NONE);
+		lblDate = new Label(grpInfo1, SWT.NONE);
+		lblDate.setText("Date:");
+		lblExpDate = new Label(grpInfo1, SWT.NONE);
 		lblExpDate.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, true,
 				false, 1, 1));
 		lblExpDate.setText("Current Date");
-		lbl_notes = new Label(grp_info_1, SWT.NONE);
-		final GridData gd_lbl_notes = new GridData(SWT.LEFT, SWT.TOP, false,
+		lblNotes = new Label(grpInfo1, SWT.NONE);
+		final GridData gdLblNotes = new GridData(SWT.LEFT, SWT.TOP, false,
 				false, 1, 1);
-		gd_lbl_notes.widthHint = 125;
-		lbl_notes.setLayoutData(gd_lbl_notes);
-		lbl_notes.setText("Additional Notes:");
-		txt_notes = new Text(grp_info_1, SWT.BORDER | SWT.MULTI);
-		final GridData gd_txt_notes = new GridData(SWT.FILL, SWT.FILL, true,
+		gdLblNotes.widthHint = 125;
+		lblNotes.setLayoutData(gdLblNotes);
+		lblNotes.setText("Additional Notes:");
+		txtNotes = new Text(grpInfo1, SWT.BORDER | SWT.MULTI);
+		final GridData gdTxtNotes = new GridData(SWT.FILL, SWT.FILL, true,
 				false, 1, 1);
-		gd_txt_notes.heightHint = 124;
-		txt_notes.setLayoutData(gd_txt_notes);
+		gdTxtNotes.heightHint = 124;
+		txtNotes.setLayoutData(gdTxtNotes);
 	}
 
 	public String getExpDate() {
@@ -108,11 +108,11 @@ public class ExpBasicInfoPage extends WizardPage {
 	}
 
 	public String getExpName() {
-		return txt_name.getText();
+		return txtName.getText();
 	}
 
 	public String getExpNotes() {
-		return txt_notes.getText();
+		return txtNotes.getText();
 	}
 
 	public String getExpType() {
@@ -120,13 +120,13 @@ public class ExpBasicInfoPage extends WizardPage {
 	}
 
 	public String getUserName() {
-		return txt_user.getText();
+		return txtUser.getText();
 	}
 
 	public void loadData(final String[] strArray) {
-		txt_name.setText(strArray[0]);
-		txt_user.setText(strArray[1]);
-		txt_notes.setText(strArray[2]);
+		txtName.setText(strArray[0]);
+		txtUser.setText(strArray[1]);
+		txtNotes.setText(strArray[2]);
 		lblExpDate.setText(strArray[3]);
 		cmboType.setText(strArray[4]);
 	}

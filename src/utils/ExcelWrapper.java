@@ -32,7 +32,7 @@ import utils.StatusManager.StatusSeverity;
  * @author Creative
  */
 public class ExcelWrapper {
-	private int				nxt_row_idx;
+	private int				nxtRowIdx;
 	private final PManager	pm;
 	private Sheet			sheet;
 	private Workbook		wb;
@@ -55,29 +55,29 @@ public class ExcelWrapper {
 	 */
 	public void fillRow(final int idx, final Object[] data) {
 		Row row;
-		String tmp_str = null;
-		Float tmp_float;
+		String tmpStr = null;
+		Float tmpFloat;
 		if (idx == -1)
 			row = sheet.createRow(getNextRowNumber());
 		else
 			row = sheet.getRow(idx);
 		if (row != null)
 			for (int i = 0; i < data.length; i++) {
-				final Cell tmp_cell = row.createCell(i);
+				final Cell tmpCell = row.createCell(i);
 				if (data[i] instanceof String) {
-					tmp_str = (String) data[i];
-					tmp_cell.setCellValue(tmp_str);
+					tmpStr = (String) data[i];
+					tmpCell.setCellValue(tmpStr);
 				} else if ((data[i] instanceof Float)
 						| (data[i] instanceof Integer)) {
-					tmp_float = (Float.valueOf(data[i].toString()));
-					tmp_cell.setCellValue(tmp_float);
+					tmpFloat = (Float.valueOf(data[i].toString()));
+					tmpCell.setCellValue(tmpFloat);
 				}
 			}
 		else if (sheet.getPhysicalNumberOfRows() == 0)
-			pm.statusMgr.setStatus("Excel sheet is Empty!",
+			pm.getStatusMgr().setStatus("Excel sheet is Empty!",
 					StatusSeverity.ERROR);
 		else
-			pm.statusMgr.setStatus("Row is not found!!", StatusSeverity.ERROR);
+			pm.getStatusMgr().setStatus("Row is not found!!", StatusSeverity.ERROR);
 	}
 
 	/**
@@ -86,8 +86,8 @@ public class ExcelWrapper {
 	 * @return an integer representing the next row index
 	 */
 	private int getNextRowNumber() {
-		nxt_row_idx++;
-		return nxt_row_idx - 1;
+		nxtRowIdx++;
+		return nxtRowIdx - 1;
 	}
 
 	/**
@@ -104,7 +104,7 @@ public class ExcelWrapper {
 	public void reset() {
 		wb = null;
 		sheet = null;
-		nxt_row_idx = 0;
+		nxtRowIdx = 0;
 		init();
 	}
 

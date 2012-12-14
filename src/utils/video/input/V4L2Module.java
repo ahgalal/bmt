@@ -62,14 +62,14 @@ public class V4L2Module extends VidInputter<VidSourceConfigs> implements
 	}
 
 	@Override
-	public boolean initialize(final FrameIntArray frame_data,
+	public boolean initialize(final FrameIntArray frameData,
 			final VidSourceConfigs configs) {
 		PManager.log.print("initializing..", this);
 		this.configs = configs;
-		fia=frame_data;
+		fia=frameData;
 		if (vdevice == null)
 			try {
-				vdevice = new VideoDevice("/dev/video" + configs.camIndex);
+				vdevice = new VideoDevice("/dev/video" + configs.getCamIndex());
 			} catch (final V4L4JException e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
@@ -77,7 +77,7 @@ public class V4L2Module extends VidInputter<VidSourceConfigs> implements
 		try {
 			final List<ImageFormat> formats = vdevice.getDeviceInfo()
 					.getFormatList().getRGBEncodableFormats();
-			vfg = vdevice.getRGBFrameGrabber(configs.width, configs.height, 0,
+			vfg = vdevice.getRGBFrameGrabber(configs.getWidth(), configs.getHeight(), 0,
 					0, formats.get(0));
 			vfg.setCaptureCallback(this);
 			vfg.setFrameInterval(1, 30);
@@ -99,7 +99,7 @@ public class V4L2Module extends VidInputter<VidSourceConfigs> implements
 	@Override
 	public void nextFrame(final VideoFrame vframe) {
 		if(paused==false){
-			fia.frame_data = ImageManipulator.byteBGR2IntRGB(vframe.getBytes());
+			fia.setFrameData(ImageManipulator.byteBGR2IntRGB(vframe.getBytes()));
 			status = SourceStatus.STREAMING;
 		}
 		
