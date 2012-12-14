@@ -35,19 +35,19 @@ public class ExperimentManager {
 
 	private String					currGrpName;
 	private int						currRatNumber;
-	public ExcelEngine				excel_engine;
+	private ExcelEngine				excelEngine;
 	private Experiment				exp;
-	public boolean					exp_is_set;
+	private boolean					expLoaded;
 
-	private ExperimentModuleConfigs	experiment_configs;
+	private ExperimentModuleConfigs	experimentConfigs;
 
-	private ExperimentModule		experiment_module;
+	private ExperimentModule		experimentModule;
 
-	public TextEngine				text_engine;
+	private TextEngine				textEngine;
 
 	private ExperimentManager() {
-		text_engine = new TextEngine();
-		excel_engine = new ExcelEngine();
+		setTextEngine(new TextEngine());
+		setExcelEngine(new ExcelEngine());
 	}
 
 	public String getCurrGrpName() {
@@ -107,23 +107,23 @@ public class ExperimentManager {
 	}
 
 	public ExperimentModule instantiateExperimentModule() {
-		experiment_configs = new ExperimentModuleConfigs("Experiment Module",
+		experimentConfigs = new ExperimentModuleConfigs("Experiment Module",
 				exp);
 
 		switch (exp.type) {
 			case OPEN_FIELD:
-				experiment_module = new OpenFieldExperimentModule(
-						"Experiment Module", experiment_configs);
+				experimentModule = new OpenFieldExperimentModule(
+						"Experiment Module", experimentConfigs);
 				break;
 			case FORCED_SWIMMING:
-				experiment_module = new ForcedSwimmingExperimentModule(
-						"Experiment Module", experiment_configs);
+				experimentModule = new ForcedSwimmingExperimentModule(
+						"Experiment Module", experimentConfigs);
 				break;
 			default:
 				break;
 		}
 
-		return experiment_module;
+		return experimentModule;
 	}
 
 	/**
@@ -132,23 +132,23 @@ public class ExperimentManager {
 	 * @return true/false
 	 */
 	public boolean isExperimentPresent() {
-		return exp_is_set;
+		return isExpLoaded();
 	}
 
 	/**
 	 * Loads an experiment from a text file to an experiment object.
 	 * 
-	 * @param file_name
+	 * @param fileName
 	 *            file name to load the experiment from
 	 */
-	public static Experiment readExperimentFromFile(final String file_name) {
+	public static Experiment readExperimentFromFile(final String fileName) {
 		ObjectInputStream ois;
 		Experiment exp = null;
 		try {
 			ois = new ObjectInputStream(
-					new FileInputStream(new File(file_name)));
+					new FileInputStream(new File(fileName)));
 			exp = (Experiment) ois.readObject();
-			exp.fileName=file_name;
+			exp.setFileName(fileName);
 		} catch (final FileNotFoundException e) {
 			e.printStackTrace();
 		} catch (final IOException e) {
@@ -161,7 +161,7 @@ public class ExperimentManager {
 
 	public void loadExperiment(Experiment experiment){
 		if (experiment != null) {
-			exp_is_set = true;
+			setExpLoaded(true);
 			this.exp=experiment;
 			PManager.getDefault().getVideoManager().setupModulesAndFilters(exp);
 			setExperimantLoadedInGUI(true);
@@ -179,15 +179,13 @@ public class ExperimentManager {
 			final ObjectOutputStream oos = new ObjectOutputStream(
 					new FileOutputStream(new File(FilePath)));
 			oos.writeObject(exp);
-			exp.fileName=FilePath;
+			exp.setFileName(FilePath);
 			oos.close();
 		} catch (final FileNotFoundException e) {
 			e.printStackTrace();
 		} catch (final IOException e) {
 			e.printStackTrace();
 		}
-
-		// text_engine.writeExpInfoToTXTFile(FilePath, exp);
 	}
 
 	public void addExpParams(ArrayList<String> arrayList){
@@ -221,34 +219,34 @@ public class ExperimentManager {
 						.getCodeNames());
 			else if (getNumberOfExpParams() != ModulesManager.getDefault()
 					.getCodeNames().length) {
-				PManager.getDefault().statusMgr
+				PManager.getDefault().getStatusMgr()
 				.setStatus(
 						"Experiment file loaded has some modules which are not active in this session, can't save",
 						StatusSeverity.ERROR);
 				return false;
 			}
-			final String[] params_list = exp.getExpParametersList();
+			final String[] paramsList = exp.getExpParametersList();
 			final String[] data = ModulesManager.getDefault().getFileData();
-			final String[] code_names = ModulesManager.getDefault()
+			final String[] codeNames = ModulesManager.getDefault()
 			.getCodeNames();
-			boolean override_rat = false;
+			boolean overrideRat = false;
 
-			Rat rat_tmp = this.exp.getGroupByName(getCurrGrpName())
+			Rat ratTmp = this.exp.getGroupByName(getCurrGrpName())
 			.getRatByNumber(getCurrRatNumber());
-			if (rat_tmp == null)
+			if (ratTmp == null)
 				// Create a new rat object, and set its params
-				rat_tmp = new Rat(params_list);
+				ratTmp = new Rat(paramsList);
 			else
-				override_rat = true;
+				overrideRat = true;
 
 			// Fill the rate object with the values of params
-			for (int i = 0; i < params_list.length; i++)
-				rat_tmp.setValueByParameterName(params_list[i],
-						data[getIndexByStringValue(code_names, params_list[i])]);
+			for (int i = 0; i < paramsList.length; i++)
+				ratTmp.setValueByParameterName(paramsList[i],
+						data[getIndexByStringValue(codeNames, paramsList[i])]);
 
-			if (!override_rat)
-				this.exp.getGroupByName(getCurrGrpName()).addRat(rat_tmp);
-			saveExperimentToFile(exp.fileName);
+			if (!overrideRat)
+				this.exp.getGroupByName(getCurrGrpName()).addRat(ratTmp);
+			saveExperimentToFile(exp.getFileName());
 			return true;
 		}
 		return false;
@@ -257,19 +255,19 @@ public class ExperimentManager {
 	/**
 	 * Sets the active group and rat number.
 	 * 
-	 * @param rat_num
+	 * @param ratNum
 	 *            rat number to be active and save exp_module_exp. info to
-	 * @param grp_name
+	 * @param grpName
 	 *            group name to be active and save the active rat to
 	 * @return 0: success, -1: group doesn't exist
 	 */
-	public int setCurrentRatAndGroup(final int rat_num, final String grp_name) {
-		final Group tmp_grp = exp.getGroupByName(grp_name);
-		if (tmp_grp != null) { // Group exists
-			setCurrRatNumber(rat_num);
-			setCurrGrpName(grp_name);
-			experiment_configs.setCurrGrpName(currGrpName);
-			experiment_configs.setCurrRatNumber(currRatNumber);
+	public int setCurrentRatAndGroup(final int ratNum, final String grpName) {
+		final Group tmpGrp = exp.getGroupByName(grpName);
+		if (tmpGrp != null) { // Group exists
+			setCurrRatNumber(ratNum);
+			setCurrGrpName(grpName);
+			experimentConfigs.setCurrGrpName(currGrpName);
+			experimentConfigs.setCurrRatNumber(currRatNumber);
 			return 0;
 		} else
 			return -1;
@@ -284,7 +282,7 @@ public class ExperimentManager {
 	}
 
 	public void setExperimantLoadedInGUI(final boolean b) {
-		PManager.main_gui.setExperimantLoaded(b);
+		PManager.mainGUI.setExperimantLoaded(b);
 	}
 
 	/**
@@ -305,7 +303,7 @@ public class ExperimentManager {
 		if (exp == null)
 			exp = new Experiment();
 		exp.setExperimentInfo(name, user, date, notes, type);
-		exp_is_set = true;
+		setExpLoaded(true);
 		setExperimantLoadedInGUI(true);
 
 		PManager.getDefault().getVideoManager().setupModulesAndFilters(exp);
@@ -317,8 +315,8 @@ public class ExperimentManager {
 	public void unloadExperiment() {
 		if (exp != null)
 			exp.clearExperimentData();
-		excel_engine.reset();
-		exp_is_set = false;
+		getExcelEngine().reset();
+		setExpLoaded(false);
 		setExperimantLoadedInGUI(false);
 	}
 
@@ -326,27 +324,27 @@ public class ExperimentManager {
 	 * Saves group information, if the group exists, it is updated; else, a new
 	 * group is created.
 	 * 
-	 * @param grp_id
+	 * @param grpId
 	 *            id of the group to edit
 	 * @param name
 	 *            new name of the group
 	 * @param notes
 	 *            notes on the group
 	 */
-	public void updateGrpInfo(final int grp_id, final String name,
+	public void updateGrpInfo(final int grpId, final String name,
 			final String notes) {
-		final Group tmp_grp = exp.getGroupByID(grp_id);
-		if (tmp_grp == null) {
-			final Group gp = new Group(grp_id, name, notes);
+		final Group tmpGrp = exp.getGroupByID(grpId);
+		if (tmpGrp == null) {
+			final Group gp = new Group(grpId, name, notes);
 			exp.addGroup(gp);
 		} else
 			// group is already existing ... edit it..
 		{
 			if(name.equals(DELETED_GROUP_NAME))
-				exp.getGroups().remove(tmp_grp);
+				exp.getGroups().remove(tmpGrp);
 			else{
-				tmp_grp.setName(name);
-				tmp_grp.setNotes(notes);
+				tmpGrp.setName(name);
+				tmpGrp.setNotes(notes);
 			}
 		}
 	}
@@ -358,17 +356,17 @@ public class ExperimentManager {
 	/**
 	 * Checks that the group already exists, and if the rat already exists.
 	 * 
-	 * @param rat_num
+	 * @param ratNum
 	 *            rat number to check its existence
-	 * @param grp_name
+	 * @param grpName
 	 *            group name to check its existence
 	 * @return integer: 0: Group exists, rat doesn't exist (it's a new rat);
 	 *         1:Group exists, rat also exists; -1: Group doesn't exist
 	 */
-	public int validateRatAndGroup(final int rat_num, final String grp_name) {
-		final Group tmp_grp = exp.getGroupByName(grp_name);
-		if (tmp_grp != null) { // Group exists
-			if (tmp_grp.getRatByNumber(rat_num) == null)
+	public int validateRatAndGroup(final int ratNum, final String grpName) {
+		final Group tmpGrp = exp.getGroupByName(grpName);
+		if (tmpGrp != null) { // Group exists
+			if (tmpGrp.getRatByNumber(ratNum) == null)
 				return 0;
 			return 1;
 		} else
@@ -382,6 +380,30 @@ public class ExperimentManager {
 	 *            FilePath file path to write to
 	 */
 	public void writeToExcelFile(final String FilePath) {
-		excel_engine.writeExpInfoToExcelFile(FilePath, exp);
+		getExcelEngine().writeExpInfoToExcelFile(FilePath, exp);
+	}
+
+	public void setExcelEngine(ExcelEngine excelEngine) {
+		this.excelEngine = excelEngine;
+	}
+
+	public ExcelEngine getExcelEngine() {
+		return excelEngine;
+	}
+
+	public void setExpLoaded(boolean expLoaded) {
+		this.expLoaded = expLoaded;
+	}
+
+	public boolean isExpLoaded() {
+		return expLoaded;
+	}
+
+	public void setTextEngine(TextEngine textEngine) {
+		this.textEngine = textEngine;
+	}
+
+	public TextEngine getTextEngine() {
+		return textEngine;
 	}
 }

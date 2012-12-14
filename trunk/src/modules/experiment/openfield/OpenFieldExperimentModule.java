@@ -18,8 +18,8 @@ import filters.source.SourceFilterData;
  * @author Creative
  */
 public class OpenFieldExperimentModule extends ExperimentModule {
-	private int[]				bg_image_rgb;
-	private boolean				bg_is_set;
+	private int[]				bgImageRGB;
+	private boolean				bgSet;
 	private SourceFilterData	rgbData;
 
 	public OpenFieldExperimentModule(final String name,
@@ -32,7 +32,7 @@ public class OpenFieldExperimentModule extends ExperimentModule {
 
 	@Override
 	public boolean allowTracking() {
-		if (bg_is_set)
+		if (bgSet)
 			return true;
 		else
 			return false;
@@ -40,7 +40,7 @@ public class OpenFieldExperimentModule extends ExperimentModule {
 
 	@Override
 	public boolean amIReady(final Shell shell) {
-		if (bg_is_set)
+		if (bgSet)
 			return super.amIReady(shell);
 		else
 			return false;
@@ -52,7 +52,7 @@ public class OpenFieldExperimentModule extends ExperimentModule {
 	 * @return true/false
 	 */
 	public boolean isBgSet() {
-		return bg_is_set;
+		return bgSet;
 	}
 
 	@Override
@@ -69,14 +69,14 @@ public class OpenFieldExperimentModule extends ExperimentModule {
 	 * @return integer array representing the RGB background image
 	 */
 	public int[] updateRGBBackground() {
-		bg_image_rgb = rgbData.getData();
-		if(bg_image_rgb==null){
+		bgImageRGB = rgbData.getData();
+		if(bgImageRGB==null){
 			Utils.sleep(100);
-			bg_image_rgb = rgbData.getData();
+			bgImageRGB = rgbData.getData();
 		}
 			
-		bg_is_set = true;
-		return bg_image_rgb;
+		bgSet = true;
+		return bgImageRGB;
 	}
 
 }

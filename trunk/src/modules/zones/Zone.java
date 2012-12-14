@@ -64,10 +64,10 @@ public class Zone {
 		}
 	}
 
-	private int			zone_number;	// zone ID, it associates the zone with
+	private int			zoneNumber;	// zone ID, it associates the zone with
 										// its shape
 
-	private ZoneType	zone_type;		// Type of the zone
+	private ZoneType	zoneType;		// Type of the zone
 
 	/**
 	 * Initialized the zone object.
@@ -78,8 +78,8 @@ public class Zone {
 	 *            type of the zone
 	 */
 	public Zone(final int zoneNumber, final ZoneType zoneType) {
-		zone_number = zoneNumber;
-		zone_type = zoneType;
+		this.zoneNumber = zoneNumber;
+		this.zoneType = zoneType;
 	}
 
 	/**
@@ -88,7 +88,7 @@ public class Zone {
 	 * @return integer representing the zone's number
 	 */
 	public int getZoneNumber() {
-		return zone_number;
+		return zoneNumber;
 	}
 
 	/**
@@ -97,7 +97,7 @@ public class Zone {
 	 * @return the type of the zone
 	 */
 	public ZoneType getZoneType() {
-		return zone_type;
+		return zoneType;
 	}
 
 	/**
@@ -107,7 +107,7 @@ public class Zone {
 	 *            the new number of the zone
 	 */
 	public void setZoneNumber(final int zoneNumber) {
-		zone_number = zoneNumber;
+		this.zoneNumber = zoneNumber;
 	}
 
 	/**
@@ -117,7 +117,7 @@ public class Zone {
 	 *            new type of the zone
 	 */
 	public void setZoneType(final ZoneType zoneType) {
-		zone_type = zoneType;
+		this.zoneType = zoneType;
 	}
 
 }

@@ -22,18 +22,18 @@ package modules;
 public abstract class ModuleConfigs {
 
 	protected boolean	enable;
-	public int			height;
-	protected String	module_name;
-	public int			width;
+	private int			height;
+	protected String	moduleName;
+	private int			width;
 
 	/**
 	 * Initializes the configurations.
 	 * 
-	 * @param module_name
+	 * @param moduleName
 	 *            name of the Module this configuration is to be applied to
 	 */
-	public ModuleConfigs(final String module_name) {
-		this.module_name = module_name;
+	public ModuleConfigs(final String moduleName) {
+		this.moduleName = moduleName;
 	}
 
 	/**
@@ -43,7 +43,7 @@ public abstract class ModuleConfigs {
 	 *         object is to be applied to
 	 */
 	public String getModuleName() {
-		return module_name;
+		return moduleName;
 	}
 
 	/**
@@ -56,4 +56,20 @@ public abstract class ModuleConfigs {
 	 *            incoming configurations object
 	 */
 	protected abstract void mergeConfigs(ModuleConfigs config);
+
+	public void setHeight(int height) {
+		this.height = height;
+	}
+
+	public int getHeight() {
+		return height;
+	}
+
+	public void setWidth(int width) {
+		this.width = width;
+	}
+
+	public int getWidth() {
+		return width;
+	}
 }

@@ -227,11 +227,11 @@ public class VideoRecorderGUI extends PluggedGUI<VideoRecorder> {
 			PManager.getDefault().getVideoManager().getFilterManager()
 					.enableFilter("Recorder", false);
 			final FileDialog fileDialog = new FileDialog(shell, SWT.SAVE);
-			final String file_name = fileDialog.open();
-			if (file_name != null)
+			final String fileName = fileDialog.open();
+			if (fileName != null)
 				((VideoRecorder) PManager.getDefault().getVideoManager()
 						.getFilterManager().getFilterByName("Recorder"))
-						.saveVideoFile(file_name);
+						.saveVideoFile(fileName);
 			
 			// need to update GUI controls according to the current tracking state
 			stateGeneralChangeHandler(programState);

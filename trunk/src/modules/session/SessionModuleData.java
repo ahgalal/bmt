@@ -22,10 +22,10 @@ import modules.ModuleData;
  * @author Creative
  */
 public class SessionModuleData extends ModuleData {
-	public long		session_end_time;
-	public boolean	session_is_running;
-	public long		session_start_time;
-	public int accumulatedSessionTime=0;
+	private long		sessionEndTime;
+	private boolean	sessionRunning;
+	private long		sessionStartTime;
+	private int accumulatedSessionTime=0;
 
 	/**
 	 * Initializes the Data.
@@ -35,6 +35,38 @@ public class SessionModuleData extends ModuleData {
 	 */
 	public SessionModuleData(final String name) {
 		super(name);
+	}
+
+	public void setSessionEndTime(long sessionEndTime) {
+		this.sessionEndTime = sessionEndTime;
+	}
+
+	public long getSessionEndTime() {
+		return sessionEndTime;
+	}
+
+	public void setSessionRunning(boolean sessionRunning) {
+		this.sessionRunning = sessionRunning;
+	}
+
+	public boolean isSessionRunning() {
+		return sessionRunning;
+	}
+
+	public void setSessionStartTime(long sessionStartTime) {
+		this.sessionStartTime = sessionStartTime;
+	}
+
+	public long getSessionStartTime() {
+		return sessionStartTime;
+	}
+
+	public void setAccumulatedSessionTime(int accumulatedSessionTime) {
+		this.accumulatedSessionTime = accumulatedSessionTime;
+	}
+
+	public int getAccumulatedSessionTime() {
+		return accumulatedSessionTime;
 	}
 
 }

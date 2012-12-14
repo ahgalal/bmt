@@ -38,7 +38,7 @@ public class StatusManager {
 		ERROR, WARNING;
 	}
 
-	private Color	clr_black, clr_red, clr;
+	private Color	clrBlack, clrRed, clr;
 
 	private StyledText	txt;						// the label to display the
 												// status
@@ -51,8 +51,8 @@ public class StatusManager {
 	 */
 	public void initialize(final StyledText styledText) {
 		this.txt = styledText;
-		clr_red = new Color(styledText.getDisplay(), 255, 0, 0);
-		clr_black = new Color(styledText.getDisplay(), 0, 0, 0);
+		clrRed = new Color(styledText.getDisplay(), 255, 0, 0);
+		clrBlack = new Color(styledText.getDisplay(), 0, 0, 0);
 	}
 
 	/**
@@ -66,11 +66,11 @@ public class StatusManager {
 	public void setStatus(final String msg, final StatusSeverity svrty) {
 		if (txt != null) {
 			if (svrty == StatusSeverity.ERROR)// ERROR-> RED
-				clr = clr_red;
+				clr = clrRed;
 			else if (svrty == StatusSeverity.WARNING) 
-				clr = clr_black;
+				clr = clrBlack;
 			else
-				clr = clr_black;
+				clr = clrBlack;
 
 			Display.getDefault().asyncExec(new Runnable() {
 				@Override

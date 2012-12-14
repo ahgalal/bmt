@@ -23,7 +23,7 @@ import utils.ExcelWrapper;
  */
 public class ExcelEngine {
 
-	private final ExcelWrapper	excel_wrapper;	// Excel wrapper utility for
+	private final ExcelWrapper	excelWrapper;	// Excel wrapper utility for
 
 	// creating sheets/cells
 
@@ -31,14 +31,14 @@ public class ExcelEngine {
 	 * Used to ecport Experiment's data to an excel document.
 	 */
 	public ExcelEngine() {
-		excel_wrapper = new ExcelWrapper();
+		excelWrapper = new ExcelWrapper();
 	}
 
 	/**
 	 * Resets the Excel wrapper.
 	 */
 	public void reset() {
-		excel_wrapper.reset();
+		excelWrapper.reset();
 	}
 
 	/**
@@ -52,38 +52,38 @@ public class ExcelEngine {
 	public void writeExpInfoToExcelFile(final String filename,
 			final Experiment exp) {
 		try {
-			excel_wrapper.fillRow(-1,
-					new String[] { Constants.h_exp_name, exp.getName() });
-			excel_wrapper.fillRow(-1,
-					new String[] { Constants.h_exp_user, exp.getUser() });
-			excel_wrapper.fillRow(-1,
-					new String[] { Constants.h_exp_date, exp.getDate() });
-			excel_wrapper.fillRow(-1,
-					new String[] { Constants.h_exp_notes, exp.getNotes() });
+			excelWrapper.fillRow(-1,
+					new String[] { Constants.H_EXP_NAME, exp.getName() });
+			excelWrapper.fillRow(-1,
+					new String[] { Constants.H_EXP_USER, exp.getUser() });
+			excelWrapper.fillRow(-1,
+					new String[] { Constants.H_EXP_DATE, exp.getDate() });
+			excelWrapper.fillRow(-1,
+					new String[] { Constants.H_EXP_NOTES, exp.getNotes() });
 
-			excel_wrapper.fillRow(-1, new String[] { "" });
+			excelWrapper.fillRow(-1, new String[] { "" });
 
-			for (final Group grp_tmp : exp.getGroups()) {
-				excel_wrapper.fillRow(-1, new Object[] { Constants.h_grp_id,
-						(grp_tmp.getId()) });
-				excel_wrapper.fillRow(-1, new Object[] { Constants.h_grp_name,
-						grp_tmp.getName() });
-				excel_wrapper.fillRow(-1, new Object[] {
-						Constants.h_grp_no_rats, (grp_tmp.getNoRats()) });
-				excel_wrapper.fillRow(
+			for (final Group grpTmp : exp.getGroups()) {
+				excelWrapper.fillRow(-1, new Object[] { Constants.H_GRP_ID,
+						(grpTmp.getId()) });
+				excelWrapper.fillRow(-1, new Object[] { Constants.H_GRP_NAME,
+						grpTmp.getName() });
+				excelWrapper.fillRow(-1, new Object[] {
+						Constants.H_GRP_NO_RATS, (grpTmp.getNoRats()) });
+				excelWrapper.fillRow(
 						-1,
-						new Object[] { Constants.h_grp_rats_numbers,
-								grp_tmp.getRatsNumbering() });
-				excel_wrapper.fillRow(-1, new Object[] { Constants.h_grp_notes,
-						grp_tmp.getNotes() });
+						new Object[] { Constants.H_GRP_RATS_NUMBERS,
+								grpTmp.getRatsNumbering() });
+				excelWrapper.fillRow(-1, new Object[] { Constants.H_GRP_NOTES,
+						grpTmp.getNotes() });
 
-				excel_wrapper.fillRow(-1, new Object[] { "" });
+				excelWrapper.fillRow(-1, new Object[] { "" });
 
-				excel_wrapper.fillRow(-1, exp.getExpParametersList());
-				for (final Rat rat_tmp : grp_tmp.getAllRats())
-					excel_wrapper.fillRow(-1, rat_tmp.getValues());
+				excelWrapper.fillRow(-1, exp.getExpParametersList());
+				for (final Rat ratTmp : grpTmp.getAllRats())
+					excelWrapper.fillRow(-1, ratTmp.getValues());
 			}
-			excel_wrapper.saveToFile(filename);
+			excelWrapper.saveToFile(filename);
 		} catch (final Exception e) {
 			e.printStackTrace();
 		}

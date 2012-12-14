@@ -33,17 +33,17 @@ public class OpenCVModule extends VidInputter<OpenCVConfigs> {
 	private class RunnableOpenCV implements Runnable {
 		@Override
 		public void run() {
-			if (configs.fileName == null)
-				cv.capture(configs.width, configs.height, configs.camIndex);
+			if (configs.getVideoFilePath()== null)
+				cv.capture(configs.getWidth(), configs.getHeight(), configs.getCamIndex());
 			else
-				cv.movie(configs.fileName,640,480);
-			while (!stop_stream & (th_update_image != null)) {
+				cv.movie(configs.getVideoFilePath(),configs.getWidth(),configs.getHeight());
+			while (!stopStream & (thUpdateImage != null)) {
 				Utils.sleep(30);
 				if(paused==false){
 					System.out.println("OpenCV, reading frame..");
 					cv.read();
-					fia.frame_data = cv.pixels();
-					if (fia.frame_data != null)
+					fia.setFrameData(cv.pixels());
+					if (fia.getFrameData() != null)
 						status = SourceStatus.STREAMING;
 				}
 			}
@@ -52,10 +52,10 @@ public class OpenCVModule extends VidInputter<OpenCVConfigs> {
 	}
 
 	private static final long	serialVersionUID	= 1L;
-	OpenCV						cv					= null; // OpenCV Object
-	private boolean				stop_stream;
+	private OpenCV						cv					= null; // OpenCV Object
+	private boolean				stopStream;
 
-	Thread						th_update_image		= null; // the sample thread
+	private Thread						thUpdateImage		= null; // the sample thread
 
 	@Override
 	public int displayMoreSettings() {
@@ -79,10 +79,10 @@ public class OpenCVModule extends VidInputter<OpenCVConfigs> {
 	}
 
 	@Override
-	public boolean initialize(final FrameIntArray frame_data,
+	public boolean initialize(final FrameIntArray frameData,
 			final OpenCVConfigs configs) {
 		PManager.log.print("initializing..", this);
-		this.fia = frame_data;
+		this.fia = frameData;
 		this.configs = configs;
 		cv = new OpenCV();
 		return true;
@@ -96,17 +96,17 @@ public class OpenCVModule extends VidInputter<OpenCVConfigs> {
 
 	@Override
 	public boolean startStream() {
-		if (th_update_image == null)
-			th_update_image = new Thread(new RunnableOpenCV());
-		th_update_image.start();
+		if (thUpdateImage == null)
+			thUpdateImage = new Thread(new RunnableOpenCV());
+		thUpdateImage.start();
 		return true;
 	}
 
 	@Override
 	public void stopModule() {
-		stop_stream = true;
+		stopStream = true;
 		Utils.sleep(30);
-		th_update_image = null;
+		thUpdateImage = null;
 		cv.stop();
 		cv.dispose();
 		cv = null;

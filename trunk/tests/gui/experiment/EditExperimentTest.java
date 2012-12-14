@@ -32,7 +32,7 @@ public class EditExperimentTest extends UITest {
 		ExperimentExecUnitGroup.loadExperiment(TEST_EXP_FILE);
 		Experiment original = Reflections.getLoadedExperiment();
 		ExperimentExecUnitGroup.editExperiment(TEST_EXP_EDIT_FILE);
-		Experiment loadedFromFile = ExperimentManager.readExperimentFromFile(original.fileName);
+		Experiment loadedFromFile = ExperimentManager.readExperimentFromFile(original.getFileName());
 		
 		assert(loadedFromFile.getDate().equals(original.getDate()));
 		assert(loadedFromFile.getGroups().size()==2);

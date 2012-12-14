@@ -60,7 +60,7 @@ Module<PluggedGUI, SessionModuleConfigs, SessionModuleData> {
 	@Override
 	public void deInitialize() {
 		endSession();
-		data.session_is_running = false;
+		data.setSessionRunning(false);
 	}
 
 	@Override
@@ -92,15 +92,15 @@ Module<PluggedGUI, SessionModuleConfigs, SessionModuleData> {
 	 * @return session's elapsed time till now
 	 */
 	private long getSessionTimeTillNow() {
-		return data.accumulatedSessionTime/(1000);
+		return data.getAccumulatedSessionTime()/(1000);
 	}
 
 	@Override
 	public void initialize() {
 		PManager.log.print("initializing..", this, Details.VERBOSE);
-		data.session_start_time = 0;
-		data.session_end_time = 0;
-		data.accumulatedSessionTime=0;
+		data.setSessionStartTime(0);
+		data.setSessionEndTime(0);
+		data.setAccumulatedSessionTime(0);
 		
 		guiCargo = new Cargo(new String[] { Constants.GUI_SESSION_TIME });
 
@@ -109,22 +109,22 @@ Module<PluggedGUI, SessionModuleConfigs, SessionModuleData> {
 		for(String param:expParams)
 			data.addParameter(param);
 		expType = new ExperimentType[] { ExperimentType.OPEN_FIELD,ExperimentType.FORCED_SWIMMING };
-		// data.expType=expType;
 	}
 
 	@Override
 	public void process() {
-		if (!data.session_is_running) {
+		if (!data.isSessionRunning()) {
 			startSession();
-			data.session_is_running = true;
+			data.setSessionRunning(true);
 		}
 		
 		if(paused==false){
-			data.session_end_time = System.currentTimeMillis();
-			data.accumulatedSessionTime+= (data.session_end_time - data.session_start_time);
-			if(data.session_start_time==0)
-				data.accumulatedSessionTime=0;
-			data.session_start_time = System.currentTimeMillis();
+			data.setSessionEndTime(System.currentTimeMillis());
+			data.setAccumulatedSessionTime((int) (data
+					.getAccumulatedSessionTime() + (data.getSessionEndTime() - data.getSessionStartTime())));
+			if(data.getSessionStartTime()==0)
+				data.setAccumulatedSessionTime(0);
+			data.setSessionStartTime(System.currentTimeMillis());
 		}
 	}
 
@@ -150,14 +150,14 @@ Module<PluggedGUI, SessionModuleConfigs, SessionModuleData> {
 	 * Saves session's start time.
 	 */
 	private void startSessionTime() {
-		data.session_start_time = System.currentTimeMillis();
+		data.setSessionStartTime(System.currentTimeMillis());
 	}
 
 	/**
 	 * Saves session's end time.
 	 */
 	private void stopSessionTimer() {
-		data.session_end_time = System.currentTimeMillis();
+		data.setSessionEndTime(System.currentTimeMillis());
 	}
 
 	@Override

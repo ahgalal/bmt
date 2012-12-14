@@ -32,16 +32,16 @@ import filters.ratfinder.markers.RectangularMarker;
  */
 public class RatFinder extends
 		VideoFilter<RatFinderFilterConfigs, RatFinderData> {
-	protected final Point	center_point;
+	protected final Point	centerPoint;
 
-	int[]					hori_sum;
+	private int[]					horiSum;
 	protected Marker		marker, marker2;
 
-	protected int[]			out_data;
+	protected int[]			outData;
 	private final int		searchSideLength	= 600;
 
-	private int				tmp_max;
-	int[]					vert_sum;
+	private int				tmpMax;
+	private int[]					vertSum;
 	private Point[] centroidHistory=new Point[2];
 
 	/**
@@ -57,19 +57,19 @@ public class RatFinder extends
 	public RatFinder(final String name, final Link linkIn, final Link linkOut) {
 		super(name, linkIn, linkOut);
 		filterData = new RatFinderData("Rat Finder Data");
-		center_point = filterData.getCenterPoint();
+		centerPoint = filterData.getCenterPoint();
 	}
 
-	int framesRemainingToEnableCentroidHistory=10;
+	private int framesRemainingToEnableCentroidHistory=10;
 	@Override
 	public boolean configure(final FilterConfigs configs) {
 		this.configs = (RatFinderFilterConfigs) configs;
 
 		marker = new CrossMarker(50, 50, 5, Color.RED,
-				configs.common_configs.width, configs.common_configs.height);
+				configs.getCommonConfigs().getWidth(), configs.getCommonConfigs().getHeight());
 
-		marker2 = new RectangularMarker(configs.common_configs.width,
-				configs.common_configs.height, searchSideLength,
+		marker2 = new RectangularMarker(configs.getCommonConfigs().getWidth(),
+				configs.getCommonConfigs().getHeight(), searchSideLength,
 				searchSideLength, Color.RED);
 		
 		for(int i=0;i<centroidHistory.length;i++)
@@ -77,9 +77,9 @@ public class RatFinder extends
 		framesRemainingToEnableCentroidHistory=10;
 		
 		// super's stuff:
-		out_data = new int[configs.common_configs.width
-				* configs.common_configs.height];
-		this.link_out.setData(out_data);
+		outData = new int[configs.getCommonConfigs().getWidth()
+				* configs.getCommonConfigs().getHeight()];
+		this.linkOut.setData(outData);
 		specialConfiguration(configs);
 		return super.configure(configs);
 	}
@@ -87,16 +87,16 @@ public class RatFinder extends
 	/**
 	 * Draws a cross at the center of the moving object.
 	 * 
-	 * @param binary_image
+	 * @param binaryImage
 	 *            image to draw the cross on
 	 */
-	protected void drawMarkerOnImg(final int[] binary_image) {
-		System.arraycopy(binary_image, 0, out_data, 0, binary_image.length);
+	protected void drawMarkerOnImg(final int[] binaryImage) {
+		System.arraycopy(binaryImage, 0, outData, 0, binaryImage.length);
 
 		try {
-			marker.draw(out_data, center_point.x, center_point.y);
-			marker2.draw(out_data, center_point.x - searchSideLength / 2,
-					center_point.y - searchSideLength / 2);
+			marker.draw(outData, centerPoint.x, centerPoint.y);
+			marker2.draw(outData, centerPoint.x - searchSideLength / 2,
+					centerPoint.y - searchSideLength / 2);
 		} catch (final Exception e) {
 			System.err.print("Error in marker");
 			e.printStackTrace();
@@ -109,69 +109,69 @@ public class RatFinder extends
 	 */
 	@Override
 	public void process() {
-		if (configs.enabled) {
-			updateCentroid(link_in.getData());
-			drawMarkerOnImg(link_in.getData());
+		if (configs.isEnabled()) {
+			updateCentroid(linkIn.getData());
+			drawMarkerOnImg(linkIn.getData());
 		}
 	}
 
 	protected void specialConfiguration(final FilterConfigs configs) {
-		hori_sum = new int[configs.common_configs.height];
-		vert_sum = new int[configs.common_configs.width];
+		horiSum = new int[configs.getCommonConfigs().getHeight()];
+		vertSum = new int[configs.getCommonConfigs().getWidth()];
 	}
 
 	/**
 	 * Updates the center point (ie: finds the location of the moving object).
 	 * 
-	 * @param binary_image
+	 * @param binaryImage
 	 *            input image
 	 */
-	protected void updateCentroid(final int[] binary_image) {
+	protected void updateCentroid(final int[] binaryImage) {
 		int smallestWhiteAreaSize=10;
-		tmp_max = smallestWhiteAreaSize;
+		tmpMax = smallestWhiteAreaSize;
 
 		int y1, y2;
-		if (center_point.y == 0) {
+		if (centerPoint.y == 0) {
 			y1 = 0;
-			y2 = configs.common_configs.height;
+			y2 = configs.getCommonConfigs().getHeight();
 		} else {
-			y1 = (center_point.y - searchSideLength) < 0 ? 0
-					: center_point.y - 40;
-			y2 = (center_point.y + searchSideLength) > configs.common_configs.height ? configs.common_configs.height
-					: center_point.y + searchSideLength;
+			y1 = (centerPoint.y - searchSideLength) < 0 ? 0
+					: centerPoint.y - 40;
+			y2 = (centerPoint.y + searchSideLength) > configs.getCommonConfigs().getHeight() ? configs.getCommonConfigs().getHeight()
+					: centerPoint.y + searchSideLength;
 		}
 		for (int y = y1; y < y2; y++){ // Horizontal Sum
-			hori_sum[y] = 0;
-			for (int x = 0; x < configs.common_configs.width; x++)
-				hori_sum[y] += binary_image[y * configs.common_configs.width
+			horiSum[y] = 0;
+			for (int x = 0; x < configs.getCommonConfigs().getWidth(); x++)
+				horiSum[y] += binaryImage[y * configs.getCommonConfigs().getWidth()
 						+ x] & 0xff;
-			if (hori_sum[y] > tmp_max) {
-				center_point.y = y;
-				tmp_max = hori_sum[y];
+			if (horiSum[y] > tmpMax) {
+				centerPoint.y = y;
+				tmpMax = horiSum[y];
 			}
 		}
 
-		tmp_max = smallestWhiteAreaSize;
+		tmpMax = smallestWhiteAreaSize;
 
 		int x1, x2;
-		if (center_point.x == 0) {
+		if (centerPoint.x == 0) {
 			x1 = 0;
-			x2 = configs.common_configs.width;
+			x2 = configs.getCommonConfigs().getWidth();
 		} else {
-			x1 = (center_point.x - searchSideLength) < 0 ? 0
-					: center_point.x - 40;
-			x2 = (center_point.x + searchSideLength) > configs.common_configs.width ? configs.common_configs.width
-					: center_point.x + searchSideLength;
+			x1 = (centerPoint.x - searchSideLength) < 0 ? 0
+					: centerPoint.x - 40;
+			x2 = (centerPoint.x + searchSideLength) > configs.getCommonConfigs().getWidth() ? configs.getCommonConfigs().getWidth()
+					: centerPoint.x + searchSideLength;
 		}
 
 		for (int x = x1; x < x2; x++){ // Vertical Sum
-			vert_sum[x] = 0;
-			for (int y = 0; y < configs.common_configs.height; y++)
-				vert_sum[x] += binary_image[y * configs.common_configs.width
+			vertSum[x] = 0;
+			for (int y = 0; y < configs.getCommonConfigs().getHeight(); y++)
+				vertSum[x] += binaryImage[y * configs.getCommonConfigs().getWidth()
 				                            + x] & 0xff;
-			if (vert_sum[x] > tmp_max) {
-				center_point.x = x;
-				tmp_max = vert_sum[x];
+			if (vertSum[x] > tmpMax) {
+				centerPoint.x = x;
+				tmpMax = vertSum[x];
 			}
 		}
 
@@ -186,8 +186,8 @@ public class RatFinder extends
 		if(framesRemainingToEnableCentroidHistory==0){
 			if(centroidHistory[0].x==-1){ // history is not initialized yet
 				for(int i=0;i<centroidHistory.length-1;i++){
-					centroidHistory[i].x=center_point.x;
-					centroidHistory[i].y=center_point.y;
+					centroidHistory[i].x=centerPoint.x;
+					centroidHistory[i].y=centerPoint.y;
 				}
 			}else{
 				int sumX=0,sumY=0;
@@ -196,8 +196,8 @@ public class RatFinder extends
 					sumY+=p.y;
 				}
 				int factor=5;
-				center_point.x= (center_point.x*factor+sumX)/(centroidHistory.length+factor);
-				center_point.y= (center_point.y*factor+sumY)/(centroidHistory.length+factor);
+				centerPoint.x= (centerPoint.x*factor+sumX)/(centroidHistory.length+factor);
+				centerPoint.y= (centerPoint.y*factor+sumY)/(centroidHistory.length+factor);
 
 				// update history
 				for(int i=0;i<centroidHistory.length-1;i++){
@@ -205,8 +205,8 @@ public class RatFinder extends
 					centroidHistory[i].y=centroidHistory[i+1].y;
 				}
 
-				centroidHistory[centroidHistory.length-1].x=center_point.x;
-				centroidHistory[centroidHistory.length-1].y=center_point.y;
+				centroidHistory[centroidHistory.length-1].x=centerPoint.x;
+				centroidHistory[centroidHistory.length-1].y=centerPoint.y;
 			}
 		}else
 			framesRemainingToEnableCentroidHistory--;

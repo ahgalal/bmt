@@ -34,26 +34,26 @@ import control.ui.CtrlCamOptions;
  */
 public class CamOptions extends BaseUI {
 
-	private Button			btn_cancel			= null;
+	private Button			btnCancel			= null;
 
-	private Button			btn_jmyron_settings	= null;
-	private Button			btn_OK				= null;
-	private Combo			cmbo_cam_lib		= null;
-	private Combo			cmbo_cam_num		= null;
+	private Button			btnJmyronSettings	= null;
+	private Button			btnOK				= null;
+	private Combo			cmboCamLib		= null;
+	private Combo			cmboCamNum		= null;
 	private CtrlCamOptions	controller;				// @jve:decl-index=0:
-	private Group			grp_format			= null;
-	private Group			grp_frame_rate		= null;
-	private Label			lbl_cam_lib			= null;
-	private Label			lbl_cam_num			= null;
-	private Label			lbl_height			= null;
-	private Label			lbl_width			= null;
-	private Button			radbtn_15fps		= null;
-	private Button			radbtn_30fps		= null;
-	private Button			radbtn_rgb			= null;
-	private Button			radbtn_yuv			= null;
+	private Group			grpFormat			= null;
+	private Group			grpFrameRate		= null;
+	private Label			lblCamLib			= null;
+	private Label			lblCamNum			= null;
+	private Label			lblHeight			= null;
+	private Label			lblWidth			= null;
+	private Button			radbtn15fps		= null;
+	private Button			radbtn30fps		= null;
+	private Button			radbtnRGB			= null;
+	private Button			radbtnYUV			= null;
 	private Shell			sShell				= null; // @jve:decl-index=0:visual-constraint="12,18"
-	private Text			txt_height			= null;
-	private Text			txt_width			= null;
+	private Text			txtHeight			= null;
+	private Text			txtWidth			= null;
 
 	/**
 	 * Initializes the GUI components.
@@ -65,24 +65,24 @@ public class CamOptions extends BaseUI {
 
 	@Override
 	public void clearForm() {
-		txt_height.setText("");
-		txt_width.setText("");
+		txtHeight.setText("");
+		txtWidth.setText("");
 	}
 
 	/**
 	 * This method initializes cmbo_cam_lib.
 	 */
 	private void createCmboCamLib() {
-		cmbo_cam_lib = new Combo(sShell, SWT.READ_ONLY);
-		cmbo_cam_lib.setBounds(new Rectangle(184, 14, 116, 23));
+		cmboCamLib = new Combo(sShell, SWT.READ_ONLY);
+		cmboCamLib.setBounds(new Rectangle(184, 14, 116, 23));
 
-		cmbo_cam_lib.add("AGCamLib");
-		cmbo_cam_lib.add("JMF");
-		cmbo_cam_lib.add("OpenCV");
-		cmbo_cam_lib.add("JMyron");
-		cmbo_cam_lib.setText("AGCamLib");
+		cmboCamLib.add("AGCamLib");
+		cmboCamLib.add("JMF");
+		cmboCamLib.add("OpenCV");
+		cmboCamLib.add("JMyron");
+		cmboCamLib.setText("AGCamLib");
 
-		cmbo_cam_lib.addSelectionListener(new SelectionListener() {
+		cmboCamLib.addSelectionListener(new SelectionListener() {
 
 			@Override
 			public void widgetDefaultSelected(final SelectionEvent e) {
@@ -90,27 +90,27 @@ public class CamOptions extends BaseUI {
 
 			@Override
 			public void widgetSelected(final SelectionEvent e) {
-				final String library = cmbo_cam_lib.getText();
+				final String library = cmboCamLib.getText();
 				if (library.equals("OpenCV")) {
-					radbtn_rgb.setEnabled(false);
-					radbtn_yuv.setEnabled(false);
-					btn_jmyron_settings.setVisible(false);
-					cmbo_cam_num.setEnabled(true);
+					radbtnRGB.setEnabled(false);
+					radbtnYUV.setEnabled(false);
+					btnJmyronSettings.setVisible(false);
+					cmboCamNum.setEnabled(true);
 				} else if (library.equals("JMF")) {
-					radbtn_rgb.setEnabled(true);
-					radbtn_yuv.setEnabled(true);
-					btn_jmyron_settings.setVisible(false);
-					cmbo_cam_num.setEnabled(true);
+					radbtnRGB.setEnabled(true);
+					radbtnYUV.setEnabled(true);
+					btnJmyronSettings.setVisible(false);
+					cmboCamNum.setEnabled(true);
 				} else if (library.equals("JMyron")) {
-					radbtn_rgb.setEnabled(false);
-					radbtn_yuv.setEnabled(false);
-					btn_jmyron_settings.setVisible(true);
-					cmbo_cam_num.setEnabled(false);
+					radbtnRGB.setEnabled(false);
+					radbtnYUV.setEnabled(false);
+					btnJmyronSettings.setVisible(true);
+					cmboCamNum.setEnabled(false);
 				} else if (library.equals("AGCamLib")) {
-					radbtn_rgb.setEnabled(false);
-					radbtn_yuv.setEnabled(false);
-					btn_jmyron_settings.setVisible(false);
-					cmbo_cam_num.setEnabled(true);
+					radbtnRGB.setEnabled(false);
+					radbtnYUV.setEnabled(false);
+					btnJmyronSettings.setVisible(false);
+					cmboCamNum.setEnabled(true);
 				}
 			}
 		});
@@ -120,47 +120,47 @@ public class CamOptions extends BaseUI {
 	 * This method initializes cmbo_cam_num.
 	 */
 	private void createCmboCamNum() {
-		cmbo_cam_num = new Combo(sShell, SWT.READ_ONLY);
-		cmbo_cam_num.setBounds(new Rectangle(184, 46, 116, 23));
-		cmbo_cam_num.add("0");
-		cmbo_cam_num.add("1");
-		cmbo_cam_num.add("2");
-		cmbo_cam_num.setText("0");
+		cmboCamNum = new Combo(sShell, SWT.READ_ONLY);
+		cmboCamNum.setBounds(new Rectangle(184, 46, 116, 23));
+		cmboCamNum.add("0");
+		cmboCamNum.add("1");
+		cmboCamNum.add("2");
+		cmboCamNum.setText("0");
 	}
 
 	/**
 	 * This method initializes grp_format.
 	 */
 	private void createGrpFormat() {
-		grp_format = new Group(sShell, SWT.NONE);
-		grp_format.setLayout(null);
-		grp_format.setText("Format");
-		grp_format.setBounds(new Rectangle(159, 121, 146, 49));
-		radbtn_rgb = new Button(grp_format, SWT.RADIO);
-		radbtn_rgb.setBounds(new Rectangle(8, 20, 43, 16));
-		radbtn_rgb.setText("RGB");
-		radbtn_yuv = new Button(grp_format, SWT.RADIO);
-		radbtn_yuv.setBounds(new Rectangle(74, 21, 43, 16));
-		radbtn_yuv.setText("YUV");
-		radbtn_yuv.setSelection(true);
+		grpFormat = new Group(sShell, SWT.NONE);
+		grpFormat.setLayout(null);
+		grpFormat.setText("Format");
+		grpFormat.setBounds(new Rectangle(159, 121, 146, 49));
+		radbtnRGB = new Button(grpFormat, SWT.RADIO);
+		radbtnRGB.setBounds(new Rectangle(8, 20, 43, 16));
+		radbtnRGB.setText("RGB");
+		radbtnYUV = new Button(grpFormat, SWT.RADIO);
+		radbtnYUV.setBounds(new Rectangle(74, 21, 43, 16));
+		radbtnYUV.setText("YUV");
+		radbtnYUV.setSelection(true);
 	}
 
 	/**
 	 * This method initializes grp_frame_rate.
 	 */
 	private void createGrpFrameRate() {
-		grp_frame_rate = new Group(sShell, SWT.NONE);
-		grp_frame_rate.setLayout(null);
-		grp_frame_rate.setBounds(new Rectangle(15, 120, 135, 48));
-		grp_frame_rate.setText("Frame Rate");
-		radbtn_15fps = new Button(grp_frame_rate, SWT.RADIO);
-		radbtn_15fps.setBounds(new Rectangle(8, 20, 52, 16));
-		radbtn_15fps.setText("15 fps");
+		grpFrameRate = new Group(sShell, SWT.NONE);
+		grpFrameRate.setLayout(null);
+		grpFrameRate.setBounds(new Rectangle(15, 120, 135, 48));
+		grpFrameRate.setText("Frame Rate");
+		radbtn15fps = new Button(grpFrameRate, SWT.RADIO);
+		radbtn15fps.setBounds(new Rectangle(8, 20, 52, 16));
+		radbtn15fps.setText("15 fps");
 
-		radbtn_30fps = new Button(grp_frame_rate, SWT.RADIO);
-		radbtn_30fps.setBounds(new Rectangle(86, 20, 52, 16));
-		radbtn_30fps.setText("30 fps");
-		radbtn_30fps.setSelection(true);
+		radbtn30fps = new Button(grpFrameRate, SWT.RADIO);
+		radbtn30fps.setBounds(new Rectangle(86, 20, 52, 16));
+		radbtn30fps.setText("30 fps");
+		radbtn30fps.setSelection(true);
 
 	}
 
@@ -174,10 +174,10 @@ public class CamOptions extends BaseUI {
 		sShell.setLayout(null);
 		sShell.setSize(new Point(318, 239));
 		sShell.setMaximized(false);
-		btn_OK = new Button(sShell, SWT.NONE);
-		btn_OK.setBounds(new Rectangle(231, 180, 73, 25));
-		btn_OK.setText("OK");
-		btn_OK.addMouseListener(new org.eclipse.swt.events.MouseAdapter() {
+		btnOK = new Button(sShell, SWT.NONE);
+		btnOK.setBounds(new Rectangle(231, 180, 73, 25));
+		btnOK.setText("OK");
+		btnOK.addMouseListener(new org.eclipse.swt.events.MouseAdapter() {
 			@Override
 			public void mouseDown(final org.eclipse.swt.events.MouseEvent e) {
 				/**
@@ -185,49 +185,49 @@ public class CamOptions extends BaseUI {
 				 * haven't chosen JMyron 2. we have chosen JMyron, but haven't
 				 * set it's advanced settings
 				 */
-				controller.setVars(new String[] { txt_width.getText(),
-						txt_height.getText(),
-						radbtn_15fps.getSelection() ? "15" : "30",
-						cmbo_cam_lib.getText(),
-						radbtn_rgb.getSelection() ? "RGB" : "YUV",
-						cmbo_cam_num.getText() });
+				controller.setVars(new String[] { txtWidth.getText(),
+						txtHeight.getText(),
+						radbtn15fps.getSelection() ? "15" : "30",
+						cmboCamLib.getText(),
+						radbtnRGB.getSelection() ? "RGB" : "YUV",
+						cmboCamNum.getText() });
 				controller.btnOkAction();
 			}
 		});
-		txt_width = new Text(sShell, SWT.BORDER);
-		txt_width.setBounds(new Rectangle(61, 80, 76, 21));
+		txtWidth = new Text(sShell, SWT.BORDER);
+		txtWidth.setBounds(new Rectangle(61, 80, 76, 21));
 
-		txt_width.setText("640");
-		txt_height = new Text(sShell, SWT.BORDER);
-		txt_height.setBounds(new Rectangle(208, 80, 76, 21));
+		txtWidth.setText("640");
+		txtHeight = new Text(sShell, SWT.BORDER);
+		txtHeight.setBounds(new Rectangle(208, 80, 76, 21));
 
-		txt_height.setText("480");
-		lbl_width = new Label(sShell, SWT.NONE);
-		lbl_width.setBounds(new Rectangle(15, 80, 35, 15));
-		lbl_width.setText("Width:");
-		lbl_height = new Label(sShell, SWT.NONE);
-		lbl_height.setBounds(new Rectangle(163, 80, 39, 15));
-		lbl_height.setText("Height:");
+		txtHeight.setText("480");
+		lblWidth = new Label(sShell, SWT.NONE);
+		lblWidth.setBounds(new Rectangle(15, 80, 35, 15));
+		lblWidth.setText("Width:");
+		lblHeight = new Label(sShell, SWT.NONE);
+		lblHeight.setBounds(new Rectangle(163, 80, 39, 15));
+		lblHeight.setText("Height:");
 		createGrpFrameRate();
 		createGrpFormat();
-		lbl_cam_num = new Label(sShell, SWT.NONE);
-		lbl_cam_num.setBounds(new Rectangle(15, 44, 83, 21));
-		lbl_cam_num.setText("Cam. Number:");
+		lblCamNum = new Label(sShell, SWT.NONE);
+		lblCamNum.setBounds(new Rectangle(15, 44, 83, 21));
+		lblCamNum.setText("Cam. Number:");
 		createCmboCamNum();
 		createCmboCamLib();
-		lbl_cam_lib = new Label(sShell, SWT.NONE);
-		lbl_cam_lib.setBounds(new Rectangle(15, 17, 112, 17));
-		lbl_cam_lib.setText("Cam. Video Library:");
-		btn_jmyron_settings = new Button(sShell, SWT.NONE);
-		btn_jmyron_settings.setText("More ..");
-		btn_jmyron_settings.setSize(new Point(73, 25));
-		btn_jmyron_settings.setVisible(false);
-		btn_jmyron_settings.setLocation(new Point(155, 180));
-		btn_cancel = new Button(sShell, SWT.NONE);
-		btn_cancel.setText("Cancel");
-		btn_cancel.setSize(new Point(73, 25));
-		btn_cancel.setLocation(new Point(10, 181));
-		btn_cancel
+		lblCamLib = new Label(sShell, SWT.NONE);
+		lblCamLib.setBounds(new Rectangle(15, 17, 112, 17));
+		lblCamLib.setText("Cam. Video Library:");
+		btnJmyronSettings = new Button(sShell, SWT.NONE);
+		btnJmyronSettings.setText("More ..");
+		btnJmyronSettings.setSize(new Point(73, 25));
+		btnJmyronSettings.setVisible(false);
+		btnJmyronSettings.setLocation(new Point(155, 180));
+		btnCancel = new Button(sShell, SWT.NONE);
+		btnCancel.setText("Cancel");
+		btnCancel.setSize(new Point(73, 25));
+		btnCancel.setLocation(new Point(10, 181));
+		btnCancel
 				.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
 					@Override
 					public void widgetSelected(
@@ -235,7 +235,7 @@ public class CamOptions extends BaseUI {
 						sShell.setVisible(false);
 					}
 				});
-		btn_jmyron_settings
+		btnJmyronSettings
 				.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
 					@Override
 					public void widgetSelected(
@@ -249,45 +249,45 @@ public class CamOptions extends BaseUI {
 						 * of the GUI from unloading the VP and loosing all it's
 						 * data(including the advanced settings!)
 						 */
-						controller.setVars(new String[] { txt_width.getText(),
-								txt_height.getText(),
-								radbtn_15fps.getSelection() ? "15" : "30",
-								cmbo_cam_lib.getText(),
-								radbtn_rgb.getSelection() ? "RGB" : "YUV",
-								cmbo_cam_num.getText() });
+						controller.setVars(new String[] { txtWidth.getText(),
+								txtHeight.getText(),
+								radbtn15fps.getSelection() ? "15" : "30",
+								cmboCamLib.getText(),
+								radbtnRGB.getSelection() ? "RGB" : "YUV",
+								cmboCamNum.getText() });
 						controller.btnJmyronSettingsAction();
 					}
 				});
 	}
 
 	@Override
-	public void loadData(final String[] str_array) {
-		if (str_array.length == 6) {
-			final String library = str_array[0];
-			final int cam_num = Integer.parseInt(str_array[1]);
-			final int width = Integer.parseInt(str_array[2]);
-			final int height = Integer.parseInt(str_array[3]);
-			final int frame_rate = Integer.parseInt(str_array[4]);
-			final String format = str_array[5];
+	public void loadData(final String[] strArray) {
+		if (strArray.length == 6) {
+			final String library = strArray[0];
+			final int camNum = Integer.parseInt(strArray[1]);
+			final int width = Integer.parseInt(strArray[2]);
+			final int height = Integer.parseInt(strArray[3]);
+			final int frameRate = Integer.parseInt(strArray[4]);
+			final String format = strArray[5];
 
 			try {
 
-				cmbo_cam_lib.setText(library);
-				cmbo_cam_num.setText(String.valueOf(cam_num));
-				txt_width.setText(String.valueOf(width));
-				txt_height.setText(String.valueOf(height));
-				switch (frame_rate) {
+				cmboCamLib.setText(library);
+				cmboCamNum.setText(String.valueOf(camNum));
+				txtWidth.setText(String.valueOf(width));
+				txtHeight.setText(String.valueOf(height));
+				switch (frameRate) {
 					case 15:
-						radbtn_15fps.setSelection(true);
+						radbtn15fps.setSelection(true);
 						break;
 					case 30:
-						radbtn_30fps.setSelection(true);
+						radbtn30fps.setSelection(true);
 						break;
 				}
 				if (format.equals("RGB"))
-					radbtn_rgb.setSelection(true);
+					radbtnRGB.setSelection(true);
 				else if (format.equals("YUV"))
-					radbtn_yuv.setSelection(true);
+					radbtnYUV.setSelection(true);
 			} catch (final Exception e) {
 				e.printStackTrace();
 			}
@@ -303,9 +303,9 @@ public class CamOptions extends BaseUI {
 	}
 
 	public void setVidLibs(final String[] libs) {
-		cmbo_cam_lib.removeAll();
+		cmboCamLib.removeAll();
 		for (final String lib : libs)
-			cmbo_cam_lib.add(lib);
-		cmbo_cam_lib.setText(libs[0]);
+			cmboCamLib.add(lib);
+		cmboCamLib.setText(libs[0]);
 	}
 }

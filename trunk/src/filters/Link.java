@@ -22,7 +22,7 @@ import java.awt.Point;
  * @author Creative
  */
 public class Link {
-	private int[]	img_data;
+	private int[]	imgData;
 
 	/**
 	 * Initializes image data.
@@ -31,7 +31,7 @@ public class Link {
 	 *            dimensions of the image the link is to deal with
 	 */
 	public Link(final Point dims) {
-		img_data = new int[dims.x * dims.y];
+		imgData = new int[dims.x * dims.y];
 	}
 
 	/**
@@ -40,7 +40,7 @@ public class Link {
 	 * @return array of integers representing the image's data
 	 */
 	public int[] getData() {
-		return img_data;
+		return imgData;
 	}
 
 	/**
@@ -50,6 +50,6 @@ public class Link {
 	 *            new data to put on the link
 	 */
 	public void setData(final int[] newdata) {
-		img_data = newdata;
+		imgData = newdata;
 	}
 }

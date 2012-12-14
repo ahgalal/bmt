@@ -55,7 +55,7 @@ public class ModulesManager {
 	private class RunnableModulesThread implements Runnable {
 		@Override
 		public void run() {
-			while (run_modules) {
+			while (runModules) {
 				doneProcessing=false;
 				Utils.sleep(33);
 
@@ -86,24 +86,24 @@ public class ModulesManager {
 		return me;
 	}
 
-	private final ArrayList<Cargo>	file_cargos	= new ArrayList<Cargo>();
-	private String[]				file_data_array;
+	private final ArrayList<Cargo>	fileCargos	= new ArrayList<Cargo>();
+	private String[]				fileDataArray;
 
-	private String[]				file_names_array;
+	private String[]				fileNamesArray;
 
-	private final ArrayList<Data>	filters_data;
-	private final ArrayList<Cargo>	gui_cargos	= new ArrayList<Cargo>();
-	private String[]				gui_data_array;
+	private final ArrayList<Data>	filtersData;
+	private final ArrayList<Cargo>	guiCargos	= new ArrayList<Cargo>();
+	private String[]				guiDataArray;
 
-	private String[]				gui_names_array;
+	private String[]				guiNamesArray;
 	private int						height;
 
 	private final ArrayList<Module>	modules;
-	private final ArrayList<ModuleData>	modules_data;
-	private boolean					run_modules;
-	private RunnableModulesThread	runnable_modules;
+	private final ArrayList<ModuleData>	modulesData;
+	private boolean					runModules;
+	private RunnableModulesThread	runnableModules;
 
-	private Thread					th_modules;
+	private Thread					thModules;
 
 	private int						width;
 
@@ -112,8 +112,8 @@ public class ModulesManager {
 	 */
 	public ModulesManager() {
 		me = this;
-		filters_data = new ArrayList<Data>();
-		modules_data = new ArrayList<ModuleData>();
+		filtersData = new ArrayList<Data>();
+		modulesData = new ArrayList<ModuleData>();
 		modules = new ArrayList<Module>();
 	}
 
@@ -125,7 +125,7 @@ public class ModulesManager {
 	 *            incoming data object from a video filter
 	 */
 	public void addFilterDataObject(final Data data) {
-		filters_data.add(data);
+		filtersData.add(data);
 		for (final Module module : modules)
 			module.registerFilterDataObject(data);
 	}
@@ -163,10 +163,10 @@ public class ModulesManager {
 		PManager.log.print("registering modules data with each others", this,
 				Details.VERBOSE);
 		for (final Module mo : modules)
-			modules_data.add(mo.getModuleData());
+			modulesData.add(mo.getModuleData());
 
 		for (final Module mo : modules)
-			for (final ModuleData data : modules_data)
+			for (final ModuleData data : modulesData)
 				mo.registerModuleDataObject(data);
 		PManager.log.print(
 				"finished registering modules data with each others", this,
@@ -178,50 +178,50 @@ public class ModulesManager {
 	 * Builds the Cargo array based on the number of instantiated modules.
 	 */
 	private void constructCargoArray() {
-		int num_strs = 0;
-		gui_cargos.clear();
-		file_cargos.clear();
+		int numStrs = 0;
+		guiCargos.clear();
+		fileCargos.clear();
 
 		Cargo tmp;
 		for (final Module m : modules) {
 			tmp = m.getGUICargo();
 			if (tmp != null) {
-				gui_cargos.add(tmp);
-				num_strs += tmp.getData().length;
+				guiCargos.add(tmp);
+				numStrs += tmp.getData().length;
 			}
 		}
 
-		gui_data_array = new String[num_strs];
-		gui_names_array = new String[num_strs];
+		guiDataArray = new String[numStrs];
+		guiNamesArray = new String[numStrs];
 
-		num_strs = 0;
+		numStrs = 0;
 		for (final Module m : modules) {
 			tmp = m.getFileCargo();
 			if (tmp != null) {
-				file_cargos.add(tmp);
-				num_strs += tmp.getData().length;
+				fileCargos.add(tmp);
+				numStrs += tmp.getData().length;
 			}
 		}
 
-		file_data_array = new String[num_strs];
-		file_names_array = new String[num_strs];
+		fileDataArray = new String[numStrs];
+		fileNamesArray = new String[numStrs];
 
 		int i = 0;
-		for (final Cargo cargo : gui_cargos) {
+		for (final Cargo cargo : guiCargos) {
 			if (cargo == null)
 				System.out.println();
-			final String[] tmp_cargo_names = cargo.getTags();
-			for (int j = 0; j < tmp_cargo_names.length; j++) {
-				gui_names_array[i] = tmp_cargo_names[j];
+			final String[] tmpCargoNames = cargo.getTags();
+			for (int j = 0; j < tmpCargoNames.length; j++) {
+				guiNamesArray[i] = tmpCargoNames[j];
 				i++;
 			}
 		}
 
 		i = 0;
-		for (final Cargo cargo : file_cargos) {
-			final String[] tmp_cargo_names = cargo.getTags();
-			for (int j = 0; j < tmp_cargo_names.length; j++) {
-				file_names_array[i] = tmp_cargo_names[j];
+		for (final Cargo cargo : fileCargos) {
+			final String[] tmpCargoNames = cargo.getTags();
+			for (int j = 0; j < tmpCargoNames.length; j++) {
+				fileNamesArray[i] = tmpCargoNames[j];
 				i++;
 			}
 		}
@@ -235,7 +235,7 @@ public class ModulesManager {
 	 */
 	public String[] getCodeNames() {
 		constructCargoArray();
-		return file_names_array;
+		return fileNamesArray;
 	}
 
 	/**
@@ -248,14 +248,14 @@ public class ModulesManager {
 			mo.updateFileCargoData();
 
 		int i = 0;
-		for (final Cargo cargo : file_cargos) {
-			final String[] tmp_cargo_data = cargo.getData();
-			for (int j = 0; j < tmp_cargo_data.length; j++) {
-				file_data_array[i] = tmp_cargo_data[j];
+		for (final Cargo cargo : fileCargos) {
+			final String[] tmpCargoData = cargo.getData();
+			for (int j = 0; j < tmpCargoData.length; j++) {
+				fileDataArray[i] = tmpCargoData[j];
 				i++;
 			}
 		}
-		return file_data_array;
+		return fileDataArray;
 	}
 
 	/**
@@ -268,14 +268,14 @@ public class ModulesManager {
 			mo.updateGUICargoData();
 
 		int i = 0;
-		for (final Cargo cargo : gui_cargos) {
-			final String[] tmp_cargo_data = cargo.getData();
-			for (int j = 0; j < tmp_cargo_data.length; j++) {
-				gui_data_array[i] = tmp_cargo_data[j];
+		for (final Cargo cargo : guiCargos) {
+			final String[] tmpCargoData = cargo.getData();
+			for (int j = 0; j < tmpCargoData.length; j++) {
+				guiDataArray[i] = tmpCargoData[j];
 				i++;
 			}
 		}
-		return gui_data_array;
+		return guiDataArray;
 	}
 
 	/**
@@ -285,7 +285,7 @@ public class ModulesManager {
 	 *         GUI
 	 */
 	public String[] getGUINames() {
-		return gui_names_array;
+		return guiNamesArray;
 	}
 
 	/**
@@ -323,10 +323,10 @@ public class ModulesManager {
 	 * @return ArrayList containing the names of active modules
 	 */
 	public ArrayList<String> getModulesNames() {
-		final ArrayList<String> tmp_arr = new ArrayList<String>();
+		final ArrayList<String> tmpArr = new ArrayList<String>();
 		for (final Module m : modules)
-			tmp_arr.add(m.getName());
-		return tmp_arr;
+			tmpArr.add(m.getName());
+		return tmpArr;
 	}
 
 	/**
@@ -337,24 +337,23 @@ public class ModulesManager {
 	 */
 	public int getNumberOfFileParameters() {
 		constructCargoArray();
-		for(String fileCargoTag:file_names_array){
+		for(String fileCargoTag:fileNamesArray){
 			PManager.log.print("File Tag: "+ fileCargoTag, this, Details.NOTES);
 		}
-		return file_names_array.length;
+		return fileNamesArray.length;
 	}
 
 	/**
 	 * Initializes modules.
 	 */
 	public void initialize() {
-		// TODO: CALLED at an incorrect timing ?? (inside "start_trackiing")
-		filters_data.clear();
+		filtersData.clear();
 		for (final Module mo : modules)
 			mo.initialize();
 
 		constructCargoArray();
 
-		runnable_modules = new RunnableModulesThread();
+		runnableModules = new RunnableModulesThread();
 	}
 
 	/**
@@ -379,9 +378,9 @@ public class ModulesManager {
 			final ZonesModuleConfigs zonesConfigs = new ZonesModuleConfigs(
 					"Zones Module", ZonesModule.DEFAULT_HYSTRISES_VALUE,
 					width, height);
-			final ZonesModule zones_module = new ZonesModule("Zones Module",
+			final ZonesModule zonesModule = new ZonesModule("Zones Module",
 					zonesConfigs);
-			modules.add(zones_module);
+			modules.add(zonesModule);
 		}
 		// ////////////////////////////////
 		// Session Module
@@ -417,7 +416,7 @@ public class ModulesManager {
      */
 	private void loadModulesGUI() {
 		PManager.log.print("loading Modules GUI..", this, Details.VERBOSE);
-		PManager.main_gui.loadPluggedGUI(getModulesGUI());
+		PManager.mainGUI.loadPluggedGUI(getModulesGUI());
 	}
 
 	/**
@@ -428,7 +427,7 @@ public class ModulesManager {
 	 *            data object of a video filter
 	 */
 	public void removeDataObject(final Data data) {
-		filters_data.remove(data);
+		filtersData.remove(data);
 		for (final Module mo : modules)
 			mo.deRegisterDataObject(data);
 	}
@@ -440,12 +439,12 @@ public class ModulesManager {
 	 *            true/false to start/stop
 	 */
 	public void runModules(final boolean run) {
-		if (run & !run_modules) {
-			run_modules = true;
-			th_modules = new Thread(runnable_modules);
-			th_modules.start();
-		} else if (!run & run_modules) {
-			run_modules = false;
+		if (run & !runModules) {
+			runModules = true;
+			thModules = new Thread(runnableModules);
+			thModules.start();
+		} else if (!run & runModules) {
+			runModules = false;
 			
 			// if paused, we need to resume to unlock the paused thread
 			if(PManager.getDefault().getState().getStream()==StreamState.PAUSED)
@@ -456,7 +455,7 @@ public class ModulesManager {
 			} catch (final InterruptedException e) {
 				e.printStackTrace();
 			}
-			th_modules = null;
+			thModules = null;
 			
 			while(doneProcessing==false)
 				Utils.sleep(50);
@@ -475,8 +474,8 @@ public class ModulesManager {
 
 	public void resumeModules(){
 		paused=false;
-		if(th_modules!=null)
-			th_modules.interrupt();
+		if(thModules!=null)
+			thModules.interrupt();
 		for(Module mod:modules)
 			mod.resume();
 	}
@@ -505,7 +504,7 @@ public class ModulesManager {
 		
 		// remove old modules
 		modules.clear();
-		modules_data.clear();
+		modulesData.clear();
 		
 		// ////////////////////////////////
 		// Experiment Module

@@ -59,16 +59,16 @@ public class CtrlDrawZones extends ControllerUI<DrawZones> {
 	/**
 	 * Adds the given zone to the GUI table.
 	 * 
-	 * @param zone_no
+	 * @param zoneNumber
 	 *            zone's number
-	 * @param zone_col
+	 * @param zoneColor
 	 *            zone's color
-	 * @param zone_type
+	 * @param zoneType
 	 *            zone's type
 	 */
-	public void addZoneToTable(final String zone_no, final String zone_col,
-			final String zone_type) {
-		ui.addZoneToTable(zone_no, zone_col, zone_type);
+	public void addZoneToTable(final String zoneNumber, final String zoneColor,
+			final String zoneType) {
+		ui.addZoneToTable(zoneNumber, zoneColor, zoneType);
 	}
 
 	/**
@@ -88,10 +88,10 @@ public class CtrlDrawZones extends ControllerUI<DrawZones> {
 	 */
 	public void btnLoadZonesAction(final Shell shell) {
 		final FileDialog fileDialog = new FileDialog(shell, SWT.OPEN);
-		final String file_name = fileDialog.open();
-		if (file_name != null)
+		final String fileName = fileDialog.open();
+		if (fileName != null)
 			((ZonesModule) ModulesManager.getDefault().getModuleByName(
-					"Zones Module")).loadZonesFromFile(file_name);
+					"Zones Module")).loadZonesFromFile(fileName);
 	}
 
 	/**
@@ -102,10 +102,10 @@ public class CtrlDrawZones extends ControllerUI<DrawZones> {
 	 */
 	public void btnSaveZonesAction(final Shell shell) {
 		final FileDialog fileDialog = new FileDialog(shell, SWT.SAVE);
-		final String file_name = fileDialog.open();
-		if (file_name != null)
+		final String fileName = fileDialog.open();
+		if (fileName != null)
 			((ZonesModule) ModulesManager.getDefault().getModuleByName(
-					"Zones Module")).saveZonesToFile(file_name);
+					"Zones Module")).saveZonesToFile(fileName);
 	}
 
 	/**
@@ -131,31 +131,31 @@ public class CtrlDrawZones extends ControllerUI<DrawZones> {
 	}
 
 	/**
-	 * Selects the zone having "zone_number" in the GUI table.
+	 * Selects the zone having "zoneNumber" in the GUI table.
 	 * 
-	 * @param zone_number
+	 * @param zoneNumber
 	 *            number of the zone to select
 	 */
-	public void selectZoneInTable(final int zone_number) {
-		ui.selectZoneInTable(zone_number);
+	public void selectZoneInTable(final int zoneNumber) {
+		ui.selectZoneInTable(zoneNumber);
 	}
 
 	/**
 	 * Sends measure points selected by the user along with the real distance
 	 * between the two points in reality to the StatsController.
 	 * 
-	 * @param measure_pnt1
+	 * @param measurePnt1
 	 *            First point that the user selected
-	 * @param measure_pnt2
+	 * @param measurePnt2
 	 *            Second point that the user selected
-	 * @param str_real_distance
+	 * @param strRealDistance
 	 *            Real distance between the two points
 	 */
-	public void sendScaletoStatsCtrlr(final Point measure_pnt1,
-			final Point measure_pnt2, final String str_real_distance) {
+	public void sendScaletoStatsCtrlr(final Point measurePnt1,
+			final Point measurePnt2, final String strRealDistance) {
 		((ZonesModule) ModulesManager.getDefault().getModuleByName(
-				"Zones Module")).setScale(measure_pnt1, measure_pnt2,
-				Integer.parseInt(str_real_distance));
+				"Zones Module")).setScale(measurePnt1, measurePnt2,
+				Integer.parseInt(strRealDistance));
 	}
 
 	/**

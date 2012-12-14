@@ -26,19 +26,19 @@ public abstract class Marker {
 	/**
 	 * Image's dimensions.
 	 */
-	protected int	img_width, img_height;
+	protected int	imgWidth, imgHeight;
 
 	/**
 	 * Initializes the marker.
 	 * 
-	 * @param img_width
+	 * @param imgWidth
 	 *            image's width
-	 * @param img_height
+	 * @param imgHeight
 	 *            image's height
 	 */
-	public Marker(final int img_width, final int img_height, final Color color) {
-		this.img_width = img_width;
-		this.img_height = img_height;
+	public Marker(final int imgWidth, final int imgHeight, final Color color) {
+		this.imgWidth = imgWidth;
+		this.imgHeight = imgHeight;
 		this.color = color;
 	}
 
@@ -73,24 +73,24 @@ public abstract class Marker {
 			int height) {
 		if (x < 0)
 			x = 0;
-		if (x + width >= img_width)
-			x = img_width - width - 1;
+		if (x + width >= imgWidth)
+			x = imgWidth - width - 1;
 		if (y < 0)
 			y = 0;
-		if (y + height >= img_height)
-			height = img_height - y - 1;
+		if (y + height >= imgHeight)
+			height = imgHeight - y - 1;
 
 		for (int i = x; i < x + width; i++) {
-			if(i + y * img_width<img.length)
-				img[i + y * img_width] = color.getRGB();
-			if(i + (y + height) * img_width<img.length)
-				img[i + (y + height) * img_width] = color.getRGB();
+			if(i + y * imgWidth<img.length)
+				img[i + y * imgWidth] = color.getRGB();
+			if(i + (y + height) * imgWidth<img.length)
+				img[i + (y + height) * imgWidth] = color.getRGB();
 		}
 
 		for (int j = y; j < y + height; j++) {
-			img[x + j * img_width] = color.getRGB();
-			if(x + width + j * img_width<img.length)
-				img[x + width + j * img_width] = color.getRGB();
+			img[x + j * imgWidth] = color.getRGB();
+			if(x + width + j * imgWidth<img.length)
+				img[x + width + j * imgWidth] = color.getRGB();
 		}
 	}
 
@@ -113,15 +113,15 @@ public abstract class Marker {
 			final int height) {
 		if (x < 0)
 			x = 0;
-		if (x + width > img_width)
-			x = img_width - width - 1;
+		if (x + width > imgWidth)
+			x = imgWidth - width - 1;
 		if (y < 0)
 			y = 0;
-		if (y + height > img_height)
-			y = img_height - height - 1;
+		if (y + height > imgHeight)
+			y = imgHeight - height - 1;
 
 		for (int i = x; i < x + width; i++)
 			for (int j = y; j < y + height; j++)
-				img[i + j * img_width] = color.getRGB();
+				img[i + j * imgWidth] = color.getRGB();
 	}
 }

@@ -30,7 +30,7 @@ public class Experiment implements Exp2GUI, Serializable {
 	private static final long							serialVersionUID	= -786827888276630828L;
 
 	private String										date;
-	public String										fileName;
+	private String										fileName;
 	private final ArrayList<modules.experiment.Group>	groups;
 	private String										name;
 	private String										notes;
@@ -74,31 +74,31 @@ public class Experiment implements Exp2GUI, Serializable {
 	 * @return String containing the experiment's information
 	 */
 	public String expInfo2String() {
-		final StringBuffer exp_info_buf = new StringBuffer();
+		final StringBuffer expInfoBuf = new StringBuffer();
 
 		try { // TODO: replace System.getProperty("line.separator") by an endl
 				// String
-			exp_info_buf.append(Constants.h_exp
+			expInfoBuf.append(Constants.H_EXP
 					+ System.getProperty("line.separator")
-					+ Constants.h_exp_name + getName()
+					+ Constants.H_EXP_NAME + getName()
 					+ System.getProperty("line.separator")
-					+ Constants.h_exp_type + type
+					+ Constants.H_EXP_TYPES + type
 					+ System.getProperty("line.separator")
-					+ Constants.h_exp_user + getUser()
+					+ Constants.H_EXP_USER + getUser()
 					+ System.getProperty("line.separator")
-					+ Constants.h_exp_date + getDate() + " "
+					+ Constants.H_EXP_DATE + getDate() + " "
 					+ System.getProperty("line.separator")
-					+ Constants.h_exp_notes + getNotes()
+					+ Constants.H_EXP_NOTES + getNotes()
 					+ System.getProperty("line.separator"));
 
-			for (final Group grp_tmp : getGroups())
-				exp_info_buf.append(grp_tmp.grp2String(getExpParametersList()));
+			for (final Group grpTmp : getGroups())
+				expInfoBuf.append(grpTmp.grp2String(getExpParametersList()));
 
 		} catch (final Exception e) {
 			e.printStackTrace();
 		}
 
-		return exp_info_buf.toString();
+		return expInfoBuf.toString();
 	}
 
 	/*
@@ -131,9 +131,9 @@ public class Experiment implements Exp2GUI, Serializable {
 	 *         else return null
 	 */
 	public Group getGroupByID(final int id) {
-		for (final Group tmp_g : groups)
-			if (tmp_g.getId() == id)
-				return tmp_g;
+		for (final Group tmpGrp : groups)
+			if (tmpGrp.getId() == id)
+				return tmpGrp;
 		return null;
 	}
 
@@ -145,9 +145,9 @@ public class Experiment implements Exp2GUI, Serializable {
 	 * @return Group having the specified name
 	 */
 	public Group getGroupByName(final String name) {
-		for (final Group tmp_g : groups)
-			if (tmp_g.getName().equals(name))
-				return tmp_g;
+		for (final Group tmpGrp : groups)
+			if (tmpGrp.getName().equals(name))
+				return tmpGrp;
 		return null;
 	}
 
@@ -230,11 +230,11 @@ public class Experiment implements Exp2GUI, Serializable {
 	/**
 	 * Sets the parameters collected in the experiment.
 	 * 
-	 * @param exp_parameters
+	 * @param expParameters
 	 *            array of strings containing experiment's parameters
 	 */
-	public void setParametersList(final String[] exp_parameters) {
-		params = exp_parameters;
+	public void setParametersList(final String[] expParameters) {
+		params = expParameters;
 	}
 
 	/**
@@ -250,6 +250,14 @@ public class Experiment implements Exp2GUI, Serializable {
 	@Override
 	public String getType() {
 		return type.toString();
+	}
+
+	public void setFileName(String fileName) {
+		this.fileName = fileName;
+	}
+
+	public String getFileName() {
+		return fileName;
 	}
 
 }

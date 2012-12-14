@@ -36,8 +36,8 @@ public class CtrlNewExperimentWizard {
 		final Shell sShell = parent.getShell();
 		try {
 			final FileDialog fileDialog = new FileDialog(sShell, SWT.SAVE);
-			final String file_name = fileDialog.open();
-			if (file_name != null) {
+			final String fileName = fileDialog.open();
+			if (fileName != null) {
 				ExperimentManager.getDefault().setExpInfo(name, user, date,
 						notes, type);
 
@@ -46,7 +46,7 @@ public class CtrlNewExperimentWizard {
 							grp.getName(), grp.getNotes());
 				}
 
-				ExperimentManager.getDefault().saveExperimentToFile(file_name);
+				ExperimentManager.getDefault().saveExperimentToFile(fileName);
 			}
 
 		} catch (final NumberFormatException e1) {

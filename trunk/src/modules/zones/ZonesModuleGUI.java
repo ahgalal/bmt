@@ -35,8 +35,6 @@ public class ZonesModuleGUI extends PluggedGUI<ZonesModule> {
 	/**
 	 * Initializes/shows the GUI components.
 	 * 
-	 * @param mnu_edit
-	 *            the Edit menu in MainGUI
 	 */
 	/*
 	 * public ZonesModuleGUI() { }
@@ -45,18 +43,18 @@ public class ZonesModuleGUI extends PluggedGUI<ZonesModule> {
 	public ZonesModuleGUI(final ZonesModule owner) {
 		super(owner);
 	}
-	private MenuItem mnutm_edit_openzoneeditor;
+	private MenuItem mnutmEditOpenzoneeditor;
 	@Override
 	public void initialize(final Shell shell, final ExpandBar expandBar,
 			final Menu menuBar, final CoolBar coolBar, final Group grpGraphs) {
-		Menu mnu_edit = null;
+		Menu mnuEdit = null;
 		for (final MenuItem miOut : menuBar.getItems())
 			if (miOut.getText().equals("Edit"))
-				mnu_edit = miOut.getMenu();
-		mnutm_edit_openzoneeditor = new MenuItem(mnu_edit,
+				mnuEdit = miOut.getMenu();
+		mnutmEditOpenzoneeditor = new MenuItem(mnuEdit,
 				SWT.PUSH);
-		mnutm_edit_openzoneeditor.setText("Zone Editor ..");
-		mnutm_edit_openzoneeditor
+		mnutmEditOpenzoneeditor.setText("Zone Editor ..");
+		mnutmEditOpenzoneeditor
 				.addSelectionListener(new org.eclipse.swt.events.SelectionListener() {
 					@Override
 					public void widgetDefaultSelected(
@@ -75,7 +73,7 @@ public class ZonesModuleGUI extends PluggedGUI<ZonesModule> {
 	 * Handles the "Zone editor" menu item click action.
 	 */
 	public void mnutmEditOpenZoneEditorAction() {
-		PManager.getDefault().drw_zns.show(true);
+		PManager.getDefault().getDrawZns().show(true);
 	}
 
 	@Override
@@ -92,6 +90,6 @@ public class ZonesModuleGUI extends PluggedGUI<ZonesModule> {
 
 	@Override
 	public void deInitialize() {
-		mnutm_edit_openzoneeditor.dispose();		
+		mnutmEditOpenzoneeditor.dispose();		
 	}
 }

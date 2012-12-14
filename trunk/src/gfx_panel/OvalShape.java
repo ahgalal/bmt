@@ -30,8 +30,8 @@ import org.eclipse.swt.graphics.RGB;
 public class OvalShape extends Shape {
 
 	private static final double	PI	= 3.14159;	// mathmatics constant
-	private int					diameter_x;	// position in X-axis
-	private int					diameter_y;	// postion in Y-axis
+	private int					diameterX;	// position in X-axis
+	private int					diameterY;	// postion in Y-axis
 
 	/**
 	 * this is by definition calling (Initializes the OvalShape).
@@ -58,8 +58,8 @@ public class OvalShape extends Shape {
 	public OvalShape(final int dx, final int dy, final int x, final int y,
 			final RGB c) {
 		super(x, y, dx, dy, c);
-		this.diameter_x = dx;
-		this.diameter_y = dy;
+		this.diameterX = dx;
+		this.diameterY = dy;
 	}
 
 	/*
@@ -68,9 +68,9 @@ public class OvalShape extends Shape {
 	 */
 	@Override
 	public void draw(final Graphics g) {
-		g.setColor(new Color(rgb_color.red, rgb_color.green, rgb_color.blue));
-		g.drawOval(x, y, diameter_x, diameter_y);
-		g.drawString(""+getShapeNumber(), x+diameter_x/2-5, y+diameter_y/2+5);
+		g.setColor(new Color(rgbColor.red, rgbColor.green, rgbColor.blue));
+		g.drawOval(x, y, diameterX, diameterY);
+		g.drawString(""+getShapeNumber(), x+diameterX/2-5, y+diameterY/2+5);
 	}
 
 	/*
@@ -79,7 +79,7 @@ public class OvalShape extends Shape {
 	 */
 	@Override
 	public int getArea() {
-		return (int) (PI * (diameter_x / 2) * (diameter_y / 2));
+		return (int) (PI * (diameterX / 2) * (diameterY / 2));
 	}
 
 	/*
@@ -89,7 +89,7 @@ public class OvalShape extends Shape {
 	@Override
 	public void setHeight(final int height) {
 		super.setHeight(height);
-		diameter_y = height;
+		diameterY = height;
 	}
 
 	/*
@@ -99,6 +99,6 @@ public class OvalShape extends Shape {
 	@Override
 	public void setWidth(final int width) {
 		super.setWidth(width);
-		diameter_x = width;
+		diameterX = width;
 	}
 }

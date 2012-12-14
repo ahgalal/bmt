@@ -26,7 +26,7 @@ public class MovementMeterModule extends
 
 	public MovementMeterModule(final String name, final ModuleConfigs config) {
 		super(name, config);
-		filters_data = new Data[1];
+		filtersData = new Data[1];
 		energyData = new ArrayList<Integer>();
 		gui = new MovementMeterModuleGUI(this);
 		data = new ModuleData("MovementMeter Module Data");
@@ -88,7 +88,7 @@ public class MovementMeterModule extends
 	public void registerFilterDataObject(final Data data) {
 		if (data instanceof MovementMeterData) {
 			movementMeterFilterData = (MovementMeterData) data;
-			this.filters_data[0] = movementMeterFilterData;
+			this.filtersData[0] = movementMeterFilterData;
 		}
 	}
 

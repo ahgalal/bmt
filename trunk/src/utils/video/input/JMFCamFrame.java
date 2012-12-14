@@ -48,22 +48,22 @@ public class JMFCamFrame {
 	/**
 	 * Converts YUV frame to RGB byte frame.
 	 * 
-	 * @param yuv_data1
+	 * @param yuvData1
 	 *            YUV data byte array
 	 * @return byte array representing the RGB image
 	 */
-	public byte[] convertYUV2RGB(final byte[] yuv_data1) {
-		final byte[] yuv_data = (byte[]) buffer.getData();
-		final byte[] rgb_data = new byte[width * height * 3];
+	public byte[] convertYUV2RGB() {
+		final byte[] yuvData = (byte[]) buffer.getData();
+		final byte[] rgbData = new byte[width * height * 3];
 
-		int rgb_row = height - 1;
-		int rgb_ptr = width * rgb_row * 3;
+		int rgbRow = height - 1;
+		int rgbPtr = width * rgbRow * 3;
 
-		for (int i = 0; i < yuv_data.length; i += 4) {
-			final int y1 = yuv_data[i + 0] & 0xff;
-			final int u = yuv_data[i + 1] & 0xff;
-			final int y2 = yuv_data[i + 2] & 0xff;
-			final int v = yuv_data[i + 3] & 0xff;
+		for (int i = 0; i < yuvData.length; i += 4) {
+			final int y1 = yuvData[i + 0] & 0xff;
+			final int u = yuvData[i + 1] & 0xff;
+			final int y2 = yuvData[i + 2] & 0xff;
+			final int v = yuvData[i + 3] & 0xff;
 
 			int b1, r1, g1, r2, g2, b2;
 
@@ -101,21 +101,21 @@ public class JMFCamFrame {
 			if (r2 < 0)
 				r2 = 0;
 
-			rgb_data[rgb_ptr] = (byte) b1;
-			rgb_data[rgb_ptr + 1] = (byte) g1;
-			rgb_data[rgb_ptr + 2] = (byte) r1;
-			rgb_data[rgb_ptr + 3] = (byte) b2;
-			rgb_data[rgb_ptr + 4] = (byte) g2;
-			rgb_data[rgb_ptr + 5] = (byte) r2;
+			rgbData[rgbPtr] = (byte) b1;
+			rgbData[rgbPtr + 1] = (byte) g1;
+			rgbData[rgbPtr + 2] = (byte) r1;
+			rgbData[rgbPtr + 3] = (byte) b2;
+			rgbData[rgbPtr + 4] = (byte) g2;
+			rgbData[rgbPtr + 5] = (byte) r2;
 
-			rgb_ptr += 6;
-			if (rgb_ptr % (width * 3) == 0) {
-				rgb_row--;
-				rgb_ptr = rgb_row * width * 3;
+			rgbPtr += 6;
+			if (rgbPtr % (width * 3) == 0) {
+				rgbRow--;
+				rgbPtr = rgbRow * width * 3;
 			}
 
 		}
-		return rgb_data;
+		return rgbData;
 	}
 
 	/**

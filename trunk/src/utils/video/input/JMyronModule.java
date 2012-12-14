@@ -33,11 +33,11 @@ public class JMyronModule extends VidInputter<VidSourceConfigs> {
 	private class RunnableJMyron implements Runnable {
 		@Override
 		public void run() {
-			while (!stop_stream && (th_jmyron_update_image != null)) {
+			while (!stopStream && (thJmyronUpdateImage != null)) {
 				Utils.sleep(20);
 				if(paused==false){
 					jmyron.update();
-					fia.frame_data = jmyron.image();
+					fia.setFrameData(jmyron.image());
 
 					status = SourceStatus.STREAMING;
 				}
@@ -47,9 +47,9 @@ public class JMyronModule extends VidInputter<VidSourceConfigs> {
 	}
 
 	private JMyron	jmyron;
-	private boolean	stop_stream;
+	private boolean	stopStream;
 
-	private Thread	th_jmyron_update_image;
+	private Thread	thJmyronUpdateImage;
 
 	@Override
 	public int displayMoreSettings() {
@@ -76,12 +76,12 @@ public class JMyronModule extends VidInputter<VidSourceConfigs> {
 	}
 
 	@Override
-	public boolean initialize(final FrameIntArray frame_data,
+	public boolean initialize(final FrameIntArray frameData,
 			final VidSourceConfigs configs) {
 		this.configs = configs;
 		if (jmyron == null)
 			jmyron = new JMyron();
-		fia = frame_data;
+		fia = frameData;
 
 		return true;
 	}
@@ -96,17 +96,17 @@ public class JMyronModule extends VidInputter<VidSourceConfigs> {
 
 	@Override
 	public boolean startStream() {
-		jmyron.start(configs.width, configs.height);
+		jmyron.start(configs.getWidth(), configs.getHeight());
 
-		th_jmyron_update_image = new Thread(new RunnableJMyron());
-		th_jmyron_update_image.start();
+		thJmyronUpdateImage = new Thread(new RunnableJMyron());
+		thJmyronUpdateImage.start();
 
 		return true;
 	}
 
 	@Override
 	public void stopModule() {
-		stop_stream = true;
+		stopStream = true;
 		try {
 			Thread.sleep(15);
 		} catch (final InterruptedException e) {
@@ -115,7 +115,7 @@ public class JMyronModule extends VidInputter<VidSourceConfigs> {
 
 		jmyron.stop();
 		jmyron = null;
-		th_jmyron_update_image = null;
+		thJmyronUpdateImage = null;
 
 	}
 	

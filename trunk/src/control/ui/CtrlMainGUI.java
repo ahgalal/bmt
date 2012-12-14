@@ -74,19 +74,19 @@ public class CtrlMainGUI extends ControllerUI<MainGUI> implements StateListener 
 					}
 				});
 			}
-			th_update_gui = null;
+			thUpdateGui = null;
 		}
 	}
 
-	private final CtrlAbout					ctrl_about_box;
+	private final CtrlAbout					ctrlAboutBox;
 	private final CtrlNewExperimentWizard	ctrlNewExpWizard;
-	private String							file_name	= "FST.avi";
+	private String							fileName	= "";
 	private final PManager					pm;						// @jve:decl-index=0:
-	private Thread							th_update_gui;				// @jve:decl-index=0:
+	private Thread							thUpdateGui;				// @jve:decl-index=0:
 	private final MainGUI					ui;
-	private boolean							ui_is_opened;
+	private boolean							uiOpened;
 
-	private final Shell						ui_shell;
+	private final Shell						uiShell;
 
 	/**
 	 * Initializes class attributes
@@ -94,12 +94,12 @@ public class CtrlMainGUI extends ControllerUI<MainGUI> implements StateListener 
 	public CtrlMainGUI() {
 		pm = PManager.getDefault();
 		ui = new MainGUI();
-		ui_shell = ui.getShell();
+		uiShell = ui.getShell();
 		ui.setController(this);
-		th_update_gui = new Thread(new RunnableUpdateGUI());
+		thUpdateGui = new Thread(new RunnableUpdateGUI());
 
-		pm.statusMgr.initialize(ui.getConsoleText());
-		ctrl_about_box = new CtrlAbout();
+		pm.getStatusMgr().initialize(ui.getConsoleText());
+		ctrlAboutBox = new CtrlAbout();
 		ctrlNewExpWizard = new CtrlNewExperimentWizard();
 	}
 
@@ -118,7 +118,7 @@ public class CtrlMainGUI extends ControllerUI<MainGUI> implements StateListener 
 			pm.stopTracking();
 		if (pm.getState().getStream() == StreamState.STREAMING)
 			pm.stopStreaming();
-		ui_is_opened = false;
+		uiOpened = false;
 		try {
 			Thread.sleep(510);
 		} catch (final InterruptedException e) {
@@ -137,14 +137,14 @@ public class CtrlMainGUI extends ControllerUI<MainGUI> implements StateListener 
 	 *            name of the ScreenDrawer filter
 	 * @param configs
 	 *            common configurations instance
-	 * @param enable_sec_screen
+	 * @param enableSecScreen
 	 *            whether to enable secondary screen
 	 */
 	public void configureScreenDrawerFilter(final String name,
-			final CommonFilterConfigs configs, final boolean enable_sec_screen) {
+			final CommonFilterConfigs configs, final boolean enableSecScreen) {
 		pm.getVideoManager().getFilterManager().applyConfigsToFilter(new ScreenDrawerConfigs(name, ui
 				.getAwtVideoMain().getGraphics(), ui.getAwtVideoSec()
-				.getGraphics(), null, true, pm.shape_controller));
+				.getGraphics(), null, true, pm.getShapeController()));
 	}
 
 	/**
@@ -153,14 +153,14 @@ public class CtrlMainGUI extends ControllerUI<MainGUI> implements StateListener 
 	 * @return true/false
 	 */
 	public boolean isShellDisposed() {
-		return ui_shell.isDisposed();
+		return uiShell.isDisposed();
 	}
 
 	/**
-	 * @return the ui_is_opened
+	 * @return the uiOpened
 	 */
 	public boolean isUIOpened() {
-		return ui_is_opened;
+		return uiOpened;
 	}
 
 	/**
@@ -170,7 +170,7 @@ public class CtrlMainGUI extends ControllerUI<MainGUI> implements StateListener 
 	 *            the pressed key on the keyboard
 	 */
 	public void keyPressedAction(final char key) {
-		/*
+		/*// manual rearing:
 		 * if(pm.state==ProgramState.TRACKING |
 		 * pm.state==ProgramState.RECORDING)
 		 * if(key==java.awt.event.KeyEvent.VK_R)
@@ -197,14 +197,14 @@ public class CtrlMainGUI extends ControllerUI<MainGUI> implements StateListener 
 	 * Handles the "Edit Experiment" menu item click action.
 	 */
 	public void mnuitmEditExpAction() {
-		ctrlNewExpWizard.show(ui_shell, false);
+		ctrlNewExpWizard.show(uiShell, false);
 	}
 
 	/**
 	 * Handles the camera options menu item click action.
 	 */
 	public void mnutmCameraOptionsAction() {
-		pm.cam_options.show(true);
+		pm.getCamOptions().show(true);
 	}
 
 	/**
@@ -216,10 +216,10 @@ public class CtrlMainGUI extends ControllerUI<MainGUI> implements StateListener 
 					-1, -1, -1, -1, "Cam", null);
 			pm.initializeVideoManager(commonConfigs, null);
 			configureScreenDrawerFilter("ScreenDrawer", null, true);
-			pm.statusMgr.setStatus("Camera is Starting..",
+			pm.getStatusMgr().setStatus("Camera is Starting..",
 					StatusSeverity.WARNING);
 		} else
-			pm.statusMgr.setStatus("Camera is already started.",
+			pm.getStatusMgr().setStatus("Camera is already started.",
 					StatusSeverity.ERROR);
 
 	}
@@ -228,7 +228,7 @@ public class CtrlMainGUI extends ControllerUI<MainGUI> implements StateListener 
 	 * Handles the "Edit options" menu item click action.
 	 */
 	public void mnutmEditOptionsAction() {
-		pm.options_window.show(true);
+		pm.getOptionsWindow().show(true);
 	}
 
 	/**
@@ -237,9 +237,9 @@ public class CtrlMainGUI extends ControllerUI<MainGUI> implements StateListener 
 	public void mnutmExperimentExportToExcelAction() {
 		final FileDialog fileDialog = new FileDialog(ui.getShell(), SWT.SAVE);
 		fileDialog.setFilterExtensions(new String[] { "*.xlsx" });
-		final String file_name = fileDialog.open();
-		if (file_name != null)
-			ExperimentManager.getDefault().writeToExcelFile(file_name);
+		final String fileName = fileDialog.open();
+		if (fileName != null)
+			ExperimentManager.getDefault().writeToExcelFile(fileName);
 	}
 
 	/**
@@ -251,13 +251,13 @@ public class CtrlMainGUI extends ControllerUI<MainGUI> implements StateListener 
 	 */
 	public void mnutmExperimentLoadexpAction(final Shell sShell) {
 		final FileDialog fileDialog = new FileDialog(sShell, SWT.OPEN);
-		final String file_name = fileDialog.open();
-		if (file_name != null) {
-			PManager.main_gui.clearForm();
+		final String fileName = fileDialog.open();
+		if (fileName != null) {
+			PManager.mainGUI.clearForm();
 			ExperimentManager.getDefault().unloadExperiment();
-			ExperimentManager.getDefault().loadExperiment(ExperimentManager.readExperimentFromFile(file_name));
-			PManager.getDefault().statusMgr.setStatus(
-					"Experiment is Loaded Successfully from file: "+file_name, StatusSeverity.WARNING);
+			ExperimentManager.getDefault().loadExperiment(ExperimentManager.readExperimentFromFile(fileName));
+			PManager.getDefault().getStatusMgr().setStatus(
+					"Experiment is Loaded Successfully from file: "+fileName, StatusSeverity.WARNING);
 		}
 	}
 
@@ -265,16 +265,16 @@ public class CtrlMainGUI extends ControllerUI<MainGUI> implements StateListener 
 	 * Shows the new ExperimentForm and unloads the previous experiment.
 	 */
 	public void mnutmExperimentNewExpAction() {
-		PManager.main_gui.clearForm();
+		PManager.mainGUI.clearForm();
 		ExperimentManager.getDefault().unloadExperiment();
-		ctrlNewExpWizard.show(ui_shell, true);
+		ctrlNewExpWizard.show(uiShell, true);
 	}
 
 	/**
 	 * Handles the "About" menu item click action.
 	 */
 	public void mnutmHelpAboutAction() {
-		ctrl_about_box.show(true);
+		ctrlAboutBox.show(true);
 	}
 
 	public void pauseResumeAction() {
@@ -310,32 +310,32 @@ public class CtrlMainGUI extends ControllerUI<MainGUI> implements StateListener 
 
 	public void setVideoFileMode() {
 		final FileDialog fileDialog = new FileDialog(ui.getShell(), SWT.OPEN);
-		if ((file_name == null) || (new File(file_name).exists() == false))
-			file_name = fileDialog.open();
-		if (file_name != null)
+		if ((fileName == null) || (new File(fileName).exists() == false))
+			fileName = fileDialog.open();
+		if (fileName != null)
 			if (pm.getState().getGeneral() == GeneralState.IDLE) {
 				final CommonFilterConfigs commonConfigs = new CommonFilterConfigs(
 						-1, -1, -1, -1, "VideoFile", null);
-				pm.initializeVideoManager(commonConfigs, file_name);
+				pm.initializeVideoManager(commonConfigs, fileName);
 				configureScreenDrawerFilter("ScreenDrawer", commonConfigs, true);
-				pm.statusMgr.setStatus("Stream is started from file: "+ file_name,
+				pm.getStatusMgr().setStatus("Stream is started from file: "+ fileName,
 						StatusSeverity.WARNING);
 			} else
-				pm.statusMgr.setStatus("Stream is already started.",
+				pm.getStatusMgr().setStatus("Stream is already started.",
 						StatusSeverity.ERROR);
-		file_name = null;
+		fileName = null;
 	}
 
 	@Override
 	public void show(final boolean visibility) {
 		ui.show(visibility);
-		ui_is_opened = true;
+		uiOpened = true;
 
 		final Thread thUpdateControlsEnable = new Thread(new Runnable() {
 
 			@Override
 			public void run() {
-				while (!ui_shell.isDisposed()) {
+				while (!uiShell.isDisposed()) {
 					if (ExperimentManager.getDefault().isExperimentPresent()
 							&& (pm.getState().getStream() == StreamState.IDLE))
 						ui.btnStartStreamingEnable(true);
@@ -376,9 +376,9 @@ public class CtrlMainGUI extends ControllerUI<MainGUI> implements StateListener 
 	private void startTracking() {
 		if (pm.startTracking()) {
 			clearForm();
-			if (th_update_gui == null)
-				th_update_gui = new Thread(new RunnableUpdateGUI());
-			th_update_gui.start();
+			if (thUpdateGui == null)
+				thUpdateGui = new Thread(new RunnableUpdateGUI());
+			thUpdateGui.start();
 		}
 	}
 
@@ -386,7 +386,7 @@ public class CtrlMainGUI extends ControllerUI<MainGUI> implements StateListener 
 	 * Shows the rat information window to enter the next rat number & group.
 	 */
 	public void startTrackingAction() {
-		final Thread th_start_gui_procedures = new Thread(new Runnable() {
+		final Thread thStartGUIProcedures = new Thread(new Runnable() {
 
 			@Override
 			public void run() {
@@ -394,10 +394,10 @@ public class CtrlMainGUI extends ControllerUI<MainGUI> implements StateListener 
 						pm.getState().getStream() == StreamState.PAUSED) {
 					if (ModulesManager.getDefault().areModulesReady(
 							ui.getShell())) {
-						final ExperimentModule tmp_exp_module = (ExperimentModule) ModulesManager
+						final ExperimentModule tmpExpModule = (ExperimentModule) ModulesManager
 								.getDefault().getModuleByName(
 										"Experiment Module");
-						if (tmp_exp_module != null)
+						if (tmpExpModule != null)
 							startTracking();
 						else
 							Display.getDefault().asyncExec(new Runnable() {
@@ -414,18 +414,18 @@ public class CtrlMainGUI extends ControllerUI<MainGUI> implements StateListener 
 								}
 							});
 					} else
-								pm.statusMgr.setStatus(
+								pm.getStatusMgr().setStatus(
 										"Tracking is cancelled",
 										StatusSeverity.WARNING);
 
 				} else
-							pm.statusMgr
+							pm.getStatusMgr()
 									.setStatus(
 											"Please make sure the camera is running, you have set the background.",
 											StatusSeverity.ERROR);
 			}
 		});
-		th_start_gui_procedures.start();
+		thStartGUIProcedures.start();
 	}
 
 	public void stopStreamingAction() {

@@ -32,7 +32,7 @@ public abstract class VideoFilter<ConfigsType extends FilterConfigs, DataType ex
 	protected ConfigsType	configs;
 	protected DataType		filterData;
 	protected PluggedGUI	gui;
-	protected Link			link_in, link_out;
+	protected Link			linkIn, linkOut;
 	protected String		name;
 
 	/**
@@ -40,16 +40,16 @@ public abstract class VideoFilter<ConfigsType extends FilterConfigs, DataType ex
 	 * 
 	 * @param name
 	 *            filter's name
-	 * @param link_in
+	 * @param linkIn
 	 *            input Link for the filter
-	 * @param link_out
+	 * @param linkOut
 	 *            output Link from the filter
 	 */
-	public VideoFilter(final String name, final Link link_in,
-			final Link link_out) {
+	public VideoFilter(final String name, final Link linkIn,
+			final Link linkOut) {
 		this.name = name;
-		this.link_in = link_in;
-		this.link_out = link_out;
+		this.linkIn = linkIn;
+		this.linkOut = linkOut;
 	}
 
 	/**
@@ -73,8 +73,8 @@ public abstract class VideoFilter<ConfigsType extends FilterConfigs, DataType ex
 	 * @return confirmation that the filter was enabled/disabled
 	 */
 	public boolean enable(final boolean enable) {
-		configs.enabled = enable;
-		return configs.enabled;
+		configs.setEnabled(enable);
+		return configs.isEnabled();
 	}
 
 	/**

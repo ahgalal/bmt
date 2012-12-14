@@ -60,7 +60,7 @@ public class VideoManager {
 		protected void checkDeviceReady() {
 			counter = 0;
 			
-			while ((v_in != null) && (v_in.getStatus() == SourceStatus.ERROR)
+			while ((vInput != null) && (vInput.getStatus() == SourceStatus.ERROR)
 					&& (counter < MAX_COUNTER)) {
 				try {
 					Thread.sleep(1000);
@@ -84,15 +84,15 @@ public class VideoManager {
 			 * { }
 			 */
 
-			while (video_processor_enabled) {
+			while (videoProcessorEnabled) {
 				checkDeviceReady();
 
-				if ((v_in != null)
-						&& (v_in.getStatus() == SourceStatus.STREAMING))
-					for (final VideoFilter<?, ?> v : filter_mgr.getFilters())
+				if ((vInput != null)
+						&& (vInput.getStatus() == SourceStatus.STREAMING))
+					for (final VideoFilter<?, ?> v : filterManager.getFilters())
 						v.process();
 
-				Utils.sleep(1000 / commonConfigs.frame_rate);
+				Utils.sleep(1000 / commonConfigs.getFrameRate());
 
 				synchronized (this) {
 					while (paused)
@@ -111,7 +111,7 @@ public class VideoManager {
 			if(counter==MAX_COUNTER && PManager.getDefault().getState().getGeneral()==GeneralState.TRACKING)
 				PManager.getDefault().stopTracking();
 			PManager.getDefault().getState().setStream(StreamState.IDLE);
-			filter_mgr.disableAll();
+			filterManager.disableAll();
 
 			PManager.log.print("Ended Video Streaming", this);
 		}
@@ -119,35 +119,33 @@ public class VideoManager {
 
 	private final CommonFilterConfigs	commonConfigs;
 
-	private FilterManager				filter_mgr;
+	private FilterManager				filterManager;
 
 	private boolean						isInitialized;
 	private boolean						paused	= false;
-	private final FrameIntArray			ref_fia;
+	private final FrameIntArray			fia;
 	private Thread						thFiltersProcess;
 
 	@SuppressWarnings("rawtypes")
-	private VidInputter					v_in;
+	private VidInputter					vInput;
 
-	private boolean						video_processor_enabled;
+	private boolean						videoProcessorEnabled;
 
 	/**
 	 * Initialization.
 	 */
 	public VideoManager() {
 		commonConfigs = new CommonFilterConfigs(640, 480, 30, 0, "VideoFile", null);
-		video_processor_enabled = true;
-		ref_fia = new FrameIntArray();
-		filter_mgr = new FilterManager(commonConfigs, ref_fia/*, expType*/);
-		// filter_mgr = new FilterManager(common_configs, ref_fia);
-		// filter_mgr.configureFilters(common_configs, ref_fia);
+		videoProcessorEnabled = true;
+		fia = new FrameIntArray();
+		filterManager = new FilterManager(commonConfigs, fia);
 	}
 
 	/**
 	 * Display additional settings of the input video library.
 	 */
 	public void displayMoreSettings() {
-		v_in.displayMoreSettings();
+		vInput.displayMoreSettings();
 	}
 
 	public String[] getAvailableCamLibs() {
@@ -174,7 +172,7 @@ public class VideoManager {
 	 * @return instance of the filter manager
 	 */
 	public FilterManager getFilterManager() {
-		return filter_mgr;
+		return filterManager;
 	}
 
 	private String getOS() {
@@ -191,81 +189,81 @@ public class VideoManager {
 
 	@SuppressWarnings("rawtypes")
 	public VidInputter getVidInputter() {
-		return v_in;
+		return vInput;
 	}
 
 	/**
 	 * Initialization of the video library.
 	 * 
-	 * @param ip_common_configs
+	 * @param ipCommonConfigs
 	 *            common configurations object, used by almost all filters
 	 * @param vidFile
 	 * @return true: success
 	 */
 	@SuppressWarnings("unchecked")
-	public boolean initialize(final CommonFilterConfigs ip_common_configs,
+	public boolean initialize(final CommonFilterConfigs ipCommonConfigs,
 			final String vidFile) {
 		isInitialized = true;
 		
-		if(ip_common_configs.vid_library.equals("Cam")&&
-				commonConfigs.vid_library!=null && 
-				commonConfigs.vid_library.equals("VideoFile"))// cam lib is already set to VideoFile
-			ip_common_configs.vid_library=getDefaultVideoLibrary();
-		else if(ip_common_configs.vid_library.equals("Cam")&& commonConfigs.vid_library!=null && commonConfigs.vid_library.equals("VideoFile")==false)
-			ip_common_configs.vid_library=commonConfigs.vid_library;
+		if(ipCommonConfigs.getVidLibrary().equals("Cam")&&
+				commonConfigs.getVidLibrary()!=null && 
+				commonConfigs.getVidLibrary().equals("VideoFile"))// cam lib is already set to VideoFile
+			ipCommonConfigs.setVidLibrary(getDefaultVideoLibrary());
+		else if(ipCommonConfigs.getVidLibrary().equals("Cam")&& commonConfigs.getVidLibrary()!=null && commonConfigs.getVidLibrary().equals("VideoFile")==false)
+			ipCommonConfigs.setVidLibrary(commonConfigs.getVidLibrary());
 		
-		updateCommonConfigs(ip_common_configs);
-		String vid_lib = commonConfigs.vid_library;
-		if (vid_lib==null || vid_lib.equals("default"))
-			vid_lib = getDefaultVideoLibrary();
+		updateCommonConfigs(ipCommonConfigs);
+		String vidLib = commonConfigs.getVidLibrary();
+		if (vidLib==null || vidLib.equals("default"))
+			vidLib = getDefaultVideoLibrary();
 		
-		filter_mgr.initializeConfigs(commonConfigs);
+		filterManager.initializeConfigs(commonConfigs);
 
 		VidSourceConfigs srcConfigs = null;
 
-		if (vid_lib.equals("JMF")) {
-			v_in = new JMFModule();
+		if (vidLib.equals("JMF")) {
+			vInput = new JMFModule();
 			srcConfigs = new VidSourceConfigs();
-		} else if (vid_lib.equals("JMyron")) {
-			v_in = new JMyronModule();
+		} else if (vidLib.equals("JMyron")) {
+			vInput = new JMyronModule();
 			srcConfigs = new VidSourceConfigs();
-		} else if (vid_lib.equals("OpenCV")) {
-			v_in = new OpenCVModule();
+		} else if (vidLib.equals("OpenCV")) {
+			vInput = new OpenCVModule();
 			srcConfigs = new OpenCVConfigs();
-		} else if (vid_lib.equals("AGCamLib")) {
-			v_in = new AGCamLibModule();
+		} else if (vidLib.equals("AGCamLib")) {
+			vInput = new AGCamLibModule();
 			srcConfigs = new VidSourceConfigs();
-		} else if (vid_lib.equals("V4L2")) {
-			v_in = new V4L2Module();
+		} else if (vidLib.equals("V4L2")) {
+			vInput = new V4L2Module();
 			srcConfigs = new VidSourceConfigs();
-		} else if (vid_lib.equals("VideoFile"))
+		} else if (vidLib.equals("VideoFile"))
 			if (vidFile != null)
 				if (System.getProperty("os.name").toLowerCase()
 						.contains("windows")) {
-					v_in = new VideoFileModule();
+					vInput = new VideoFileModule();
 					srcConfigs = new AGVidLibConfigs();
-					((AGVidLibConfigs) srcConfigs).vidFile = vidFile;
+					srcConfigs.setVideoFilePath(vidFile);
 				} else {
-					v_in = new GStreamerModule();
+					vInput = new GStreamerModule();
 					srcConfigs = new VidSourceConfigs();
-					srcConfigs.videoFilePath= vidFile;
+					srcConfigs.setVideoFilePath(vidFile);
 				}
 
-		v_in.setFormat(commonConfigs.format);
+		vInput.setFormat(commonConfigs.getFormat());
 
-		srcConfigs.width = commonConfigs.width;
-		srcConfigs.height = commonConfigs.height;
-		srcConfigs.camIndex = commonConfigs.cam_index;
+		srcConfigs.setWidth(commonConfigs.getWidth());
+		srcConfigs.setHeight(commonConfigs.getHeight());
+		srcConfigs.setCamIndex(commonConfigs.getCamIndex());
 		
-		PManager.log.print("Vid lib: "+ vid_lib, this);
+		PManager.log.print("Vid lib: "+ vidLib, this);
 
-		return v_in.initialize(ref_fia, srcConfigs);
+		return vInput.initialize(fia, srcConfigs);
 	}
 	
 	private void initFilters(final ExperimentType expType){
-		if (filter_mgr != null)
-			filter_mgr.deInitialize();
-		filter_mgr.instantiateFilters(ref_fia, expType);
+		if (filterManager != null)
+			filterManager.deInitialize();
+		filterManager.instantiateFilters(fia, expType);
 	}
 
 	public boolean isInitialized() {
@@ -277,28 +275,27 @@ public class VideoManager {
 	 * @param exp
 	 */
 	public void setupModulesAndFilters(Experiment exp){
-		filter_mgr.initializeConfigs(commonConfigs);
+		filterManager.initializeConfigs(commonConfigs);
 		ModulesManager.getDefault().setupModules(exp);
-		ModulesManager.getDefault().setModulesWidthandHeight(commonConfigs.width, commonConfigs.height);
+		ModulesManager.getDefault().setModulesWidthandHeight(commonConfigs.getWidth(), commonConfigs.getHeight());
 		initFilters(exp.type);
 		PManager.getDefault().signalProgramStateUpdate();
 	}
 
 	public void pauseStream() {
-		if ((v_in != null) && (v_in.getStatus() == SourceStatus.STREAMING)) {
+		if ((vInput != null) && (vInput.getStatus() == SourceStatus.STREAMING)) {
 			paused = true;
-			v_in.pauseStream();
-			filter_mgr.enableFilter("ScreenDrawer", false);
+			vInput.pauseStream();
+			filterManager.enableFilter("ScreenDrawer", false);
 		}
 	}
 
 	public void resumeStream() {
-		if ((v_in != null) && (v_in.getStatus() == SourceStatus.PAUSED)) {
+		if ((vInput != null) && (vInput.getStatus() == SourceStatus.PAUSED)) {
 			paused = false;
-			v_in.resumeStream();
-			//if(thFiltersProcess.)
+			vInput.resumeStream();
 			thFiltersProcess.interrupt();
-			filter_mgr.enableFilter("ScreenDrawer", true);
+			filterManager.enableFilter("ScreenDrawer", true);
 		}
 	}
 
@@ -307,10 +304,10 @@ public class VideoManager {
 	 * filters.
 	 */
 	public void startProcessing() {
-		filter_mgr.enableFilter("SubtractionFilter", true);
-		filter_mgr.enableFilter("RatFinder", true);
-		filter_mgr.enableFilter("RearingDetector", true);
-		filter_mgr.enableFilter("Average Filter", true);
+		filterManager.enableFilter("SubtractionFilter", true);
+		filterManager.enableFilter("RatFinder", true);
+		filterManager.enableFilter("RearingDetector", true);
+		filterManager.enableFilter("Average Filter", true);
 		PManager.getDefault().getState().setGeneral(GeneralState.TRACKING);
 	}
 
@@ -319,24 +316,24 @@ public class VideoManager {
 	 */
 	public void startStreaming() {
 		try {
-			video_processor_enabled = true;
-			while (!v_in.startStream())
+			videoProcessorEnabled = true;
+			while (!vInput.startStream())
 				Thread.sleep(100);
-			filter_mgr.enableFilter("ScreenDrawer", true);
+			filterManager.enableFilter("ScreenDrawer", true);
 			thFiltersProcess = new Thread(new RunnableProcessor());
 			thFiltersProcess.start();
 			PManager.getDefault().getState().setStream(StreamState.STREAMING);
-			filter_mgr.submitDataObjects();
+			filterManager.submitDataObjects();
 
-			if (v_in.getType() == SourceType.FILE) {
-				while (v_in.getStatus() != SourceStatus.STREAMING)
+			if (vInput.getType() == SourceType.FILE) {
+				while (vInput.getStatus() != SourceStatus.STREAMING)
 					Thread.sleep(200);
 				Thread.sleep(200);
 				PManager.getDefault().pauseResume();
 			}
 
 		}catch (VideoLoadException e) {
-			PManager.getDefault().statusMgr.setStatus(e.getMessage(), StatusSeverity.ERROR);
+			PManager.getDefault().getStatusMgr().setStatus(e.getMessage(), StatusSeverity.ERROR);
 		} catch (final Exception e) {
 			e.printStackTrace();
 		}
@@ -346,10 +343,10 @@ public class VideoManager {
 	 * Stops processing of the video stream.
 	 */
 	public void stopProcessing() {
-		filter_mgr.enableFilter("SubtractionFilter", false);
-		filter_mgr.enableFilter("RearingDetector", false);
-		filter_mgr.enableFilter("RatFinder", false);
-		filter_mgr.enableFilter("Average Filter", false);
+		filterManager.enableFilter("SubtractionFilter", false);
+		filterManager.enableFilter("RearingDetector", false);
+		filterManager.enableFilter("RatFinder", false);
+		filterManager.enableFilter("Average Filter", false);
 		// PManager.getDefault().getState().setStream(StreamState.STREAMING);
 	}
 
@@ -360,49 +357,49 @@ public class VideoManager {
 		// if paused, we need to resume to unlock the paused thread
 		if (PManager.getDefault().getState().getStream() == StreamState.PAUSED) {
 			resumeStream();
-			filter_mgr.enableFilter("ScreenDrawer", false);
+			filterManager.enableFilter("ScreenDrawer", false);
 		}
 
 		isInitialized = false;
-		video_processor_enabled = false;
+		videoProcessorEnabled = false;
 		Utils.sleep(200);
-		v_in.stopModule();
-		v_in = null;
+		vInput.stopModule();
+		vInput = null;
 	}
 
 	/**
 	 * Updates common configurations used by almost all filters.
 	 * 
-	 * @param common_configs
+	 * @param commonConfigs
 	 *            common configurations to apply
 	 */
-	public void updateCommonConfigs(final CommonFilterConfigs common_configs) {
-		if (common_configs.cam_index != -1)
-			this.commonConfigs.cam_index = common_configs.cam_index;
-		if (common_configs.format != null)
-			this.commonConfigs.format = common_configs.format;
-		if (common_configs.vid_library != null)
-			this.commonConfigs.vid_library = common_configs.vid_library;
-		if (common_configs.frame_rate != -1)
-			this.commonConfigs.frame_rate = common_configs.frame_rate;
-		if (common_configs.height != -1)
-			this.commonConfigs.height = common_configs.height;
-		if (common_configs.width != -1)
-			this.commonConfigs.width = common_configs.width;
+	public void updateCommonConfigs(final CommonFilterConfigs commonConfigs) {
+		if (commonConfigs.getCamIndex() != -1)
+			this.commonConfigs.setCamIndex(commonConfigs.getCamIndex());
+		if (commonConfigs.getFormat() != null)
+			this.commonConfigs.setFormat(commonConfigs.getFormat());
+		if (commonConfigs.getVidLibrary() != null)
+			this.commonConfigs.setVidLibrary(commonConfigs.getVidLibrary());
+		if (commonConfigs.getFrameRate() != -1)
+			this.commonConfigs.setFrameRate(commonConfigs.getFrameRate());
+		if (commonConfigs.getHeight() != -1)
+			this.commonConfigs.setHeight(commonConfigs.getHeight());
+		if (commonConfigs.getWidth() != -1)
+			this.commonConfigs.setWidth(commonConfigs.getWidth());
 		this.commonConfigs.validate();
 	}
 
 	/**
 	 * Updates the configurations of filters.
 	 * 
-	 * @param filters_configs
+	 * @param filtersConfigs
 	 *            an array of filters configurations, each configuration object
 	 *            will be applied to its designated filter.
 	 */
-	public void updateFiltersConfigs(final FilterConfigs[] filters_configs) {
-		for (final FilterConfigs f_cfg : filters_configs) {
-			f_cfg.common_configs = commonConfigs;
-			filter_mgr.applyConfigsToFilter(f_cfg);
+	public void updateFiltersConfigs(final FilterConfigs[] filtersConfigs) {
+		for (final FilterConfigs fCfg : filtersConfigs) {
+			fCfg.setCommonConfigs(commonConfigs);
+			filterManager.applyConfigsToFilter(fCfg);
 		}
 	}
 

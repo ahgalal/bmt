@@ -32,9 +32,9 @@ import filters.VideoFilter;
  */
 public class SubtractorFilter extends
 		VideoFilter<SubtractionConfigs, FilterData> {
-	private final FrameIntArray	bg_image_gray;
+	private final FrameIntArray	bgImageGray;
 
-	private int[]				local_data;
+	private int[]				localData;
 
 	/**
 	 * Initializes the filter.
@@ -49,14 +49,14 @@ public class SubtractorFilter extends
 	public SubtractorFilter(final String name, final Link linkIn,
 			final Link linkOut) {
 		super(name, linkIn, linkOut);
-		bg_image_gray = new FrameIntArray();
+		bgImageGray = new FrameIntArray();
 	}
 
 	@Override
 	public boolean configure(final FilterConfigs configs) {
 		this.configs = (SubtractionConfigs) configs;
-		local_data = new int[configs.common_configs.width
-				* configs.common_configs.height];
+		localData = new int[configs.getCommonConfigs().getWidth()
+				* configs.getCommonConfigs().getHeight()];
 
 		return super.configure(configs);
 	}
@@ -68,25 +68,25 @@ public class SubtractorFilter extends
 	@Override
 	public void process() {
 		int tmp;
-		final int threshMask = configs.threshold | configs.threshold << 8
-				| configs.threshold << 16;
-		if (configs.enabled)
-			if (link_in.getData().length == bg_image_gray.frame_data.length) {
-				local_data = ImageManipulator.rgbIntArray2GrayIntArray(link_in
+		final int threshMask = configs.getThreshold() | configs.getThreshold() << 8
+				| configs.getThreshold() << 16;
+		if (configs.isEnabled())
+			if (linkIn.getData().length == bgImageGray.getFrameData().length) {
+				localData = ImageManipulator.rgbIntArray2GrayIntArray(linkIn
 						.getData());
 				tmp = 0;
-				for (int i = 0; i < local_data.length; i++) {
-					tmp = local_data[i] - bg_image_gray.frame_data[i];
+				for (int i = 0; i < localData.length; i++) {
+					tmp = localData[i] - bgImageGray.getFrameData()[i];
 
 					if (tmp < 0)
 						tmp *= -1;
 
 					if (tmp < threshMask)
-						local_data[i] = 0;
+						localData[i] = 0;
 					else
-						local_data[i] = 0x00FFFFFF;
+						localData[i] = 0x00FFFFFF;
 				}
-				link_out.setData(local_data);
+				linkOut.setData(localData);
 			}
 	}
 
@@ -114,7 +114,7 @@ public class SubtractorFilter extends
 				tmp3 = (short) (tmp1 - tmp2);
 				if (tmp3 < 0)
 					tmp3 *= -1;
-				if (tmp3 < configs.threshold)
+				if (tmp3 < configs.getThreshold())
 					res[i] = 0;
 				else
 					res[i] = (byte) 0xFF;
@@ -128,9 +128,9 @@ public class SubtractorFilter extends
 	 * Updates the background image of the filter.
 	 */
 	public void updateBG() {
-		if (link_in.getData() != null)
-			bg_image_gray.frame_data = ImageManipulator
-					.rgbIntArray2GrayIntArray(link_in.getData());
+		if (linkIn.getData() != null)
+			bgImageGray.setFrameData(ImageManipulator
+					.rgbIntArray2GrayIntArray(linkIn.getData()));
 		else
 			PManager.log.print("Error updating BG, data is null", this,
 					StatusSeverity.ERROR);

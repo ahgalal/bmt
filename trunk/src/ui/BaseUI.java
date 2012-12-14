@@ -38,11 +38,11 @@ public abstract class BaseUI {
 	 * Loads data from an array of strings to the GUI controls, by a specific
 	 * order.
 	 * 
-	 * @param str_array
+	 * @param strArray
 	 *            array of strings that contains data to load to the GUI
 	 *            controls
 	 */
-	public abstract void loadData(String[] str_array);
+	public abstract void loadData(String[] strArray);
 
 	/**
 	 * Registers the controller with the GUI. the Controller is the one who

@@ -32,11 +32,11 @@ public class VideoFileModule extends VidInputter<AGVidLibConfigs> {
 		@Override
 		public void run() {
 			final Point dims = vidLib.getVideoDimensions();
-			fia.frame_data = new int[dims.x * dims.y];
+			fia.setFrameData(new int[dims.x * dims.y]);
 			
 			vidLib.play();
 			Utils.sleep(100);
-			while (!stop_stream) {
+			while (!stopStream) {
 				synchronized (this) {
 					while (paused) {
 						try {
@@ -47,9 +47,9 @@ public class VideoFileModule extends VidInputter<AGVidLibConfigs> {
 				}
 
 				// long l1 = System.currentTimeMillis();
-				fia.frame_data = vidLib.getCurrentFrameInt();
+				fia.setFrameData(vidLib.getCurrentFrameInt());
 				// long l2 = System.currentTimeMillis();
-				if (fia.frame_data != null)
+				if (fia.getFrameData() != null)
 					status = SourceStatus.STREAMING;
 				else{
 					if(paused)
@@ -69,9 +69,9 @@ public class VideoFileModule extends VidInputter<AGVidLibConfigs> {
 
 	}
 
-	private boolean			stop_stream;
+	private boolean			stopStream;
 
-	private Thread			th_update_image;
+	private Thread			thUpdateImage;
 
 	private final JAGVidLib	vidLib;
 
@@ -121,10 +121,10 @@ public class VideoFileModule extends VidInputter<AGVidLibConfigs> {
 	}
 
 	@Override
-	public boolean initialize(final FrameIntArray frame_data,
+	public boolean initialize(final FrameIntArray frameData,
 			final AGVidLibConfigs configs) {
 		this.configs = configs;
-		fia = frame_data;
+		fia = frameData;
 		return true;
 	}
 
@@ -143,11 +143,11 @@ public class VideoFileModule extends VidInputter<AGVidLibConfigs> {
 	 */
 	@Override
 	public boolean startStream() {
-		vidLib.initialize(configs.vidFile);
+		vidLib.initialize(configs.getVideoFilePath());
 		Utils.sleep(100);
-		th_update_image = new Thread(new RunnableAGVidLib());
-		th_update_image.start();
-		stop_stream = false;
+		thUpdateImage = new Thread(new RunnableAGVidLib());
+		thUpdateImage.start();
+		stopStream = false;
 		return true;
 	}
 	@Override
@@ -160,7 +160,7 @@ public class VideoFileModule extends VidInputter<AGVidLibConfigs> {
 	 */
 	@Override
 	public void stopModule() {
-		stop_stream = true;
+		stopStream = true;
 		vidLib.stop();
 	}
 	
@@ -174,7 +174,7 @@ public class VideoFileModule extends VidInputter<AGVidLibConfigs> {
 	public void resumeStream() {
 		paused=false;
 		vidLib.play();
-		th_update_image.interrupt();		
+		thUpdateImage.interrupt();		
 	}
 
 }

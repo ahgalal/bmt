@@ -31,17 +31,17 @@ import control.ui.CtrlOptionsWindow;
  *         & Threshold then choose the subtraction threshold
  */
 public class OptionsWindow extends BaseUI {
-	private Button				btn_cancel			= null;
-	private Button				btn_ok				= null;
-	private Button				chk_auto_rearing	= null;
+	private Button				btnCancel			= null;
+	private Button				btnOk				= null;
+	private Button				chkAutoRearing	= null;
 	private CtrlOptionsWindow	controller;				// @jve:decl-index=0:
-	private Label				lbl_hysteresis		= null;
-	private Label				lbl_rearing_thresh	= null;
-	private Label				lbl_threshold		= null;
-	private Scale				scl_sub_thresh		= null;
+	private Label				lblHysteresis		= null;
+	private Label				lblRearingThresh	= null;
+	private Label				lblThreshold		= null;
+	private Scale				sclSubThresh		= null;
 	private Shell				sShell				= null; // @jve:decl-index=0:visual-constraint="13,18"
-	private Text				txt_hysteresis		= null;
-	private Text				txt_rearing_thresh	= null;
+	private Text				txtHysteresis		= null;
+	private Text				txtRearingThresh	= null;
 
 	/**
 	 * Creates GUI components, and links this Shell with the parent Shell.
@@ -53,9 +53,9 @@ public class OptionsWindow extends BaseUI {
 
 	@Override
 	public void clearForm() {
-		txt_hysteresis.setText("0");
-		txt_rearing_thresh.setText("0");
-		scl_sub_thresh.setSelection(0);
+		txtHysteresis.setText("0");
+		txtRearingThresh.setText("0");
+		sclSubThresh.setSelection(0);
 	}
 
 	/**
@@ -66,58 +66,58 @@ public class OptionsWindow extends BaseUI {
 		sShell.setText("OptionsWindow");
 		sShell.setLayout(null);
 		sShell.setSize(new Point(263, 208));
-		lbl_hysteresis = new Label(sShell, SWT.NONE);
-		lbl_hysteresis.setText("Zone Hysteresis");
-		lbl_hysteresis.setBounds(new Rectangle(10, 18, 86, 15));
-		lbl_threshold = new Label(sShell, SWT.NONE);
-		lbl_threshold.setBounds(new Rectangle(10, 79, 124, 15));
-		lbl_threshold.setText("Subtraction Threshold");
-		txt_hysteresis = new Text(sShell, SWT.BORDER);
-		txt_hysteresis.setBounds(new Rectangle(173, 13, 76, 21));
-		txt_hysteresis.setText("20");
-		btn_ok = new Button(sShell, SWT.NONE);
-		btn_ok.setBounds(new Rectangle(50, 143, 95, 24));
-		btn_ok.setText("OK");
-		btn_ok.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
+		lblHysteresis = new Label(sShell, SWT.NONE);
+		lblHysteresis.setText("Zone Hysteresis");
+		lblHysteresis.setBounds(new Rectangle(10, 18, 86, 15));
+		lblThreshold = new Label(sShell, SWT.NONE);
+		lblThreshold.setBounds(new Rectangle(10, 79, 124, 15));
+		lblThreshold.setText("Subtraction Threshold");
+		txtHysteresis = new Text(sShell, SWT.BORDER);
+		txtHysteresis.setBounds(new Rectangle(173, 13, 76, 21));
+		txtHysteresis.setText("20");
+		btnOk = new Button(sShell, SWT.NONE);
+		btnOk.setBounds(new Rectangle(50, 143, 95, 24));
+		btnOk.setText("OK");
+		btnOk.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
 			@Override
 			public void widgetSelected(
 					final org.eclipse.swt.events.SelectionEvent e) {
-				controller.setVars(new String[] { txt_hysteresis.getText(),
-						txt_rearing_thresh.getText(),
-						String.valueOf(scl_sub_thresh.getSelection()),
-						String.valueOf(chk_auto_rearing.getSelection()) });
+				controller.setVars(new String[] { txtHysteresis.getText(),
+						txtRearingThresh.getText(),
+						String.valueOf(sclSubThresh.getSelection()),
+						String.valueOf(chkAutoRearing.getSelection()) });
 				controller.btnOkAction();
 			}
 		});
-		btn_cancel = new Button(sShell, SWT.NONE);
-		btn_cancel.setBounds(new Rectangle(156, 143, 95, 24));
-		btn_cancel.setText("Cancel");
-		lbl_rearing_thresh = new Label(sShell, SWT.NONE);
-		lbl_rearing_thresh.setBounds(new Rectangle(10, 44, 123, 19));
-		lbl_rearing_thresh.setText("Rearing Threshold");
-		txt_rearing_thresh = new Text(sShell, SWT.BORDER);
-		txt_rearing_thresh.setText("200");
-		txt_rearing_thresh.setSize(new Point(76, 21));
-		txt_rearing_thresh.setLocation(new Point(173, 42));
-		scl_sub_thresh = new Scale(sShell, SWT.NONE);
-		scl_sub_thresh.setBounds(new Rectangle(139, 67, 116, 35));
-		scl_sub_thresh.setMaximum(255);
-		chk_auto_rearing = new Button(sShell, SWT.CHECK);
-		chk_auto_rearing.setSelection(true);
-		chk_auto_rearing.setBounds(new Rectangle(12, 107, 216, 20));
-		chk_auto_rearing.setText("enable auto Rearing Detector");
-		scl_sub_thresh
+		btnCancel = new Button(sShell, SWT.NONE);
+		btnCancel.setBounds(new Rectangle(156, 143, 95, 24));
+		btnCancel.setText("Cancel");
+		lblRearingThresh = new Label(sShell, SWT.NONE);
+		lblRearingThresh.setBounds(new Rectangle(10, 44, 123, 19));
+		lblRearingThresh.setText("Rearing Threshold");
+		txtRearingThresh = new Text(sShell, SWT.BORDER);
+		txtRearingThresh.setText("200");
+		txtRearingThresh.setSize(new Point(76, 21));
+		txtRearingThresh.setLocation(new Point(173, 42));
+		sclSubThresh = new Scale(sShell, SWT.NONE);
+		sclSubThresh.setBounds(new Rectangle(139, 67, 116, 35));
+		sclSubThresh.setMaximum(255);
+		chkAutoRearing = new Button(sShell, SWT.CHECK);
+		chkAutoRearing.setSelection(true);
+		chkAutoRearing.setBounds(new Rectangle(12, 107, 216, 20));
+		chkAutoRearing.setText("enable auto Rearing Detector");
+		sclSubThresh
 				.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
 					@Override
 					public void widgetSelected(
 							final org.eclipse.swt.events.SelectionEvent e) {
 						controller.setVars(new String[] { "-1", "-1",
-								String.valueOf(scl_sub_thresh.getSelection()),
-								String.valueOf(chk_auto_rearing.getSelection()) });
+								String.valueOf(sclSubThresh.getSelection()),
+								String.valueOf(chkAutoRearing.getSelection()) });
 						controller.updateOptions(true);
 					}
 				});
-		btn_cancel
+		btnCancel
 				.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
 					@Override
 					public void widgetSelected(
@@ -129,8 +129,8 @@ public class OptionsWindow extends BaseUI {
 
 	@Override
 	public void loadData(final String[] strArray) {
-		txt_hysteresis.setText(strArray[0]);
-		scl_sub_thresh.setSelection(Integer.parseInt(strArray[1]));
+		txtHysteresis.setText(strArray[0]);
+		sclSubThresh.setSelection(Integer.parseInt(strArray[1]));
 	}
 
 	@SuppressWarnings("rawtypes")

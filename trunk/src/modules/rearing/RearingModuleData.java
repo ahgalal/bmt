@@ -22,7 +22,7 @@ import modules.ModuleData;
  * @author Creative
  */
 public class RearingModuleData extends ModuleData {
-	public int	rearing_ctr;
+	private int	rearingCtr;
 
 	/**
 	 * Initializes the Data.
@@ -32,5 +32,13 @@ public class RearingModuleData extends ModuleData {
 	 */
 	public RearingModuleData(final String name) {
 		super(name);
+	}
+
+	public void setRearingCtr(int rearingCtr) {
+		this.rearingCtr = rearingCtr;
+	}
+
+	public int getRearingCtr() {
+		return rearingCtr;
 	}
 }

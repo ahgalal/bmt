@@ -43,7 +43,7 @@ import gfx_panel.Shape;
  */
 public class ZonesModule extends
 		Module<ZonesModuleGUI, ZonesModuleConfigs, ZonesModuleData> {
-	private final ArrayList<Point>	arr_path;								// This
+	private final ArrayList<Point>	path;								// This
 	public static final int DEFAULT_HYSTRISES_VALUE = 50;															// array
 																			// will
 																			// hold
@@ -51,19 +51,19 @@ public class ZonesModule extends
 	// positions of
 	// the object through the whole
 	// experiment
-	private long					central_start_tmp;
-	private long					central_zone_time_tmp;
-	private Point					current_position;
+	private long					centralStartTmp;
+	private long					centralZoneTimeTmp;
+	private Point					currentPosition;
 	private final String[]			expParams	= new String[] {
 			Constants.FILE_ALL_ENTRANCE, Constants.FILE_CENTRAL_ENTRANCE,
 			Constants.FILE_CENTRAL_TIME, Constants.FILE_TOTAL_DISTANCE };
-	private final Point				old_position;
-	private RatFinderData			rat_finder_data;
+	private final Point				oldPosition;
+	private RatFinderData			ratFinderData;
 
-	private final ShapeController	shape_controller;
+	private final ShapeController	shapeController;
 
-	private int						updated_zone_number;
-	private byte[]					zone_map;
+	private int						updatedZoneNumber;
+	private byte[]					zoneMap;
 
 	/**
 	 * Initializes the module.
@@ -76,13 +76,13 @@ public class ZonesModule extends
 	public ZonesModule(final String name, final ZonesModuleConfigs configs) {
 		super(name, configs);
 		data = new ZonesModuleData("Zones Module Data");
-		old_position = new Point();
+		oldPosition = new Point();
 
-		filters_data = new Data[1];
-		data.scale = 10;
-		arr_path = new ArrayList<Point>();
-		data.zones = new ZonesCollection();
-		shape_controller = ShapeController.getDefault();
+		filtersData = new Data[1];
+		data.setScale(10);
+		path = new ArrayList<Point>();
+		data.setZones(new ZonesCollection());
+		shapeController = ShapeController.getDefault();
 		initialize();
 		gui = new ZonesModuleGUI(this);
 		expType = new ExperimentType[] { ExperimentType.OPEN_FIELD };
@@ -101,12 +101,12 @@ public class ZonesModule extends
 	 */
 	public void addAllZonesToGUI() {
 		int zonenumber;
-		for (final Zone z : data.zones.getAllZones())
+		for (final Zone z : data.getZones().getAllZones())
 			if (z != null) {
 				zonenumber = z.getZoneNumber();
-				PManager.getDefault().drw_zns.addZoneToTable(
+				PManager.getDefault().getDrawZns().addZoneToTable(
 						Integer.toString(zonenumber),
-						Shape.color2String(shape_controller.getShapeByNumber(
+						Shape.color2String(shapeController.getShapeByNumber(
 								zonenumber).getColor()),
 						ZoneType.zoneType2String(z.getZoneType()));
 			}
@@ -119,19 +119,19 @@ public class ZonesModule extends
 	 *            Current rat position
 	 */
 	private void addPointToPosArray(final Point pos) {
-		arr_path.add(new Point(pos.x,pos.y));
+		path.add(new Point(pos.x,pos.y));
 	}
 
 	/**
 	 * Adds a new zone to the collection.
 	 * 
-	 * @param zone_number
+	 * @param zoneNumber
 	 *            zone's number
 	 * @param type
 	 *            zones' type
 	 */
-	public void addZone(final int zone_number, final ZoneType type) {
-		data.zones.addZone(zone_number, type);
+	public void addZone(final int zoneNumber, final ZoneType type) {
+		data.getZones().addZone(zoneNumber, type);
 		updateZoneMap();
 	}
 
@@ -144,7 +144,7 @@ public class ZonesModule extends
 
 	@Override
 	public void deInitialize() {
-		for (Point point : arr_path) {
+		for (Point point : path) {
 			//System.out.println(point.x+"\t"+point.y);	
 		}
 	}
@@ -156,18 +156,18 @@ public class ZonesModule extends
 	 *            number of the zone to delete
 	 */
 	public void deleteZone(final int zoneNumber) {
-		data.zones.deleteZone(zoneNumber);
+		data.getZones().deleteZone(zoneNumber);
 		updateZoneMap();
-		PManager.getDefault().drw_zns.clearTable();
+		PManager.getDefault().getDrawZns().clearTable();
 		addAllZonesToGUI();
 	}
 
 	@Override
 	public void deRegisterDataObject(final Data data) {
-		if (rat_finder_data == data) {
-			rat_finder_data = null;
-			this.filters_data[0] = null;
-			current_position = null;
+		if (ratFinderData == data) {
+			ratFinderData = null;
+			this.filtersData[0] = null;
+			currentPosition = null;
 		}
 	}
 
@@ -178,7 +178,7 @@ public class ZonesModule extends
 	 * @return number of all zones entrances
 	 */
 	public int getAllEntrance() {
-		return data.all_entrance;
+		return data.getAllEntrance();
 	}
 
 	/**
@@ -187,7 +187,7 @@ public class ZonesModule extends
 	 * @return number of central zones entrances
 	 */
 	public int getCentralEntrance() {
-		return data.central_entrance;
+		return data.getCentralEntrance();
 	}
 
 	/**
@@ -196,7 +196,7 @@ public class ZonesModule extends
 	 * @return total time spent in the central zones
 	 */
 	public float getCentralTime() {
-		return data.central_zone_time;
+		return data.getCentralZoneTime();
 	}
 
 	/**
@@ -205,7 +205,7 @@ public class ZonesModule extends
 	 * @return zone number of the current zone
 	 */
 	public int getCurrentZoneNumber() {
-		return data.current_zone_num;
+		return data.getCurrentZoneNum();
 	}
 
 	/**
@@ -214,7 +214,7 @@ public class ZonesModule extends
 	 * @return total distance covered by the object
 	 */
 	public long getTotalDistance() {
-		return data.total_distance;
+		return data.getTotalDistance();
 	}
 
 	/**
@@ -227,8 +227,8 @@ public class ZonesModule extends
 	 * @return zone's number located at the pixel of x,y
 	 */
 	private int getZone(final int x, final int y) {
-		if(x + y * configs.width < zone_map.length)
-			return zone_map[x + y * configs.width];
+		if(x + y * configs.getWidth() < zoneMap.length)
+			return zoneMap[x + y * configs.getWidth()];
 		return -1;
 	}
 
@@ -238,17 +238,17 @@ public class ZonesModule extends
 	@Override
 	public void initialize() {
 		PManager.log.print("initializing..", this, Details.VERBOSE);
-		data.current_zone_num = -1;
-		central_start_tmp = 0;
-		data.central_flag = false;
-		data.central_zone_time = 0;
-		updated_zone_number = -1;
-		data.all_entrance = 0;
-		data.central_entrance = 0;
-		central_zone_time_tmp = 0;
-		data.total_distance = 0;
+		data.setCurrentZoneNum(-1);
+		centralStartTmp = 0;
+		data.setCentralFlag(false);
+		data.setCentralZoneTime(0);
+		updatedZoneNumber = -1;
+		data.setAllEntrance(0);
+		data.setCentralEntrance(0);
+		centralZoneTimeTmp = 0;
+		data.setTotalDistance(0);
 
-		arr_path.clear();
+		path.clear();
 
 		guiCargo = new Cargo(new String[] { Constants.GUI_CURRENT_ZONE,
 				Constants.GUI_ALL_ENTRANCE, Constants.GUI_CENTRAL_ENTRANCE,
@@ -257,19 +257,19 @@ public class ZonesModule extends
 		fileCargo = new Cargo(expParams);
 		for(String param:expParams)
 			data.addParameter(param);
-		zone_map = new byte[configs.width * configs.height];
+		zoneMap = new byte[configs.getWidth() * configs.getHeight()];
 		updateZoneMap();
 	}
 
 	/**
 	 * Fills the zone map with a given number.
 	 * 
-	 * @param null_zone_number
+	 * @param nullNoneNumber
 	 *            Number to fill the zone map array with
 	 */
-	private void initializeZoneMap(final int null_zone_number) {
-		for (int i = 0; i < zone_map.length; i++)
-			zone_map[i] = (byte) null_zone_number;
+	private void initializeZoneMap(final int nullNoneNumber) {
+		for (int i = 0; i < zoneMap.length; i++)
+			zoneMap[i] = (byte) nullNoneNumber;
 	}
 
 	/**
@@ -279,29 +279,29 @@ public class ZonesModule extends
 	 *            file path to load the zones from
 	 */
 	public void loadZonesFromFile(final String fileName) {
-		data.zones.loadZonesFromFile(fileName);
+		data.getZones().loadZonesFromFile(fileName);
 	}
 
 	@Override
 	public void process() {
-		updated_zone_number = getZone(current_position.x, current_position.y);
+		updatedZoneNumber = getZone(currentPosition.x, currentPosition.y);
 		zoneHysteresis();
 		updateTotalDistance();
 		updateCentralZoneTime();
-		addPointToPosArray(current_position);
+		addPointToPosArray(currentPosition);
 
-		if (current_position != null) {
-			old_position.x = current_position.x;
-			old_position.y = current_position.y;
+		if (currentPosition != null) {
+			oldPosition.x = currentPosition.x;
+			oldPosition.y = currentPosition.y;
 		}
 	}
 
 	@Override
 	public void registerFilterDataObject(final Data data) {
 		if (data instanceof RatFinderData) {
-			rat_finder_data = (RatFinderData) data;
-			this.filters_data[0] = rat_finder_data;
-			current_position = rat_finder_data.getCenterPoint();
+			ratFinderData = (RatFinderData) data;
+			this.filtersData[0] = ratFinderData;
+			currentPosition = ratFinderData.getCenterPoint();
 		}
 	}
 
@@ -317,17 +317,17 @@ public class ZonesModule extends
 	 *            file path of the file to save the zones to
 	 */
 	public void saveZonesToFile(final String fileName) {
-		data.zones.saveZonesToFile(fileName);
+		data.getZones().saveZonesToFile(fileName);
 	}
 
 	/**
 	 * Selects the zone in the GUI table.
 	 * 
-	 * @param zone_number
+	 * @param zoneNumber
 	 *            number of the zone to select in the GUI table.
 	 */
-	public void selectZoneInGUI(final int zone_number) {
-		PManager.getDefault().drw_zns.selectZoneInTable(zone_number);
+	public void selectZoneInGUI(final int zoneNumber) {
+		PManager.getDefault().getDrawZns().selectZoneInTable(zoneNumber);
 	}
 
 	/**
@@ -339,40 +339,41 @@ public class ZonesModule extends
 	 *            First point of measurement
 	 * @param p2
 	 *            Second point of measurement
-	 * @param real_distance
+	 * @param realDistance
 	 *            distance entered by the user as real distance
 	 */
 	public void setScale(final Point p1, final Point p2,
-			final float real_distance) {
-		final double screen_distance = p1.distance(p2);
+			final float realDistance) {
+		final double screenDistance = p1.distance(p2);
 		// note: horizontal scale === vertical scale (the cam is perpendicular
 		// on the field)
 
-		final double cmResult = screen_distance / real_distance;
-		data.scale = (float) cmResult;
+		final double cmResult = screenDistance / realDistance;
+		data.setScale((float) cmResult);
 	}
 
 	/**
 	 * Updates "central zone time" counter , if the rat is in a central zone.
 	 */
 	private void updateCentralZoneTime() {
-		if (data.zones.getNumberOfZones() != -1)
-			if ((data.current_zone_num != -1)
-					&& (data.zones.getZoneByNumber(data.current_zone_num) != null))
-				if ((data.zones.getZoneByNumber(data.current_zone_num)
+		if (data.getZones().getNumberOfZones() != -1)
+			if ((data.getCurrentZoneNum() != -1)
+					&& (data.getZones().getZoneByNumber(data.getCurrentZoneNum()) != null))
+				if ((data.getZones().getZoneByNumber(data.getCurrentZoneNum())
 						.getZoneType() == ZoneType.CENTRAL_ZONE)
-						& !data.central_flag) {
-					central_start_tmp = System.currentTimeMillis();
-					data.central_flag = true;
-				} else if ((data.zones.getZoneByNumber(data.current_zone_num)
+						& !data.isCentralFlag()) {
+					centralStartTmp = System.currentTimeMillis();
+					data.setCentralFlag(true);
+				} else if ((data.getZones().getZoneByNumber(data.getCurrentZoneNum())
 						.getZoneType() == ZoneType.CENTRAL_ZONE)
-						&& data.central_flag)
-					central_zone_time_tmp = ((System.currentTimeMillis() - central_start_tmp) / 1000L);
-				else if ((data.zones.getZoneByNumber(data.current_zone_num)
+						&& data.isCentralFlag())
+					centralZoneTimeTmp = ((System.currentTimeMillis() - centralStartTmp) / 1000L);
+				else if ((data.getZones().getZoneByNumber(data.getCurrentZoneNum())
 						.getZoneType() != ZoneType.CENTRAL_ZONE)
-						&& data.central_flag) {
-					data.central_zone_time += central_zone_time_tmp;
-					data.central_flag = false;
+						&& data.isCentralFlag()) {
+					data.setCentralZoneTime((int) (data.getCentralZoneTime()
+							+ centralZoneTimeTmp));
+					data.setCentralFlag(false);
 				}
 	}
 
@@ -385,27 +386,27 @@ public class ZonesModule extends
 	@Override
 	public void updateFileCargoData() {
 		fileCargo.setDataByTag(Constants.FILE_ALL_ENTRANCE,
-				Integer.toString(data.all_entrance));
+				Integer.toString(data.getAllEntrance()));
 		fileCargo.setDataByTag(Constants.FILE_CENTRAL_ENTRANCE,
-				Integer.toString(data.central_entrance));
+				Integer.toString(data.getCentralEntrance()));
 		fileCargo.setDataByTag(Constants.FILE_CENTRAL_TIME,
-				Integer.toString(data.central_zone_time));
+				Integer.toString(data.getCentralZoneTime()));
 		fileCargo.setDataByTag(Constants.FILE_TOTAL_DISTANCE,
-				Long.toString(data.total_distance));
+				Long.toString(data.getTotalDistance()));
 	}
 
 	@Override
 	public void updateGUICargoData() {
 		guiCargo.setDataByTag(Constants.GUI_CURRENT_ZONE,
-				Integer.toString(data.current_zone_num));
+				Integer.toString(data.getCurrentZoneNum()));
 		guiCargo.setDataByTag(Constants.GUI_ALL_ENTRANCE,
-				Integer.toString(data.all_entrance));
+				Integer.toString(data.getAllEntrance()));
 		guiCargo.setDataByTag(Constants.GUI_CENTRAL_ENTRANCE,
-				Integer.toString(data.central_entrance));
+				Integer.toString(data.getCentralEntrance()));
 		guiCargo.setDataByTag(Constants.GUI_CENTRAL_TIME,
-				Integer.toString(data.central_zone_time));
+				Integer.toString(data.getCentralZoneTime()));
 		guiCargo.setDataByTag(Constants.GUI_TOTAL_DISTANCE,
-				Long.toString(data.total_distance));
+				Long.toString(data.getTotalDistance()));
 	}
 
 	/**
@@ -413,21 +414,22 @@ public class ZonesModule extends
 	 * experiment.
 	 */
 	private void updateTotalDistance() {
-		if (old_position != null)
-			data.total_distance += current_position.distance(old_position)
-					/ data.scale;
+		if (oldPosition != null)
+			data.setTotalDistance((long) (data.getTotalDistance()
+					+ (currentPosition.distance(oldPosition)
+							/ data.getScale())));
 	}
 
 	/**
 	 * updates (all zones entrance and central zone entrance) counters.
 	 */
 	private void updateZoneCounters() {
-		data.current_zone_num = updated_zone_number;
-		data.all_entrance++;
-		System.out.println("Moved to zone: " + updated_zone_number);
-		if (data.zones.getZoneByNumber(data.current_zone_num) != null)
-			if (data.zones.getZoneByNumber(data.current_zone_num).getZoneType() == ZoneType.CENTRAL_ZONE)
-				data.central_entrance++;
+		data.setCurrentZoneNum(updatedZoneNumber);
+		data.setAllEntrance(data.getAllEntrance() + 1);
+		System.out.println("Moved to zone: " + updatedZoneNumber);
+		if (data.getZones().getZoneByNumber(data.getCurrentZoneNum()) != null)
+			if (data.getZones().getZoneByNumber(data.getCurrentZoneNum()).getZoneType() == ZoneType.CENTRAL_ZONE)
+				data.setCentralEntrance(data.getCentralEntrance() + 1);
 	}
 
 	/**
@@ -438,11 +440,11 @@ public class ZonesModule extends
 	 *            table.
 	 */
 	public void updateZoneDataInGUI(final int zonenumber) {
-		final Zone z = data.zones.getZoneByNumber(zonenumber);
-		PManager.getDefault().drw_zns
+		final Zone z = data.getZones().getZoneByNumber(zonenumber);
+		PManager.getDefault().getDrawZns()
 				.editZoneDataInTable(
 						zonenumber,
-						Shape.color2String(shape_controller.getShapeByNumber(
+						Shape.color2String(shapeController.getShapeByNumber(
 								zonenumber).getColor()),
 						ZoneType.zoneType2String(z.getZoneType()));
 	}
@@ -454,44 +456,44 @@ public class ZonesModule extends
 	 * existing at that point (x,y)
 	 */
 	public void updateZoneMap() {
-		RectangleShape tmp_rect;
-		OvalShape tmp_oval;
-		int tmp_zone_number;
-		zone_map = new byte[configs.width * configs.height];
+		RectangleShape tmpRect;
+		OvalShape tmpOval;
+		int tmpZoneNumber;
+		zoneMap = new byte[configs.getWidth() * configs.getHeight()];
 		initializeZoneMap(-1);
-		for (Zone zone:data.zones.getAllZones()) {
-			tmp_zone_number = zone.getZoneNumber();
-			final Shape tmp_shp = shape_controller
-					.getShapeByNumber(tmp_zone_number);
+		for (Zone zone:data.getZones().getAllZones()) {
+			tmpZoneNumber = zone.getZoneNumber();
+			final Shape tmpShp = shapeController
+					.getShapeByNumber(tmpZoneNumber);
 
-			if (tmp_shp instanceof RectangleShape) {
-				tmp_rect = (RectangleShape) tmp_shp;
-				for (int x = tmp_rect.getX(); x < tmp_rect.getX()
-						+ tmp_rect.getWidth(); x++)
-					if ((x > -1) & (x < configs.width))
-						for (int y = tmp_rect.getY(); y < tmp_rect.getY()
-								+ tmp_rect.getHeight(); y++)
-							if ((y > -1) & (y < configs.height))
-								zone_map[x + (/*configs.height - */y)
-										* configs.width] = (byte) tmp_zone_number;
-			} else if (tmp_shp instanceof OvalShape) {
-				tmp_oval = (OvalShape) tmp_shp;
-				final int rx = tmp_oval.getWidth() / 2, ry = tmp_oval
-						.getHeight() / 2, x_ov = tmp_oval.getX() + rx, y_ov = tmp_oval
+			if (tmpShp instanceof RectangleShape) {
+				tmpRect = (RectangleShape) tmpShp;
+				for (int x = tmpRect.getX(); x < tmpRect.getX()
+						+ tmpRect.getWidth(); x++)
+					if ((x > -1) & (x < configs.getWidth()))
+						for (int y = tmpRect.getY(); y < tmpRect.getY()
+								+ tmpRect.getHeight(); y++)
+							if ((y > -1) & (y < configs.getHeight()))
+								zoneMap[x + (/*configs.height - */y)
+										* configs.getWidth()] = (byte) tmpZoneNumber;
+			} else if (tmpShp instanceof OvalShape) {
+				tmpOval = (OvalShape) tmpShp;
+				final int rx = tmpOval.getWidth() / 2, ry = tmpOval
+						.getHeight() / 2, ovX = tmpOval.getX() + rx, ovY = tmpOval
 						.getY() + ry;
-				float x_final, y_final;
+				float xFinal, yFinal;
 
-				for (int x = tmp_oval.getX(); x < tmp_oval.getX() + rx * 2; x++)
-					if ((x > -1) & (x < configs.width))
-						for (int y = tmp_oval.getY(); y < tmp_oval.getY() + ry
+				for (int x = tmpOval.getX(); x < tmpOval.getX() + rx * 2; x++)
+					if ((x > -1) & (x < configs.getWidth()))
+						for (int y = tmpOval.getY(); y < tmpOval.getY() + ry
 								* 2; y++)
-							if ((y > -1) & (y < configs.height)) {
-								x_final = x - x_ov;
-								y_final = y - y_ov;
-								if ((x_final * x_final) / (rx * rx)
-										+ (y_final * y_final) / (ry * ry) < 1)
-									zone_map[x + (configs.height - y)
-											* configs.width] = (byte) tmp_zone_number;
+							if ((y > -1) & (y < configs.getHeight())) {
+								xFinal = x - ovX;
+								yFinal = y - ovY;
+								if ((xFinal * xFinal) / (rx * rx)
+										+ (yFinal * yFinal) / (ry * ry) < 1)
+									zoneMap[x + (configs.getHeight() - y)
+											* configs.getWidth()] = (byte) tmpZoneNumber;
 							}
 			}
 		}
@@ -509,30 +511,30 @@ public class ZonesModule extends
 	 * fluctuations)
 	 */
 	private void zoneHysteresis() {
-		if ((data.current_zone_num != updated_zone_number)
-				& (updated_zone_number != -1)) {
-			int zone_up_left = 0, zone_up_right = 0, zone_down_left = 0, zone_down_right = 0;
+		if ((data.getCurrentZoneNum() != updatedZoneNumber)
+				& (updatedZoneNumber != -1)) {
+			int zoneUpLeft = 0, zoneUpRight = 0, zoneDownLeft = 0, zoneDownRight = 0;
 			try {
-				zone_up_left = getZone(current_position.x - configs.hyst_value
-						/ 2, current_position.y + configs.hyst_value / 2);
-				zone_up_right = getZone(current_position.x + configs.hyst_value
-						/ 2, current_position.y + configs.hyst_value / 2);
-				zone_down_left = getZone(current_position.x
-						- configs.hyst_value / 2, current_position.y
-						- configs.hyst_value / 2);
-				zone_down_right = getZone(current_position.x
-						+ configs.hyst_value / 2, current_position.y
-						- configs.hyst_value / 2);
+				zoneUpLeft = getZone(currentPosition.x - configs.getHystValue()
+						/ 2, currentPosition.y + configs.getHystValue() / 2);
+				zoneUpRight = getZone(currentPosition.x + configs.getHystValue()
+						/ 2, currentPosition.y + configs.getHystValue() / 2);
+				zoneDownLeft = getZone(currentPosition.x
+						- configs.getHystValue() / 2, currentPosition.y
+						- configs.getHystValue() / 2);
+				zoneDownRight = getZone(currentPosition.x
+						+ configs.getHystValue() / 2, currentPosition.y
+						- configs.getHystValue() / 2);
 				
 			} catch (final Exception e) {
 				PManager.log.print("Error fel index .. zoneHysteresis!", this,
 						StatusSeverity.ERROR);
 			}
 			
-			if ((zone_up_left != data.current_zone_num)
-					& (zone_up_right != data.current_zone_num)
-					& (zone_down_left != data.current_zone_num)
-					& (zone_down_right != data.current_zone_num)){
+			if ((zoneUpLeft != data.getCurrentZoneNum())
+					& (zoneUpRight != data.getCurrentZoneNum())
+					& (zoneDownLeft != data.getCurrentZoneNum())
+					& (zoneDownRight != data.getCurrentZoneNum())){
 				updateZoneCounters();
 				
 			}

@@ -29,21 +29,21 @@ public class RatFinderFilterConfigs extends FilterConfigs {
 	/**
 	 * Initializes the configurations.
 	 * 
-	 * @param filt_name
+	 * @param filterName
 	 *            name of the filter this configurations will be applied to
-	 * @param common_configs
+	 * @param commonConfigs
 	 *            CommonConfigurations used by all filters
 	 */
-	public RatFinderFilterConfigs(final String filt_name,
-			final CommonFilterConfigs common_configs) {
-		super(filt_name, common_configs);
+	public RatFinderFilterConfigs(final String filterName,
+			final CommonFilterConfigs commonConfigs) {
+		super(filterName, commonConfigs);
 	}
 
 	@Override
 	public void mergeConfigs(final FilterConfigs configs) {
-		final RatFinderFilterConfigs tmp_ratfiner_configs = (RatFinderFilterConfigs) configs;
-		if (tmp_ratfiner_configs.common_configs != null)
-			common_configs = tmp_ratfiner_configs.common_configs;
+		final RatFinderFilterConfigs tmpRatfinerConfigs = (RatFinderFilterConfigs) configs;
+		if (tmpRatfinerConfigs.getCommonConfigs() != null)
+			setCommonConfigs(tmpRatfinerConfigs.getCommonConfigs());
 	}
 
 	/**
@@ -53,7 +53,7 @@ public class RatFinderFilterConfigs extends FilterConfigs {
 	 */
 	@Override
 	public boolean validate() {
-		if (common_configs == null) {
+		if (getCommonConfigs() == null) {
 			PManager.log.print("Configs are not completely configured!", this,
 					StatusSeverity.ERROR);
 			return false;

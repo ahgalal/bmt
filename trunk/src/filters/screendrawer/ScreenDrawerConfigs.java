@@ -31,24 +31,26 @@ public class ScreenDrawerConfigs extends FilterConfigs {
 	/**
 	 * enable drawing of the secondary stream.
 	 */
-	public boolean			enable_sec_screen;
+	private boolean			enableSecScreen;
 
 	/**
-	 * ref_gfx_main_screen reference to a Graphics object that the filter will
-	 * draw on the main data stream. ref_gfx_sec_screen reference to a Graphics
+	 * refGfxMainScreen reference to a Graphics object that the filter will
+	 * draw on the main data stream. refGfxSecScreen reference to a Graphics
 	 * object that the filter will draw on the secondary data stream.
 	 */
-	public Graphics			ref_gfx_main_screen, ref_gfx_sec_screen;
+	private Graphics			refGfxMainScreen;
+
+	private Graphics	refGfxSecScreen;
 	/**
 	 * instance of a ShapeCollection that will draw its shapes on the main
 	 * stream.
 	 */
-	public ShapeCollection	shape_controller;
+	private ShapeCollection	shapeController;
 
 	/**
 	 * Initializes the configurations.
 	 * 
-	 * @param filt_name
+	 * @param filterName
 	 *            name of the filter this configurations will be applied to
 	 * @param refGfxMainScreen
 	 *            reference to a Graphics object that the filter will draw on
@@ -56,48 +58,80 @@ public class ScreenDrawerConfigs extends FilterConfigs {
 	 * @param refGfxSecScreen
 	 *            reference to a Graphics object that the filter will draw on
 	 *            the secondary data stream
-	 * @param common_configs
+	 * @param commonConfigs
 	 *            CommonConfigurations used by all filters
-	 * @param enable_sec_screen
+	 * @param enableSecScreen
 	 *            enable drawing of the secondary stream
-	 * @param shp_controller
+	 * @param shpController
 	 *            instance of ShapeController that will draw its shapes on the
 	 *            main stream
 	 */
-	public ScreenDrawerConfigs(final String filt_name,
+	public ScreenDrawerConfigs(final String filterName,
 			final Graphics refGfxMainScreen, final Graphics refGfxSecScreen,
-			final CommonFilterConfigs common_configs,
-			final boolean enable_sec_screen,
-			final ShapeCollection shp_controller) {
-		super(filt_name, common_configs);
-		ref_gfx_main_screen = refGfxMainScreen;
-		ref_gfx_sec_screen = refGfxSecScreen;
-		this.enable_sec_screen = enable_sec_screen;
-		this.shape_controller = shp_controller;
+			final CommonFilterConfigs commonConfigs,
+			final boolean enableSecScreen,
+			final ShapeCollection shpController) {
+		super(filterName, commonConfigs);
+		this.setRefGfxMainScreen(refGfxMainScreen);
+		this.setRefGfxSecScreen(refGfxSecScreen);
+		this.setEnableSecScreen(enableSecScreen);
+		this.setShapeController(shpController);
 	}
 
 	@Override
 	public void mergeConfigs(final FilterConfigs configs) {
-		final ScreenDrawerConfigs tmp_scn_drwr_cfgs = (ScreenDrawerConfigs) configs;
-		if (tmp_scn_drwr_cfgs.common_configs != null)
-			common_configs = tmp_scn_drwr_cfgs.common_configs;
-		if (tmp_scn_drwr_cfgs.ref_gfx_main_screen != null)
-			ref_gfx_main_screen = tmp_scn_drwr_cfgs.ref_gfx_main_screen;
-		if (tmp_scn_drwr_cfgs.ref_gfx_sec_screen != null)
-			ref_gfx_sec_screen = tmp_scn_drwr_cfgs.ref_gfx_sec_screen;
-		this.enable_sec_screen = tmp_scn_drwr_cfgs.enable_sec_screen;
-		if (tmp_scn_drwr_cfgs.shape_controller != null)
-			shape_controller = tmp_scn_drwr_cfgs.shape_controller;
+		final ScreenDrawerConfigs tmpScnDrwrCfgs = (ScreenDrawerConfigs) configs;
+		if (tmpScnDrwrCfgs.getCommonConfigs() != null)
+			setCommonConfigs(tmpScnDrwrCfgs.getCommonConfigs());
+		if (tmpScnDrwrCfgs.getRefGfxMainScreen() != null)
+			setRefGfxMainScreen(tmpScnDrwrCfgs.getRefGfxMainScreen());
+		if (tmpScnDrwrCfgs.getRefGfxSecScreen() != null)
+			setRefGfxSecScreen(tmpScnDrwrCfgs.getRefGfxSecScreen());
+		this.setEnableSecScreen(tmpScnDrwrCfgs.isEnableSecScreen());
+		if (tmpScnDrwrCfgs.getShapeController() != null)
+			setShapeController(tmpScnDrwrCfgs.getShapeController());
 	}
 
 	@Override
 	public boolean validate() {
-		if ((common_configs == null) || (shape_controller == null)) {
+		if ((getCommonConfigs() == null) || (getShapeController() == null)) {
 			PManager.log.print("Configs are not completely configured!", this,
 					StatusSeverity.ERROR);
 			return false;
 		}
 		return true;
+	}
+
+	public void setEnableSecScreen(boolean enableSecScreen) {
+		this.enableSecScreen = enableSecScreen;
+	}
+
+	public boolean isEnableSecScreen() {
+		return enableSecScreen;
+	}
+
+	public void setRefGfxMainScreen(Graphics refGfxMainScreen) {
+		this.refGfxMainScreen = refGfxMainScreen;
+	}
+
+	public Graphics getRefGfxMainScreen() {
+		return refGfxMainScreen;
+	}
+
+	public void setRefGfxSecScreen(Graphics refGfxSecScreen) {
+		this.refGfxSecScreen = refGfxSecScreen;
+	}
+
+	public Graphics getRefGfxSecScreen() {
+		return refGfxSecScreen;
+	}
+
+	public void setShapeController(ShapeCollection shapeController) {
+		this.shapeController = shapeController;
+	}
+
+	public ShapeCollection getShapeController() {
+		return shapeController;
 	}
 
 }

@@ -68,17 +68,15 @@ public abstract class VidInputter<ConfigsType extends VidSourceConfigs> {
 	/**
 	 * Initializes the video library.
 	 * 
-	 * @param frame_data
+	 * @param frameData
 	 *            frame data carrier object
 	 * @param width
 	 *            image width
 	 * @param height
 	 *            image height
-	 * @param cam_index
-	 *            camera index to use
 	 * @return true if the initialization was successful
 	 */
-	public abstract boolean initialize(FrameIntArray frame_data,
+	public abstract boolean initialize(FrameIntArray frameData,
 			ConfigsType configs);
 
 	/**

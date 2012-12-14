@@ -38,10 +38,10 @@ public abstract class Module<GUIType extends PluggedGUI, ConfigsType extends Mod
 	protected ExperimentType[]	expType;
 	protected Cargo				fileCargo;
 
-	protected Data[]			filters_data;
+	protected Data[]			filtersData;
 	protected GUIType			gui;
 	protected Cargo				guiCargo;
-	protected Data[]			modules_data;
+	protected Data[]			modulesData;
 	protected String			name;
 
 	/**
@@ -75,8 +75,8 @@ public abstract class Module<GUIType extends PluggedGUI, ConfigsType extends Mod
 	 */
 	public void unload(){
 		// unload data
-		modules_data=null;
-		filters_data=null;
+		modulesData=null;
+		filtersData=null;
 		guiCargo=null;
 		fileCargo=null;
 		data=null;

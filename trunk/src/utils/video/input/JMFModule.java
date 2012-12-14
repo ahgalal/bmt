@@ -49,11 +49,11 @@ import utils.video.FrameIntArray;
  * @author Creative
  */
 public class JMFModule extends VidInputter<VidSourceConfigs> {
-	private JMFGrabber	ana_eff			= null;
+	private JMFGrabber	anaEff			= null;
 	private String		format;
 	private Player		pl;
 	private Processor	proc_1;
-	VideoFormat			video_format	= null;
+	private VideoFormat			videoFormat	= null;
 
 	@Override
 	public int displayMoreSettings() {
@@ -76,24 +76,24 @@ public class JMFModule extends VidInputter<VidSourceConfigs> {
 
 	@Override
 	public SourceStatus getStatus() {
-		return ana_eff.getStatus();
+		return anaEff.getStatus();
 	}
 	
 	@Override
 	public void pauseStream() {
-		ana_eff.pause();
+		anaEff.pause();
 	}
 	
 	@Override
 	public void resumeStream() {
-		ana_eff.resume();
+		anaEff.resume();
 	}
 
 	@Override
-	public boolean initialize(final FrameIntArray frame_data,
+	public boolean initialize(final FrameIntArray frameData,
 			final VidSourceConfigs configs) {
 		this.configs = configs;
-		return initializeJMF(frame_data);
+		return initializeJMF(frameData);
 	}
 
 	/**
@@ -108,13 +108,13 @@ public class JMFModule extends VidInputter<VidSourceConfigs> {
 			MediaLocator ml = null;
 
 			final RGBFormat rgb640x480 = new RGBFormat(new Dimension(
-					configs.width, configs.height), configs.width
-					* configs.height * 3, Format.byteArray, 30.0f, 24, -1, -1,
+					configs.getWidth(), configs.getHeight()), configs.getWidth()
+					* configs.getHeight() * 3, Format.byteArray, 30.0f, 24, -1, -1,
 					-1, -1, -1, -1, -1);
 
 			final YUVFormat yuv640x480_device = new YUVFormat(new Dimension(
-					configs.width, configs.height), configs.width
-					* configs.height * 2, Format.byteArray, 30.0f, 32, 1280,
+					configs.getWidth(), configs.getHeight()), configs.getWidth()
+					* configs.getHeight() * 2, Format.byteArray, 30.0f, 32, 1280,
 					1280, 0, 1, 3);
 			// YUVFormat yuv640x480 = new YUVFormat(new Dimension(352, 288),-1,
 			// RGBFormat.byteArray, -1, 2, -1 , -1 , -1,-1,-1);
@@ -122,18 +122,18 @@ public class JMFModule extends VidInputter<VidSourceConfigs> {
 			// RGBFormat rgb320x240 = new RGBFormat(new Dimension(320, 240),
 			// RGBFormat.NOT_SPECIFIED, RGBFormat.byteArray, -1, 24, 3, 2,
 			// 1,-1,-1,-1,-1);
-			VideoFormat format_to_use;
-			if (video_format == null)
-				format_to_use = yuv640x480_device;
+			VideoFormat formatToUse;
+			if (videoFormat == null)
+				formatToUse = yuv640x480_device;
 			else
-				format_to_use = video_format;
+				formatToUse = videoFormat;
 
 			if (format == "YUV")
-				format_to_use = yuv640x480_device;
+				formatToUse = yuv640x480_device;
 			else if (format == "RGB")
-				format_to_use = rgb640x480;
+				formatToUse = rgb640x480;
 
-			ml = obtainMediaLocator(format_to_use);
+			ml = obtainMediaLocator(formatToUse);
 
 			DataSource ds = null;
 			try {
@@ -164,21 +164,21 @@ public class JMFModule extends VidInputter<VidSourceConfigs> {
 			System.err.print("0");
 			final FormatControl[] formatcontrol = ((CaptureDevice) ds)
 					.getFormatControls();
-			final Format[] supported_formats = formatcontrol[0]
+			final Format[] supportedFormats = formatcontrol[0]
 					.getSupportedFormats();
 
 			System.err.print("1");
-			for (int i = 0; i < supported_formats.length; i++)
-				if (supported_formats[i].matches(format_to_use))// yuv640x480_device))
+			for (int i = 0; i < supportedFormats.length; i++)
+				if (supportedFormats[i].matches(formatToUse))// yuv640x480_device))
 				{
 					System.err.print("1");
-					video_format = (VideoFormat) supported_formats[i];
+					videoFormat = (VideoFormat) supportedFormats[i];
 					break;
 				}
 
-			if (video_format == null) {
+			if (videoFormat == null) {
 				System.err.print("The CAM does not support "
-						+ format_to_use.toString() + "video!");
+						+ formatToUse.toString() + "video!");
 				// MsgBox.show(MainGUI.getDefault().getsShell(),
 				// "The CAM does not support RGB640*480 video!", "Error",
 				// SWT.ERROR);
@@ -186,9 +186,9 @@ public class JMFModule extends VidInputter<VidSourceConfigs> {
 				return false;
 			}
 
-			System.out.print(video_format.toString());
+			System.out.print(videoFormat.toString());
 
-			formatcontrol[0].setFormat(video_format);
+			formatcontrol[0].setFormat(videoFormat);
 
 			proc_1 = Manager.createProcessor(ds);
 
@@ -199,33 +199,28 @@ public class JMFModule extends VidInputter<VidSourceConfigs> {
 			// proc_1.setContentDescriptor(null);
 			System.err.print("2");
 
-			ana_eff = new JMFGrabber(video_format.getSize().width,
-					video_format.getSize().height, fia);
-			ana_eff.setInputFormat(tracks[0].getFormat());
-			ana_eff.setOutputFormat(new RGBFormat(new Dimension(configs.width,
-					configs.height), configs.width * configs.height * 3,
-					Format.byteArray, 30.0f, 24, 3, 2, 1, 3, configs.width * 3,
+			anaEff = new JMFGrabber(videoFormat.getSize().width,
+					videoFormat.getSize().height, fia);
+			anaEff.setInputFormat(tracks[0].getFormat());
+			anaEff.setOutputFormat(new RGBFormat(new Dimension(configs.getWidth(),
+					configs.getHeight()), configs.getWidth() * configs.getHeight() * 3,
+					Format.byteArray, 30.0f, 24, 3, 2, 1, 3, configs.getWidth() * 3,
 					0, 0));
 
 			System.err.print("3");
 
-			final Codec[] codecs = { ana_eff };
+			final Codec[] codecs = { anaEff };
 			try {
 				tracks[0].setCodecChain(codecs);
 			} catch (final UnsupportedPlugInException e) {
 				e.printStackTrace();
 			}
 
-			// proc_1.setContentDescriptor(null);
-
 			System.err.print("4");
 
 			proc_1.realize();
 			while (proc_1.getState() != Controller.Realized)
 				Thread.sleep(10);
-
-			// vis_comp=pl.getVisualComponent();
-			// MainGUI.getDefault().getAwt_video_frame().add(vis_comp);
 
 		} catch (final NoProcessorException e) {
 			e.printStackTrace();
@@ -245,12 +240,12 @@ public class JMFModule extends VidInputter<VidSourceConfigs> {
 	/**
 	 * Creates the MediaLocator for the webcam device.
 	 * 
-	 * @param format_to_use
+	 * @param formatToUse
 	 *            VideoFormat, either RGB or YUV
 	 * @return MediaLocator object corresponding to the webcam
 	 */
 	@SuppressWarnings("rawtypes")
-	private MediaLocator obtainMediaLocator(final VideoFormat format_to_use) {
+	private MediaLocator obtainMediaLocator(final VideoFormat formatToUse) {
 		MediaLocator ml = null;
 		final Vector devicelist = CaptureDeviceManager
 				.getDeviceList(new VideoFormat(null));
@@ -259,7 +254,7 @@ public class JMFModule extends VidInputter<VidSourceConfigs> {
 			System.err
 					.print("No Cams Available using normal way ... will try finding a CAM using hardcoded way! :)\n");
 			try {
-				ml = new MediaLocator("vfw://" + configs.camIndex);
+				ml = new MediaLocator("vfw://" + configs.getCamIndex());
 			} catch (final Exception e) {
 				e.printStackTrace();
 				System.out.print("media locator!!!!!!!!!!!!?");
@@ -270,17 +265,17 @@ public class JMFModule extends VidInputter<VidSourceConfigs> {
 		// More than 1 CAM
 		{
 			boolean breaker = false;
-			CaptureDeviceInfo tmp_device;
-			Format[] tmp_formats;
+			CaptureDeviceInfo tmpDevice;
+			Format[] tmpFormats;
 			for (int i = 0; i < devicelist.size(); i++) // Loop on CAMs
 			{
-				tmp_device = (CaptureDeviceInfo) devicelist.get(i);
-				tmp_formats = tmp_device.getFormats();
+				tmpDevice = (CaptureDeviceInfo) devicelist.get(i);
+				tmpFormats = tmpDevice.getFormats();
 				// Loop on Formats, searching for rgb640x480
-				for (int j = 0; j < tmp_formats.length; j++)
+				for (int j = 0; j < tmpFormats.length; j++)
 					// if found ... locate/use the device
-					if (tmp_formats[j].matches(format_to_use)) {
-						ml = tmp_device.getLocator();
+					if (tmpFormats[j].matches(formatToUse)) {
+						ml = tmpDevice.getLocator();
 						breaker = true;
 						break;
 					}
@@ -359,7 +354,7 @@ public class JMFModule extends VidInputter<VidSourceConfigs> {
 	public void stopModule() {
 		try {
 			format = null;
-			video_format = null;
+			videoFormat = null;
 			if (proc_1 != null) {
 				proc_1.stop();
 				proc_1.close();
@@ -376,7 +371,7 @@ public class JMFModule extends VidInputter<VidSourceConfigs> {
 					Thread.sleep(10);
 				pl = null;
 			}
-			ana_eff = null;
+			anaEff = null;
 		} catch (final InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

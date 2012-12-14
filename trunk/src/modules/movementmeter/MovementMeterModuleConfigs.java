@@ -4,8 +4,8 @@ import modules.ModuleConfigs;
 
 public class MovementMeterModuleConfigs extends ModuleConfigs {
 
-	public MovementMeterModuleConfigs(final String module_name) {
-		super(module_name);
+	public MovementMeterModuleConfigs(final String moduleName) {
+		super(moduleName);
 	}
 
 	@Override

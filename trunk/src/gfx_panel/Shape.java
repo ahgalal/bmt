@@ -111,21 +111,21 @@ public abstract class Shape {
 	/**
 	 * array of attached shapes to this shape, they move as this shape moves.
 	 */
-	protected ArrayList<Shape>	arr_attachee;
+	protected ArrayList<Shape>	arrAttachee;
 	/**
 	 * Color.
 	 */
-	protected RGB				rgb_color;
+	protected RGB				rgbColor;
 
 	/**
 	 * side length of the selection box drawn at corners.
 	 */
-	protected int				selectionbox_length;
+	protected int				selectionboxLength;
 
 	/**
 	 * Shape identifier.
 	 */
-	protected int				shape_number;
+	protected int				shapeNumber;
 
 	/**
 	 * Dimensions.
@@ -152,8 +152,8 @@ public abstract class Shape {
 		this.y = y;
 		this.width = width;
 		this.height = height;
-		this.rgb_color = c;
-		arr_attachee = new ArrayList<Shape>();
+		this.rgbColor = c;
+		arrAttachee = new ArrayList<Shape>();
 	}
 
 	/**
@@ -164,7 +164,7 @@ public abstract class Shape {
 	 *            Shape to attach
 	 */
 	public void attachToMe(final Shape attachee) {
-		arr_attachee.add(attachee);
+		arrAttachee.add(attachee);
 	}
 
 	/**
@@ -174,7 +174,7 @@ public abstract class Shape {
 	 *            Shape to deattach
 	 */
 	public void deattachFromMe(final Shape attachee) {
-		arr_attachee.remove(attachee);
+		arrAttachee.remove(attachee);
 	}
 
 	/**
@@ -198,7 +198,7 @@ public abstract class Shape {
 	 * @return RGB color representing the color of the shape
 	 */
 	public RGB getColor() {
-		return rgb_color;
+		return rgbColor;
 	}
 
 	/**
@@ -216,7 +216,7 @@ public abstract class Shape {
 	 * @return integer representing the shape's number
 	 */
 	public int getShapeNumber() {
-		return shape_number;
+		return shapeNumber;
 	}
 
 	/**
@@ -247,25 +247,25 @@ public abstract class Shape {
 	}
 
 	/**
-	 * Moves this shape by a value delta_x. if delta_x is positive, shape moves
+	 * Moves this shape by a value deltaX. if deltaX is positive, shape moves
 	 * right, else , to the left.
 	 * 
-	 * @param delta_x
+	 * @param deltaX
 	 *            distance to move the shape along the x-axis
 	 */
-	public void moveX(final int delta_x) {
-		setX(x + delta_x);
+	public void moveX(final int deltaX) {
+		setX(x + deltaX);
 	}
 
 	/**
-	 * Moves this shape by a value delta_y. if delta_y is positive, shape moves
+	 * Moves this shape by a value deltaY. if deltaY is positive, shape moves
 	 * down, else , up.
 	 * 
-	 * @param delta_y
+	 * @param deltaY
 	 *            distance to move the shape along the y-axis
 	 */
-	public void moveY(final int delta_y) {
-		setY(y + delta_y);
+	public void moveY(final int deltaY) {
+		setY(y + deltaY);
 	}
 
 	/**
@@ -277,7 +277,7 @@ public abstract class Shape {
 	 *            side length of the selection box
 	 */
 	public void select(final Graphics gfx, final int length) {
-		selectionbox_length = length;
+		selectionboxLength = length;
 		gfx.setColor(Color.black);
 		gfx.fillRect(x, y, length, length);
 		gfx.fillRect(x + width - length, y, length, length);
@@ -292,7 +292,7 @@ public abstract class Shape {
 	 *            new shape's color
 	 */
 	public void setColor(final RGB color) {
-		this.rgb_color = color;
+		this.rgbColor = color;
 	}
 
 	/**
@@ -308,11 +308,11 @@ public abstract class Shape {
 	/**
 	 * Sets the shape number.
 	 * 
-	 * @param shape_number
+	 * @param shapeNumber
 	 *            the new shape number
 	 */
-	public void setShapeNumber(final int shape_number) {
-		this.shape_number = shape_number;
+	public void setShapeNumber(final int shapeNumber) {
+		this.shapeNumber = shapeNumber;
 	}
 
 	/**
@@ -332,7 +332,7 @@ public abstract class Shape {
 	 *            new X value to move to
 	 */
 	public void setX(final int x) {
-		for (final Shape att : arr_attachee)
+		for (final Shape att : arrAttachee)
 			att.moveX(x - this.x);
 		this.x = x;
 	}
@@ -344,7 +344,7 @@ public abstract class Shape {
 	 *            new Y value to move to
 	 */
 	public void setY(final int y) {
-		for (final Shape att : arr_attachee)
+		for (final Shape att : arrAttachee)
 			att.moveY(y - this.y);
 		this.y = y;
 	}

@@ -65,7 +65,7 @@ public abstract class GUITest {
 
 				@Override
 				public void run() {
-					PManager.main_gui.closeProgram();
+					PManager.mainGUI.closeProgram();
 					// Display.getDefault().getActiveShell().close();
 					// Display.getDefault().close();
 				}

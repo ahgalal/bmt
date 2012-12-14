@@ -23,5 +23,13 @@ public class FrameIntArray {
 	/**
 	 * Array containing the image data as an array of integers.
 	 */
-	public int[]	frame_data;
+	private int[]	frameData;
+
+	public void setFrameData(int[] frameData) {
+		this.frameData = frameData;
+	}
+
+	public int[] getFrameData() {
+		return frameData;
+	}
 }

@@ -39,9 +39,9 @@ import utils.PManager.ProgramState.GeneralState;
  * @author Creative
  */
 public class RearingModuleGUI extends PluggedGUI<RearingModule> {
-	private Button		btn_add_rearing	= null;
+	private Button		btnAddRearing	= null;
 
-	private Button		btn_sub_rearing	= null;
+	private Button		btnSubRearing	= null;
 
 	private Composite	cmpstManualRearing;
 
@@ -97,10 +97,10 @@ public class RearingModuleGUI extends PluggedGUI<RearingModule> {
 		cmpstManualRearing = new Composite(expandBar, SWT.NONE);
 		xpndtmManualRearing.setControl(cmpstManualRearing);
 
-		btn_sub_rearing = new Button(cmpstManualRearing, SWT.NONE);
-		btn_sub_rearing.setBounds(new Rectangle(10, 10, 28, 21));
-		btn_sub_rearing.setText("-");
-		btn_sub_rearing
+		btnSubRearing = new Button(cmpstManualRearing, SWT.NONE);
+		btnSubRearing.setBounds(new Rectangle(10, 10, 28, 21));
+		btnSubRearing.setText("-");
+		btnSubRearing
 				.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
 					@Override
 					public void widgetSelected(
@@ -108,12 +108,12 @@ public class RearingModuleGUI extends PluggedGUI<RearingModule> {
 						btnSubRearingAction();
 					}
 				});
-		btn_add_rearing = new Button(cmpstManualRearing, SWT.NONE);
-		btn_add_rearing.setText("+");
-		btn_add_rearing.setSize(new Point(28, 21));
-		btn_add_rearing.setLocation(new Point(40, 10));
+		btnAddRearing = new Button(cmpstManualRearing, SWT.NONE);
+		btnAddRearing.setText("+");
+		btnAddRearing.setSize(new Point(28, 21));
+		btnAddRearing.setLocation(new Point(40, 10));
 
-		btn_add_rearing
+		btnAddRearing
 				.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
 					@Override
 					public void widgetSelected(
@@ -129,16 +129,16 @@ public class RearingModuleGUI extends PluggedGUI<RearingModule> {
 	public void stateGeneralChangeHandler(final ProgramState state) {
 		switch (state.getGeneral()) {
 			case IDLE:
-				btn_add_rearing.setEnabled(false);
-				btn_sub_rearing.setEnabled(false);
+				btnAddRearing.setEnabled(false);
+				btnSubRearing.setEnabled(false);
 				break;
 			case TRACKING:
-				btn_add_rearing.setEnabled(true);
-				btn_sub_rearing.setEnabled(true);
+				btnAddRearing.setEnabled(true);
+				btnSubRearing.setEnabled(true);
 				break;
 			default:
-				btn_add_rearing.setEnabled(false);
-				btn_sub_rearing.setEnabled(false);
+				btnAddRearing.setEnabled(false);
+				btnSubRearing.setEnabled(false);
 				break;
 		}
 	}

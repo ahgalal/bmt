@@ -12,15 +12,15 @@ public class FileReader {
 	public static String read(final String fileName) {
 		FileInputStream fis;
 		BufferedInputStream bis;
-		BufferedReader buf_rdr;
+		BufferedReader bufReader;
 		final StringBuffer strBuf = new StringBuffer();
 		try {
 			fis = new FileInputStream(fileName);
 			bis = new BufferedInputStream(fis);
-			buf_rdr = new BufferedReader(new InputStreamReader(bis));
+			bufReader = new BufferedReader(new InputStreamReader(bis));
 
-			while (buf_rdr.ready()) {
-				strBuf.append(buf_rdr.readLine() + "\n");
+			while (bufReader.ready()) {
+				strBuf.append(bufReader.readLine() + "\n");
 			}
 		} catch (final FileNotFoundException e) {
 			e.printStackTrace();

@@ -31,7 +31,7 @@ public class ImageManipulator {
 
 	private static int[]	subResult;
 
-	static TimeCalculator	tc	= new TimeCalculator();
+	private static TimeCalculator	tc	= new TimeCalculator();
 
 	public static int addRGBInt(final int img1, final int img2) {
 		byte r1, r2, g1, g2, b1, b2;
@@ -51,17 +51,17 @@ public class ImageManipulator {
 	/**
 	 * Converts a byte[] BGR image to int[] RGB image.
 	 * 
-	 * @param byte_arr
+	 * @param byteArr
 	 *            input byte[] BGR image
 	 * @return integer array RGB image
 	 */
-	public static int[] byteBGR2IntRGB(final byte[] byte_arr) {
-		final int[] iarr = new int[byte_arr.length / 3];
+	public static int[] byteBGR2IntRGB(final byte[] byteArr) {
+		final int[] iarr = new int[byteArr.length / 3];
 		int r, g, b;
-		for (int i = 0; i < byte_arr.length; i += 3) {
-			r = byte_arr[i + 2] & 255;
-			g = byte_arr[i + 1] & 255;
-			b = byte_arr[i] & 255;
+		for (int i = 0; i < byteArr.length; i += 3) {
+			r = byteArr[i + 2] & 255;
+			g = byteArr[i + 1] & 255;
+			b = byteArr[i] & 255;
 			iarr[i / 3] = r | (g << 8) | (b << 16);
 		}
 		return iarr;
@@ -70,17 +70,17 @@ public class ImageManipulator {
 	/**
 	 * Converts a byte[] RGB image to int[] RGB image.
 	 * 
-	 * @param byte_arr
+	 * @param byteArr
 	 *            input byte[] RGB image
 	 * @return integer array RGB image
 	 */
-	public static int[] byteRGB2IntRGB(final byte[] byte_arr) {
-		final int[] iarr = new int[byte_arr.length / 3];
+	public static int[] byteRGB2IntRGB(final byte[] byteArr) {
+		final int[] iarr = new int[byteArr.length / 3];
 		int r, g, b;
-		for (int i = 0; i < byte_arr.length; i += 3) {
-			r = byte_arr[i + 2] & 255;
-			g = byte_arr[i + 1] & 255;
-			b = byte_arr[i] & 255;
+		for (int i = 0; i < byteArr.length; i += 3) {
+			r = byteArr[i + 2] & 255;
+			g = byteArr[i + 1] & 255;
+			b = byteArr[i] & 255;
 			iarr[i / 3] = b | (g << 8) | (r << 16);
 		}
 		return iarr;
@@ -110,26 +110,26 @@ public class ImageManipulator {
 	 */
 	public static int[] flipImage(final int[] img, final int width,
 			final int height) {
-		final int[] tmp_img = new int[width * height];
+		final int[] tmpImg = new int[width * height];
 		for (int y = 0; y < height; y++)
 			for (int x = 0; x < width; x++)
-				tmp_img[y * width + x] = img[(height - y - 1) * width + x];
-		return tmp_img;
+				tmpImg[y * width + x] = img[(height - y - 1) * width + x];
+		return tmpImg;
 	}
 
 	/**
 	 * Converts a byte[] Grayscale image to int[] RGB image (representation
 	 * changes, but the image remains Gray colors).
 	 * 
-	 * @param gray_arr
+	 * @param grayArr
 	 *            input Grayscale image
 	 * @return integer array of the RGB image
 	 */
-	public static int[] gray2RGBInt(final byte[] gray_arr) {
-		final int[] rgbarr = new int[gray_arr.length];
+	public static int[] gray2RGBInt(final byte[] grayArr) {
+		final int[] rgbarr = new int[grayArr.length];
 		int valgray;
-		for (int i = 0; i < gray_arr.length; i++) {
-			valgray = gray_arr[i] & 0xFF;
+		for (int i = 0; i < grayArr.length; i++) {
+			valgray = grayArr[i] & 0xFF;
 			rgbarr[i] = valgray | (valgray << 8) | (valgray << 16);
 		}
 		return rgbarr;
@@ -158,17 +158,17 @@ public class ImageManipulator {
 	/**
 	 * Converts an int[] RGB image to byte[] RGB image.
 	 * 
-	 * @param int_arr
+	 * @param intArr
 	 *            input image
 	 * @return converted image as an array of bytes
 	 */
-	public static byte[] intRGB2ByteRGB(final int[] int_arr) { // 4ms
+	public static byte[] intRGB2ByteRGB(final int[] intArr) { // 4ms
 
-		final byte[] res = new byte[int_arr.length * 3];
+		final byte[] res = new byte[intArr.length * 3];
 		for (int i = 0; i < res.length; i += 3) {
-			res[i] = (byte) ((byte) int_arr[i / 3] & (255)); // B
-			res[i + 1] = (byte) ((int_arr[i / 3] >> 8) & (255)); // G
-			res[i + 2] = (byte) ((byte) (int_arr[i / 3] >> 16) & (255)); // R
+			res[i] = (byte) ((byte) intArr[i / 3] & (255)); // B
+			res[i + 1] = (byte) ((intArr[i / 3] >> 8) & (255)); // G
+			res[i + 2] = (byte) ((byte) (intArr[i / 3] >> 16) & (255)); // R
 
 		}
 
@@ -178,14 +178,14 @@ public class ImageManipulator {
 	/**
 	 * Loads an image file into a buffered image.
 	 * 
-	 * @param file_path
+	 * @param filePath
 	 *            path to the image file
 	 * @return BufferedImage containing the loaded image's data
 	 */
-	public static BufferedImage loadImage(final String file_path) {
+	public static BufferedImage loadImage(final String filePath) {
 		BufferedImage bimg = null;
 		try {
-			bimg = ImageIO.read(new File(file_path));
+			bimg = ImageIO.read(new File(filePath));
 		} catch (final Exception e) {
 			e.printStackTrace();
 		}
@@ -210,20 +210,20 @@ public class ImageManipulator {
 	/**
 	 * Converts an RGB byte[] image to Grayscale byte[] image.
 	 * 
-	 * @param rgb_byte_arr
+	 * @param rgbByteArr
 	 *            RGB image byte array
 	 * @return Grayscale image as an array of bytes
 	 */
-	public static byte[] rgbByteArray2GrayByteArray(final byte[] rgb_byte_arr) {
-		final byte[] gray_arr = new byte[rgb_byte_arr.length / 3];
+	public static byte[] rgbByteArray2GrayByteArray(final byte[] rgbByteArr) {
+		final byte[] grayArr = new byte[rgbByteArr.length / 3];
 		int r, g, b;
-		for (int i = 0; i < rgb_byte_arr.length; i += 3) {
-			r = rgb_byte_arr[i + 2] & 0xff;
-			g = rgb_byte_arr[i + 1] & 0xff;
-			b = rgb_byte_arr[i] & 0xff;
-			gray_arr[i / 3] = (byte) (0.2989 * r + 0.5870 * g + 0.1140 * b);
+		for (int i = 0; i < rgbByteArr.length; i += 3) {
+			r = rgbByteArr[i + 2] & 0xff;
+			g = rgbByteArr[i + 1] & 0xff;
+			b = rgbByteArr[i] & 0xff;
+			grayArr[i / 3] = (byte) (0.2989 * r + 0.5870 * g + 0.1140 * b);
 		}
-		return gray_arr;
+		return grayArr;
 	}
 
 	/**
@@ -325,15 +325,15 @@ public class ImageManipulator {
 	 * Converts a byte[] Grayscale image to a byte[] RGB image. notice that the
 	 * size of the output RGB image is triple that of the input Grayscale image.
 	 * 
-	 * @param gray_arr
+	 * @param grayArr
 	 *            input grayscale byte array
 	 * @return RGB byte array image
 	 */
-	public byte[] grayByteArray2RGBByteArray(final byte[] gray_arr) {
-		final byte[] rgbarr = new byte[gray_arr.length * 3];
+	public byte[] grayByteArray2RGBByteArray(final byte[] grayArr) {
+		final byte[] rgbarr = new byte[grayArr.length * 3];
 		int valgray;
-		for (int i = 0; i < gray_arr.length * 3; i += 3) {
-			valgray = gray_arr[i / 3];
+		for (int i = 0; i < grayArr.length * 3; i += 3) {
+			valgray = grayArr[i / 3];
 			rgbarr[i] = rgbarr[i + 1] = rgbarr[i + 2] = (byte) valgray;
 		}
 		return rgbarr;

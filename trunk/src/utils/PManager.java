@@ -95,7 +95,7 @@ public class PManager {
 		}
 	}
 
-	private static PManager		default_me;
+	private static PManager		defaultInstance;
 
 	/**
 	 * Logger instance, used to log messages to the console.
@@ -104,7 +104,7 @@ public class PManager {
 	/**
 	 * MainGUI static instance, Main GUI screen of the program.
 	 */
-	public static CtrlMainGUI	main_gui;
+	public static CtrlMainGUI	mainGUI;
 	public static boolean		testingMode;
 
 	/**
@@ -113,7 +113,7 @@ public class PManager {
 	 * @return Static PManager instance
 	 */
 	public static PManager getDefault() {
-		return default_me;
+		return defaultInstance;
 	}
 
 	/**
@@ -124,7 +124,7 @@ public class PManager {
 		new PManager();
 		final Display display = Display.getDefault();
 
-		while (!main_gui.isShellDisposed())
+		while (!mainGUI.isShellDisposed())
 			if (!display.readAndDispatch())
 				display.sleep();
 
@@ -134,33 +134,33 @@ public class PManager {
 	/**
 	 * About Dialog box instance, displays credits of this software.
 	 */
-	public CtrlAbout						about;
+	private CtrlAbout						about;
 	private final ArrayList<StateListener>	arrStateListsners	= new ArrayList<StateListener>();
 	/**
 	 * CamOptions GUI instance, used to change camera options.
 	 */
-	public CtrlCamOptions					cam_options;
+	private CtrlCamOptions					camOptions;
 	/**
 	 * DrawZones GUI instance.
 	 */
-	public CtrlDrawZones					drw_zns;
+	private CtrlDrawZones					drawZns;
 	/**
 	 * Excel engine instance, used to write data to excel sheets.
 	 */
-	public ExcelEngine						excel_engine;
+	private ExcelEngine						excelEngine;
 	/**
 	 * Rat form, used to enter next rat number/group.
 	 */
-	public CtrlRatInfoForm					frm_rat;
+	private CtrlRatInfoForm					frmRat;
 	/**
 	 * Options window, used to alter filters/modules options.
 	 */
-	public CtrlOptionsWindow				options_window;
+	private CtrlOptionsWindow				optionsWindow;
 	/**
 	 * ShapeController instance, used to handle the graphical representation of
 	 * zones.
 	 */
-	public final ShapeController			shape_controller;
+	private final ShapeController			shapeController;
 
 	/**
 	 * Program's state, check the documentation of ProgramState enumeration.
@@ -171,7 +171,7 @@ public class PManager {
 	 * Status manager instance, manages the status label at the bottom of the
 	 * MainGUI.
 	 */
-	public StatusManager					statusMgr;
+	private StatusManager					statusMgr;
 
 	private final VideoManager				vidMgr;
 
@@ -180,38 +180,38 @@ public class PManager {
 	 */
 	public PManager() {
 		state = new ProgramState(StreamState.IDLE, GeneralState.IDLE);
-		excel_engine = new ExcelEngine();
-		default_me = this;
-		statusMgr = new StatusManager();
+		this.excelEngine=new ExcelEngine();
+		defaultInstance = this;
+		this.statusMgr=new StatusManager();
 
-		shape_controller = ShapeController.getDefault();
-		drw_zns = new CtrlDrawZones();
-		frm_rat = new CtrlRatInfoForm();
-		cam_options = new CtrlCamOptions();
-		options_window = new CtrlOptionsWindow();
+		shapeController = ShapeController.getDefault();
+		this.drawZns=new CtrlDrawZones();
+		this.frmRat=new CtrlRatInfoForm();
+		this.camOptions=new CtrlCamOptions();
+		this.optionsWindow=new CtrlOptionsWindow();
 		log = new Logger(Details.VERBOSE);
 
-		main_gui = new CtrlMainGUI();
+		mainGUI = new CtrlMainGUI();
 		new ModulesManager();
-		addStateListener(main_gui);
+		addStateListener(mainGUI);
 
-		main_gui.show(true);
+		mainGUI.show(true);
 
 		vidMgr = new VideoManager();
 
 		// State watcher, when state changes, it notified all StateListsners
 		final Thread thStateChangedNotifier = new Thread(new Runnable() {
-			ProgramState	old_state	= new ProgramState(StreamState.IDLE,
+			ProgramState	oldState	= new ProgramState(StreamState.IDLE,
 												GeneralState.LAUNCHING);
 
 			@Override
 			public void run() {
-				while (main_gui.isUIOpened()) {
-					if ((old_state.getGeneral() != getState().getGeneral())
-							|| (old_state.getStream() != getState().getStream())) {
+				while (mainGUI.isUIOpened()) {
+					if ((oldState.getGeneral() != getState().getGeneral())
+							|| (oldState.getStream() != getState().getStream())) {
 						notifyStateListeners();
-						old_state.setGeneral(getState().getGeneral());
-						old_state.setStream(getState().getStream());
+						oldState.setGeneral(getState().getGeneral());
+						oldState.setStream(getState().getStream());
 						log.print("State is: " + getState(), this);
 					}
 					try {
@@ -224,7 +224,7 @@ public class PManager {
 		});
 		thStateChangedNotifier.start();
 
-		main_gui.setActive();
+		mainGUI.setActive();
 	}
 
 	public void addStateListener(final StateListener sListener) {
@@ -252,26 +252,26 @@ public class PManager {
 	/**
 	 * Initializes the Video Processor.
 	 * 
-	 * @param common_configs
+	 * @param commonConfigs
 	 *            CommonFilterConfigs object needed by most filters
 	 * @param vidFile
 	 *            video file to load (if not using webcam as the streaming
 	 *            source)
 	 */
 	public void initializeVideoManager(
-			final CommonFilterConfigs common_configs, final String vidFile) {
-		vidMgr.initialize(common_configs, vidFile);
+			final CommonFilterConfigs commonConfigs, final String vidFile) {
+		vidMgr.initialize(commonConfigs, vidFile);
 	}
 
 	/**
 	 * Links Gfx_panel with ShapeController, gives the gfx_panel instance to the
 	 * shape_controller instance.
 	 * 
-	 * @param gfx_panel
+	 * @param gfxPanel
 	 *            GfxPanel object to send to the shape controller
 	 */
-	public void linkGFXPanelWithShapeCtrlr(final GfxPanel gfx_panel) {
-		shape_controller.linkWithGFXPanel(gfx_panel);
+	public void linkGFXPanelWithShapeCtrlr(final GfxPanel gfxPanel) {
+		getShapeController().linkWithGFXPanel(gfxPanel);
 	}
 
 	private void notifyStateListeners() {
@@ -285,13 +285,13 @@ public class PManager {
 				ModulesManager.getDefault().pauseModules();
 				getVideoManager().pauseStream();
 				getState().setStream(StreamState.PAUSED);
-				statusMgr.setStatus("PAUSED", StatusSeverity.WARNING);
+				getStatusMgr().setStatus("PAUSED", StatusSeverity.WARNING);
 				break;
 			case PAUSED:
 				ModulesManager.getDefault().resumeModules();
 				getVideoManager().resumeStream();
 				getState().setStream(StreamState.STREAMING);
-				statusMgr.setStatus("RESUMED", StatusSeverity.WARNING);
+				getStatusMgr().setStatus("RESUMED", StatusSeverity.WARNING);
 				break;
 			default:
 				break;
@@ -311,7 +311,7 @@ public class PManager {
 				&& vidMgr.isInitialized())
 			vidMgr.startStreaming();
 		else
-			statusMgr
+			getStatusMgr()
 					.setStatus(
 							"State is not idle or no video source selected, not able to start streaming",
 							StatusSeverity.ERROR);
@@ -323,10 +323,10 @@ public class PManager {
 			ModulesManager.getDefault().initialize();
 			vidMgr.startProcessing();
 			ModulesManager.getDefault().runModules(true);
-			statusMgr.setStatus("Tracking is started", StatusSeverity.WARNING);
+			getStatusMgr().setStatus("Tracking is started", StatusSeverity.WARNING);
 			return true;
 		} else {
-			statusMgr.setStatus("Please start the camera first.",
+			getStatusMgr().setStatus("Please start the camera first.",
 					StatusSeverity.ERROR);
 			return false;
 		}
@@ -342,17 +342,17 @@ public class PManager {
 				if(getState().getGeneral() != GeneralState.TRACKING) {
 					vidMgr.unloadLibrary();
 					getState().setStream(StreamState.IDLE);
-					statusMgr.setStatus("Streaming is stopped!", StatusSeverity.WARNING);
+					getStatusMgr().setStatus("Streaming is stopped!", StatusSeverity.WARNING);
 				} else
-					statusMgr.setStatus(
+					getStatusMgr().setStatus(
 							"Streaming Cannot be stopped while Tracking is running.",
 							StatusSeverity.ERROR);
 			}else
-				statusMgr.setStatus(
+				getStatusMgr().setStatus(
 						"incorrect state, unable to unload video library",
 						StatusSeverity.ERROR);
 		}else
-			statusMgr.setStatus(
+			getStatusMgr().setStatus(
 					"incorrect state, was not in streaming/paused state",
 					StatusSeverity.ERROR);
 	}
@@ -362,16 +362,48 @@ public class PManager {
 			ModulesManager.getDefault().runModules(false);
 			vidMgr.stopProcessing();
 			getState().setGeneral(GeneralState.IDLE);
-			statusMgr.setStatus("Tracking is stopped", StatusSeverity.WARNING);
+			getStatusMgr().setStatus("Tracking is stopped", StatusSeverity.WARNING);
 		} else
-			statusMgr.setStatus("Tracking is not running.",
+			getStatusMgr().setStatus("Tracking is not running.",
 					StatusSeverity.ERROR);
 	}
 
 	public void unloadGUI() {
-		drw_zns.unloadGUI();
-		frm_rat.unloadGUI();
-		cam_options.unloadGUI();
-		options_window.unloadGUI();
+		getDrawZns().unloadGUI();
+		getFrmRat().unloadGUI();
+		getCamOptions().unloadGUI();
+		getOptionsWindow().unloadGUI();
+	}
+
+	public StatusManager getStatusMgr() {
+		return statusMgr;
+	}
+
+	public ShapeController getShapeController() {
+		return shapeController;
+	}
+
+	public CtrlOptionsWindow getOptionsWindow() {
+		return optionsWindow;
+	}
+
+	public CtrlRatInfoForm getFrmRat() {
+		return frmRat;
+	}
+
+	public ExcelEngine getExcelEngine() {
+		return excelEngine;
+	}
+
+	public CtrlDrawZones getDrawZns() {
+		return drawZns;
+	}
+
+	public CtrlCamOptions getCamOptions() {
+		return camOptions;
+	}
+
+	public CtrlAbout getAbout() {
+		return about;
 	}
 }

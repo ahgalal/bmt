@@ -26,8 +26,8 @@ public class Cargo implements Serializable {
      * 
      */
 	private static final long	serialVersionUID	= 271285755448822703L;
-	private String[]			arr_data;
-	private String[]			arr_tags;
+	private String[]			data;
+	private String[]			tags;
 
 	/**
 	 * Initializes the cargo.
@@ -36,8 +36,8 @@ public class Cargo implements Serializable {
 	 *            a.k.a parameters/keys
 	 */
 	public Cargo(final String[] tags) {
-		arr_data = new String[tags.length];
-		arr_tags = tags;
+		data = new String[tags.length];
+		this.tags = tags;
 	}
 
 	/**
@@ -46,7 +46,7 @@ public class Cargo implements Serializable {
 	 * @return array containing the cargo's data
 	 */
 	public String[] getData() {
-		return arr_data;
+		return data;
 	}
 
 	/**
@@ -57,7 +57,7 @@ public class Cargo implements Serializable {
 	 * @return data at the index from the data array
 	 */
 	public String getDataByIndex(final int index) {
-		return arr_data[index];
+		return data[index];
 	}
 
 	/**
@@ -69,7 +69,7 @@ public class Cargo implements Serializable {
 	 */
 	public String getDataByTag(final String tag) {
 		final int index = getIndexByTag(tag);
-		return arr_data[index];
+		return data[index];
 	}
 
 	/**
@@ -80,8 +80,8 @@ public class Cargo implements Serializable {
 	 * @return index of the tag's name in the tags arrray
 	 */
 	private int getIndexByTag(final String tag) {
-		for (int i = 0; i < arr_tags.length; i++)
-			if (arr_tags[i].equals(tag))
+		for (int i = 0; i < tags.length; i++)
+			if (tags[i].equals(tag))
 				return i;
 		return -1;
 	}
@@ -92,7 +92,7 @@ public class Cargo implements Serializable {
 	 * @return array of Strings containing tags' names
 	 */
 	public String[] getTags() {
-		return arr_tags;
+		return tags;
 	}
 
 	/**
@@ -103,7 +103,7 @@ public class Cargo implements Serializable {
 	 *            consideration with respect to the order of the tags)
 	 */
 	public void setData(final String[] data) {
-		arr_data = data;
+		this.data = data;
 	}
 
 	/**
@@ -116,7 +116,7 @@ public class Cargo implements Serializable {
 	 *            new data value
 	 */
 	public void setDataByIndex(final int index, final String data) {
-		arr_data[index] = data;
+		this.data[index] = data;
 	}
 
 	/**
@@ -128,7 +128,7 @@ public class Cargo implements Serializable {
 	 *            new data value
 	 */
 	public void setDataByTag(final String tag, final String data) {
-		arr_data[getIndexByTag(tag)] = data;
+		this.data[getIndexByTag(tag)] = data;
 	}
 
 	/**
@@ -138,7 +138,7 @@ public class Cargo implements Serializable {
 	 *            Tags as an array of strings
 	 */
 	public void setTags(final String[] tags) {
-		arr_tags = tags;
+		this.tags = tags;
 	}
 
 }

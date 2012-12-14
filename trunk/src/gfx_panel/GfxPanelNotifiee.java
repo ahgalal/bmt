@@ -25,12 +25,12 @@ public interface GfxPanelNotifiee {
 	/**
 	 * Drag operation occurred.
 	 * 
-	 * @param dragged_shape
+	 * @param draggedShape
 	 *            dragged shape (moving)
-	 * @param dragged_on_shape
+	 * @param draggedOnShape
 	 *            shape being dragged on (still)
 	 */
-	void dragOccured(int dragged_shape, int dragged_on_shape);
+	void dragOccured(int draggedShape, int draggedOnShape);
 
 	/**
 	 * Mouse is clicked on the panel.
@@ -43,32 +43,32 @@ public interface GfxPanelNotifiee {
 	/**
 	 * A new shape is added on the panel.
 	 * 
-	 * @param shape_number
+	 * @param shapeNumber
 	 *            new shape's number
 	 */
-	void shapeAdded(int shape_number);
+	void shapeAdded(int shapeNumber);
 
 	/**
 	 * A shape is deleted.
 	 * 
-	 * @param shape_number
+	 * @param shapeNumber
 	 *            deleted shape's number
 	 */
-	void shapeDeleted(int shape_number);
+	void shapeDeleted(int shapeNumber);
 
 	/**
 	 * A shape is modified (moved/resized/color changed).
 	 * 
-	 * @param shape_number
+	 * @param shapeNumber
 	 *            modified shape's number
 	 */
-	void shapeModified(int shape_number);
+	void shapeModified(int shapeNumber);
 
 	/**
 	 * A shape is selected.
 	 * 
-	 * @param shape_number
+	 * @param shapeNumber
 	 *            selected shape's number
 	 */
-	void shapeSelected(int shape_number);
+	void shapeSelected(int shapeNumber);
 }

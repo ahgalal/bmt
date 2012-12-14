@@ -32,24 +32,24 @@ import control.ui.CtrlAbout;
  * @author Creative
  */
 public class About extends BaseUI {
-	private Button		btn_OK			= null;
+	private Button		btnOK			= null;
 
 	@SuppressWarnings("unused")
 	private CtrlAbout	controller;			// @jve:decl-index=0:
 
-	private Group		grp_format		= null;
-	private Label		lbl_proj_desc	= null;
-	private Shell		sShell_1;
+	private Group		grpFormat		= null;
+	private Label		lblProjDesc	= null;
+	private Shell		sShell1;
 	private Text		textArea		= null;
-	private Text		txt_owner_email	= null;
-	private Text		txt_owner_name	= null;
+	private Text		txtOwnerEmail	= null;
+	private Text		txtOwnerName	= null;
 
 	/**
 	 * Initializes the GUI components.
 	 */
 	public About() {
 		createSShell();
-		super.sShell = sShell_1;
+		super.sShell = sShell1;
 	}
 
 	@Override
@@ -60,20 +60,20 @@ public class About extends BaseUI {
 	 * This method initializes grp_format.
 	 */
 	private void createGrpFormat() {
-		grp_format = new Group(sShell_1, SWT.NONE);
-		grp_format.setLayout(null);
-		grp_format.setText("Credits:");
-		grp_format.setBounds(new Rectangle(11, 165, 444, 105));
-		txt_owner_name = new Text(grp_format, SWT.MULTI | SWT.WRAP);
-		txt_owner_name.setBounds(new Rectangle(10, 20, 236, 82));
-		txt_owner_name.setEditable(false);
-		txt_owner_name.setEnabled(true);
-		txt_owner_name
+		grpFormat = new Group(sShell1, SWT.NONE);
+		grpFormat.setLayout(null);
+		grpFormat.setText("Credits:");
+		grpFormat.setBounds(new Rectangle(11, 165, 444, 105));
+		txtOwnerName = new Text(grpFormat, SWT.MULTI | SWT.WRAP);
+		txtOwnerName.setBounds(new Rectangle(10, 20, 236, 82));
+		txtOwnerName.setEditable(false);
+		txtOwnerName.setEnabled(true);
+		txtOwnerName
 				.setText("- Ahmed Galal El-Din (Software)\n- Ahmed Mohammed Ali (Software)\n- Mohammed Ahmed Ramadan (Software)\n- Mohammed Mostafa (Neuro-Science)\n- Sarah Mohammed Hamed (Software)");
-		txt_owner_email = new Text(grp_format, SWT.MULTI | SWT.WRAP);
-		txt_owner_email.setBounds(new Rectangle(266, 20, 169, 61));
-		txt_owner_email.setEditable(false);
-		txt_owner_email
+		txtOwnerEmail = new Text(grpFormat, SWT.MULTI | SWT.WRAP);
+		txtOwnerEmail.setBounds(new Rectangle(266, 20, 169, 61));
+		txtOwnerEmail.setEditable(false);
+		txtOwnerEmail
 				.setText("ceng.ahmedgalal@gmail.com\na.mohamed.aly0@gmail.com\nmido_emak@hotmail.com\neltabbal@gmail.com");
 	}
 
@@ -81,27 +81,27 @@ public class About extends BaseUI {
 	 * This method initializes sShell1.
 	 */
 	private void createSShell() {
-		sShell_1 = new Shell(SWT.TITLE | SWT.APPLICATION_MODAL);
-		sShell_1.setLayout(null);
-		sShell_1.setText("About");
-		sShell_1.setMaximized(false);
-		sShell_1.setSize(new Point(467, 326));
-		btn_OK = new Button(sShell_1, SWT.NONE);
-		btn_OK.setBounds(new Rectangle(378, 271, 73, 25));
-		btn_OK.setText("OK");
-		btn_OK.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
+		sShell1 = new Shell(SWT.TITLE | SWT.APPLICATION_MODAL);
+		sShell1.setLayout(null);
+		sShell1.setText("About");
+		sShell1.setMaximized(false);
+		sShell1.setSize(new Point(467, 326));
+		btnOK = new Button(sShell1, SWT.NONE);
+		btnOK.setBounds(new Rectangle(378, 271, 73, 25));
+		btnOK.setText("OK");
+		btnOK.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
 			@Override
 			public void widgetSelected(
 					final org.eclipse.swt.events.SelectionEvent e) {
 				sShell.setVisible(false);
 			}
 		});
-		lbl_proj_desc = new Label(sShell_1, SWT.NONE);
-		lbl_proj_desc.setBounds(new Rectangle(11, 5, 112, 17));
-		lbl_proj_desc.setText("Project description:");
+		lblProjDesc = new Label(sShell1, SWT.NONE);
+		lblProjDesc.setBounds(new Rectangle(11, 5, 112, 17));
+		lblProjDesc.setText("Project description:");
 
 		createGrpFormat();
-		textArea = new Text(sShell_1, SWT.MULTI | SWT.WRAP | SWT.V_SCROLL);
+		textArea = new Text(sShell1, SWT.MULTI | SWT.WRAP | SWT.V_SCROLL);
 		textArea.setEditable(false);
 		textArea.setBounds(new Rectangle(11, 29, 443, 124));
 		textArea.setText("Behavioural Monitoring Tool ( Ein BMT ) : this software is used to record and analyse some behavioural expermients (open field , water maze , forced swimming)  in neuroscience. the program was developed in collaboration with neuropharmacology lab at Faculty of Medicine,,  Ain Shams University . The sofware has 3 modules , each module is concerned with one of the three experminets.\nEin BMT (Open Field Module):\na test arena is divided into a number of zones. a rat or mouse is put inside the arena. rat movements are recorded and a number of parameters (number of zones, time spent in central zones, rearing behaviour, distance travelled) are analysed.");
