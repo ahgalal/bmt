@@ -8,6 +8,7 @@ import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Shell;
 
 import utils.PManager.ProgramState;
+import utils.PManager.ProgramState.GeneralState;
 import utils.StateListener;
 
 public abstract class PluggedGUI<OwnerType> implements StateListener {
@@ -27,6 +28,13 @@ public abstract class PluggedGUI<OwnerType> implements StateListener {
 	public abstract void stateGeneralChangeHandler(ProgramState state);
 
 	public abstract void stateStreamChangeHandler(ProgramState state);
+	
+	public void trackingStoppedHandler(){
+		
+	}
+	public void trackingStartedHandler() {
+		
+	}
 
 	@Override
 	public void updateProgramState(final ProgramState state) {
@@ -36,7 +44,7 @@ public abstract class PluggedGUI<OwnerType> implements StateListener {
 		final boolean streamStateChanged = (programState == null ? true
 				: (state.getStream() != programState.getStream()));
 		if (generalStateChanged || streamStateChanged)
-			Display.getDefault().asyncExec(new Runnable() {
+			Display.getDefault().syncExec(new Runnable() {
 
 				@Override
 				public void run() {
@@ -46,7 +54,16 @@ public abstract class PluggedGUI<OwnerType> implements StateListener {
 
 					if (streamStateChanged)
 						stateStreamChangeHandler(state);
+					
+					if(programState.getGeneral()==GeneralState.TRACKING &&
+							state.getGeneral()==GeneralState.IDLE)
+						trackingStoppedHandler();
+					else if(programState.getGeneral()==GeneralState.IDLE &&
+							state.getGeneral()==GeneralState.TRACKING)
+						trackingStartedHandler();
 				}
+
+
 
 			});
 		programState.setStream(state.getStream());

@@ -114,13 +114,11 @@ public class MainGUI extends BaseUI {
 		grpGraphs = new Group(sShell, SWT.NONE);
 		grpGraphs.setText("Graphs");
 		grpGraphs.setBounds(10, 511, 969, 165);
-		//grpGraphs.setVisible(false);
 		
 		txtConsole = new StyledText(sShell, SWT.BORDER | SWT.WRAP | SWT.V_SCROLL | SWT.MULTI);
 		txtConsole.setBounds(10, 511, 662, 82);
 		txtConsole.setEditable(false);
 		txtConsole.setVisible(false); // TODO: reenable console when graphs are in a separate window
-
 	}
 
 	/**
@@ -453,7 +451,7 @@ public class MainGUI extends BaseUI {
 	 * This method initializes sShell.
 	 */
 	private void createSShell() {
-		sShell = new Shell(SWT.APPLICATION_MODAL | SWT.DIALOG_TRIM);
+		sShell = new Shell(/*SWT.APPLICATION_MODAL | */SWT.DIALOG_TRIM);
 		sShell.setText("Behavioral Monitoring Tool");
 		createExpandBar();
 		createCoolBar();
