@@ -22,7 +22,6 @@ public class MovementMeterModule extends
 	private MovementMeterData			movementMeterFilterData;
 	private final int					noEnergyLevels	= 3;
 	private int[]						sectorsData;
-	private int							time			= 0;
 
 	public MovementMeterModule(final String name, final ModuleConfigs config) {
 		super(name, config);
@@ -78,7 +77,7 @@ public class MovementMeterModule extends
 			if (Math.abs(newVal - oldVal2) > 1000000)
 				newVal = oldVal2;
 			else
-				newVal = (movementMeterFilterData.getWhiteSummation() + oldVal1 + oldVal2) / 3;
+				newVal = (movementMeterFilterData.getWhiteSummation() + oldVal1 + oldVal2+oldVal3) / 4;
 		}
 
 		energyData.add(newVal);
@@ -156,7 +155,7 @@ public class MovementMeterModule extends
 		if (energyData.size() > 0) {
 			final int newData = energyData.get(energyData.size() - 1);
 			guiCargo.setDataByIndex(0, "" + newData);
-			gui.addPoint(time++, newData/ 2000);
+			gui.addPoint(newData/ 2000);
 		}
 	}
 

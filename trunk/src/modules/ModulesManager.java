@@ -58,7 +58,6 @@ public class ModulesManager {
 			while (runModules) {
 				doneProcessing=false;
 				Utils.sleep(33);
-
 				for (final Module mo : modules)
 					mo.process();
 				

@@ -34,6 +34,7 @@ import utils.PManager.ProgramState.GeneralState;
 import utils.PManager.ProgramState.StreamState;
 import utils.StateListener;
 import utils.StatusManager.StatusSeverity;
+import utils.Utils;
 import filters.CommonFilterConfigs;
 import filters.screendrawer.ScreenDrawerConfigs;
 
@@ -59,20 +60,17 @@ public class CtrlMainGUI extends ControllerUI<MainGUI> implements StateListener 
 
 			setTableNamesColumn();
 			while (pm.getState().getGeneral() == GeneralState.TRACKING) {
-				try {
-					Thread.sleep(200);
-				} catch (final InterruptedException e) {
-					e.printStackTrace();
-				}
-				Display.getDefault().asyncExec(new Runnable() {
+				Utils.sleep(200);
+				if(pm.getState().getStream()==StreamState.STREAMING)
+					Display.getDefault().asyncExec(new Runnable() {
 
-					@Override
-					public void run() {
-						if (!ui.getShell().isDisposed())
-							ui.fillDataTable(null, ModulesManager.getDefault()
-									.getGUIData());
-					}
-				});
+						@Override
+						public void run() {
+							if (!ui.getShell().isDisposed())
+								ui.fillDataTable(null, ModulesManager.getDefault()
+										.getGUIData());
+						}
+					});
 			}
 			thUpdateGui = null;
 		}
