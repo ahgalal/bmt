@@ -21,11 +21,6 @@
 
 	<property name="jarfile" value="../output/release/${jarfile.name}" />
 	<property name="exefile" value="../output/release/${exefile.name}" />
-	<property name="jmf_libs" value="'C:/Program Files/JMF2.1.1e/lib/custom.jar' 'C:/Program Files/JMF2.1.1e/lib/jmf.jar' 'C:/Program Files/JMF2.1.1e/lib/mediaplayer.jar' 'C:/Program Files/JMF2.1.1e/lib/multiplayer.jar' 'C:/Program Files/JMF2.1.1e/lib/sound.jar'" />
-	<condition property="jmf_home_lib" value="C:/Program Files/JMF2.1.1e/lib" else="">
-		<os family="windows" />
-	</condition>
-	<property name="jmf_home_lib" value="C:/Program Files/JMF2.1.1e/lib" />
 	<property name="output_dir" value="../output/" />
 	<property name="release_dir" value="../output/release" />
 	<property name="uploads_dir" value="../output/uploads" />
@@ -70,9 +65,6 @@
 		<include name="**/*.jar" />
 		<include name="**/*.txt" />
 	</fileset>
-	<fileset id="jmf_libs" dir="${jmf_home_lib}">
-		<include name="**/*.jar" />
-	</fileset>
 	<filelist id="jface_libs" dir="${eclipse.home}\plugins">
 		<file name="org.eclipse.core.commands_3.6.0.I20100512-1500.jar" />
 		<file name="org.eclipse.jface_3.6.2.M20110210-1200.jar" />
@@ -87,7 +79,6 @@
 	<target name="copy_libs">
 		<copy flatten="true" todir="${libs_dir}" verbose="true">
 			<fileset refid="libs" />
-			<fileset refid="jmf_libs" />
 			<filelist refid="jface_libs"/>
 		</copy>
 	</target>
