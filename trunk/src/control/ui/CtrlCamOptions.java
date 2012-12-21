@@ -28,7 +28,7 @@ public class CtrlCamOptions extends ControllerUI<CamOptions> {
 	private int		camNum		= 0;
 	private String	format		= "YUV";	// @jve:decl-index=0:
 	private int		frameRate	= 30;
-	private String	library		= "JMF";	// @jve:decl-index=0:
+	private String	library		= "";	// @jve:decl-index=0:
 	private int		width		= 640, height = 480;
 
 	/**
@@ -74,7 +74,7 @@ public class CtrlCamOptions extends ControllerUI<CamOptions> {
 		height = Integer.parseInt(strs[1]);
 		this.frameRate = Integer.parseInt(strs[2]);
 		this.library = strs[3];
-		this.format = strs[4];
+		this.format = strs[4]; // TODO: remove, it was used by JMF only
 		this.camNum = Integer.parseInt(strs[5]);
 		return true;
 	}

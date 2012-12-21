@@ -76,12 +76,6 @@ public class CamOptions extends BaseUI {
 		cmboCamLib = new Combo(sShell, SWT.READ_ONLY);
 		cmboCamLib.setBounds(new Rectangle(184, 14, 116, 23));
 
-		cmboCamLib.add("AGCamLib");
-		cmboCamLib.add("JMF");
-		cmboCamLib.add("OpenCV");
-		cmboCamLib.add("JMyron");
-		cmboCamLib.setText("AGCamLib");
-
 		cmboCamLib.addSelectionListener(new SelectionListener() {
 
 			@Override
@@ -94,11 +88,6 @@ public class CamOptions extends BaseUI {
 				if (library.equals("OpenCV")) {
 					radbtnRGB.setEnabled(false);
 					radbtnYUV.setEnabled(false);
-					btnJmyronSettings.setVisible(false);
-					cmboCamNum.setEnabled(true);
-				} else if (library.equals("JMF")) {
-					radbtnRGB.setEnabled(true);
-					radbtnYUV.setEnabled(true);
 					btnJmyronSettings.setVisible(false);
 					cmboCamNum.setEnabled(true);
 				} else if (library.equals("JMyron")) {

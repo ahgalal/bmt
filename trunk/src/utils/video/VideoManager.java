@@ -27,7 +27,6 @@ import utils.Utils;
 import utils.video.input.AGCamLibModule;
 import utils.video.input.AGVidLibConfigs;
 import utils.video.input.GStreamerModule;
-import utils.video.input.JMFModule;
 import utils.video.input.JMyronModule;
 import utils.video.input.OpenCVConfigs;
 import utils.video.input.OpenCVModule;
@@ -153,7 +152,7 @@ public class VideoManager {
 		if (os.equals("Linux"))
 			return new String[] { "V4L2", "OpenCV" };
 		else if (os.equals("Windows"))
-			return new String[] { "AGCamLib", "JMF", "OpenCV", "JMyron" };
+			return new String[] { "AGCamLib", "OpenCV", "JMyron" };
 		return null;
 	}
 
@@ -221,10 +220,7 @@ public class VideoManager {
 
 		VidSourceConfigs srcConfigs = null;
 
-		if (vidLib.equals("JMF")) {
-			vInput = new JMFModule();
-			srcConfigs = new VidSourceConfigs();
-		} else if (vidLib.equals("JMyron")) {
+		if (vidLib.equals("JMyron")) {
 			vInput = new JMyronModule();
 			srcConfigs = new VidSourceConfigs();
 		} else if (vidLib.equals("OpenCV")) {
