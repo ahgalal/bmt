@@ -24,9 +24,11 @@ public class CreateExperimentTest extends UITest {
 			+ Files.convertPathToPlatformPath("/BMT/ants/test/resources/TestExp.bmt"));
 
 	public void testCreateExperimentOF() throws Exception {
+		// Open field
 		ExperimentExecUnitGroup.createNewExperiment(ExperimentType.OPEN_FIELD,expFileName);
 		checkExperimentCreated();
 		
+		// Forced swimming
 		ExperimentExecUnitGroup.createNewExperiment(ExperimentType.FORCED_SWIMMING,expFileName);
 		checkExperimentCreated();
 	}
