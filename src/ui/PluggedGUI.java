@@ -15,6 +15,7 @@ public abstract class PluggedGUI<OwnerType> implements StateListener {
 	protected OwnerType		owner;
 	protected ProgramState	programState	= new ProgramState(null, null);
 	protected Shell			shell;
+	private boolean initialized;
 
 	public PluggedGUI(final OwnerType owner) {
 		this.owner = owner;
@@ -68,6 +69,14 @@ public abstract class PluggedGUI<OwnerType> implements StateListener {
 			});
 		programState.setStream(state.getStream());
 		programState.setGeneral(state.getGeneral());
+	}
+
+	protected void setInitialized(boolean initialized) {
+		this.initialized = initialized;
+	}
+
+	public boolean isInitialized() {
+		return initialized;
 	}
 
 }

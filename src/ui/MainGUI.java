@@ -708,8 +708,10 @@ public class MainGUI extends BaseUI {
 	 *            ArrayList of available filters' gui
 	 */
 	public void loadPluggedGUI(final PluggedGUI<?>[] pGUIs) {
-		for (final PluggedGUI<?> pgui : pGUIs)
+		for (final PluggedGUI<?> pgui : pGUIs){
 			pgui.initialize(sShell, expandBar, menuBar, coolBar, grpGraphs);
+			pgui.setInitialized(true);
+		}
 
 		coolBar.setBounds(5, 5, 300, 30);
 		coolBar.layout();
