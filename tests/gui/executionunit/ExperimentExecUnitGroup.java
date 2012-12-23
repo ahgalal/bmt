@@ -118,9 +118,10 @@ public class ExperimentExecUnitGroup extends ExecutionUnitGroup {
 	 * file is used.
 	 * 
 	 * @param filePath
+	 * @throws WidgetSearchException 
 	 * @throws Exception
 	 */
-	public static void loadExperiment(final String filePath) throws Exception {
+	public static void loadExperiment(final String filePath) throws WidgetSearchException {
 		String file;
 		if ((filePath != null) && (filePath != ""))
 			file = filePath;
