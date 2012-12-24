@@ -19,58 +19,61 @@ package modules.experiment;
  * 
  * @author Creative
  */
-public class Constants {
+public interface Constants {
 
 	/**
 	 * Text File Header, used when saving/loading experiment to/from text file.
 	 */
 
-	public static final String	FILE_ALL_ENTRANCE		= "AZE";
-	public static final String	FILE_CENTRAL_ENTRANCE	= "CZE";
-	public static final String	FILE_CENTRAL_TIME		= "CT";
-	public static final String	FILE_GROUP_NAME			= "Group";
-	public static final String	FILE_RAT_NUMBER			= "Number";
-	public static final String	FILE_REARING_COUNTER	= "RRNG";
+	String	FILE_ALL_ENTRANCE		= "AZE";
+	String	FILE_CENTRAL_ENTRANCE	= "CZE";
+	String	FILE_CENTRAL_TIME		= "CT";
+	String	FILE_GROUP_NAME			= "Group";
+	String	FILE_RAT_NUMBER			= "Number";
+	String	FILE_REARING_COUNTER	= "RRNG";
 
-	public static final String	FILE_SESSION_TIME		= "ST";
-	public static final String	FILE_TOTAL_DISTANCE		= "Distance";
-	public static final String	GUI_ALL_ENTRANCE		= "All Entrance";
-	public static final String	GUI_CENTRAL_ENTRANCE	= "Central Entrance";
-	public static final String	GUI_CENTRAL_TIME		= "Central Time";
-	public static final String	GUI_CURRENT_ZONE		= "Current Zone";
+	String	FILE_SESSION_TIME		= "ST";
+	String	FILE_TOTAL_DISTANCE		= "Distance";
+	String	GUI_ALL_ENTRANCE		= "All Entrance";
+	String	GUI_CENTRAL_ENTRANCE	= "Central Entrance";
+	String	GUI_CENTRAL_TIME		= "Central Time";
+	String	GUI_CURRENT_ZONE		= "Current Zone";
 
+	String	FLOATING	= "Floating";
+	String	SWIMMING	= "Swimming";
+	String	CLIMBING	= "Climbing";
 	/**
 	 * GUI Headers, used to Load data to GUI.
 	 */
-	public static final String	GUI_EXP_NAME			= "Experiment's Name";
-	public static final String	GUI_EXP_TYPE			= "Type";
-	public static final String	GUI_GROUP_NAME			= "Group's Name";
-	public static final String	GUI_RAT_NUMBER			= "Rat Number";
-	public static final String	GUI_REARING_COUNTER		= "Rearing Counter";
-	public static final String	GUI_SESSION_TIME		= "Session Time";
-	public static final String	GUI_TOTAL_DISTANCE		= "Total Distance";
+	String	GUI_EXP_NAME			= "Experiment's Name";
+	String	GUI_EXP_TYPE			= "Type";
+	String	GUI_GROUP_NAME			= "Group's Name";
+	String	GUI_RAT_NUMBER			= "Rat Number";
+	String	GUI_REARING_COUNTER		= "Rearing Counter";
+	String	GUI_SESSION_TIME		= "Session Time";
+	String	GUI_TOTAL_DISTANCE		= "Total Distance";
 	/**
 	 * Experiment Headers:.
 	 */
-	public static final String	H_EXP					= "[Experiment Info]";
-	public static final String	H_EXP_DATE				= "Date: ";
+	String	H_EXP					= "[Experiment Info]";
+	String	H_EXP_DATE				= "Date: ";
 
-	public static final String	H_EXP_NAME				= "Name: ";
-	public static final String	H_EXP_NOTES				= "Notes: ";
-	public static final String	H_EXP_TYPES				= "Type: ";
-	public static final String	H_EXP_USER				= "User Name: ";
+	String	H_EXP_NAME				= "Name: ";
+	String	H_EXP_NOTES				= "Notes: ";
+	String	H_EXP_TYPES				= "Type: ";
+	String	H_EXP_USER				= "User Name: ";
 	/**
 	 * Group Headers:.
 	 */
-	public static final String	H_GRP					= "[Group Info]";
-	public static final String	H_GRP_ID				= "ID: ";
-	public static final String	H_GRP_NAME				= "Name: ";
-	public static final String	H_GRP_NO_RATS			= "Number of Rats: ";
-	public static final String	H_GRP_NOTES				= "Notes: ";
-	public static final String	H_GRP_RATS_NUMBERS		= "Rats' Numbers: ";
+	String	H_GRP					= "[Group Info]";
+	String	H_GRP_ID				= "ID: ";
+	String	H_GRP_NAME				= "Name: ";
+	String	H_GRP_NO_RATS			= "Number of Rats: ";
+	String	H_GRP_NOTES				= "Notes: ";
+	String	H_GRP_RATS_NUMBERS		= "Rats' Numbers: ";
 	/**
 	 * Rat Header:.
 	 */
-	public static final String	H_RAT					= "[Rat Info]";
+	String	H_RAT					= "[Rat Info]";
 
 }
