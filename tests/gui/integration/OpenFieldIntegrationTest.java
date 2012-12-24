@@ -63,7 +63,7 @@ public class OpenFieldIntegrationTest extends ExperimentIntegrationTestBase {
 
 		/************* start tracking ********/
 		preStartTracking();
-		ExperimentExecUnitGroup.startTracking(Integer.toString(ratNumber));
+		startTracking();
 		Thread.sleep(1000);
 
 		/************* resume streaming ********/

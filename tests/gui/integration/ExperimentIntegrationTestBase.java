@@ -41,6 +41,10 @@ public class ExperimentIntegrationTestBase extends UITest {
 
 		afterVideoLoad();
 	}
+	
+	protected void startTracking() throws WidgetSearchException{
+		ExperimentExecUnitGroup.startTracking(Integer.toString(ratNumber));
+	}
 
 	protected void afterStartTracking() throws WidgetSearchException {
 		/************* sleep ********/

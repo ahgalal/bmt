@@ -6,6 +6,7 @@ import modules.Cargo;
 import modules.Module;
 import modules.ModuleConfigs;
 import modules.ModuleData;
+import modules.experiment.Constants;
 import modules.experiment.ExperimentType;
 
 import org.eclipse.swt.widgets.Shell;
@@ -28,6 +29,21 @@ public class MovementMeterModule extends
 	private MovementMeterData			movementMeterFilterData;
 	private final int					noEnergyLevels			= 3;
 	private int	sectorizeFlag;
+	
+	/**.............A
+	 * .............|....................___
+	 * Climbing (0).|-------------------/---\---------
+	 * .............|..........________/.....\
+	 * .............|........./...............\
+	 * Swimming (1).|--------/-----------------\------
+	 * .............|.....__/...................\___
+	 * .............|..../
+	 * Floating (2).|---/-----------------------------
+	 * .............|../
+	 * .............|./
+	 * .............|/_________________________________
+	 * ...............................................
+	 */
 
 	public MovementMeterModule(final String name, final ModuleConfigs config) {
 		super(name, config);
@@ -76,9 +92,9 @@ public class MovementMeterModule extends
 		}
 		
 		//////// in case of 3 levels:
-		expParams[0]="Climbing";
-		expParams[1]="Swimming";
-		expParams[2]="Floating";
+		expParams[0]=Constants.CLIMBING;
+		expParams[1]=Constants.SWIMMING;
+		expParams[2]=Constants.FLOATING;
 		////////
 		
 		fileCargo = new Cargo(expParams);
@@ -204,7 +220,7 @@ public class MovementMeterModule extends
 		// TODO: consider using HashMap to map bin name to each bin, to avoid
 		// order index dependency!
 		for (final int i : energyBins) {
-			sectorsDataStr[k] = Integer.toString(i);
+			sectorsDataStr[k] = Double.toString(100*i/(double)energyData.size());
 			k++;
 		}
 		fileCargo.setData(sectorsDataStr);
