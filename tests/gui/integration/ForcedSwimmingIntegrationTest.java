@@ -22,12 +22,12 @@ public class ForcedSwimmingIntegrationTest extends
 		ExperimentIntegrationTestBase {
 	
 	// TODO: tighten constrains
-	protected int	climbingTimeMax	= 25;
-	protected int	climbingTimeMin	= 5;
-	protected int	floatingTimeMax	= 70;
-	protected int	floatingTimeMin	= 5;
-	protected int	swimmingTimeMax	= 50;
-	protected int	swimmingTimeMin	= 5;
+	protected int	climbingTimeMax	= 9;
+	protected int	climbingTimeMin	= 3;
+	protected int	floatingTimeMax	= 20;
+	protected int	floatingTimeMin	= 10;
+	protected int	swimmingTimeMax	= 25; // need to be ~15
+	protected int	swimmingTimeMin	= 10;
 
 	@Override
 	protected void afterStartTracking() throws WidgetSearchException {

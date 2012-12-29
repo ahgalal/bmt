@@ -178,17 +178,13 @@ public class ExperimentIntegrationTestBase extends UITest {
 		sys.utils.Files.deleteFile(expFileName);
 	}
 
-	public void testIntegration(){
+	public void testIntegration() throws Exception{
 		try {
 			fullScenario();
 		} catch (final CancellationException e) {
 			PManager.log.print("Test is explicitly terminated", this);
-		} catch (final WidgetSearchException e) {
-			e.printStackTrace();
-		} catch (final InterruptedException e) {
-			e.printStackTrace();
 		} catch (final Exception e) {
-			e.printStackTrace();
+			throw e;
 		}
 	}
 }

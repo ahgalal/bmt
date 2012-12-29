@@ -28,7 +28,7 @@ public abstract class VidInputter<ConfigsType extends VidSourceConfigs> {
 	protected boolean paused=false;
 	
 	public static enum SourceStatus{
-		STREAMING,PAUSED,UNINITIALIZED,ERROR;
+		STREAMING,PAUSED,END_OF_STREAM,ERROR,INITIALIZING;
 	}
 	
 	public static enum SourceType{

@@ -29,6 +29,7 @@ public class OpenFieldIntegrationManStopStreamWhenPausedTest extends
 
 	@Override
 	protected void preStartTracking() throws Exception {
+		super.preStartTracking();
 		if (enablePreTracking) {
 			// resume stream
 			VideoExecUnitGroup.pauseResumeStream();
@@ -52,8 +53,8 @@ public class OpenFieldIntegrationManStopStreamWhenPausedTest extends
 	@Override
 	public void setUp() {
 		super.setUp();
-		sessionTimeMin = 23;
-		sessionTimeMax = 24;
+		sessionTimeMin = 18;
+		sessionTimeMax = 19;
 		centralTimeMin = 1;
 		sleepTime1 = 25;
 	}

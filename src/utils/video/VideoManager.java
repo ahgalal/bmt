@@ -59,7 +59,8 @@ public class VideoManager {
 		protected void checkDeviceReady() {
 			counter = 0;
 			
-			while ((vInput != null) && (vInput.getStatus() == SourceStatus.ERROR)
+			while ((vInput != null) && (vInput.getStatus() == SourceStatus.ERROR ||
+					vInput.getStatus() == SourceStatus.INITIALIZING)
 					&& (counter < MAX_COUNTER)) {
 				try {
 					Thread.sleep(1000);
@@ -70,18 +71,13 @@ public class VideoManager {
 					e.printStackTrace();
 				}
 			}
-			if (counter == MAX_COUNTER)
+			if (counter == MAX_COUNTER || vInput.getStatus()==SourceStatus.END_OF_STREAM)
 				unloadLibrary();
 		}
 
 		@Override
 		public void run() {
 			PManager.log.print("Started Video Streaming", this);
-
-			/*
-			 * try { Thread.sleep(100); } catch (final InterruptedException e1)
-			 * { }
-			 */
 
 			while (videoProcessorEnabled) {
 				checkDeviceReady();
@@ -107,7 +103,7 @@ public class VideoManager {
 			// ////////////////////////////////
 
 			// auto stop tracking if stream is terminated
-			if(counter==MAX_COUNTER && PManager.getDefault().getState().getGeneral()==GeneralState.TRACKING)
+			if(PManager.getDefault().getState().getGeneral()==GeneralState.TRACKING)
 				PManager.getDefault().stopTracking();
 			PManager.getDefault().getState().setStream(StreamState.IDLE);
 			filterManager.disableAll();

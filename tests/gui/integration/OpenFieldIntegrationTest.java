@@ -77,8 +77,6 @@ public class OpenFieldIntegrationTest extends ExperimentIntegrationTestBase {
 	
 	@Override
 	protected void preStartTracking() throws Exception {
-		super.preStartTracking();
-		
 		/************* set background ********/
 		preSetBackground();
 		Utils.sleep(500);
@@ -151,8 +149,8 @@ public class OpenFieldIntegrationTest extends ExperimentIntegrationTestBase {
 				.getEnvVariableValue("BMT_WS")
 				+ "/BMT/ants/test/resources/zones_test.bmt");
 
-		sessionTimeMin = 23;
-		sessionTimeMax = 25;
+		sessionTimeMin = 18;
+		sessionTimeMax = 19;
 		sleepTime1 = 30;
 		sleepTime2 = 0;
 		sleepTime3 = 0;
