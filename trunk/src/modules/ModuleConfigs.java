@@ -23,17 +23,17 @@ public abstract class ModuleConfigs {
 
 	protected boolean	enable;
 	private int			height;
-	protected String	moduleName;
+	protected String	moduleID;
 	private int			width;
 
 	/**
 	 * Initializes the configurations.
 	 * 
-	 * @param moduleName
-	 *            name of the Module this configuration is to be applied to
+	 * @param moduleID
+	 *            id of the Module this configuration is to be applied to
 	 */
-	public ModuleConfigs(final String moduleName) {
-		this.moduleName = moduleName;
+	public ModuleConfigs(final String moduleID) {
+		this.moduleID = moduleID;
 	}
 
 	/**
@@ -42,8 +42,8 @@ public abstract class ModuleConfigs {
 	 * @return String containing the name of the module this configuration
 	 *         object is to be applied to
 	 */
-	public String getModuleName() {
-		return moduleName;
+	public String getModuleID() {
+		return moduleID;
 	}
 
 	/**

@@ -42,7 +42,6 @@ public abstract class Module<GUIType extends PluggedGUI, ConfigsType extends Mod
 	protected GUIType			gui;
 	protected Cargo				guiCargo;
 	protected Data[]			modulesData;
-	protected String			name;
 
 	/**
 	 * Initializes the module.
@@ -52,12 +51,10 @@ public abstract class Module<GUIType extends PluggedGUI, ConfigsType extends Mod
 	 * @param config
 	 *            initial configurations of the module
 	 */
-	public Module(final String name, final ConfigsType config) {
-		this.name = name;
+	public Module(final ConfigsType config) {
 		this.configs = config;
-
 	}
-
+	
 	public boolean allowTracking() {
 		return true;
 	}
@@ -144,15 +141,6 @@ public abstract class Module<GUIType extends PluggedGUI, ConfigsType extends Mod
 		return data;
 	}
 
-	/**
-	 * Gets the module's name.
-	 * 
-	 * @return String containing the module's name
-	 */
-	public String getName() {
-		return name;
-	}
-
 	public ExperimentType[] getSupportedExperiments() {
 		return expType;
 	}
@@ -213,4 +201,6 @@ public abstract class Module<GUIType extends PluggedGUI, ConfigsType extends Mod
 	 * Updates the cargo data to be sent to GUI.
 	 */
 	public abstract void updateGUICargoData();
+
+	public abstract String getID();
 }

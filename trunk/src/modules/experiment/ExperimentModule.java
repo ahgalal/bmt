@@ -45,10 +45,11 @@ Module<ExperimentModuleGUI, ExperimentModuleConfigs, ExperimentModuleData> {
 	private boolean	msgboxPending		= true;
 
 	private boolean	ratFrmShown	= false;
+	
 
-	public ExperimentModule(final String name,
+	public ExperimentModule(
 			final ExperimentModuleConfigs config) {
-		super(name, config);
+		super(config);
 		initialize();
 	}
 	protected void addDefaultModuleDataParams() {

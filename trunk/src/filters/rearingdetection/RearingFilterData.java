@@ -14,6 +14,7 @@
 
 package filters.rearingdetection;
 
+import modules.experiment.Constants;
 import filters.FilterData;
 
 /**
@@ -23,17 +24,7 @@ import filters.FilterData;
  */
 public class RearingFilterData extends FilterData {
 	private boolean	rearing;
-
-	/**
-	 * Initialized data.
-	 * 
-	 * @param name
-	 *            name of the data object
-	 */
-	public RearingFilterData(final String name) {
-		super(name);
-	}
-
+	public final static String dataID=Constants.FILTER_ID+".rearing.data";
 	/**
 	 * Gets the rearing status.
 	 * 
@@ -42,7 +33,10 @@ public class RearingFilterData extends FilterData {
 	public boolean isRearing() {
 		return rearing;
 	}
-
+	@Override
+	public String getId() {
+		return dataID;
+	}
 	/**
 	 * Set rearing status.
 	 * 
@@ -52,5 +46,4 @@ public class RearingFilterData extends FilterData {
 	public void setRearing(final boolean rearing) {
 		this.rearing = rearing;
 	}
-
 }

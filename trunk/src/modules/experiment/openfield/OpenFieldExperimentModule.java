@@ -3,6 +3,7 @@
  */
 package modules.experiment.openfield;
 
+import modules.experiment.Constants;
 import modules.experiment.ExperimentModule;
 import modules.experiment.ExperimentModuleConfigs;
 import modules.experiment.ExperimentModuleData;
@@ -21,15 +22,15 @@ public class OpenFieldExperimentModule extends ExperimentModule {
 	private int[]				bgImageRGB;
 	private boolean				bgSet;
 	private SourceFilterData	rgbData;
-
-	public OpenFieldExperimentModule(final String name,
+	public OpenFieldExperimentModule(
 			final ExperimentModuleConfigs config) {
-		super(name, config);
+		super(config);
 		gui = new OpenFieldExperimentModuleGUI(this);
-		data = new ExperimentModuleData(name);
+		
+		data = new ExperimentModuleData();
 		addDefaultModuleDataParams();
 	}
-
+	public final static String			moduleID=Constants.EXPERIMENT_ID+".openfield";
 	@Override
 	public boolean allowTracking() {
 		if (bgSet)
@@ -37,7 +38,10 @@ public class OpenFieldExperimentModule extends ExperimentModule {
 		else
 			return false;
 	}
-
+	@Override
+	public String getID() {
+		return moduleID;
+	}
 	@Override
 	public boolean amIReady(final Shell shell) {
 		if (bgSet)
@@ -78,5 +82,6 @@ public class OpenFieldExperimentModule extends ExperimentModule {
 		bgSet = true;
 		return bgImageRGB;
 	}
+
 
 }

@@ -47,9 +47,9 @@ public class RearingModule extends
 	 * @param configs
 	 *            RearingModuleConfigs to configure the module
 	 */
-	public RearingModule(final String name, final RearingModuleConfigs configs) {
-		super(name, configs);
-		data = new RearingModuleData("Rearing Module Data");
+	public RearingModule(final RearingModuleConfigs configs) {
+		super(configs);
+		data = new RearingModuleData();
 		filtersData = new Data[1];
 		initialize();
 		gui = new RearingModuleGUI(this);
@@ -146,5 +146,11 @@ public class RearingModule extends
 	public void updateGUICargoData() {
 		guiCargo.setDataByTag(Constants.GUI_REARING_COUNTER,
 				Integer.toString(data.getRearingCtr()));
+	}
+	public final static String			moduleID=Constants.MODULE_ID+".rearing";
+
+	@Override
+	public String getID() {
+		return moduleID;
 	}
 }

@@ -16,6 +16,8 @@ package filters.ratfinder;
 
 import java.awt.Point;
 
+import modules.experiment.Constants;
+
 import filters.FilterData;
 
 
@@ -27,18 +29,20 @@ import filters.FilterData;
 public class RatFinderData extends FilterData {
 
 	private final Point	center;
-
+	public final static String dataID=Constants.FILTER_ID+".ratfinder.data";
 	/**
 	 * Initialized the data.
 	 * 
 	 * @param name
 	 *            name of the data object
 	 */
-	public RatFinderData(final String name) {
-		super(name);
+	public RatFinderData() {
 		this.center = new Point();
 	}
-
+	@Override
+	public String getId() {
+		return dataID;
+	}
 	/**
 	 * Gets the current location of the rat.
 	 * 
@@ -47,5 +51,4 @@ public class RatFinderData extends FilterData {
 	public Point getCenterPoint() {
 		return center;
 	}
-
 }

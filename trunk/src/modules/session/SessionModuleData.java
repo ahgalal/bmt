@@ -15,6 +15,7 @@
 package modules.session;
 
 import modules.ModuleData;
+import modules.experiment.Constants;
 
 /**
  * Data of the Session Module.
@@ -26,17 +27,7 @@ public class SessionModuleData extends ModuleData {
 	private boolean	sessionRunning;
 	private long		sessionStartTime;
 	private int accumulatedSessionTime=0;
-
-	/**
-	 * Initializes the Data.
-	 * 
-	 * @param name
-	 *            name of the data instance
-	 */
-	public SessionModuleData(final String name) {
-		super(name);
-	}
-
+	public final static String dataID=Constants.MODULE_ID+".session.data";
 	public void setSessionEndTime(long sessionEndTime) {
 		this.sessionEndTime = sessionEndTime;
 	}
@@ -48,7 +39,10 @@ public class SessionModuleData extends ModuleData {
 	public void setSessionRunning(boolean sessionRunning) {
 		this.sessionRunning = sessionRunning;
 	}
-
+	@Override
+	public String getId() {
+		return dataID;
+	}
 	public boolean isSessionRunning() {
 		return sessionRunning;
 	}
@@ -68,5 +62,4 @@ public class SessionModuleData extends ModuleData {
 	public int getAccumulatedSessionTime() {
 		return accumulatedSessionTime;
 	}
-
 }

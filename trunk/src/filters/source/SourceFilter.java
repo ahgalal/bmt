@@ -39,7 +39,7 @@ public class SourceFilter extends
 	 */
 	public SourceFilter(final String name, final Link linkIn, final Link linkOut) {
 		super(name, linkIn, linkOut);
-		filterData = new SourceFilterData("Source Filter");
+		filterData = new SourceFilterData();
 	}
 
 	@Override

@@ -70,8 +70,8 @@ public class FormZoneType {
 			@Override
 			public void widgetSelected(
 					final org.eclipse.swt.events.SelectionEvent e) {
-				((ZonesModule) ModulesManager.getDefault().getModuleByName(
-						"Zones Module")).addZone(shapeNumber, ZoneType
+				((ZonesModule) ModulesManager.getDefault().getModuleByID(
+						ZonesModule.moduleID)).addZone(shapeNumber, ZoneType
 						.string2ZoneType(cmboType.getItem(cmboType
 								.getSelectionIndex())));
 				sShell.close();

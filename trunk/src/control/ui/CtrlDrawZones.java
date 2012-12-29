@@ -75,8 +75,8 @@ public class CtrlDrawZones extends ControllerUI<DrawZones> {
 	 * Handles the "Hide" button click action.
 	 */
 	public void btnHideAction() {
-		((ZonesModule) ModulesManager.getDefault().getModuleByName(
-				"Zones Module")).updateZoneMap();
+		((ZonesModule) ModulesManager.getDefault().getModuleByID(
+				ZonesModule.moduleID)).updateZoneMap();
 		show(false);
 	}
 
@@ -90,8 +90,8 @@ public class CtrlDrawZones extends ControllerUI<DrawZones> {
 		final FileDialog fileDialog = new FileDialog(shell, SWT.OPEN);
 		final String fileName = fileDialog.open();
 		if (fileName != null)
-			((ZonesModule) ModulesManager.getDefault().getModuleByName(
-					"Zones Module")).loadZonesFromFile(fileName);
+			((ZonesModule) ModulesManager.getDefault().getModuleByID(
+					ZonesModule.moduleID)).loadZonesFromFile(fileName);
 	}
 
 	/**
@@ -104,8 +104,8 @@ public class CtrlDrawZones extends ControllerUI<DrawZones> {
 		final FileDialog fileDialog = new FileDialog(shell, SWT.SAVE);
 		final String fileName = fileDialog.open();
 		if (fileName != null)
-			((ZonesModule) ModulesManager.getDefault().getModuleByName(
-					"Zones Module")).saveZonesToFile(fileName);
+			((ZonesModule) ModulesManager.getDefault().getModuleByID(
+					ZonesModule.moduleID)).saveZonesToFile(fileName);
 	}
 
 	/**
@@ -153,8 +153,8 @@ public class CtrlDrawZones extends ControllerUI<DrawZones> {
 	 */
 	public void sendScaletoStatsCtrlr(final Point measurePnt1,
 			final Point measurePnt2, final String strRealDistance) {
-		((ZonesModule) ModulesManager.getDefault().getModuleByName(
-				"Zones Module")).setScale(measurePnt1, measurePnt2,
+		((ZonesModule) ModulesManager.getDefault().getModuleByID(
+				ZonesModule.moduleID)).setScale(measurePnt1, measurePnt2,
 				Integer.parseInt(strRealDistance));
 	}
 

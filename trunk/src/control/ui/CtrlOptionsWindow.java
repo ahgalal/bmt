@@ -16,6 +16,7 @@ package control.ui;
 
 import modules.ModuleConfigs;
 import modules.ModulesManager;
+import modules.zones.ZonesModule;
 import modules.zones.ZonesModuleConfigs;
 import ui.OptionsWindow;
 import utils.PManager;
@@ -83,7 +84,7 @@ public class CtrlOptionsWindow extends ControllerUI<OptionsWindow> {
 	 */
 	public void updateOptions(final boolean showWindow) {
 		try {
-			final SubtractionConfigs subtractionCconfigs = new SubtractionConfigs(
+			final SubtractionConfigs subtractionConfigs = new SubtractionConfigs(
 					"SubtractionFilter", subtractionThresh, null);
 			final RearingFilterConfigs rearingConfigs = new RearingFilterConfigs(
 					"RearingDetector", rearingThresh, -1, // TODO: add set
@@ -93,12 +94,12 @@ public class CtrlOptionsWindow extends ControllerUI<OptionsWindow> {
 					null, null);
 
 			final FilterConfigs[] filtersConfigs = new FilterConfigs[2];
-			filtersConfigs[0] = subtractionCconfigs;
+			filtersConfigs[0] = subtractionConfigs;
 			filtersConfigs[1] = rearingConfigs;
 
 			pm.getVideoManager().updateFiltersConfigs(filtersConfigs);
 			final ZonesModuleConfigs zonesConfigs = new ZonesModuleConfigs(
-					"Zones Module", hyst, -1, -1);
+					ZonesModule.moduleID, hyst, -1, -1);
 
 			ModulesManager.getDefault().updateModuleConfigs(
 					new ModuleConfigs[] { zonesConfigs });

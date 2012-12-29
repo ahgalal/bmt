@@ -24,7 +24,7 @@ import utils.PManager;
 import utils.StatusManager.StatusSeverity;
 
 public class ExperimentManager {
-	public static final String	DELETED_GROUP_NAME	= "-";
+	public static final String			DELETED_GROUP_NAME	= "-";
 	private static ExperimentManager	me;
 
 	public static ExperimentManager getDefault() {
@@ -33,21 +33,64 @@ public class ExperimentManager {
 		return me;
 	}
 
+	/**
+	 * Loads an experiment from a text file to an experiment object.
+	 * 
+	 * @param fileName
+	 *            file name to load the experiment from
+	 */
+	public static Experiment readExperimentFromFile(final String fileName) {
+		ObjectInputStream ois;
+		Experiment exp = null;
+		try {
+			ois = new ObjectInputStream(new FileInputStream(new File(fileName)));
+			exp = (Experiment) ois.readObject();
+			exp.setFileName(fileName);
+		} catch (final FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (final IOException e) {
+			System.err
+					.println("Experiment loading error, Experiment file may be corrupted");
+		} catch (final ClassNotFoundException e) {
+			System.err.println("incompatible experiment file!");
+		}
+		return exp;
+	}
+
 	private String					currGrpName;
 	private int						currRatNumber;
 	private ExcelEngine				excelEngine;
 	private Experiment				exp;
-	private boolean					expLoaded;
 
 	private ExperimentModuleConfigs	experimentConfigs;
 
 	private ExperimentModule		experimentModule;
+
+	private boolean					expLoaded;
 
 	private TextEngine				textEngine;
 
 	private ExperimentManager() {
 		setTextEngine(new TextEngine());
 		setExcelEngine(new ExcelEngine());
+	}
+
+	public void addExpParams(final ArrayList<String> arrayList) {
+		final ArrayList<String> allParams = new ArrayList<String>();
+		if (exp.getExpParametersList() != null)
+			for (final String param : exp.getExpParametersList())
+				allParams.add(param);
+
+		outer: for (final String param : arrayList) {
+			for (final String str : allParams) {
+				if (param.equals(str)) {
+					continue outer;
+				}
+			}
+			allParams.add(param);
+		}
+
+		exp.setParametersList(allParams.toArray(new String[0]));
 	}
 
 	public String getCurrGrpName() {
@@ -58,8 +101,16 @@ public class ExperimentManager {
 		return currRatNumber;
 	}
 
+	public ExcelEngine getExcelEngine() {
+		return excelEngine;
+	}
+
 	public Exp2GUI getExpBasicInfo() {
 		return exp;
+	}
+
+	public Grp2GUI[] getExpGroupsInfo() {
+		return exp.getGroups().toArray(new Grp2GUI[0]);
 	}
 
 	/**
@@ -106,18 +157,24 @@ public class ExperimentManager {
 
 	}
 
+	public TextEngine getTextEngine() {
+		return textEngine;
+	}
+
 	public ExperimentModule instantiateExperimentModule() {
-		experimentConfigs = new ExperimentModuleConfigs("Experiment Module",
-				exp);
 
 		switch (exp.type) {
 			case OPEN_FIELD:
+				experimentConfigs = new ExperimentModuleConfigs(
+						OpenFieldExperimentModule.moduleID, exp);
 				experimentModule = new OpenFieldExperimentModule(
-						"Experiment Module", experimentConfigs);
+						experimentConfigs);
 				break;
 			case FORCED_SWIMMING:
+				experimentConfigs = new ExperimentModuleConfigs(
+						ForcedSwimmingExperimentModule.moduleID, exp);
 				experimentModule = new ForcedSwimmingExperimentModule(
-						"Experiment Module", experimentConfigs);
+						experimentConfigs);
 				break;
 			default:
 				break;
@@ -135,34 +192,14 @@ public class ExperimentManager {
 		return isExpLoaded();
 	}
 
-	/**
-	 * Loads an experiment from a text file to an experiment object.
-	 * 
-	 * @param fileName
-	 *            file name to load the experiment from
-	 */
-	public static Experiment readExperimentFromFile(final String fileName) {
-		ObjectInputStream ois;
-		Experiment exp = null;
-		try {
-			ois = new ObjectInputStream(
-					new FileInputStream(new File(fileName)));
-			exp = (Experiment) ois.readObject();
-			exp.setFileName(fileName);
-		} catch (final FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (final IOException e) {
-			System.err.println("Experiment loading error, Experiment file may be corrupted");
-		} catch (final ClassNotFoundException e) {
-			System.err.println("incompatible experiment file!");
-		}
-		return exp;
+	public boolean isExpLoaded() {
+		return expLoaded;
 	}
 
-	public void loadExperiment(Experiment experiment){
+	public void loadExperiment(final Experiment experiment) {
 		if (experiment != null) {
 			setExpLoaded(true);
-			this.exp=experiment;
+			this.exp = experiment;
 			PManager.getDefault().getVideoManager().setupModulesAndFilters(exp);
 			setExperimantLoadedInGUI(true);
 		}
@@ -188,25 +225,6 @@ public class ExperimentManager {
 		}
 	}
 
-	public void addExpParams(ArrayList<String> arrayList){
-		ArrayList<String> allParams = new ArrayList<String>();
-		if(exp.getExpParametersList()!=null)
-			for(String param: exp.getExpParametersList())
-				allParams.add(param);
-
-		outer:
-			for(String param: arrayList){
-				for(String str: allParams){
-					if(param.equals(str)){
-						continue outer;
-					}
-				}
-				allParams.add(param);
-			}
-
-		exp.setParametersList(allParams.toArray(new String[0]));
-	}
-
 	/**
 	 * Saves the rat's info to the experiment object.
 	 * 
@@ -219,20 +237,21 @@ public class ExperimentManager {
 						.getCodeNames());
 			else if (getNumberOfExpParams() != ModulesManager.getDefault()
 					.getCodeNames().length) {
-				PManager.getDefault().getStatusMgr()
-				.setStatus(
-						"Experiment file loaded has some modules which are not active in this session, can't save",
-						StatusSeverity.ERROR);
+				PManager.getDefault()
+						.getStatusMgr()
+						.setStatus(
+								"Experiment file loaded has some modules which are not active in this session, can't save",
+								StatusSeverity.ERROR);
 				return false;
 			}
 			final String[] paramsList = exp.getExpParametersList();
 			final String[] data = ModulesManager.getDefault().getFileData();
 			final String[] codeNames = ModulesManager.getDefault()
-			.getCodeNames();
+					.getCodeNames();
 			boolean overrideRat = false;
 
 			Rat ratTmp = this.exp.getGroupByName(getCurrGrpName())
-			.getRatByNumber(getCurrRatNumber());
+					.getRatByNumber(getCurrRatNumber());
 			if (ratTmp == null)
 				// Create a new rat object, and set its params
 				ratTmp = new Rat(paramsList);
@@ -281,6 +300,10 @@ public class ExperimentManager {
 		this.currRatNumber = currRatNumber;
 	}
 
+	public void setExcelEngine(final ExcelEngine excelEngine) {
+		this.excelEngine = excelEngine;
+	}
+
 	public void setExperimantLoadedInGUI(final boolean b) {
 		PManager.mainGUI.setExperimantLoaded(b);
 	}
@@ -307,6 +330,14 @@ public class ExperimentManager {
 		setExperimantLoadedInGUI(true);
 
 		PManager.getDefault().getVideoManager().setupModulesAndFilters(exp);
+	}
+
+	public void setExpLoaded(final boolean expLoaded) {
+		this.expLoaded = expLoaded;
+	}
+
+	public void setTextEngine(final TextEngine textEngine) {
+		this.textEngine = textEngine;
 	}
 
 	/**
@@ -338,19 +369,15 @@ public class ExperimentManager {
 			final Group gp = new Group(grpId, name, notes);
 			exp.addGroup(gp);
 		} else
-			// group is already existing ... edit it..
+		// group is already existing ... edit it..
 		{
-			if(name.equals(DELETED_GROUP_NAME))
+			if (name.equals(DELETED_GROUP_NAME))
 				exp.getGroups().remove(tmpGrp);
-			else{
+			else {
 				tmpGrp.setName(name);
 				tmpGrp.setNotes(notes);
 			}
 		}
-	}
-
-	public Grp2GUI[] getExpGroupsInfo(){
-		return exp.getGroups().toArray(new Grp2GUI[0]);
 	}
 
 	/**
@@ -381,29 +408,5 @@ public class ExperimentManager {
 	 */
 	public void writeToExcelFile(final String FilePath) {
 		getExcelEngine().writeExpInfoToExcelFile(FilePath, exp);
-	}
-
-	public void setExcelEngine(ExcelEngine excelEngine) {
-		this.excelEngine = excelEngine;
-	}
-
-	public ExcelEngine getExcelEngine() {
-		return excelEngine;
-	}
-
-	public void setExpLoaded(boolean expLoaded) {
-		this.expLoaded = expLoaded;
-	}
-
-	public boolean isExpLoaded() {
-		return expLoaded;
-	}
-
-	public void setTextEngine(TextEngine textEngine) {
-		this.textEngine = textEngine;
-	}
-
-	public TextEngine getTextEngine() {
-		return textEngine;
 	}
 }

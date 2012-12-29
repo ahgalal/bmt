@@ -179,8 +179,8 @@ public class ShapeController implements GfxPanelNotifiee, ShapeCollection {
 	 */
 	@Override
 	public void shapeDeleted(final int shapeNumber) {
-		((ZonesModule) ModulesManager.getDefault().getModuleByName(
-				"Zones Module")).deleteZone(shapeNumber);
+		((ZonesModule) ModulesManager.getDefault().getModuleByID(
+				ZonesModule.moduleID)).deleteZone(shapeNumber);
 
 	}
 
@@ -190,8 +190,8 @@ public class ShapeController implements GfxPanelNotifiee, ShapeCollection {
 	 */
 	@Override
 	public void shapeModified(final int shapeNumber) {
-		((ZonesModule) ModulesManager.getDefault().getModuleByName(
-				"Zones Module")).updateZoneDataInGUI(shapeNumber);
+		((ZonesModule) ModulesManager.getDefault().getModuleByID(
+				ZonesModule.moduleID)).updateZoneDataInGUI(shapeNumber);
 	}
 
 	/*
@@ -200,8 +200,8 @@ public class ShapeController implements GfxPanelNotifiee, ShapeCollection {
 	 */
 	@Override
 	public void shapeSelected(final int shapeNumber) {
-		((ZonesModule) ModulesManager.getDefault().getModuleByName(
-				"Zones Module")).selectZoneInGUI(shapeNumber);
+		((ZonesModule) ModulesManager.getDefault().getModuleByID(
+				ZonesModule.moduleID)).selectZoneInGUI(shapeNumber);
 	}
 
 }

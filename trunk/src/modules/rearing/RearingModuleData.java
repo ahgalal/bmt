@@ -15,6 +15,7 @@
 package modules.rearing;
 
 import modules.ModuleData;
+import modules.experiment.Constants;
 
 /**
  * Data of the Rearing Module.
@@ -23,22 +24,16 @@ import modules.ModuleData;
  */
 public class RearingModuleData extends ModuleData {
 	private int	rearingCtr;
-
-	/**
-	 * Initializes the Data.
-	 * 
-	 * @param name
-	 *            name of the data instance
-	 */
-	public RearingModuleData(final String name) {
-		super(name);
-	}
-
+	public final static String dataID=Constants.MODULE_ID+".rearing.data";
 	public void setRearingCtr(int rearingCtr) {
 		this.rearingCtr = rearingCtr;
 	}
 
 	public int getRearingCtr() {
 		return rearingCtr;
+	}
+	@Override
+	public String getId() {
+		return dataID;
 	}
 }
