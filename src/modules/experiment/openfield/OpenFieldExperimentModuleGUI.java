@@ -3,6 +3,7 @@
  */
 package modules.experiment.openfield;
 
+import modules.experiment.ExperimentModule;
 import modules.experiment.ExperimentModuleGUI;
 
 import org.eclipse.swt.SWT;
@@ -34,7 +35,7 @@ public class OpenFieldExperimentModuleGUI extends ExperimentModuleGUI {
 
 	private ExpandItem	xpndtmOptions;
 
-	public OpenFieldExperimentModuleGUI(final OpenFieldExperimentModule owner) {
+	public OpenFieldExperimentModuleGUI(final ExperimentModule owner) {
 		super(owner);
 	}
 

@@ -151,7 +151,7 @@ public class ModulesManager {
 	public boolean areModulesReady(final Shell shell) {
 		for (final Module mo : modules)
 			if (!mo.amIReady(shell)) {
-				PManager.log.print(mo.getName() + " cancelled Tracking!", this,
+				PManager.log.print(mo.getID() + " cancelled Tracking!", this,
 						StatusSeverity.ERROR);
 				return false;
 			}
@@ -290,15 +290,23 @@ public class ModulesManager {
 	/**
 	 * Gets a module using the module's name.
 	 * 
-	 * @param name
-	 *            name of the module to return
+	 * @param id
+	 *            id of the module to return
 	 * @return module instance having the name specified
 	 */
-	public Module getModuleByName(final String name) {
+	public Module getModuleByID(final String id) {
 		for (final Module mo : modules)
-			if (mo.getName().equals(name))
+			if (mo.getID().equals(id))
 				return mo;
 		return null;
+	}
+	
+	public ArrayList<Module<?, ?, ?>> getModulesUnderID(final String id){
+		ArrayList<Module<?, ?, ?>> ret=new ArrayList<Module<?, ?, ?>>();
+		for (final Module mo : modules)
+			if (mo.getID().startsWith(id))
+				ret.add(mo);
+		return ret;
 	}
 
 	public PluggedGUI[] getModulesGUI() {
@@ -321,10 +329,10 @@ public class ModulesManager {
 	 * 
 	 * @return ArrayList containing the names of active modules
 	 */
-	public ArrayList<String> getModulesNames() {
+	public ArrayList<String> getModulesIDs() {
 		final ArrayList<String> tmpArr = new ArrayList<String>();
 		for (final Module m : modules)
-			tmpArr.add(m.getName());
+			tmpArr.add(m.getID());
 		return tmpArr;
 	}
 
@@ -363,40 +371,40 @@ public class ModulesManager {
 		PManager.log.print("instantiating Modules", this, Details.VERBOSE);
 		// ////////////////////////////////
 		// Rearing Module
-		if (isWithinArray("Rearing Module", moduleNames)) {
+		if (isWithinArray(RearingModule.moduleID, moduleNames)) {
 			final RearingModuleConfigs rearingConfigs = new RearingModuleConfigs(
-					"Rearing Module");
+					RearingModule.moduleID);
 			final RearingModule rearingModule = new RearingModule(
-					"Rearing Module", rearingConfigs);
+					rearingConfigs);
 			modules.add(rearingModule);
 		}
 		// ////////////////////////////////
 		// Zones Module
-		if (isWithinArray("Zones Module", moduleNames)) {
+		if (isWithinArray(ZonesModule.moduleID, moduleNames)) {
 			
 			final ZonesModuleConfigs zonesConfigs = new ZonesModuleConfigs(
-					"Zones Module", ZonesModule.DEFAULT_HYSTRISES_VALUE,
+					ZonesModule.moduleID, ZonesModule.DEFAULT_HYSTRISES_VALUE,
 					width, height);
-			final ZonesModule zonesModule = new ZonesModule("Zones Module",
+			final ZonesModule zonesModule = new ZonesModule(
 					zonesConfigs);
 			modules.add(zonesModule);
 		}
 		// ////////////////////////////////
 		// Session Module
-		if (isWithinArray("Session Module", moduleNames)) {
+		if (isWithinArray(SessionModule.moduleID, moduleNames)) {
 			final SessionModuleConfigs sessionConfigs = new SessionModuleConfigs(
-					"Session Module");
+					SessionModule.moduleID);
 			final SessionModule sessionModule = new SessionModule(
-					"Session Module", sessionConfigs);
+					 sessionConfigs);
 			modules.add(sessionModule);
 		}
 		// ////////////////////////////////
 		// MovementMeter Module
-		if (isWithinArray("Movement Meter Module", moduleNames)) {
+		if (isWithinArray(MovementMeterModule.moduleID, moduleNames)) {
 			final MovementMeterModuleConfigs movementModuleConfigs = new MovementMeterModuleConfigs(
-					"Movement Meter Module");
+					MovementMeterModule.moduleID);
 			final MovementMeterModule movementMeterModule = new MovementMeterModule(
-					"Movement Meter Module", movementModuleConfigs);
+					movementModuleConfigs);
 			modules.add(movementMeterModule);
 		}
 		PManager.log.print("finished instantiating Modules", this,
@@ -493,7 +501,7 @@ public class ModulesManager {
 		this.height = height;
 
 		updateModuleConfigs(new ModuleConfigs[] { new ZonesModuleConfigs(
-				"Zones Module", -1, width, height) });
+				ZonesModule.moduleID, -1, width, height) });
 	}
 
 	public void setupModules(final Experiment exp) {
@@ -512,10 +520,10 @@ public class ModulesManager {
 		modules.add(expModule);
 		
 		final ModulesSet openFieldModulesSetup = new ModulesSet(new String[] {
-				"Rearing Module", "Zones Module", "Session Module" });
+				RearingModule.moduleID,ZonesModule.moduleID, SessionModule.moduleID });
 
 		final ModulesSet forcedSwimmingModulesSetup = new ModulesSet(
-				new String[] { "Session Module", "Movement Meter Module" });
+				new String[] { SessionModule.moduleID, MovementMeterModule.moduleID });
 
 		switch (exp.type) {
 			case FORCED_SWIMMING:
@@ -540,7 +548,7 @@ public class ModulesManager {
 	 */
 	public void updateModuleConfigs(final ModuleConfigs[] configs) {
 		for (int i = 0; i < configs.length; i++) {
-			final Module tmp = getModuleByName(configs[i].getModuleName());
+			final Module tmp = getModuleByID(configs[i].getModuleID());
 			if (tmp != null)
 				tmp.updateConfigs(configs[i]);
 		}

@@ -73,7 +73,7 @@ public class RearingDetector extends
 	public RearingDetector(final String name, final Link linkIn,
 			final Link linkOut) {
 		super(name, linkIn, linkOut);
-		filterData = new RearingFilterData("Rearing Data");
+		filterData = new RearingFilterData();
 
 		// super's stuff:
 		gui = new RearingDetectorGUI(this);

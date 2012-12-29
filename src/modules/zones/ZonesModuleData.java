@@ -15,6 +15,7 @@
 package modules.zones;
 
 import modules.ModuleData;
+import modules.experiment.Constants;
 
 /**
  * Data of the Zones Module.
@@ -22,87 +23,83 @@ import modules.ModuleData;
  * @author Creative
  */
 public class ZonesModuleData extends ModuleData {
-	private int				allEntrance;
-	private int	centralEntrance;
-	private boolean			centralFlag;
-	private int				centralZoneTime;
-	private int				currentZoneNum;
-	private float			scale;
+	public final static String	dataID	= Constants.MODULE_ID + ".zones.data";
+	private int					allEntrance;
+	private int					centralEntrance;
+	private boolean				centralFlag;
+	private int					centralZoneTime;
+	private int					currentZoneNum;
+	private float				scale;
 	private long				totalDistance;
-	private ZonesCollection	zones;
 
-	/**
-	 * Initializes the Data.
-	 * 
-	 * @param name
-	 *            name of the data instance
-	 */
-	public ZonesModuleData(final String name) {
-		super(name);
-	}
-
-	public void setAllEntrance(int allEntrance) {
-		this.allEntrance = allEntrance;
-	}
+	private ZonesCollection		zones;
 
 	public int getAllEntrance() {
 		return allEntrance;
-	}
-
-	public void setCentralEntrance(int centralEntrance) {
-		this.centralEntrance = centralEntrance;
 	}
 
 	public int getCentralEntrance() {
 		return centralEntrance;
 	}
 
-	public void setCentralFlag(boolean centralFlag) {
-		this.centralFlag = centralFlag;
-	}
-
-	public boolean isCentralFlag() {
-		return centralFlag;
-	}
-
-	public void setCentralZoneTime(int centralZoneTime) {
-		this.centralZoneTime = centralZoneTime;
-	}
-
 	public int getCentralZoneTime() {
 		return centralZoneTime;
-	}
-
-	public void setCurrentZoneNum(int currentZoneNum) {
-		this.currentZoneNum = currentZoneNum;
 	}
 
 	public int getCurrentZoneNum() {
 		return currentZoneNum;
 	}
 
-	public void setScale(float scale) {
-		this.scale = scale;
+	@Override
+	public String getId() {
+		return dataID;
 	}
 
 	public float getScale() {
 		return scale;
 	}
 
-	public void setTotalDistance(long totalDistance) {
-		this.totalDistance = totalDistance;
-	}
-
 	public long getTotalDistance() {
 		return totalDistance;
-	}
-
-	public void setZones(ZonesCollection zones) {
-		this.zones = zones;
 	}
 
 	public ZonesCollection getZones() {
 		return zones;
 	}
 
+	public boolean isCentralFlag() {
+		return centralFlag;
+	}
+
+	public void setAllEntrance(final int allEntrance) {
+		this.allEntrance = allEntrance;
+	}
+
+	public void setCentralEntrance(final int centralEntrance) {
+		this.centralEntrance = centralEntrance;
+	}
+
+	public void setCentralFlag(final boolean centralFlag) {
+		this.centralFlag = centralFlag;
+	}
+
+	public void setCentralZoneTime(final int centralZoneTime) {
+		this.centralZoneTime = centralZoneTime;
+	}
+
+	public void setCurrentZoneNum(final int currentZoneNum) {
+		this.currentZoneNum = currentZoneNum;
+	}
+
+	public void setScale(final float scale) {
+		this.scale = scale;
+	}
+
+	public void setTotalDistance(final long totalDistance) {
+		this.totalDistance = totalDistance;
+	}
+
+	public void setZones(final ZonesCollection zones) {
+		this.zones = zones;
+	}
 }

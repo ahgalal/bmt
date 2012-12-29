@@ -22,14 +22,11 @@ import modules.ModuleData;
  * @author Creative
  */
 public class ExperimentModuleData extends ModuleData {
-	/**
-	 * Initializes the Data.
-	 * 
-	 * @param name
-	 *            name of the data instance
-	 */
-	public ExperimentModuleData(final String name) {
-		super(name);
+	public final static String dataID=Constants.EXPERIMENT_ID+".data";
+
+	@Override
+	public String getId() {
+		return dataID;
 	}
 
 }

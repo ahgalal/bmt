@@ -67,8 +67,8 @@ public class RearingModuleGUI extends PluggedGUI<RearingModule> {
 	public void btnAddRearingAction() {
 		if (PManager.getDefault().getState().getGeneral() == GeneralState.TRACKING
 		/* || PManager.getDefault().state == ProgramState.RECORDING */)
-			((RearingModule) ModulesManager.getDefault().getModuleByName(
-					"Rearing Module")).incrementRearingCounter();
+			((RearingModule) ModulesManager.getDefault().getModuleByID(
+					RearingModule.moduleID)).incrementRearingCounter();
 	}
 
 	/**
@@ -77,8 +77,8 @@ public class RearingModuleGUI extends PluggedGUI<RearingModule> {
 	public void btnSubRearingAction() {
 		if (PManager.getDefault().getState().getGeneral() == GeneralState.TRACKING
 		/* || PManager.getDefault().state == ProgramState.RECORDING */)
-			((RearingModule) ModulesManager.getDefault().getModuleByName(
-					"Rearing Module")).decrementRearingCounter();
+			((RearingModule) ModulesManager.getDefault().getModuleByID(
+					RearingModule.moduleID)).decrementRearingCounter();
 	}
 
 	@Override

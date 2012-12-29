@@ -46,9 +46,9 @@ Module<PluggedGUI, SessionModuleConfigs, SessionModuleData> {
 	 * @param config
 	 *            SessionModuleConfigs object to configure the module
 	 */
-	public SessionModule(final String name, final SessionModuleConfigs config) {
-		super(name, config);
-		data = new SessionModuleData("Session Module Data");
+	public SessionModule(final SessionModuleConfigs config) {
+		super(config);
+		data = new SessionModuleData();
 		initialize();
 	}
 
@@ -175,6 +175,12 @@ Module<PluggedGUI, SessionModuleConfigs, SessionModuleData> {
 	public void updateGUICargoData() {
 		guiCargo.setDataByTag(Constants.GUI_SESSION_TIME,
 				Float.toString(getSessionTimeTillNow()));
+	}
+	public final static String			moduleID=Constants.MODULE_ID+".session";
+
+	@Override
+	public String getID() {
+		return moduleID;
 	}
 
 }

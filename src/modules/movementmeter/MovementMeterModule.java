@@ -17,7 +17,7 @@ import filters.Data;
 import filters.movementmeter.MovementMeterData;
 
 public class MovementMeterModule extends
-		Module<MovementMeterModuleGUI, ModuleConfigs, ModuleData> {
+		Module<MovementMeterModuleGUI, ModuleConfigs, MovementMeterModuleData> {
 	private static final int			ENERGY_DIVISION_FACTOR	= 2000;
 	private static final int			MIN_SAMPLES				= 31;
 	private ArrayList<Integer>			energyBins;
@@ -45,12 +45,17 @@ public class MovementMeterModule extends
 	 * ...............................................
 	 */
 
-	public MovementMeterModule(final String name, final ModuleConfigs config) {
-		super(name, config);
+	@Override
+	public String getID() {
+		return moduleID;
+	}
+	
+	public MovementMeterModule(final ModuleConfigs config) {
+		super(config);
 		filtersData = new Data[1];
 		energyData = new ArrayList<Integer>();
 		gui = new MovementMeterModuleGUI(this);
-		data = new ModuleData("MovementMeter Module Data");
+		data = new MovementMeterModuleData();
 		initialize();
 	}
 
@@ -120,12 +125,12 @@ public class MovementMeterModule extends
 			final int oldVal5 = energyData.get(energyData.size() - 25);
 			final int oldVal6 = energyData.get(energyData.size() - 30);
 
-			// filter out abrupt changes
+			// filter out abrupt changes (spikes)
 			if (Math.abs(newVal - oldVal1) > getMaxEnergy() / 2)
 				newVal = oldVal1;// +(newVal - oldVal1)/5;
 
 			// smooth curve
-			newVal = ((newVal + oldVal1 + oldVal2 + oldVal3 + oldVal4 + oldVal5 + oldVal6) / 7);
+			newVal = (int) (0.2*newVal+0.8*oldVal1);
 
 			if (newVal > getMaxEnergy())
 				setMaxEnergy(newVal);
@@ -176,21 +181,18 @@ public class MovementMeterModule extends
 						.set(smallestValueBinIndex, smallestValueBinValue + 1);
 			}
 		}
-		/*
-		 * int max = 0, min = 100000000; sectorsData = new int[noEnergyLevels];
-		 * for (final int i : energyData) if (i > max) max = i; else if (i <
-		 * min) min = i; System.out.println("Sectors: min: " + min + " max: " +
-		 * max); final int[] levels = new int[noEnergyLevels]; final int
-		 * levelHeight = (max - min) / noEnergyLevels; for (int k = 0; k <
-		 * noEnergyLevels; k++) { levels[k] = levelHeight * k;
-		 * System.out.println("Level-" + k + " has min value: " + levels[k]); }
-		 * for (final int i : energyData) for (int j = 1; j < noEnergyLevels;
-		 * j++) if ((i < levels[j]) && (i > levels[j - 1])) sectorsData[j -
-		 * 1]++; System.out.println("[[[Sectors data:]]]"); for (int i = 0; i <
-		 * sectorsData.length; i++) System.out.println("Level-" + i + " " +
-		 * sectorsData[i]);
-		 */
-
+		
+		final int newData = energyData.get(energyData.size() - 1);
+		guiCargo.setDataByIndex(0, "" + newData);
+		final double climbingPercent = 100 * energyBins.get(0)
+				/ (double) energyData.size();
+		guiCargo.setDataByTag(expParams[0], "" + climbingPercent + "%");
+		final double swimmingPercent = 100 * energyBins.get(1)
+				/ (double) energyData.size();
+		guiCargo.setDataByTag(expParams[1], "" + swimmingPercent + "%");
+		final double floatingPercent = 100 * energyBins.get(2)
+				/ (double) energyData.size();
+		guiCargo.setDataByTag(expParams[2], "" + floatingPercent + "%");
 	}
 
 	private void setMaxEnergy(final int maxEnergy) {
@@ -235,20 +237,11 @@ public class MovementMeterModule extends
 	public void updateGUICargoData() {
 		if (energyData.size() > MIN_SAMPLES) {
 			final int newData = energyData.get(energyData.size() - 1);
-			guiCargo.setDataByIndex(0, "" + newData);
-			final double climbingPercent = 100 * energyBins.get(0)
-					/ (double) energyData.size();
-			guiCargo.setDataByTag(expParams[0], "" + climbingPercent + "%");
-			final double swimmingPercent = 100 * energyBins.get(1)
-					/ (double) energyData.size();
-			guiCargo.setDataByTag(expParams[1], "" + swimmingPercent + "%");
-			final double floatingPercent = 100 * energyBins.get(2)
-					/ (double) energyData.size();
-			guiCargo.setDataByTag(expParams[2], "" + floatingPercent + "%");
 			gui.addPoint(newData);
 			
 			gui.setEnergyLevels(energyLevels);
 		}
 	}
+	public final static String			moduleID=Constants.MODULE_ID+".movementmeter";
 
 }

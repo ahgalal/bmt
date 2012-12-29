@@ -75,5 +75,14 @@ public interface Constants {
 	 * Rat Header:.
 	 */
 	String	H_RAT					= "[Rat Info]";
+	
+	/**
+	 * ID constants
+	 */
+	String BMT_ID="bmt";
+	String MODULE_ID=BMT_ID+".module";
+	String FILTER_ID=BMT_ID+".filter";
+	String DATA_ID="data";
+	String EXPERIMENT_ID =MODULE_ID+ ".experiment";
 
 }

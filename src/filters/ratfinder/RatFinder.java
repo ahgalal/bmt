@@ -56,7 +56,7 @@ public class RatFinder extends
 	 */
 	public RatFinder(final String name, final Link linkIn, final Link linkOut) {
 		super(name, linkIn, linkOut);
-		filterData = new RatFinderData("Rat Finder Data");
+		filterData = new RatFinderData();
 		centerPoint = filterData.getCenterPoint();
 	}
 

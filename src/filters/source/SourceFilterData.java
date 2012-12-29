@@ -3,6 +3,7 @@
  */
 package filters.source;
 
+import modules.experiment.Constants;
 import filters.FilterData;
 
 /**
@@ -10,11 +11,7 @@ import filters.FilterData;
  */
 public class SourceFilterData extends FilterData {
 	private int[]	frame;
-
-	public SourceFilterData(final String name) {
-		super(name);
-	}
-
+	public final static String dataID=Constants.FILTER_ID+".source.data";
 	public int[] getData() {
 		return frame;
 	}
@@ -23,4 +20,8 @@ public class SourceFilterData extends FilterData {
 		this.frame = data;
 	}
 
+	@Override
+	public String getId() {
+		return dataID;
+	}
 }

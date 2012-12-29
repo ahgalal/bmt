@@ -4,9 +4,8 @@ import java.util.ArrayList;
 
 import filters.Data;
 
-public class ModuleData extends Data {
+public abstract class ModuleData extends Data {
 
-	//public ExperimentType[] expType;
 	private ArrayList<String> parameters;
 	
 	public void addParameter(String param){
@@ -21,9 +20,7 @@ public class ModuleData extends Data {
 		return parameters;
 	}
 	
-	public ModuleData(String name) {
-		super(name);
+	public ModuleData() {
 		parameters=new ArrayList<String>();
 	}
-
 }

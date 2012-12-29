@@ -15,10 +15,12 @@
 package control.ui;
 
 import java.io.File;
+import java.util.ArrayList;
 
 import modules.ExperimentManager;
+import modules.Module;
 import modules.ModulesManager;
-import modules.experiment.ExperimentModule;
+import modules.experiment.Constants;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Display;
@@ -61,14 +63,14 @@ public class CtrlMainGUI extends ControllerUI<MainGUI> implements StateListener 
 			setTableNamesColumn();
 			while (pm.getState().getGeneral() == GeneralState.TRACKING) {
 				Utils.sleep(200);
-				if(pm.getState().getStream()==StreamState.STREAMING)
+				if (pm.getState().getStream() == StreamState.STREAMING)
 					Display.getDefault().asyncExec(new Runnable() {
 
 						@Override
 						public void run() {
 							if (!ui.getShell().isDisposed())
-								ui.fillDataTable(null, ModulesManager.getDefault()
-										.getGUIData());
+								ui.fillDataTable(null, ModulesManager
+										.getDefault().getGUIData());
 						}
 					});
 			}
@@ -79,8 +81,8 @@ public class CtrlMainGUI extends ControllerUI<MainGUI> implements StateListener 
 	private final CtrlAbout					ctrlAboutBox;
 	private final CtrlNewExperimentWizard	ctrlNewExpWizard;
 	private String							fileName	= "";
-	private final PManager					pm;						// @jve:decl-index=0:
-	private Thread							thUpdateGui;				// @jve:decl-index=0:
+	private final PManager					pm;				// @jve:decl-index=0:
+	private Thread							thUpdateGui;		// @jve:decl-index=0:
 	private final MainGUI					ui;
 	private boolean							uiOpened;
 
@@ -140,9 +142,13 @@ public class CtrlMainGUI extends ControllerUI<MainGUI> implements StateListener 
 	 */
 	public void configureScreenDrawerFilter(final String name,
 			final CommonFilterConfigs configs, final boolean enableSecScreen) {
-		pm.getVideoManager().getFilterManager().applyConfigsToFilter(new ScreenDrawerConfigs(name, ui
-				.getAwtVideoMain().getGraphics(), ui.getAwtVideoSec()
-				.getGraphics(), null, true, pm.getShapeController()));
+		pm.getVideoManager()
+				.getFilterManager()
+				.applyConfigsToFilter(
+						new ScreenDrawerConfigs(name, ui.getAwtVideoMain()
+								.getGraphics(), ui.getAwtVideoSec()
+								.getGraphics(), null, true, pm
+								.getShapeController()));
 	}
 
 	/**
@@ -168,8 +174,8 @@ public class CtrlMainGUI extends ControllerUI<MainGUI> implements StateListener 
 	 *            the pressed key on the keyboard
 	 */
 	public void keyPressedAction(final char key) {
-		/*// manual rearing:
-		 * if(pm.state==ProgramState.TRACKING |
+		/*
+		 * // manual rearing: if(pm.state==ProgramState.TRACKING |
 		 * pm.state==ProgramState.RECORDING)
 		 * if(key==java.awt.event.KeyEvent.VK_R)
 		 * stats_controller.incrementRearingCounter(); else
@@ -253,9 +259,13 @@ public class CtrlMainGUI extends ControllerUI<MainGUI> implements StateListener 
 		if (fileName != null) {
 			PManager.mainGUI.clearForm();
 			ExperimentManager.getDefault().unloadExperiment();
-			ExperimentManager.getDefault().loadExperiment(ExperimentManager.readExperimentFromFile(fileName));
-			PManager.getDefault().getStatusMgr().setStatus(
-					"Experiment is Loaded Successfully from file: "+fileName, StatusSeverity.WARNING);
+			ExperimentManager.getDefault().loadExperiment(
+					ExperimentManager.readExperimentFromFile(fileName));
+			PManager.getDefault()
+					.getStatusMgr()
+					.setStatus(
+							"Experiment is Loaded Successfully from file: "
+									+ fileName, StatusSeverity.WARNING);
 		}
 	}
 
@@ -316,7 +326,8 @@ public class CtrlMainGUI extends ControllerUI<MainGUI> implements StateListener 
 						-1, -1, -1, -1, "VideoFile", null);
 				pm.initializeVideoManager(commonConfigs, fileName);
 				configureScreenDrawerFilter("ScreenDrawer", commonConfigs, true);
-				pm.getStatusMgr().setStatus("Stream is started from file: "+ fileName,
+				pm.getStatusMgr().setStatus(
+						"Stream is started from file: " + fileName,
 						StatusSeverity.WARNING);
 			} else
 				pm.getStatusMgr().setStatus("Stream is already started.",
@@ -341,8 +352,8 @@ public class CtrlMainGUI extends ControllerUI<MainGUI> implements StateListener 
 						ui.btnStartStreamingEnable(false);
 					if (ModulesManager.getDefault().allowTracking()
 							&& ((pm.getState().getStream() == StreamState.STREAMING) || (pm
-									.getState().getStream() == StreamState.PAUSED)) &&
-									pm.getState().getGeneral()!=GeneralState.TRACKING)
+									.getState().getStream() == StreamState.PAUSED))
+							&& (pm.getState().getGeneral() != GeneralState.TRACKING))
 						ui.btnStartTrackingEnable(true);
 					else
 						ui.btnStartTrackingEnable(false);
@@ -386,41 +397,45 @@ public class CtrlMainGUI extends ControllerUI<MainGUI> implements StateListener 
 	public void startTrackingAction() {
 		final Thread thStartGUIProcedures = new Thread(new Runnable() {
 
+			private void handleNoExperimentModule(final String msg) {
+				Display.getDefault().asyncExec(new Runnable() {
+					@Override
+					public void run() {
+						final MessageBox mbox = new MessageBox(ui.getShell(),
+								SWT.ICON_QUESTION | SWT.YES | SWT.NO);
+						mbox.setMessage(msg + ", do you want to continue?");
+						mbox.setText("Continue?");
+						final int res = mbox.open();
+						if (res == SWT.YES)
+							startTracking();
+					}
+				});
+			}
+
 			@Override
 			public void run() {
-				if (pm.getState().getStream() == StreamState.STREAMING ||
-						pm.getState().getStream() == StreamState.PAUSED) {
+				if ((pm.getState().getStream() == StreamState.STREAMING)
+						|| (pm.getState().getStream() == StreamState.PAUSED)) {
 					if (ModulesManager.getDefault().areModulesReady(
 							ui.getShell())) {
-						final ExperimentModule tmpExpModule = (ExperimentModule) ModulesManager
-								.getDefault().getModuleByName(
-										"Experiment Module");
-						if (tmpExpModule != null)
-							startTracking();
+						final ArrayList<Module<?,?,?>> experimentModulesAvailable = ModulesManager
+								.getDefault().getModulesUnderID(
+										Constants.EXPERIMENT_ID);
+						if (experimentModulesAvailable.size() == 0)
+							handleNoExperimentModule("No Experiment Module found");
+						else if (experimentModulesAvailable.size() > 1)
+							handleNoExperimentModule("More than one experiment module found, there should be only one loaded");
 						else
-							Display.getDefault().asyncExec(new Runnable() {
-								@Override
-								public void run() {
-									final MessageBox mbox = new MessageBox(ui
-											.getShell(), SWT.ICON_QUESTION
-											| SWT.YES | SWT.NO);
-									mbox.setMessage("No experiment module is found! continue?");
-									mbox.setText("Continue?");
-									final int res = mbox.open();
-									if (res == SWT.YES)
-										startTracking();
-								}
-							});
+							startTracking();
 					} else
-								pm.getStatusMgr().setStatus(
-										"Tracking is cancelled",
-										StatusSeverity.WARNING);
+						pm.getStatusMgr().setStatus("Tracking is cancelled",
+								StatusSeverity.WARNING);
 
 				} else
-							pm.getStatusMgr()
-									.setStatus(
-											"Please make sure the camera is running, you have set the background.",
-											StatusSeverity.ERROR);
+					pm.getStatusMgr()
+							.setStatus(
+									"Please make sure the camera is running, you have set the background.",
+									StatusSeverity.ERROR);
 			}
 		});
 		thStartGUIProcedures.start();

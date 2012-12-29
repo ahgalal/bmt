@@ -20,25 +20,26 @@ package filters;
  * @author Creative
  */
 public abstract class Data {
-	private final String	name;
 
-	/**
+/*	*//**
 	 * Initializes the name of the data object.
 	 * 
 	 * @param name
 	 *            name of the data object
-	 */
-	public Data(final String name) {
-		this.name = name;
-	}
+	 *//*
+	public Data() {
+	}*/
 
-	/**
+/*	*//**
 	 * Gets the name of the data object.
+ * @return 
 	 * 
 	 * @return String containing the name of the data object
-	 */
+	 *//*
 	public String getName() {
 		return name;
-	}
+	}*/
+	
+	public abstract String getId();
 
 }

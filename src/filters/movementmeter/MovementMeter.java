@@ -25,7 +25,7 @@ public class MovementMeter extends
 	public MovementMeter(final String name, final Link linkIn,
 			final Link linkOut) {
 		super(name, linkIn, linkOut);
-		filterData = new MovementMeterData("Movement Meter Data");
+		filterData = new MovementMeterData();
 	}
 
 	private int addAllPixelsValues(final int[] arr) {
