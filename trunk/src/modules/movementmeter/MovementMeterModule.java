@@ -8,6 +8,7 @@ import modules.ModuleConfigs;
 import modules.ModuleData;
 import modules.experiment.Constants;
 import modules.experiment.ExperimentType;
+import modules.session.SessionModuleData;
 
 import org.eclipse.swt.widgets.Shell;
 
@@ -29,6 +30,7 @@ public class MovementMeterModule extends
 	private MovementMeterData			movementMeterFilterData;
 	private final int					noEnergyLevels			= 3;
 	private int	sectorizeFlag;
+	private SessionModuleData sessionModuleData;
 	
 	/**.............A
 	 * .............|....................___
@@ -155,6 +157,8 @@ public class MovementMeterModule extends
 
 	@Override
 	public void registerModuleDataObject(final ModuleData data) {
+		if(data instanceof SessionModuleData)
+			sessionModuleData=(SessionModuleData) data;
 	}
 
 	private void sectorizeEnergy() {
@@ -181,18 +185,21 @@ public class MovementMeterModule extends
 						.set(smallestValueBinIndex, smallestValueBinValue + 1);
 			}
 		}
-		
-		final int newData = energyData.get(energyData.size() - 1);
-		guiCargo.setDataByIndex(0, "" + newData);
-		final double climbingPercent = 100 * energyBins.get(0)
+
+		accumulatedSessionTime = sessionModuleData.getAccumulatedSessionTime()/1000;
+		final double climbingTime = accumulatedSessionTime * energyBins.get(0)
 				/ (double) energyData.size();
-		guiCargo.setDataByTag(expParams[0], "" + climbingPercent + "%");
-		final double swimmingPercent = 100 * energyBins.get(1)
+		guiCargo.setDataByTag(expParams[0], formatTime(climbingTime));
+		final double swimmingTime = accumulatedSessionTime * energyBins.get(1)
 				/ (double) energyData.size();
-		guiCargo.setDataByTag(expParams[1], "" + swimmingPercent + "%");
-		final double floatingPercent = 100 * energyBins.get(2)
+		guiCargo.setDataByTag(expParams[1], formatTime(swimmingTime));
+		final double floatingTime = accumulatedSessionTime * energyBins.get(2)
 				/ (double) energyData.size();
-		guiCargo.setDataByTag(expParams[2], "" + floatingPercent + "%");
+		guiCargo.setDataByTag(expParams[2], formatTime(floatingTime));
+	}
+	int accumulatedSessionTime;
+	private String formatTime(final double time) {
+		return String.format("%.1f", time);
 	}
 
 	private void setMaxEnergy(final int maxEnergy) {
@@ -216,7 +223,7 @@ public class MovementMeterModule extends
 
 	@Override
 	public void updateFileCargoData() {
-		final String[] sectorsDataStr = new String[energyBins.size()];
+/*		final String[] sectorsDataStr = new String[energyBins.size()];
 		int k = 0;
 		
 		// TODO: consider using HashMap to map bin name to each bin, to avoid
@@ -225,8 +232,17 @@ public class MovementMeterModule extends
 			sectorsDataStr[k] = Double.toString(100*i/(double)energyData.size());
 			k++;
 		}
-		fileCargo.setData(sectorsDataStr);
-
+		fileCargo.setData(sectorsDataStr);*/
+		accumulatedSessionTime = sessionModuleData.getAccumulatedSessionTime()/1000;
+		final double climbingTime = accumulatedSessionTime * energyBins.get(0)
+				/ (double) energyData.size();
+		fileCargo.setDataByTag(expParams[0], formatTime(climbingTime));
+		final double swimmingTime = accumulatedSessionTime * energyBins.get(1)
+				/ (double) energyData.size();
+		fileCargo.setDataByTag(expParams[1], formatTime(swimmingTime));
+		final double floatingTime = accumulatedSessionTime * energyBins.get(2)
+				/ (double) energyData.size();
+		fileCargo.setDataByTag(expParams[2], formatTime(floatingTime));
 		/*
 		 * fileCargo.setDataByIndex(0, "" +
 		 * movementMeterFilterData.getWhiteSummation());

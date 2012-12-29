@@ -18,6 +18,7 @@
 package utils.video.input;
 
 import jagvidlib.JAGVidLib;
+import jagvidlib.JAGVidLib.StreamState;
 
 import java.awt.Point;
 
@@ -49,14 +50,14 @@ public class VideoFileModule extends VidInputter<AGVidLibConfigs> {
 				// long l1 = System.currentTimeMillis();
 				fia.setFrameData(vidLib.getCurrentFrameInt());
 				// long l2 = System.currentTimeMillis();
-				if (fia.getFrameData() != null)
+/*				if (fia.getFrameData() != null)
 					status = SourceStatus.STREAMING;
 				else{
 					if(paused)
 						status = SourceStatus.PAUSED;
 					else
 						status=SourceStatus.ERROR;
-				}
+				}*/
 				
 				try {
 					Thread.sleep(30);
@@ -67,6 +68,22 @@ public class VideoFileModule extends VidInputter<AGVidLibConfigs> {
 			}
 		}
 
+	}
+	
+	private SourceStatus convertStreamStatus(StreamState state){
+		switch (state) {
+			case INITIAL_STATE:
+				return SourceStatus.INITIALIZING;
+			case PAUSED:
+				return SourceStatus.PAUSED;
+			case RUNNING:
+				return SourceStatus.STREAMING;
+			case STOPPED:
+				return SourceStatus.END_OF_STREAM;
+			default:
+				break;
+		}
+		return null;
 	}
 
 	private boolean			stopStream;
@@ -115,9 +132,11 @@ public class VideoFileModule extends VidInputter<AGVidLibConfigs> {
 	 */
 	@Override
 	public SourceStatus getStatus() {
-		if(paused)
+		SourceStatus streamStatus = convertStreamStatus(vidLib.getState());
+		return streamStatus;
+/*		if(paused)
 			status=SourceStatus.PAUSED;
-		return status;
+		return status;*/
 	}
 
 	@Override
