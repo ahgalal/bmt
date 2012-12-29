@@ -1,5 +1,7 @@
 package gui.integration;
 
+import com.windowtester.runtime.WidgetSearchException;
+
 import gui.executionunit.VideoExecUnitGroup;
 import gui.utils.Reflections;
 import modules.experiment.Constants;
@@ -11,20 +13,29 @@ import sys.utils.Files;
 import utils.PManager;
 
 /**
- * Tests the integration of Open Field Experiment, that all filters/modules work
- * as expected.
+ * Tests the integration of Forced Swimming Experiment, that all filters/modules
+ * work as expected.
  * 
  * @author Creative
  */
-public class ForcedSwimmingIntegrationTest extends ExperimentIntegrationTestBase {
-
+public class ForcedSwimmingIntegrationTest extends
+		ExperimentIntegrationTestBase {
+	
 	// TODO: tighten constrains
-	protected int		climbingTimeMin		= 5;
-	protected int		climbingTimeMax		= 25;
-	protected int		swimmingTimeMin		= 5;
-	protected int		swimmingTimeMax		= 50;
-	protected int		floatingTimeMin		= 5;
-	protected int		floatingTimeMax		= 70;
+	protected int	climbingTimeMax	= 25;
+	protected int	climbingTimeMin	= 5;
+	protected int	floatingTimeMax	= 70;
+	protected int	floatingTimeMin	= 5;
+	protected int	swimmingTimeMax	= 50;
+	protected int	swimmingTimeMin	= 5;
+
+	@Override
+	protected void afterStartTracking() throws WidgetSearchException {
+		// resume tracking
+		VideoExecUnitGroup.pauseResumeStream();
+		
+		super.afterStartTracking();
+	}
 
 	@Override
 	protected void checks() {
@@ -36,27 +47,13 @@ public class ForcedSwimmingIntegrationTest extends ExperimentIntegrationTestBase
 
 		checkParamValue(rat0, Constants.CLIMBING, climbingTimeMin,
 				climbingTimeMax);
-		checkParamValue(rat0, Constants.SWIMMING,
-				swimmingTimeMin, swimmingTimeMax);
+		checkParamValue(rat0, Constants.SWIMMING, swimmingTimeMin,
+				swimmingTimeMax);
 		checkParamValue(rat0, Constants.FLOATING, floatingTimeMin,
 				floatingTimeMax);
-		// TODO: check rearing counter
-		// checkParamValue(rat0, Constants.FILE_REARING_COUNTER, "");
 		PManager.log.print("Experiment info check: OK", this);
 	}
-	
-	@Override
-	protected void afterVideoLoad() throws Exception {
-		super.afterVideoLoad();
-		
-		preStartTracking();
-		startTracking();
-		// resume tracking
-		VideoExecUnitGroup.pauseResumeStream();
-		
-		afterStartTracking();
-	}
-	
+
 	@Override
 	public void setUp() {
 		super.setUp();

@@ -60,20 +60,25 @@ public class OpenFieldIntegrationTest extends ExperimentIntegrationTestBase {
 		VideoExecUnitGroup.pauseResumeStream();
 		// wait a while :D
 		Utils.sleep(200);
-
-		/************* start tracking ********/
+/*
+		*//************* start tracking ********//*
 		preStartTracking();
 		startTracking();
-		Thread.sleep(1000);
-
+		Thread.sleep(1000);*/
+	}
+	
+	@Override
+	protected void afterStartTracking() throws WidgetSearchException {
 		/************* resume streaming ********/
 		VideoExecUnitGroup.pauseResumeStream();
-
-		afterStartTracking();
+		
+		super.afterStartTracking();
 	}
-
+	
 	@Override
-	protected void afterVideoLoad() throws Exception {
+	protected void preStartTracking() throws Exception {
+		super.preStartTracking();
+		
 		/************* set background ********/
 		preSetBackground();
 		Utils.sleep(500);

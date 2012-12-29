@@ -244,7 +244,6 @@ public class ZonesModule extends
 	@Override
 	public void process() {
 		updatedZoneNumber = getZone(currentPosition.x, currentPosition.y);
-		System.out.println(updatedZoneNumber);
 		zoneHysteresis();
 		updateTotalDistance();
 		updateCentralZoneTime();
@@ -387,7 +386,6 @@ public class ZonesModule extends
 	private void updateZoneCounters() {
 		data.setCurrentZoneNum(updatedZoneNumber);
 		data.setAllEntrance(data.getAllEntrance() + 1);
-		System.out.println("Moved to zone: " + updatedZoneNumber);
 		if (data.getZones().getZoneByNumber(data.getCurrentZoneNum()) != null)
 			if (data.getZones().getZoneByNumber(data.getCurrentZoneNum())
 					.getZoneType() == ZoneType.CENTRAL_ZONE)

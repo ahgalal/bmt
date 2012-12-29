@@ -56,6 +56,14 @@ public class ExperimentIntegrationTestBase extends UITest {
 	}
 
 	protected void afterVideoLoad() throws Exception {
+		/************* pre-tracking ********/
+		preStartTracking();
+		
+		/************* tracking ********/
+		startTracking();
+		
+		/************* post-tracking ********/
+		afterStartTracking();
 	}
 
 	protected void checkParamValue(final Rat rat, final String param,
