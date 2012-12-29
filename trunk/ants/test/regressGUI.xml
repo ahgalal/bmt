@@ -24,7 +24,7 @@
 	<target name="BMTTestGUI">
 		<copy todir="." file="libs/JAGVidLib/AGVidLib.dll" overwrite="true"/>
 		<antcall target="testGUI"/>
-
+		<delete file="AGVidLib.dll"/>
 
 	</target>
 </project>
