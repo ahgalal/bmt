@@ -107,4 +107,12 @@ public abstract class VidInputter<ConfigsType extends VidSourceConfigs> {
 	public void resumeStream() {
 		paused=false;
 	}
+
+	public int getStreamPosition() {
+		return -1;
+	}
+
+	public int getStreamLength() {
+		return -1;
+	}
 }
