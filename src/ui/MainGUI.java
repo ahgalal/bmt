@@ -43,6 +43,7 @@ import org.eclipse.swt.widgets.TableItem;
 
 import control.ui.ControllerUI;
 import control.ui.CtrlMainGUI;
+import org.eclipse.swt.widgets.Scale;
 
 /**
  * Main window of the Rat Monitoring Tool, it has links to all program portions.
@@ -58,11 +59,11 @@ public class MainGUI extends BaseUI {
 																// processed
 																// image
 	private Button		btnStartStream;
-	private Button btnPause;
+	private Button		btnPause;
 	private Button		btnStartTracking				= null;
 	private Button		btnStopStream;
 	private Button		btnStopTracking					= null;
-	private Composite	cmpstMain						= null;
+	private Composite	cmpstMain;
 	private Composite	cmpstSecondary					= null;
 	private Composite	cmpstStreaming;
 	private Composite	cmpstTracking;
@@ -72,7 +73,7 @@ public class MainGUI extends BaseUI {
 	private ExpandBar	expandBar;
 	private Group		grpStats						= null;
 
-	private Group		grpVideo						= null;
+	private Group		grpVideo;
 	private Group		grpGraphs;
 	private Label		lblStatus						= null;
 
@@ -104,6 +105,7 @@ public class MainGUI extends BaseUI {
 
 	private Table		tblData						= null;
 	private StyledText txtConsole;
+	private Scale sclStreamPosition;
 
 	/**
 	 * Creates GUI components, and links this Shell with the parent Shell.
@@ -113,7 +115,7 @@ public class MainGUI extends BaseUI {
 		super.sShell = this.sShell;
 		grpGraphs = new Group(sShell, SWT.NONE);
 		grpGraphs.setText("Graphs");
-		grpGraphs.setBounds(10, 511, 969, 165);
+		grpGraphs.setBounds(10, 524, 969, 152);
 		
 		txtConsole = new StyledText(sShell, SWT.BORDER | SWT.WRAP | SWT.V_SCROLL | SWT.MULTI);
 		txtConsole.setBounds(10, 511, 662, 82);
@@ -209,6 +211,9 @@ public class MainGUI extends BaseUI {
 		cmpstMain.setLayout(new GridLayout());
 		cmpstMain.setLocation(new Point(5, 15));
 		cmpstMain.setSize(new Point(640, 480));
+		
+		sclStreamPosition = new Scale(grpVideo, SWT.NONE);
+		sclStreamPosition.setBounds(5, 490, 640, 18);
 		createMainAWTFrame();
 	}
 
@@ -423,7 +428,7 @@ public class MainGUI extends BaseUI {
 		grpVideo.setLayout(null);
 		grpVideo.setText("Video:");
 
-		grpVideo.setBounds(new Rectangle(10, 5, 665, 500));
+		grpVideo.setBounds(new Rectangle(10, 5, 665, 518));
 		createCmpstMain();
 	}
 
@@ -734,5 +739,10 @@ public class MainGUI extends BaseUI {
 		mnuitmEditExp.setEnabled(loaded);
 		mnutmExperimentExporttoexcel.setEnabled(loaded);
 		mnuEditItem.setEnabled(loaded);
+	}
+
+	public void setStreamProgress(int position,int totalLength) {
+		sclStreamPosition.setSelection(position);
+		sclStreamPosition.setMaximum(totalLength);
 	}
 }

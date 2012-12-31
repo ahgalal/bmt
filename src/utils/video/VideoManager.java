@@ -395,4 +395,18 @@ public class VideoManager {
 		}
 	}
 
+	public int getStreamPosition() {
+		int streamPosition=0;
+		if(vInput!=null)
+			streamPosition= vInput.getStreamPosition();
+		return streamPosition;
+	}
+
+	public int getStreamLength() {
+		int streamLength=0;
+		if(vInput!=null)
+			streamLength= vInput.getStreamLength();
+		return streamLength;
+	}
+
 }

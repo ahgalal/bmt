@@ -92,6 +92,15 @@ public class VideoFileModule extends VidInputter<AGVidLibConfigs> {
 
 	private final JAGVidLib	vidLib;
 
+	@Override
+	public int getStreamPosition() {
+		return vidLib.getPosition();
+	}
+	
+	@Override
+	public int getStreamLength() {
+		return vidLib.getLength();
+	}
 	/**
 	 * 
 	 */

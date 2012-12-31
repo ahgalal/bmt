@@ -59,7 +59,7 @@ public class CtrlMainGUI extends ControllerUI<MainGUI> implements StateListener 
 		 */
 		@Override
 		public void run() {
-
+			final int streamLength = pm.getVideoManager().getStreamLength();
 			setTableNamesColumn();
 			while (pm.getState().getGeneral() == GeneralState.TRACKING) {
 				Utils.sleep(200);
@@ -68,9 +68,16 @@ public class CtrlMainGUI extends ControllerUI<MainGUI> implements StateListener 
 
 						@Override
 						public void run() {
-							if (!ui.getShell().isDisposed())
+							if (!ui.getShell().isDisposed()) {
 								ui.fillDataTable(null, ModulesManager
 										.getDefault().getGUIData());
+
+								// update stream position
+								int streamPosition = pm.getVideoManager()
+										.getStreamPosition();
+								ui.setStreamProgress(streamPosition,
+										streamLength);
+							}
 						}
 					});
 			}
