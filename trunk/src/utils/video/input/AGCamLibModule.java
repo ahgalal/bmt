@@ -84,7 +84,8 @@ public class AGCamLibModule extends VidInputter<VidSourceConfigs> {
 		this.configs = configs;
 		fia = frameData;
 
-		if (agCam.initialize(configs.getWidth(), configs.getHeight(), configs.getCamIndex()) == ReturnValue.SUCCESS)
+		ReturnValue initialize = agCam.initialize(configs.getWidth(), configs.getHeight(), configs.getCamIndex());
+		if (initialize == ReturnValue.SUCCESS)
 			return true;
 		else {
 			PManager.log.print("Error initializing the Webcam!", this,
