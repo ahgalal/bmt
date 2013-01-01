@@ -81,7 +81,7 @@ public class OpenFieldIntegrationRecordStreamPausedStopTest extends
 		super.setUp();
 		sleepTime1 = 3; // after 3 seconds, start recording
 		sleepTime2 = 7; // after 7 seconds, stop recording
-		sleepTime3 = 15; // remaining of 25, to complete the experiment
+		sleepTime3 = 10; // remaining of 25, to complete the experiment
 	}
 
 	@Override

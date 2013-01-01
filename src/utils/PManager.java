@@ -121,12 +121,15 @@ public class PManager {
 	 *            Main arguments
 	 */
 	public static void main(final String[] args) {
-		new PManager();
-		final Display display = Display.getDefault();
+		if (mainGUI == null) { // for handling successive tests in a suite 
+		//(to prevent duplicating GUI + Invalid thread access)
+			new PManager();
+			final Display display = Display.getDefault();
 
-		while (!mainGUI.isShellDisposed())
-			if (!display.readAndDispatch())
-				display.sleep();
+			while (!mainGUI.isShellDisposed())
+				if (!display.readAndDispatch())
+					display.sleep();
+		}
 
 		// display.dispose();
 	}

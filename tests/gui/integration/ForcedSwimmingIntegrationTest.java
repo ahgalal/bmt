@@ -68,8 +68,8 @@ public class ForcedSwimmingIntegrationTest extends
 
 		// TODO: tighten constraints
 		sessionTimeMin = 35;
-		sessionTimeMax = 45;
-		sleepTime1 = 42;
+		sessionTimeMax = 37;
+		sleepTime1 = 38;
 		sleepTime2 = 0;
 		sleepTime3 = 0;
 
