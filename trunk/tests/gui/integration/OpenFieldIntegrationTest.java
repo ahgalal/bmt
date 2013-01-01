@@ -149,17 +149,12 @@ public class OpenFieldIntegrationTest extends ExperimentIntegrationTestBase {
 				.getEnvVariableValue("BMT_WS")
 				+ "/BMT/ants/test/resources/zones_test.bmt");
 
-		sessionTimeMin = 18;
+		sessionTimeMin = 17;
 		sessionTimeMax = 19;
-		sleepTime1 = 30;
+		sleepTime1 = 20;
 		sleepTime2 = 0;
 		sleepTime3 = 0;
 
 		copyExperimentFile();
-	}
-
-	@Override
-	protected void tearDown() throws Exception {
-		super.tearDown();
 	}
 }
