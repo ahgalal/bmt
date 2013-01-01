@@ -115,5 +115,17 @@ public class GStreamerModule extends VidInputter<VidSourceConfigs> {
 		super.resumeStream();
 		playBin.play();
 	}
+	
+	@Override
+	public int getStreamLength() {
+		// TODO: test this
+		return (int) (dataSink.getDuration().longValue()/10000);
+	}
+	
+	@Override
+	public int getStreamPosition() {
+		// TODO: test this
+		return (int) (dataSink.getPosition().longValue()/10000);
+	}
 
 }
