@@ -65,13 +65,13 @@
 		<include name="**/*.jar" />
 		<include name="**/*.txt" />
 	</fileset>
-	<filelist id="jface_libs" dir="${eclipse.home}\plugins">
-		<file name="org.eclipse.core.commands_3.6.0.I20100512-1500.jar" />
-		<file name="org.eclipse.jface_3.6.2.M20110210-1200.jar" />
-		<file name="org.eclipse.ui.forms_3.5.2.r36_v20100702.jar" />
-		<file name="org.eclipse.ui.workbench_3.6.2.M20110210-1200.jar" />
-		<file name="org.eclipse.equinox.common_3.6.0.v20100503.jar" />
-	</filelist>
+	<fileset id="jface_libs" dir="${eclipse.home}\plugins">
+		<include name="org.eclipse.core.commands_3.6.0.I20100512-1500.jar"/>
+		<include name="org.eclipse.jface_3.6.2.M20110210-1200.jar" />
+		<include name="org.eclipse.ui.forms_3.5.2.r36_v20100702.jar" />
+		<include name="org.eclipse.ui.workbench_3.6.2.M20110210-1200.jar" />
+		<include name="org.eclipse.equinox.common_3.6.0.v20100503.jar" />
+	</fileset>
 
 	<!-- - - - - - - - - - - - - - - - - - 
           target: copy_libs                      
@@ -79,7 +79,7 @@
 	<target name="copy_libs">
 		<copy flatten="true" todir="${libs_dir}" verbose="true">
 			<fileset refid="libs" />
-			<filelist refid="jface_libs"/>
+			<fileset refid="jface_libs"/>
 		</copy>
 	</target>
 

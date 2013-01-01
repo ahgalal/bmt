@@ -78,11 +78,8 @@ public class MovementMeter extends
 	 */
 	@Override
 	public void process() {
-		if (linkIn.getData()[640 * 100] == 0)
-			System.out.println("linkIn has 0");
 		greyData = ImageManipulator.rgbIntArray2GrayIntArray(linkIn.getData());
-		if (greyData[640 * 100] == 0)
-			System.out.println("greyData has 0");
+
 		outputData = ImageManipulator.subtractGreyImage(greyData, prevGreyData);
 		// tc.start();
 		getInterestingAreaBounds(outputData, 20);

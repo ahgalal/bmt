@@ -198,7 +198,6 @@ public class VideoManager {
 	@SuppressWarnings("unchecked")
 	public boolean initialize(final CommonFilterConfigs ipCommonConfigs,
 			final String vidFile) {
-		isInitialized = true;
 		
 		if(ipCommonConfigs.getVidLibrary().equals("Cam")&&
 				commonConfigs.getVidLibrary()!=null && 
@@ -249,7 +248,8 @@ public class VideoManager {
 		
 		PManager.log.print("Vid lib: "+ vidLib, this);
 
-		return vInput.initialize(fia, srcConfigs);
+		isInitialized = vInput.initialize(fia, srcConfigs);
+		return isInitialized;
 	}
 	
 	private void initFilters(final ExperimentType expType){
