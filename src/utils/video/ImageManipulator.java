@@ -29,7 +29,7 @@ import utils.TimeCalculator;
  */
 public class ImageManipulator {
 
-	private static int[]	subResult;
+	private static int[]			subResult;
 
 	private static TimeCalculator	tc	= new TimeCalculator();
 
@@ -252,9 +252,8 @@ public class ImageManipulator {
 	 *            RGB image integer array
 	 * @return Grayscale image integer array
 	 */
-	public static int[] rgbIntArray2GrayIntArray(final int[] in) {
+	public static int[] rgbIntArray2GrayIntArray(final int[] in,int[] res) {
 		int r, g, b, grey;
-		final int[] res = new int[in.length];
 		for (int i = 0; i < in.length; i++) {
 			/*
 			 * r = in[i] & (0x000000FF); g = (in[i] & (0x0000FF00)) >> 8; b =
@@ -266,6 +265,38 @@ public class ImageManipulator {
 			b = (int) (0.1140 * ((in[i] & (0x00FF0000)) >> 16));
 			grey = r + g + b;
 			res[i] = (grey + (grey << 8) | (grey << 16));
+		}
+		return res;
+	}
+
+	public static int[] formGrayImageFromGrayMap(byte[] grayMap) {
+		int r, g, b, grey;
+		final int[] res = new int[grayMap.length];
+		for (int i = 0; i < grayMap.length; i++) {
+			r = (int) (0.2989 * (grayMap[i]));
+			g = (int) (0.5870 * ((grayMap[i]) >> 8));
+			b = (int) (0.1140 * ((grayMap[i]) >> 16));
+			grey = r + g + b;
+			res[i] = (grey + (grey << 8) | (grey << 16));
+		}
+		return res;
+	}
+
+	public static int formGrayValueFromGrayIntensity(short grayValue) {
+		int res = 0;
+		res = (grayValue + (grayValue << 8) | (grayValue << 16));
+		return res;
+	}
+
+	public static short[] formGrayMapFromGrayImage(int[] grayImage) {
+		int r, g, b, grey;
+		final short[] res = new short[grayImage.length];
+		for (int i = 0; i < grayImage.length; i++) {
+			r = (int) (0.2989 * (grayImage[i] & 0x000000FF));
+			g = (int) (0.5870 * ((grayImage[i] & 0x0000FF00) >> 8));
+			b = (int) (0.1140 * ((grayImage[i] & 0x00FF0000) >> 16));
+			grey =  (r + g + b);
+			res[i] = (short) grey;
 		}
 		return res;
 	}

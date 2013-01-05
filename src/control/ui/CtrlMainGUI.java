@@ -103,7 +103,7 @@ public class CtrlMainGUI extends ControllerUI<MainGUI> implements StateListener 
 		ui = new MainGUI();
 		uiShell = ui.getShell();
 		ui.setController(this);
-		thUpdateGui = new Thread(new RunnableUpdateGUI());
+		thUpdateGui = new Thread(new RunnableUpdateGUI(),"Update GUI");
 
 		pm.getStatusMgr().initialize(ui.getConsoleText());
 		ctrlAboutBox = new CtrlAbout();

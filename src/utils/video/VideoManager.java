@@ -80,15 +80,27 @@ public class VideoManager {
 			PManager.log.print("Started Video Streaming", this);
 
 			while (videoProcessorEnabled) {
+				
 				checkDeviceReady();
 
+				long t1=System.currentTimeMillis();
 				if ((vInput != null)
 						&& (vInput.getStatus() == SourceStatus.STREAMING))
 					for (final VideoFilter<?, ?> v : filterManager.getFilters())
 						v.process();
-
-				Utils.sleep(1000 / commonConfigs.getFrameRate());
-
+				long t2=System.currentTimeMillis();
+				
+				//Utils.sleep(1000 / commonConfigs.getFrameRate());
+				
+				// adaptive sleep time
+				int filtersLoopTime = (int) (t2-t1);
+				int sleepTime=1000 / commonConfigs.getFrameRate() - filtersLoopTime;
+				if(sleepTime<30)
+					sleepTime=30;
+				Utils.sleep(sleepTime);
+				
+				//long t3=System.currentTimeMillis();
+				//System.out.println(t3-t1);
 				synchronized (this) {
 					while (paused)
 						try {
@@ -312,7 +324,7 @@ public class VideoManager {
 			while (!vInput.startStream())
 				Thread.sleep(100);
 			filterManager.enableFilter("ScreenDrawer", true);
-			thFiltersProcess = new Thread(new RunnableProcessor());
+			thFiltersProcess = new Thread(new RunnableProcessor(),"Filters process");
 			thFiltersProcess.start();
 			PManager.getDefault().getState().setStream(StreamState.STREAMING);
 			filterManager.submitDataObjects();

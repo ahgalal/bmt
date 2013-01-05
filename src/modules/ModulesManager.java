@@ -448,7 +448,7 @@ public class ModulesManager {
 	public void runModules(final boolean run) {
 		if (run & !runModules) {
 			runModules = true;
-			thModules = new Thread(runnableModules);
+			thModules = new Thread(runnableModules,"Modules process");
 			thModules.start();
 		} else if (!run & runModules) {
 			runModules = false;

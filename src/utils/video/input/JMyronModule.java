@@ -98,7 +98,7 @@ public class JMyronModule extends VidInputter<VidSourceConfigs> {
 	public boolean startStream() {
 		jmyron.start(configs.getWidth(), configs.getHeight());
 
-		thJmyronUpdateImage = new Thread(new RunnableJMyron());
+		thJmyronUpdateImage = new Thread(new RunnableJMyron(),"JMyron");
 		thJmyronUpdateImage.start();
 
 		return true;
