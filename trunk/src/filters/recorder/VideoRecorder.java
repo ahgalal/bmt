@@ -105,7 +105,7 @@ public class VideoRecorder extends VideoFilter<RecorderConfigs, FilterData> {
 						prevSampleTime = 0;
 
 					}
-				});
+				},"Stop Recording");
 				thStopRecording.start();
 			}
 			return true;

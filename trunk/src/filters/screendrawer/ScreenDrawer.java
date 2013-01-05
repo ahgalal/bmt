@@ -153,7 +153,7 @@ public class ScreenDrawer extends VideoFilter<ScreenDrawerConfigs, FilterData> {
 	@Override
 	public boolean enable(final boolean enable) {
 		if (enable) {
-			thDrawer = new Thread(new RunnableDrawer());
+			thDrawer = new Thread(new RunnableDrawer(),"Screen drawer");
 			thDrawer.start();
 		}
 		return super.enable(enable);

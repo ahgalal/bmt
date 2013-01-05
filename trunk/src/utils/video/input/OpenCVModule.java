@@ -97,7 +97,7 @@ public class OpenCVModule extends VidInputter<OpenCVConfigs> {
 	@Override
 	public boolean startStream() {
 		if (thUpdateImage == null)
-			thUpdateImage = new Thread(new RunnableOpenCV());
+			thUpdateImage = new Thread(new RunnableOpenCV(),"OpenCV");
 		thUpdateImage.start();
 		return true;
 	}

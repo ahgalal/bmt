@@ -129,7 +129,7 @@ public class RearingDetector extends
 					+ "\n");
 		} else {
 			rearingNow = false;
-			final Thread thRearing = new Thread(new NormalRatAreaThread());
+			final Thread thRearing = new Thread(new NormalRatAreaThread(),"Rearing area");
 			thRearing.start();
 			System.out.print("Rearing Training Started" + "\n");
 		}

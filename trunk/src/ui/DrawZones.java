@@ -210,7 +210,7 @@ public class DrawZones extends BaseUI {
 								measurePnt2 = null;
 								controller.settingScale(false);
 							}
-						});
+						},"Scale setting");
 						th_2points.start();
 					}
 				});

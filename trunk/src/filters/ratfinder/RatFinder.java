@@ -34,15 +34,20 @@ public class RatFinder extends
 		VideoFilter<RatFinderFilterConfigs, RatFinderData> {
 	protected final Point	centerPoint;
 
-	private int[]					horiSum;
-	protected Marker		marker, marker2;
+	private final Point[]	centroidHistory							= new Point[2];
+	private int				framesRemainingToEnableCentroidHistory	= 10;
 
+	private int				height;
+	private int[]			horiSum;
+
+	protected Marker		marker, marker2;
 	protected int[]			outData;
-	private final int		searchSideLength	= 600;
+	private final int		searchSideLength						= 600;
 
 	private int				tmpMax;
-	private int[]					vertSum;
-	private Point[] centroidHistory=new Point[2];
+
+	private int[]			vertSum;
+	private int				width;
 
 	/**
 	 * Initializes the filter.
@@ -60,27 +65,29 @@ public class RatFinder extends
 		centerPoint = filterData.getCenterPoint();
 	}
 
-	private int framesRemainingToEnableCentroidHistory=10;
 	@Override
 	public boolean configure(final FilterConfigs configs) {
 		this.configs = (RatFinderFilterConfigs) configs;
 
-		marker = new CrossMarker(50, 50, 5, Color.RED,
-				configs.getCommonConfigs().getWidth(), configs.getCommonConfigs().getHeight());
+		marker = new CrossMarker(50, 50, 5, Color.RED, configs
+				.getCommonConfigs().getWidth(), configs.getCommonConfigs()
+				.getHeight());
 
 		marker2 = new RectangularMarker(configs.getCommonConfigs().getWidth(),
 				configs.getCommonConfigs().getHeight(), searchSideLength,
 				searchSideLength, Color.RED);
-		
-		for(int i=0;i<centroidHistory.length;i++)
-			centroidHistory[i]=new Point(-1,-1);
-		framesRemainingToEnableCentroidHistory=10;
-		
+
+		for (int i = 0; i < centroidHistory.length; i++)
+			centroidHistory[i] = new Point(-1, -1);
+		framesRemainingToEnableCentroidHistory = 10;
+
 		// super's stuff:
 		outData = new int[configs.getCommonConfigs().getWidth()
 				* configs.getCommonConfigs().getHeight()];
 		this.linkOut.setData(outData);
 		specialConfiguration(configs);
+		width = configs.getCommonConfigs().getWidth();
+		height = configs.getCommonConfigs().getHeight();
 		return super.configure(configs);
 	}
 
@@ -103,6 +110,41 @@ public class RatFinder extends
 		}
 	}
 
+	private void lowPassFilterCentroidPosition() {
+
+		// history remains disabled till ex:10 frames elapse, this is to ensure
+		// the reliability of the centroid position (after ex:10 frames)
+		if (framesRemainingToEnableCentroidHistory == 0) {
+			if (centroidHistory[0].x == -1) { // history is not initialized yet
+				for (int i = 0; i < centroidHistory.length - 1; i++) {
+					centroidHistory[i].x = centerPoint.x;
+					centroidHistory[i].y = centerPoint.y;
+				}
+			} else {
+				int sumX = 0, sumY = 0;
+				for (final Point p : centroidHistory) {
+					sumX += p.x;
+					sumY += p.y;
+				}
+				final int factor = 5;
+				centerPoint.x = (centerPoint.x * factor + sumX)
+						/ (centroidHistory.length + factor);
+				centerPoint.y = (centerPoint.y * factor + sumY)
+						/ (centroidHistory.length + factor);
+
+				// update history
+				for (int i = 0; i < centroidHistory.length - 1; i++) {
+					centroidHistory[i].x = centroidHistory[i + 1].x;
+					centroidHistory[i].y = centroidHistory[i + 1].y;
+				}
+
+				centroidHistory[centroidHistory.length - 1].x = centerPoint.x;
+				centroidHistory[centroidHistory.length - 1].y = centerPoint.y;
+			}
+		} else
+			framesRemainingToEnableCentroidHistory--;
+	}
+
 	/*
 	 * (non-Javadoc)
 	 * @see utils.video.processors.VideoUtility#process(int[])
@@ -110,8 +152,11 @@ public class RatFinder extends
 	@Override
 	public void process() {
 		if (configs.isEnabled()) {
+			//final long t1 = System.currentTimeMillis();
 			updateCentroid(linkIn.getData());
 			drawMarkerOnImg(linkIn.getData());
+			//final long t2 = System.currentTimeMillis();
+			// System.out.println(t2-t1);
 		}
 	}
 
@@ -127,24 +172,25 @@ public class RatFinder extends
 	 *            input image
 	 */
 	protected void updateCentroid(final int[] binaryImage) {
-		int smallestWhiteAreaSize=10;
+		final int smallestWhiteAreaSize = 10;
 		tmpMax = smallestWhiteAreaSize;
 
 		int y1, y2;
+
 		if (centerPoint.y == 0) {
 			y1 = 0;
-			y2 = configs.getCommonConfigs().getHeight();
+			y2 = height;
 		} else {
 			y1 = (centerPoint.y - searchSideLength) < 0 ? 0
 					: centerPoint.y - 40;
-			y2 = (centerPoint.y + searchSideLength) > configs.getCommonConfigs().getHeight() ? configs.getCommonConfigs().getHeight()
+			y2 = (centerPoint.y + searchSideLength) > height ? height
 					: centerPoint.y + searchSideLength;
 		}
-		for (int y = y1; y < y2; y++){ // Horizontal Sum
+
+		for (int y = y1; y < y2; y++) { // Horizontal Sum
 			horiSum[y] = 0;
-			for (int x = 0; x < configs.getCommonConfigs().getWidth(); x++)
-				horiSum[y] += binaryImage[y * configs.getCommonConfigs().getWidth()
-						+ x] & 0xff;
+			for (int x = 0; x < width; x++)
+				horiSum[y] += binaryImage[y * width + x] & 0xff;
 			if (horiSum[y] > tmpMax) {
 				centerPoint.y = y;
 				tmpMax = horiSum[y];
@@ -156,19 +202,18 @@ public class RatFinder extends
 		int x1, x2;
 		if (centerPoint.x == 0) {
 			x1 = 0;
-			x2 = configs.getCommonConfigs().getWidth();
+			x2 = width;
 		} else {
 			x1 = (centerPoint.x - searchSideLength) < 0 ? 0
 					: centerPoint.x - 40;
-			x2 = (centerPoint.x + searchSideLength) > configs.getCommonConfigs().getWidth() ? configs.getCommonConfigs().getWidth()
+			x2 = (centerPoint.x + searchSideLength) > width ? width
 					: centerPoint.x + searchSideLength;
 		}
 
-		for (int x = x1; x < x2; x++){ // Vertical Sum
+		for (int x = x1; x < x2; x++) { // Vertical Sum
 			vertSum[x] = 0;
-			for (int y = 0; y < configs.getCommonConfigs().getHeight(); y++)
-				vertSum[x] += binaryImage[y * configs.getCommonConfigs().getWidth()
-				                            + x] & 0xff;
+			for (int y = 0; y < height; y++)
+				vertSum[x] += binaryImage[y * width + x] & 0xff;
 			if (vertSum[x] > tmpMax) {
 				centerPoint.x = x;
 				tmpMax = vertSum[x];
@@ -177,39 +222,6 @@ public class RatFinder extends
 
 		// low pass filter on position
 		lowPassFilterCentroidPosition();
-	}
-
-	private void lowPassFilterCentroidPosition() {
-		
-		// history remains disabled till ex:10 frames elapse, this is to ensure
-		// the reliability of the centroid position (after ex:10 frames)
-		if(framesRemainingToEnableCentroidHistory==0){
-			if(centroidHistory[0].x==-1){ // history is not initialized yet
-				for(int i=0;i<centroidHistory.length-1;i++){
-					centroidHistory[i].x=centerPoint.x;
-					centroidHistory[i].y=centerPoint.y;
-				}
-			}else{
-				int sumX=0,sumY=0;
-				for(Point p:centroidHistory){
-					sumX+=p.x;
-					sumY+=p.y;
-				}
-				int factor=5;
-				centerPoint.x= (centerPoint.x*factor+sumX)/(centroidHistory.length+factor);
-				centerPoint.y= (centerPoint.y*factor+sumY)/(centroidHistory.length+factor);
-
-				// update history
-				for(int i=0;i<centroidHistory.length-1;i++){
-					centroidHistory[i].x=centroidHistory[i+1].x;
-					centroidHistory[i].y=centroidHistory[i+1].y;
-				}
-
-				centroidHistory[centroidHistory.length-1].x=centerPoint.x;
-				centroidHistory[centroidHistory.length-1].y=centerPoint.y;
-			}
-		}else
-			framesRemainingToEnableCentroidHistory--;
 	}
 
 	@Override

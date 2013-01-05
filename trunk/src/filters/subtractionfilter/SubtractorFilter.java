@@ -73,7 +73,7 @@ public class SubtractorFilter extends
 		if (configs.isEnabled())
 			if (linkIn.getData().length == bgImageGray.getFrameData().length) {
 				localData = ImageManipulator.rgbIntArray2GrayIntArray(linkIn
-						.getData());
+						.getData(),localData);
 				tmp = 0;
 				for (int i = 0; i < localData.length; i++) {
 					tmp = localData[i] - bgImageGray.getFrameData()[i];
@@ -130,7 +130,7 @@ public class SubtractorFilter extends
 	public void updateBG() {
 		if (linkIn.getData() != null)
 			bgImageGray.setFrameData(ImageManipulator
-					.rgbIntArray2GrayIntArray(linkIn.getData()));
+					.rgbIntArray2GrayIntArray(linkIn.getData(), new int[linkIn.getData().length]));
 		else
 			PManager.log.print("Error updating BG, data is null", this,
 					StatusSeverity.ERROR);

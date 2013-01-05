@@ -105,7 +105,7 @@ public class AGCamLibModule extends VidInputter<VidSourceConfigs> {
 	@Override
 	public boolean startStream() {
 		if (agCam.start() == ReturnValue.SUCCESS) {
-			thUpdateImage = new Thread(new RunnableAGCamLib());
+			thUpdateImage = new Thread(new RunnableAGCamLib(),"AGCamLib");
 			thUpdateImage.start();
 
 			return true;

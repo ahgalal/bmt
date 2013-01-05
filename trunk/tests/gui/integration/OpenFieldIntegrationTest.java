@@ -31,8 +31,8 @@ public class OpenFieldIntegrationTest extends ExperimentIntegrationTestBase {
 	protected int		centralTimeMin		= 1;
 	protected String	scale				= "60";
 
-	protected int		totalDistanceMax	= 420;
-	protected int		totalDistanceMin	= 320;
+	protected int		totalDistanceMax	= 350;
+	protected int		totalDistanceMin	= 300;
 	protected String	zonesFile;
 
 	protected void afterLoadZones() throws Exception {

@@ -41,10 +41,12 @@ public class MovementMeter extends
 
 	@Override
 	public boolean configure(final FilterConfigs configs) {
+		
 		prevGreyData = new int[configs.getCommonConfigs().getWidth()
 				* configs.getCommonConfigs().getHeight()];
 		prevOutputData = new int[configs.getCommonConfigs().getWidth()
 				* configs.getCommonConfigs().getHeight()];
+		greyData = new int[prevGreyData.length];
 		final boolean ret = super.configure(configs);
 		initializeSearchBounds();
 		return ret;
@@ -78,7 +80,7 @@ public class MovementMeter extends
 	 */
 	@Override
 	public void process() {
-		greyData = ImageManipulator.rgbIntArray2GrayIntArray(linkIn.getData());
+		greyData = ImageManipulator.rgbIntArray2GrayIntArray(linkIn.getData(),greyData);
 
 		outputData = ImageManipulator.subtractGreyImage(greyData, prevGreyData);
 		// tc.start();
@@ -96,7 +98,7 @@ public class MovementMeter extends
 			prevOutputData = outputData;
 		}
 
-		prevGreyData = greyData;
+		System.arraycopy(greyData, 0, prevGreyData, 0, greyData.length);
 		filterData.setWhiteSummation(summation);
 	}
 

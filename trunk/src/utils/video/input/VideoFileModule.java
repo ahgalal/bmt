@@ -173,7 +173,7 @@ public class VideoFileModule extends VidInputter<AGVidLibConfigs> {
 	public boolean startStream() {
 		vidLib.initialize(configs.getVideoFilePath());
 		Utils.sleep(100);
-		thUpdateImage = new Thread(new RunnableAGVidLib());
+		thUpdateImage = new Thread(new RunnableAGVidLib(),"AGVidLib");
 		thUpdateImage.start();
 		stopStream = false;
 		return true;
