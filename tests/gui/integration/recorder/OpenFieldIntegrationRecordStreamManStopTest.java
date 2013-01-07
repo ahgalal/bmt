@@ -30,14 +30,14 @@ public class OpenFieldIntegrationRecordStreamManStopTest extends
 	protected void preSleep2() throws WidgetSearchException {
 		super.preSleep2();
 		// start recording
-		VideoExecUnitGroup.StartRecord();
+		VideoExecUnitGroup.startRecord();
 	}
 
 	@Override
 	protected void preSleep3() throws WidgetSearchException {
 		super.preSleep3();
 		// stop recording
-		VideoExecUnitGroup.StopRecord();
+		VideoExecUnitGroup.stopRecord();
 
 		// save video file
 		DialogBoxUtils.fillDialog(recordedVideoFile, getUI());

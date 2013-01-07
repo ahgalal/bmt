@@ -41,7 +41,7 @@ public class OpenFieldIntegrationManStopStreamWhenPausedTest extends
 			VideoExecUnitGroup.pauseResumeStream();
 
 			// stop stream
-			VideoExecUnitGroup.StopStream();
+			VideoExecUnitGroup.stopStream();
 
 			// continue the default scenario starting at the point after loading
 			// experiment

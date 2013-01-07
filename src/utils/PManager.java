@@ -409,4 +409,16 @@ public class PManager {
 	public CtrlAbout getAbout() {
 		return about;
 	}
+	
+	public static String getOS() {
+		final String os = System.getProperty("os.name");
+		PManager.log.print("OS: " + os, PManager.class, Details.VERBOSE);
+		if (os.contains("Linux"))
+			return "Linux";
+		else if (os.contains("Windows"))
+			return "Windows";
+
+		System.out.print("Unknown OS\n");
+		return null;
+	}
 }

@@ -12,9 +12,9 @@
     </description>
 
 	<!-- override default values in build.xml and common.xml -->
-	<property name="lib.dir" value="libs"/>
-	<property name="include1" value="gui/**/*Test.java"/>
-	<property name="exclude1" value="gui/utils/*"/>
+	<property name="lib.dir" value="libs" />
+	<property name="include1" value="gui/**/*Test.java" />
+	<property name="exclude1" value="gui/utils/*" />
 
 	<import file="./base/GUITests.xml" />
 
@@ -22,9 +22,15 @@
           target: Test GUI              
          ================================= -->
 	<target name="BMTTestGUI">
-		<copy todir="." file="libs/JAGVidLib/AGVidLib.dll" overwrite="true"/>
-		<antcall target="testGUI"/>
-		<delete file="AGVidLib.dll"/>
-
+		<copy todir="." file="libs/JAGVidLib/AGVidLib.dll" overwrite="true" />
+		<copy todir="." file="libs/JAGCamLib/AGCamLib.dll" overwrite="true" />
+		<copy todir="." file="libs/JMyron/DSVL.dll" overwrite="true" />
+		<copy todir="." file="libs/JMyron/DSVL.dll" overwrite="true" />
+		<copy todir="." file="libs/JMyron/JMyron.dll" overwrite="true" />
+		<copy todir="." file="libs/JMyron/myron_ezcam.dll" overwrite="true" />
+		
+		<antcall target="testGUI" />
+		
+		<delete dir="." includes="*.dll"/>
 	</target>
 </project>

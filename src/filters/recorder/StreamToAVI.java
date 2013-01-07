@@ -114,7 +114,10 @@ public class StreamToAVI {
 			if (prevSampleTime != 0) {
 				long deltaSamples = currentSampleTime - prevSampleTime;
 				if(deltaSamples>333){ // more than third of a second (stream is paused)
-					deltaSamples=accumulativeRecordTime/noFrames;
+					if(noFrames==0)
+						deltaSamples=30;
+					else
+						deltaSamples=accumulativeRecordTime/noFrames;
 					System.out.println("setting deltaSamples to avg: "+ deltaSamples);
 				}
 				accumulativeRecordTime += deltaSamples;

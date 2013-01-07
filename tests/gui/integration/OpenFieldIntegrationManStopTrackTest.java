@@ -38,7 +38,7 @@ public class OpenFieldIntegrationManStopTrackTest extends
 		super.preSleep1();
 		
 		// start recording
-		VideoExecUnitGroup.StartRecord();
+		VideoExecUnitGroup.startRecord();
 	}
 	
 	@Override
@@ -72,7 +72,7 @@ public class OpenFieldIntegrationManStopTrackTest extends
 		centralEntranceMin = 0;centralEntranceMax = 1;
 		allEntranceMin = 9;
 		allEntranceMax = 12;
-		totalDistanceMin = 170;
+		totalDistanceMin = 160;
 		totalDistanceMax = 220;
 	}
 	
