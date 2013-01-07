@@ -72,7 +72,7 @@ public class OpenFieldIntegrationManStopTrackTest extends
 		centralEntranceMin = 0;centralEntranceMax = 1;
 		allEntranceMin = 9;
 		allEntranceMax = 12;
-		totalDistanceMin = 180;
+		totalDistanceMin = 170;
 		totalDistanceMax = 220;
 	}
 	

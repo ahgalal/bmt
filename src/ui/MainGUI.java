@@ -36,6 +36,7 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
+import org.eclipse.swt.widgets.Scale;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
@@ -43,7 +44,6 @@ import org.eclipse.swt.widgets.TableItem;
 
 import control.ui.ControllerUI;
 import control.ui.CtrlMainGUI;
-import org.eclipse.swt.widgets.Scale;
 
 /**
  * Main window of the Rat Monitoring Tool, it has links to all program portions.

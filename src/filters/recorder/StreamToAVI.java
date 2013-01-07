@@ -36,7 +36,9 @@ public class StreamToAVI {
 	private enum State {
 		INITIALIZED
 	}
-
+	private long			prevSampleTime			= 0;
+	private long			noFrames				= 0;
+	private long			accumulativeRecordTime	= 0;
 	private AVIOutputStream	aviOp;
 	private int[]			data;
 	private BufferedImage	image;
@@ -48,7 +50,17 @@ public class StreamToAVI {
 	 */
 	public void close() {
 		try {
+			double framesPerSecond = 1000 * noFrames / (double) accumulativeRecordTime;
+			//aviSaver.setTimeScale(timescale);
+			setFrameRate(framesPerSecond);
 			aviOp.close();
+			
+			System.out.println("accRecordTime: "
+					+ accumulativeRecordTime + " FPS: "+ framesPerSecond);
+			accumulativeRecordTime = 0;
+
+			noFrames = 0;
+			prevSampleTime = 0;
 		} catch (final IOException e) {
 			e.printStackTrace();
 		}
@@ -91,6 +103,16 @@ public class StreamToAVI {
 	 */
 	public void writeFrame(final int[] frameData) {
 		if (state == State.INITIALIZED) {
+			
+			// calculate video time and number of frames
+			final long currentSampleTime = System.currentTimeMillis();
+			if (prevSampleTime != 0) {
+				final long deltaSamples = currentSampleTime - prevSampleTime;
+				accumulativeRecordTime += deltaSamples;
+				noFrames++;
+			}
+			prevSampleTime = currentSampleTime;
+			
 			System.arraycopy(frameData, 0, data, 0, frameData.length);
 			try {
 				aviOp.writeFrame(image);
@@ -107,6 +129,10 @@ public class StreamToAVI {
 	 */
 	public void setTimeScale(int val){
 		aviOp.setTimeScale(val);
+	}
+
+	public void setFrameRate(double d) {
+		aviOp.setFrameRate(d);
 	}
 
 }

@@ -144,9 +144,9 @@ public class ZonesModule extends
 
 	@Override
 	public void deInitialize() {
-		for (final Point point : path) {
+/*		for (final Point point : path) {
 			// System.out.println(point.x+"\t"+point.y);
-		}
+		}*/
 	}
 
 	/**

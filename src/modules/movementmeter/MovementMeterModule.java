@@ -121,11 +121,11 @@ public class MovementMeterModule extends
 				/ ENERGY_DIVISION_FACTOR;
 		if (energyData.size() > MIN_SAMPLES) {
 			final int oldVal1 = energyData.get(energyData.size() - 5);
-			final int oldVal2 = energyData.get(energyData.size() - 10);
+/*			final int oldVal2 = energyData.get(energyData.size() - 10);
 			final int oldVal3 = energyData.get(energyData.size() - 15);
 			final int oldVal4 = energyData.get(energyData.size() - 20);
 			final int oldVal5 = energyData.get(energyData.size() - 25);
-			final int oldVal6 = energyData.get(energyData.size() - 30);
+			final int oldVal6 = energyData.get(energyData.size() - 30);*/
 
 			// filter out abrupt changes (spikes)
 			if (Math.abs(newVal - oldVal1) > getMaxEnergy() / 2)

@@ -33,13 +33,38 @@ import filters.VideoFilter;
  * @author Creative
  */
 public class VideoRecorder extends VideoFilter<RecorderConfigs, FilterData> {
-	private long			accumulativeRecordTime	= 0;
+	
 
 	private StreamToAVI		aviSaver;
 	private boolean			isRecording				= false;
-	private long			noFrames				= 0;
+	
 	private final PManager	pm;
-	private long			prevSampleTime			= 0;
+	
+	private Thread			frameWriterThread;
+
+	private class FrameWriterRunnable implements Runnable {
+
+		@Override
+		public void run() {
+			while (frameWriterThread != null) {
+				synchronized (frameWriterThread) {
+					try {
+						frameWriterThread.wait();
+					} catch (InterruptedException e) {
+						// do nothing when interrupted
+					}
+				}
+				if (frameAvailable) { // there is a new frame to save
+					frameAvailable = false;
+
+					// write frame
+					final int[] imageData = linkIn.getData();
+					aviSaver.writeFrame(imageData);
+				}
+
+			}
+		}
+	};
 
 	/**
 	 * Initializes the filter.
@@ -58,6 +83,8 @@ public class VideoRecorder extends VideoFilter<RecorderConfigs, FilterData> {
 		pm = PManager.getDefault();
 	}
 
+	private Boolean	frameAvailable	= false;
+
 	@Override
 	public boolean configure(final FilterConfigs configs) {
 		this.configs = (RecorderConfigs) configs;
@@ -69,10 +96,16 @@ public class VideoRecorder extends VideoFilter<RecorderConfigs, FilterData> {
 		if (enable) {
 			if (pm.getState().getGeneral() == GeneralState.TRACKING) {
 				aviSaver = new StreamToAVI();
-				aviSaver.initialize("video.avi", VideoFormat.JPG, 10,
-						configs.getCommonConfigs().getWidth(),
-						configs.getCommonConfigs().getHeight());
+				aviSaver.initialize("video.avi", VideoFormat.JPG, 1, configs
+						.getCommonConfigs().getWidth(), configs
+						.getCommonConfigs().getHeight());
 				isRecording = true;
+
+				// start frame writer
+				frameWriterThread = new Thread(new FrameWriterRunnable(),
+						"Record Frame Writer");
+				frameWriterThread.start();
+
 				configs.setEnabled(true);
 				return true;
 			} else
@@ -82,30 +115,21 @@ public class VideoRecorder extends VideoFilter<RecorderConfigs, FilterData> {
 		} else {
 			if (isRecording == true) {
 				isRecording = false;
+
+				// stop frame writer thread
+				frameWriterThread.interrupt(); // wake up from wait
+				frameWriterThread = null; // break the while loop
+
 				final Thread thStopRecording = new Thread(new Runnable() {
 					@Override
 					public void run() {
 						configs.setEnabled(false);
 						Utils.sleep(100);
 
-						final int factor = 3;
-						final int timescale = (int) (Math
-								.round((30 / factor)
-										/ (1000 * noFrames / (double) accumulativeRecordTime)));
-						aviSaver.setTimeScale(timescale);
 						aviSaver.close();
 						aviSaver = null;
-
-						System.out.println("accRecordTime: "
-								+ accumulativeRecordTime + " timescale: "
-								+ timescale);
-						accumulativeRecordTime = 0;
-						
-						noFrames = 0;
-						prevSampleTime = 0;
-
 					}
-				},"Stop Recording");
+				}, "Stop Recording");
 				thStopRecording.start();
 			}
 			return true;
@@ -119,18 +143,11 @@ public class VideoRecorder extends VideoFilter<RecorderConfigs, FilterData> {
 	@Override
 	public void process() {
 		if (configs.isEnabled()) {
-
-			// calculate video time and number of frames
-			final long currentSampleTime = System.currentTimeMillis();
-			if (prevSampleTime != 0) {
-				final long deltaSamples = currentSampleTime - prevSampleTime;
-				accumulativeRecordTime += deltaSamples;
-				noFrames++;
+			synchronized (frameWriterThread) {
+				frameAvailable = true;
+				// notify the waiting "frame writer thread"
+				frameWriterThread.notify();
 			}
-			prevSampleTime = currentSampleTime;
-
-			final int[] imageData = linkIn.getData();
-			aviSaver.writeFrame(imageData);
 		}
 	}
 
@@ -141,20 +158,27 @@ public class VideoRecorder extends VideoFilter<RecorderConfigs, FilterData> {
 	 *            name of the file to save data to
 	 */
 	public void saveVideoFile(final String fileName) {
+		final File tmpFile = new File("video.avi");
 		try {
-
-			final File tmpFile = new File("video.avi");
-			if (!tmpFile.renameTo(new File(fileName)))
+			File dest = new File(fileName);
+			if (dest.exists())
+				dest.delete();
+			if (!tmpFile.renameTo(dest))
 				throw new Exception();
 		} catch (final Exception e) {
-			PManager.log.print("Couldn't rename video file", this,
+			String newFileName = fileName+"_"+Math.random();
+			PManager.log.print("Couldn't rename video file, saving to: " + newFileName, this,
 					StatusSeverity.ERROR);
+			try{
+				tmpFile.renameTo(new File(newFileName));
+			}catch(Exception e1){
+				PManager.log.print("Save Error!", this);
+			}
 		}
 	}
 
 	@Override
 	public void updateProgramState(final ProgramState state) {
-
+		
 	}
-
 }
