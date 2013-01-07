@@ -23,7 +23,7 @@ public class ForcedSwimmingIntegrationTest extends
 	
 	// TODO: tighten constrains
 	protected int	climbingTimeMax	= 9;
-	protected int	climbingTimeMin	= 3;
+	protected int	climbingTimeMin	= 2;
 	protected int	floatingTimeMax	= 20;
 	protected int	floatingTimeMin	= 10;
 	protected int	swimmingTimeMax	= 25; // need to be ~15

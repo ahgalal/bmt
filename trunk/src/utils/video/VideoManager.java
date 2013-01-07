@@ -18,7 +18,6 @@ import jagvidlib.JAGVidLib.VideoLoadException;
 import modules.ModulesManager;
 import modules.experiment.Experiment;
 import modules.experiment.ExperimentType;
-import utils.Logger.Details;
 import utils.PManager;
 import utils.PManager.ProgramState.GeneralState;
 import utils.PManager.ProgramState.StreamState;
@@ -156,7 +155,7 @@ public class VideoManager {
 	}
 
 	public String[] getAvailableCamLibs() {
-		final String os = getOS();
+		final String os = PManager.getOS();
 		if (os.equals("Linux"))
 			return new String[] { "V4L2", "OpenCV" };
 		else if (os.equals("Windows"))
@@ -165,7 +164,7 @@ public class VideoManager {
 	}
 
 	public String getDefaultVideoLibrary() {
-		final String os = getOS();
+		final String os = PManager.getOS();
 		if (os.equals("Linux"))
 			return "V4L2";
 		else if (os.equals("Windows"))
@@ -180,18 +179,6 @@ public class VideoManager {
 	 */
 	public FilterManager getFilterManager() {
 		return filterManager;
-	}
-
-	private String getOS() {
-		final String os = System.getProperty("os.name");
-		PManager.log.print("OS: " + os, this, Details.VERBOSE);
-		if (os.contains("Linux"))
-			return "Linux";
-		else if (os.contains("Windows"))
-			return "Windows";
-
-		System.out.print("Unknown OS\n");
-		return null;
 	}
 
 	@SuppressWarnings("rawtypes")

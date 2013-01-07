@@ -49,7 +49,7 @@ public class OpenFieldIntegrationRecordStreamPausedStopTest extends
 		Utils.sleep(200);
 
 		// start recording
-		VideoExecUnitGroup.StartRecord();
+		VideoExecUnitGroup.startRecord();
 
 		// delay
 		Utils.sleep(200);
@@ -67,7 +67,7 @@ public class OpenFieldIntegrationRecordStreamPausedStopTest extends
 		Utils.sleep(200);
 
 		// stop recording
-		VideoExecUnitGroup.StopRecord();
+		VideoExecUnitGroup.stopRecord();
 
 		// save video file
 		DialogBoxUtils.fillDialog(recordedVideoFile, getUI());

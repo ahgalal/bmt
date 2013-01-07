@@ -33,13 +33,12 @@ import filters.VideoFilter;
  * @author Creative
  */
 public class VideoRecorder extends VideoFilter<RecorderConfigs, FilterData> {
-	
 
 	private StreamToAVI		aviSaver;
-	private boolean			isRecording				= false;
-	
+	private boolean			isRecording	= false;
+
 	private final PManager	pm;
-	
+
 	private Thread			frameWriterThread;
 
 	private class FrameWriterRunnable implements Runnable {
@@ -143,11 +142,12 @@ public class VideoRecorder extends VideoFilter<RecorderConfigs, FilterData> {
 	@Override
 	public void process() {
 		if (configs.isEnabled()) {
-			synchronized (frameWriterThread) {
-				frameAvailable = true;
-				// notify the waiting "frame writer thread"
-				frameWriterThread.notify();
-			}
+			if (frameWriterThread != null)
+				synchronized (frameWriterThread) {
+					frameAvailable = true;
+					// notify the waiting "frame writer thread"
+					frameWriterThread.notify();
+				}
 		}
 	}
 
@@ -166,12 +166,12 @@ public class VideoRecorder extends VideoFilter<RecorderConfigs, FilterData> {
 			if (!tmpFile.renameTo(dest))
 				throw new Exception();
 		} catch (final Exception e) {
-			String newFileName = fileName+"_"+Math.random();
-			PManager.log.print("Couldn't rename video file, saving to: " + newFileName, this,
-					StatusSeverity.ERROR);
-			try{
+			String newFileName = fileName + "_" + Math.random();
+			PManager.log.print("Couldn't rename video file, saving to: "
+					+ newFileName, this, StatusSeverity.ERROR);
+			try {
 				tmpFile.renameTo(new File(newFileName));
-			}catch(Exception e1){
+			} catch (Exception e1) {
 				PManager.log.print("Save Error!", this);
 			}
 		}
@@ -179,6 +179,6 @@ public class VideoRecorder extends VideoFilter<RecorderConfigs, FilterData> {
 
 	@Override
 	public void updateProgramState(final ProgramState state) {
-		
+
 	}
 }

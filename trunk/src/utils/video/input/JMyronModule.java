@@ -43,7 +43,6 @@ public class JMyronModule extends VidInputter<VidSourceConfigs> {
 				}
 			}
 		}
-
 	}
 
 	private JMyron	jmyron;
@@ -117,16 +116,6 @@ public class JMyronModule extends VidInputter<VidSourceConfigs> {
 		jmyron = null;
 		thJmyronUpdateImage = null;
 
-	}
-	
-	@Override
-	public void pauseStream() {
-		// this ia used as a cam module, no pause is supported for cams currently.
-	}
-
-	@Override
-	public void resumeStream() {
-		// TODO Auto-generated method stub
 	}
 	
 	@Override

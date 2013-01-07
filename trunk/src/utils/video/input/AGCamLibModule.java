@@ -75,7 +75,7 @@ public class AGCamLibModule extends VidInputter<VidSourceConfigs> {
 	public SourceStatus getStatus() {
 		return status;
 	}
-
+	private static ReturnValue initialize;
 	@Override
 	public boolean initialize(final FrameIntArray frameData,
 			final VidSourceConfigs configs) {
@@ -83,8 +83,9 @@ public class AGCamLibModule extends VidInputter<VidSourceConfigs> {
 			agCam = new JAGCamLib();
 		this.configs = configs;
 		fia = frameData;
-
-		ReturnValue initialize = agCam.initialize(configs.getWidth(), configs.getHeight(), configs.getCamIndex());
+		
+		if(initialize==null || initialize!=ReturnValue.SUCCESS)
+			initialize = agCam.initialize(configs.getWidth(), configs.getHeight(), configs.getCamIndex());
 		if (initialize == ReturnValue.SUCCESS)
 			return true;
 		else {
@@ -127,6 +128,7 @@ public class AGCamLibModule extends VidInputter<VidSourceConfigs> {
 
 		agCam.stop();
 		agCam.deInitialize();
+		initialize=ReturnValue.ERR_CAM;
 		agCam = null;
 		thUpdateImage = null;
 
