@@ -50,7 +50,7 @@ public class StreamToAVI {
 	 */
 	public void close() {
 		try {
-			double framesPerSecond = 1000 * noFrames / (double) accumulativeRecordTime;
+			double framesPerSecond = calculateFramesPerSecond();
 			//aviSaver.setTimeScale(timescale);
 			setFrameRate(framesPerSecond);
 			aviOp.close();
@@ -64,6 +64,11 @@ public class StreamToAVI {
 		} catch (final IOException e) {
 			e.printStackTrace();
 		}
+	}
+
+	private double calculateFramesPerSecond() {
+		double framesPerSecond = 1000 * noFrames / (double) accumulativeRecordTime;
+		return framesPerSecond;
 	}
 
 	/**
@@ -107,7 +112,11 @@ public class StreamToAVI {
 			// calculate video time and number of frames
 			final long currentSampleTime = System.currentTimeMillis();
 			if (prevSampleTime != 0) {
-				final long deltaSamples = currentSampleTime - prevSampleTime;
+				long deltaSamples = currentSampleTime - prevSampleTime;
+				if(deltaSamples>333){ // more than third of a second (stream is paused)
+					deltaSamples=accumulativeRecordTime/noFrames;
+					System.out.println("setting deltaSamples to avg: "+ deltaSamples);
+				}
 				accumulativeRecordTime += deltaSamples;
 				noFrames++;
 			}
