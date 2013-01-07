@@ -17,7 +17,6 @@ package filters.ratfinder;
 import java.awt.Point;
 
 import modules.experiment.Constants;
-
 import filters.FilterData;
 
 

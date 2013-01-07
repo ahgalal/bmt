@@ -128,7 +128,7 @@ public class FilterManager {
 	public void deInitialize() {
 		// unregister filters' PluggedGUI from listening to state changes
 		// and unload GUI
-		for (final PluggedGUI pgui : getFiltersGUI()) {
+		for (final PluggedGUI<?> pgui : getFiltersGUI()) {
 			PManager.getDefault().removeStateListener(pgui);
 			pgui.deInitialize();
 		}

@@ -31,7 +31,7 @@ public abstract class VideoFilter<ConfigsType extends FilterConfigs, DataType ex
 		implements StateListener {
 	protected ConfigsType	configs;
 	protected DataType		filterData;
-	protected PluggedGUI	gui;
+	protected PluggedGUI<?>	gui;
 	protected Link			linkIn, linkOut;
 	protected String		name;
 
@@ -59,6 +59,7 @@ public abstract class VideoFilter<ConfigsType extends FilterConfigs, DataType ex
 	 *            filter's configurations
 	 * @return true: success, false: failure
 	 */
+	@SuppressWarnings("unchecked")
 	public boolean configure(final FilterConfigs configs) {
 		this.configs = (ConfigsType) configs;
 		PManager.log.print("initializing..", this, Details.VERBOSE);
@@ -104,7 +105,7 @@ public abstract class VideoFilter<ConfigsType extends FilterConfigs, DataType ex
 		return filterData;
 	}
 
-	public PluggedGUI getGUI() {
+	public PluggedGUI<?> getGUI() {
 		return gui;
 	}
 
@@ -139,6 +140,7 @@ public abstract class VideoFilter<ConfigsType extends FilterConfigs, DataType ex
 	 * @param configs
 	 *            configurations object for the filter
 	 */
+	@SuppressWarnings("unchecked")
 	public void updateConfigs(final FilterConfigs configs) {
 		if(this.configs==null)
 			this.configs=(ConfigsType) configs;

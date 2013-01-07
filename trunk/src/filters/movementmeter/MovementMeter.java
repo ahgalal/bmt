@@ -4,7 +4,6 @@
 package filters.movementmeter;
 
 import utils.PManager.ProgramState;
-import utils.TimeCalculator;
 import utils.video.ImageManipulator;
 import filters.FilterConfigs;
 import filters.Link;
@@ -18,7 +17,6 @@ public class MovementMeter extends
 	private int[]	greyData, prevGreyData;
 	private int[]	outputData, prevOutputData;
 	private int		summation;
-	private TimeCalculator	tc	= new TimeCalculator();
 
 	private int		x1, x2, y1, y2;
 

@@ -34,7 +34,7 @@ import filters.Data;
  * @author Creative
  */
 public class SessionModule extends
-Module<PluggedGUI, SessionModuleConfigs, SessionModuleData> {
+Module<PluggedGUI<?>, SessionModuleConfigs, SessionModuleData> {
 	private final String[]	expParams	= new String[] { Constants.FILE_SESSION_TIME };
 	private boolean	paused;
 

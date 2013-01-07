@@ -48,7 +48,6 @@ public class RatFinder2 extends RatFinder {
 
 	protected int contourEdge(final int[] img, final int xStart,
 			final int yStart, final int width, final int height) {
-		final int area;
 		int pivotX = 0, pivotY = 0;
 		int pivotXOld = xStart, pivotYOld = yStart;
 
@@ -162,7 +161,7 @@ public class RatFinder2 extends RatFinder {
 		// walking on y, step=5
 		yLoop: for (int y = 0; y < configs.getCommonConfigs().getHeight(); y += 5)
 			// walking on x, step=1
-			xLoop: for (int x = 0; x < configs.getCommonConfigs().getWidth(); x++)
+			for (int x = 0; x < configs.getCommonConfigs().getWidth(); x++)
 				// if white ...
 				if (outData[x + y * configs.getCommonConfigs().getWidth()] == 0xFFFFFF) {
 					contourEdge(outData, x, y, configs.getCommonConfigs().getWidth(),

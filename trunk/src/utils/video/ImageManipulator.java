@@ -19,8 +19,6 @@ import java.io.File;
 
 import javax.imageio.ImageIO;
 
-import utils.TimeCalculator;
-
 /**
  * Collection of static methods to handle images and convert between different
  * representations (int rgb, byte rgb, int grayscale ..).
@@ -30,8 +28,6 @@ import utils.TimeCalculator;
 public class ImageManipulator {
 
 	private static int[]			subResult;
-
-	private static TimeCalculator	tc	= new TimeCalculator();
 
 	public static int addRGBInt(final int img1, final int img2) {
 		byte r1, r2, g1, g2, b1, b2;
