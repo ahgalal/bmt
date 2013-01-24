@@ -71,9 +71,8 @@ public class GStreamerModule extends VidInputter<VidSourceConfigs> {
 			@Override
 			public void rgbFrame(int arg0, int arg1, IntBuffer buf) {
 				if(paused==false){
-						fia.setFrameData(ImageManipulator.bgrIntArray2rgbIntArray(buf.array())); //ImageManipulator.byteBGR2IntRGB(buf.getBytes());
-						status = SourceStatus.STREAMING;
-						
+					fia.setFrameData(ImageManipulator.bgrIntArray2rgbIntArray(buf.array())); //ImageManipulator.byteBGR2IntRGB(buf.getBytes());
+					updateStatus();
 				}
 			}
 		});

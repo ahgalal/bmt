@@ -100,7 +100,7 @@ public class V4L2Module extends VidInputter<VidSourceConfigs> implements
 	public void nextFrame(final VideoFrame vframe) {
 		if(paused==false){
 			fia.setFrameData(ImageManipulator.byteBGR2IntRGB(vframe.getBytes()));
-			status = SourceStatus.STREAMING;
+			updateStatus();
 		}
 		
 		// frame needs to be recycled whether we are paused or not

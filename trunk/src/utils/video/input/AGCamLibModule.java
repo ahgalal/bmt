@@ -41,9 +41,7 @@ public class AGCamLibModule extends VidInputter<VidSourceConfigs> {
 				if(paused==false){
 					fia.setFrameData(agCam.grabIntRGBFrame());
 					
-					if(fia.getFrameData()!=null){
-						status = SourceStatus.STREAMING;
-					}
+					updateStatus();
 				}
 			}
 		}

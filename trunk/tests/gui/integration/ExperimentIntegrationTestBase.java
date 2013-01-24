@@ -104,9 +104,12 @@ public class ExperimentIntegrationTestBase extends UITest {
 
 	protected void copyExperimentFile() {
 		try {
+			File newFile = new File(expFileName);
+			if(newFile.exists())
+				newFile.delete();
 			// make a copy of the original file
 			FileUtils.getFileUtils().copyFile(new File(expFileName_orig),
-					new File(expFileName));
+					newFile);
 		} catch (final IOException e) {
 			e.printStackTrace();
 		}

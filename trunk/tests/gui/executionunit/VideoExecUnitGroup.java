@@ -43,6 +43,7 @@ public class VideoExecUnitGroup extends ExecutionUnitGroup {
 	}
 	
 	public static void pauseResumeStream() throws WidgetSearchException{
+		ExperimentExecUnitGroup.activateMainGUI();
 		ui.click(new ButtonLocator("Pause/Resume"));
 	}
 	

@@ -59,7 +59,6 @@ public class CtrlMainGUI extends ControllerUI<MainGUI> implements StateListener 
 		 */
 		@Override
 		public void run() {
-			final int streamLength = pm.getVideoManager().getStreamLength();
 			setTableNamesColumn();
 			while (pm.getState().getGeneral() == GeneralState.TRACKING) {
 				Utils.sleep(200);
@@ -68,20 +67,49 @@ public class CtrlMainGUI extends ControllerUI<MainGUI> implements StateListener 
 
 						@Override
 						public void run() {
-							if (!ui.getShell().isDisposed()) {
+							if (!ui.getShell().isDisposed())
 								ui.fillDataTable(null, ModulesManager
 										.getDefault().getGUIData());
-
-								// update stream position
-								int streamPosition = pm.getVideoManager()
-										.getStreamPosition();
-								ui.setStreamProgress(streamPosition,
-										streamLength);
-							}
 						}
 					});
 			}
 			thUpdateGui = null;
+		}
+	}
+
+	private class RunnableStreamProgress implements Runnable {
+		/*
+		 * (non-Javadoc)
+		 * @see java.lang.Runnable#run()
+		 */
+		@Override
+		public void run() {
+			Utils.sleep(1000);
+			final int streamLength = pm.getVideoManager().getStreamLength();
+			Display.getDefault().syncExec(new Runnable() {
+				@Override
+				public void run() {
+					if (!ui.getShell().isDisposed()) {
+						// update stream length
+						ui.setStreamLength(streamLength);
+					}
+				}
+			});
+			while (pm.getState().getStream() == StreamState.STREAMING
+					|| pm.getState().getStream() == StreamState.PAUSED) {
+				Utils.sleep(1000);
+				final int streamPosition = pm.getVideoManager()
+						.getStreamPosition();
+				Display.getDefault().syncExec(new Runnable() {
+					@Override
+					public void run() {
+						if (!ui.getShell().isDisposed()) {
+							// update stream position
+							ui.setStreamProgress(streamPosition);
+						}
+					}
+				});
+			}
 		}
 	}
 
@@ -103,11 +131,15 @@ public class CtrlMainGUI extends ControllerUI<MainGUI> implements StateListener 
 		ui = new MainGUI();
 		uiShell = ui.getShell();
 		ui.setController(this);
-		thUpdateGui = new Thread(new RunnableUpdateGUI(),"Update GUI");
+		thUpdateGui = createUpdateUIThread();
 
 		pm.getStatusMgr().initialize(ui.getConsoleText());
 		ctrlAboutBox = new CtrlAbout();
 		ctrlNewExpWizard = new CtrlNewExperimentWizard();
+	}
+
+	private Thread createUpdateUIThread() {
+		return new Thread(new RunnableUpdateGUI(), "Update GUI");
 	}
 
 	/**
@@ -372,7 +404,7 @@ public class CtrlMainGUI extends ControllerUI<MainGUI> implements StateListener 
 				}
 
 			}
-		});
+		}, "GUIControlsUpdater");
 		thUpdateControlsEnable.start();
 
 	}
@@ -382,7 +414,13 @@ public class CtrlMainGUI extends ControllerUI<MainGUI> implements StateListener 
 			mnutmCameraStartAction();
 		else if (ui.getSelectedInputMode().equals("VIDEOFILE"))
 			setVideoFileMode();
-		pm.startStreaming();
+		if (pm.startStreaming()) {
+			if (ui.getSelectedInputMode().equals("VIDEOFILE")) {
+				Thread thStreamProgress = new Thread(
+						new RunnableStreamProgress(), "StreamProgress");
+				thStreamProgress.start();
+			}
+		}
 	}
 
 	/**
@@ -393,7 +431,7 @@ public class CtrlMainGUI extends ControllerUI<MainGUI> implements StateListener 
 		if (pm.startTracking()) {
 			clearForm();
 			if (thUpdateGui == null)
-				thUpdateGui = new Thread(new RunnableUpdateGUI());
+				thUpdateGui = createUpdateUIThread();
 			thUpdateGui.start();
 		}
 	}
@@ -425,7 +463,7 @@ public class CtrlMainGUI extends ControllerUI<MainGUI> implements StateListener 
 						|| (pm.getState().getStream() == StreamState.PAUSED)) {
 					if (ModulesManager.getDefault().areModulesReady(
 							ui.getShell())) {
-						final ArrayList<Module<?,?,?>> experimentModulesAvailable = ModulesManager
+						final ArrayList<Module<?, ?, ?>> experimentModulesAvailable = ModulesManager
 								.getDefault().getModulesUnderID(
 										Constants.EXPERIMENT_ID);
 						if (experimentModulesAvailable.size() == 0)

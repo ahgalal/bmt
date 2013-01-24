@@ -224,7 +224,7 @@ public class PManager {
 					}
 				}
 			}
-		});
+		},"StateChangeNotifier");
 		thStateChangedNotifier.start();
 
 		mainGUI.setActive();
@@ -309,15 +309,16 @@ public class PManager {
 		notifyStateListeners();
 	}
 
-	public void startStreaming() {
+	public boolean startStreaming() {
 		if ((getState().getGeneral() == GeneralState.IDLE)
 				&& vidMgr.isInitialized())
-			vidMgr.startStreaming();
+			return vidMgr.startStreaming();
 		else
 			getStatusMgr()
 					.setStatus(
 							"State is not idle or no video source selected, not able to start streaming",
 							StatusSeverity.ERROR);
+		return false;
 	}
 
 	public boolean startTracking() {

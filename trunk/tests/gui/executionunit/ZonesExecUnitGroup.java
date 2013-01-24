@@ -33,6 +33,8 @@ public class ZonesExecUnitGroup extends ExecutionUnitGroup {
 
 	public static void setScale(final String scale)
 			throws WidgetSearchException, InterruptedException {
+		ExperimentExecUnitGroup.activateMainGUI();
+		
 		Utils.sleep(100);
 		ui.click(new MenuItemLocator("Edit/Zone Editor .."));
 		ui.wait(new ShellShowingCondition("Zone Editor"));

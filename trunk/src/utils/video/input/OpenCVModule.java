@@ -40,11 +40,9 @@ public class OpenCVModule extends VidInputter<OpenCVConfigs> {
 			while (!stopStream & (thUpdateImage != null)) {
 				Utils.sleep(30);
 				if(paused==false){
-					System.out.println("OpenCV, reading frame..");
 					cv.read();
 					fia.setFrameData(cv.pixels());
-					if (fia.getFrameData() != null)
-						status = SourceStatus.STREAMING;
+					updateStatus();
 				}
 			}
 		}

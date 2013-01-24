@@ -38,8 +38,7 @@ public class JMyronModule extends VidInputter<VidSourceConfigs> {
 				if(paused==false){
 					jmyron.update();
 					fia.setFrameData(jmyron.image());
-
-					status = SourceStatus.STREAMING;
+					updateStatus();
 				}
 			}
 		}

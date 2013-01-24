@@ -22,15 +22,14 @@
           target: Test GUI              
          ================================= -->
 	<target name="BMTTestGUI">
-		<copy todir="." file="libs/JAGVidLib/AGVidLib.dll" overwrite="true" />
-		<copy todir="." file="libs/JAGCamLib/AGCamLib.dll" overwrite="true" />
-		<copy todir="." file="libs/JMyron/DSVL.dll" overwrite="true" />
-		<copy todir="." file="libs/JMyron/DSVL.dll" overwrite="true" />
-		<copy todir="." file="libs/JMyron/JMyron.dll" overwrite="true" />
-		<copy todir="." file="libs/JMyron/myron_ezcam.dll" overwrite="true" />
-		
+		<copy todir="." overwrite="true" flatten="true">
+			<fileset dir="libs" id="dlls">
+				<include name="**/*.dll" />
+			</fileset>
+		</copy>
+
 		<antcall target="testGUI" />
-		
-		<delete dir="." includes="*.dll"/>
+
+		<delete dir="." includes="*.dll" />
 	</target>
 </project>
