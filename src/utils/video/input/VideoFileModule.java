@@ -67,7 +67,6 @@ public class VideoFileModule extends VidInputter<AGVidLibConfigs> {
 				// System.out.println(l2-l1 + "\n");
 			}
 		}
-
 	}
 	
 	private SourceStatus convertStreamStatus(StreamState state){

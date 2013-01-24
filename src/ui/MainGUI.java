@@ -741,8 +741,11 @@ public class MainGUI extends BaseUI {
 		mnuEditItem.setEnabled(loaded);
 	}
 
-	public void setStreamProgress(int position,int totalLength) {
+	public void setStreamProgress(int position) {
 		sclStreamPosition.setSelection(position);
+	}
+	
+	public void setStreamLength(int totalLength) {
 		sclStreamPosition.setMaximum(totalLength);
 	}
 }

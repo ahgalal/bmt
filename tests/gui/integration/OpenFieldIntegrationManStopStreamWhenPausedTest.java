@@ -54,7 +54,7 @@ public class OpenFieldIntegrationManStopStreamWhenPausedTest extends
 	public void setUp() {
 		super.setUp();
 		sessionTimeMin = 18;
-		sessionTimeMax = 19;
+		sessionTimeMax = 23;
 		centralTimeMin = 1;
 		sleepTime1 = 25;
 	}

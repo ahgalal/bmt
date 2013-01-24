@@ -17,7 +17,7 @@ public class UITest extends UITestCaseSWT {
 			
 			@Override
 			public void run() {
-				((Shell)getUI().getActiveWindow()).setLocation(0, 0);		
+				((Shell)getUI().getActiveWindow()).setLocation(0, 0);
 			}
 		});
 		

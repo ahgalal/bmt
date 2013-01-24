@@ -1,7 +1,12 @@
 package gui.executionunit;
 
+import org.eclipse.swt.widgets.Display;
+
 import modules.experiment.ExperimentType;
+import ui.MainGUI;
 import utils.DialogBoxUtils;
+import utils.PManager;
+import utils.ReflectUtils;
 
 import com.windowtester.runtime.IUIContext;
 import com.windowtester.runtime.WidgetSearchException;
@@ -25,7 +30,14 @@ public class ExperimentExecUnitGroup extends ExecutionUnitGroup {
 	public ExperimentExecUnitGroup(final IUIContext ui) {
 		super(ui);
 	}
-	
+	public static void activateMainGUI() {
+		Display.getDefault().syncExec(new Runnable() {
+			@Override
+			public void run() {
+				((MainGUI)ReflectUtils.getField(PManager.mainGUI, "ui")).setActive();		
+			}
+		});
+	}
 	public static void setBackground() throws WidgetSearchException{
 		ui.click(new ButtonLocator("Set Background"));
 	}

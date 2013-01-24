@@ -62,6 +62,63 @@ public class ImageManipulator {
 		}
 		return iarr;
 	}
+	
+	/**
+	 * Converts a int[] RGB buffer to int[] RGB image.</br>
+	 * i.e. [BRGB | GBRG | RGBR] to [ 0RGB | 0RGB | 0RGB | 0RGB].
+	 * 
+	 * @param buf
+	 *            input int[] RGB buffer
+	 * @param iarr
+	 *            the output int[] RGB array
+	 * @return integer array RGB image
+	 */
+	public static int[] intRGBBuf2IntRGB(final int[] buf,int[] iarr) {
+		float factor = 1.3333333f;
+		int bytes[]=new int[12];
+		for (int i = 0; i < buf.length; i += 3) {
+			bytes[0] = ((buf[i] & 0xFF000000) >> 24)& 0x000000FF;
+			bytes[1] = (buf[i] & 0x00FF0000) >> 16;
+			bytes[2] = (buf[i] & 0x0000FF00) >> 8;
+			bytes[3] = buf[i] & 0x000000FF;
+			
+			bytes[4] = ((buf[i+1] & 0xFF000000) >> 24)& 0x000000FF;
+			bytes[5] = (buf[i+1] & 0x00FF0000) >> 16;
+			bytes[6] = (buf[i+1] & 0x0000FF00) >> 8;
+			bytes[7] = buf[i+1] & 0x000000FF;
+		
+			bytes[8] = ((buf[i+2] & 0xFF000000) >> 24)& 0x000000FF;
+			bytes[9] = (buf[i+2] & 0x00FF0000) >> 16;
+			bytes[10] = (buf[i+2] & 0x0000FF00) >> 8;
+			bytes[11] = buf[i+2] & 0x000000FF;
+
+			int dstIndex=Math.round(i*factor);
+			int r;
+			int g;
+			int b;
+
+			b=bytes[0];
+			r=bytes[1];
+			g=bytes[2];
+			iarr[dstIndex] = b | (g << 8) | (r << 16);
+			
+			b=bytes[3];
+			g=bytes[4];
+			r=bytes[6];
+			iarr[dstIndex+1] = b | (g << 8) | (r << 16);
+			
+			b=bytes[5];
+			g=bytes[7];
+			r=bytes[8];
+			iarr[dstIndex+2] = b | (g << 8) | (r << 16);
+			
+			g=bytes[9];
+			b=bytes[10];
+			r=bytes[11];
+			iarr[dstIndex+3] = b | (g << 8) | (r << 16);
+		}
+		return iarr;
+	}
 
 	/**
 	 * Converts a byte[] RGB image to int[] RGB image.

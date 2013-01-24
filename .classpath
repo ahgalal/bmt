@@ -26,18 +26,15 @@
 			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="BMT/libs/JAGCamLib"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="libs/LibAVI/LibAVI.jar"/>
 	<classpathentry kind="lib" path="libs/V4L2/v4l4j.jar">
 		<attributes>
 			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="BMT/libs/V4L2"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="libs/JMF/jmf.jar"/>
-	<classpathentry kind="lib" path="libs/JMF/mediaplayer.jar"/>
-	<classpathentry kind="lib" path="libs/JMF/multiplayer.jar"/>
 	<classpathentry kind="lib" path="libs/Utils/Utils.jar"/>
 	<classpathentry kind="lib" path="libs/gstreamer/jna.jar"/>
 	<classpathentry kind="lib" path="libs/SWT/org.eclipse.swt.win32.win32.x86_3.6.2.v3659c.jar"/>
+	<classpathentry kind="lib" path="libs/swtchart/org.swtchart_0.8.0.v20120301.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
 	<classpathentry kind="lib" path="libs/JAGVidLib/AGVidLib.jar">
 		<attributes>
@@ -53,5 +50,22 @@
 	<classpathentry kind="var" path="ECLIPSE_HOME/plugins/org.apache.ant_1.7.1.v20100518-1145/lib/ant.jar"/>
 	<classpathentry kind="lib" path="libs/gstreamer/gstreamer-java.jar"/>
 	<classpathentry kind="var" path="ECLIPSE_HOME/plugins/com.windowtester.swt.runtime.win32.win32.x86_6.0.0.r36x201009131510/wt-win32-win32-x86.jar"/>
+	<classpathentry kind="lib" path="libs/LibAVI/LibAVI.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/3.8.1"/>
+	<classpathentry kind="lib" path="libs/javacv/win32/javacv-windows-x86.jar">
+		<attributes>
+			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="BMT/libs/javacv/win32"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="libs/javacv/javacpp.jar">
+		<attributes>
+			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="BMT/libs/javacv/win32"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="libs/javacv/javacv.jar">
+		<attributes>
+			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="BMT/libs/javacv/win32"/>
+		</attributes>
+	</classpathentry>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

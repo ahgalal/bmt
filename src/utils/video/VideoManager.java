@@ -27,6 +27,8 @@ import utils.video.input.AGCamLibModule;
 import utils.video.input.AGVidLibConfigs;
 import utils.video.input.GStreamerModule;
 import utils.video.input.JMyronModule;
+import utils.video.input.JavaCVCamModule;
+import utils.video.input.JavaCVFileModule;
 import utils.video.input.OpenCVConfigs;
 import utils.video.input.OpenCVModule;
 import utils.video.input.V4L2Module;
@@ -159,7 +161,7 @@ public class VideoManager {
 		if (os.equals("Linux"))
 			return new String[] { "V4L2", "OpenCV" };
 		else if (os.equals("Windows"))
-			return new String[] { "AGCamLib", "OpenCV", "JMyron" };
+			return new String[] { "AGCamLib", "OpenCV", "JMyron",JavaCVCamModule.JAVA_CV_CAM };
 		return null;
 	}
 
@@ -220,6 +222,9 @@ public class VideoManager {
 		} else if (vidLib.equals("OpenCV")) {
 			vInput = new OpenCVModule();
 			srcConfigs = new OpenCVConfigs();
+		} else if (vidLib.equals(JavaCVCamModule.JAVA_CV_CAM)) {
+			vInput = new JavaCVCamModule();
+			srcConfigs = new VidSourceConfigs();
 		} else if (vidLib.equals("AGCamLib")) {
 			vInput = new AGCamLibModule();
 			srcConfigs = new VidSourceConfigs();
@@ -231,6 +236,7 @@ public class VideoManager {
 				if (System.getProperty("os.name").toLowerCase()
 						.contains("windows")) {
 					vInput = new VideoFileModule();
+					//vInput = new JavaCVFileModule();
 					srcConfigs = new AGVidLibConfigs();
 					srcConfigs.setVideoFilePath(vidFile);
 				} else {
@@ -305,7 +311,7 @@ public class VideoManager {
 	/**
 	 * Starts video streaming.
 	 */
-	public void startStreaming() {
+	public boolean startStreaming() {
 		try {
 			videoProcessorEnabled = true;
 			while (!vInput.startStream())
@@ -322,12 +328,13 @@ public class VideoManager {
 				Thread.sleep(200);
 				PManager.getDefault().pauseResume();
 			}
-
+			return true;
 		}catch (VideoLoadException e) {
 			PManager.getDefault().getStatusMgr().setStatus(e.getMessage(), StatusSeverity.ERROR);
 		} catch (final Exception e) {
 			e.printStackTrace();
 		}
+		return false;
 	}
 
 	/**

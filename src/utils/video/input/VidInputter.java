@@ -30,7 +30,13 @@ public abstract class VidInputter<ConfigsType extends VidSourceConfigs> {
 	public static enum SourceStatus{
 		STREAMING,PAUSED,END_OF_STREAM,ERROR,INITIALIZING;
 	}
-	
+
+	protected void updateStatus() {
+		if (fia.getFrameData() != null && paused == false) {
+			status = SourceStatus.STREAMING;
+		}
+	}
+
 	public static enum SourceType{
 		FILE,CAM;
 	}
