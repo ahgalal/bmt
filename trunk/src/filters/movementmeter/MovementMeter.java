@@ -28,11 +28,13 @@ public class MovementMeter extends
 
 	private int addAllPixelsValues(final int[] arr) {
 		int sum = 0;
+		int width = configs.getCommonConfigs().getWidth();
 		for (int x = x1; x < x2; x++)
 			for (int y = y1; y < y2; y++) {
-				sum += arr[x + y * configs.getCommonConfigs().getWidth()] & 0x000000FF;
+				
+				sum += arr[x + y * width] & 0x000000FF;
 				if ((x == x1) || (x == x2 - 1))
-					arr[x + y * configs.getCommonConfigs().getWidth()] = 0x000000FF;
+					arr[x + y * width] = 0x000000FF;
 			}
 		return sum;
 	}
@@ -52,17 +54,20 @@ public class MovementMeter extends
 
 	private void getInterestingAreaBounds(final int[] arr, final int threshold) {
 		initializeSearchBounds();
-		for (int y = 10; y < configs.getCommonConfigs().getHeight(); y += 3)
-			for (int x1 = 10; x1 < configs.getCommonConfigs().getWidth(); x1 += 3)
-				if ((arr[x1 + y * configs.getCommonConfigs().getWidth()] & 0x000000FF) > threshold) {
+		int height = configs.getCommonConfigs().getHeight();
+		int width = configs.getCommonConfigs().getWidth();
+		for (int y = 10; y < height; y += 3) {
+			for (int x1 = 10; x1 < width; x1 += 3)
+				if ((arr[x1 + y * width] & 0x000000FF) > threshold) {
 					if (x1 < this.x1)
 						this.x1 = x1;
-					for (int x2 = configs.getCommonConfigs().getWidth() - 11; x2 > x1; x2 -= 3)
-						if ((arr[x2 + y * configs.getCommonConfigs().getWidth()] & 0x000000FF) > threshold)
+					for (int x2 = width - 11; x2 > x1; x2 -= 3)
+						if ((arr[x2 + y * width] & 0x000000FF) > threshold)
 							if (x2 > this.x2)
 								this.x2 = x2;
 					break;
 				}
+		}
 	}
 
 	private void initializeSearchBounds() {
@@ -80,17 +85,19 @@ public class MovementMeter extends
 	public void process() {
 		greyData = ImageManipulator.rgbIntArray2GrayIntArray(linkIn.getData(),greyData);
 
-		outputData = ImageManipulator.subtractGreyImage(greyData, prevGreyData);
+		outputData = ImageManipulator.subtractGreyImage(greyData, prevGreyData,20);
 		// tc.start();
 		getInterestingAreaBounds(outputData, 20);
 		// System.out.println("x1,x2 = " + x1 + " , " + x2);
 		// System.out.println(tc.end());
 
 		final int tmp = addAllPixelsValues(outputData);
+		pseudoColors(outputData);
 		if (tmp == 0)
 			linkOut.setData(prevOutputData);
 		else {
 			summation = tmp;
+			
 			linkOut.setData(outputData);
 
 			prevOutputData = outputData;
@@ -98,6 +105,38 @@ public class MovementMeter extends
 
 		System.arraycopy(greyData, 0, prevGreyData, 0, greyData.length);
 		filterData.setWhiteSummation(summation);
+	}
+
+	private void pseudoColors(int[] outputData2) {
+		/**
+		 * 0-20: 	green
+		 * 21-50:	blue
+		 * 51-255:	red
+		 */
+		int greenMin=0;
+		int greenMax=20;
+		int blueMin=21;
+		int blueMax=50;
+		int redMin=51;
+		int redMax=255;
+		int width = configs.getCommonConfigs().getWidth();
+		// we work on the interesting area only, to save processing power
+		for (int x = x1; x < x2; x++)
+			for (int y = y1; y < y2; y++) {
+			int i = x+y*width;
+			int grayVal=outputData2[i]>>16;
+			if(grayVal>greenMin &&grayVal<=greenMax){
+				int g=(int) ((grayVal/(float)greenMax)*255);
+				outputData2[i]=0 | (g << 8) | (0 << 16);
+			}else if(grayVal>blueMin &&grayVal<blueMax){
+				int b=(int) (((grayVal-blueMin)/(float)(blueMax-blueMin))*255);
+				outputData2[i]=b | (0 << 8) | (0 << 16);
+			}else if(grayVal>redMin &&grayVal<redMax){
+				int r=(int) (((grayVal-redMin)/(float)(redMax-redMin))*255);
+				outputData2[i]=0 | (0 << 8) | (r << 16);
+			}else
+				outputData2[i]=0;
+		}
 	}
 
 	/*

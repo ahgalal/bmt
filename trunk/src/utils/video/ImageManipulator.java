@@ -375,6 +375,10 @@ public class ImageManipulator {
 	}
 
 	public static int[] subtractGreyImage(final int[] img1, final int[] img2) {
+		return subtractGreyImage(img1,img2,0);
+	}
+	
+	public static int[] subtractGreyImage(final int[] img1, final int[] img2,int threshold) {
 		// if(subResult==null || subResult.length!=img1.length)
 		subResult = new int[img1.length];
 		assert img1.length == img2.length : "different image size!";
@@ -383,7 +387,10 @@ public class ImageManipulator {
 			sub = (img1[i] & 0x000000FF) - (img2[i] & 0x000000FF);
 			sub = sub < 0 ? sub * -1 : sub;
 			sub = sub | sub << 8 | sub << 16;
-			subResult[i] = sub;
+			if(sub>threshold)
+				subResult[i] = sub;
+			else
+				subResult[i] = 0;
 		}
 		return subResult;
 	}

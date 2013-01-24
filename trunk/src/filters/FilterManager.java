@@ -343,8 +343,8 @@ public class FilterManager {
 				// "ScreenDrawer", /*src_rgb_link*/avg_link, /*marker_link*/
 				// grey_link, null);
 						"ScreenDrawer", /* grey_link */
-						differentialLink/* src_rgb_link *//* avg_link */, /* marker_link */
-						srcRGBLink /* grey_link */, null);
+						/*differentialLink*/ srcRGBLink /* avg_link */, /* marker_link */
+						differentialLink /* grey_link */, null);
 				filtersNames = forcedSwimmingFiltersSetup.getFiltersNames();
 				break;
 		}
