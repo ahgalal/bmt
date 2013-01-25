@@ -19,39 +19,26 @@ import filters.movementmeter.MovementMeterData;
 
 public class MovementMeterModule extends
 		Module<MovementMeterModuleGUI, ModuleConfigs, MovementMeterModuleData> {
-	private static final int			ENERGY_DIVISION_FACTOR	= 2000;
+	private static final int			ENERGY_DIVISION_FACTOR	= 200;
+	private static final int			IGNORED_FRAMES			= 30;
 	private static final int			MIN_SAMPLES				= 31;
+	public final static String			moduleID				= Constants.MODULE_ID
+																		+ ".movementmeter";
+	private static final int			OLD_VAL_COUNT			= 20;
+	int									accumulatedSessionTime;
 	private ArrayList<Integer>			energyBins;
 	private final ArrayList<Integer>	energyData;
 	private int[]						energyLevels;
 	private String[]					expParams;
+	private boolean						ignoredFramesNormalized;
 	private int							maxEnergy;
 	private int							minEnergy;
 	private MovementMeterData			movementMeterFilterData;
 	private final int					noEnergyLevels			= 3;
-	private int	sectorizeFlag;
-	private SessionModuleData sessionModuleData;
-	
-	/**.............A
-	 * .............|....................___
-	 * Climbing (0).|-------------------/---\---------
-	 * .............|..........________/.....\
-	 * .............|........./...............\
-	 * Swimming (1).|--------/-----------------\------
-	 * .............|.....__/...................\___
-	 * .............|..../
-	 * Floating (2).|---/-----------------------------
-	 * .............|../
-	 * .............|./
-	 * .............|/_________________________________
-	 * ...............................................
-	 */
+	private final int[]					oldValues				= new int[OLD_VAL_COUNT];
+	private int							sectorizeFlag;
+	private SessionModuleData			sessionModuleData;
 
-	@Override
-	public String getID() {
-		return moduleID;
-	}
-	
 	public MovementMeterModule(final ModuleConfigs config) {
 		super(config);
 		filtersData = new Data[1];
@@ -71,11 +58,38 @@ public class MovementMeterModule extends
 
 	@Override
 	public void deInitialize() {
-		//sectorizeEnergy();
+		// sectorizeEnergy();
 	}
 
 	@Override
 	public void deRegisterDataObject(final Data data) {
+	}
+
+	private String formatTime(final double time) {
+		return String.format("%.1f", time);
+	}
+
+	//@formatter:off	
+	/**
+	 * .............A
+	 * .............|....................___
+	 * Climbing (0).|-------------------/---\---------
+	 * .............|..........________/.....\
+	 * .............|........./...............\
+	 * Swimming (1).|--------/-----------------\------
+	 * .............|.....__/...................\___
+	 * .............|..../
+	 * Floating (2).|---/-----------------------------
+	 * .............|../
+	 * .............|./
+	 * .............|/_________________________________
+	 * ...............................................
+	 * @formatter:on
+	 */
+
+	@Override
+	public String getID() {
+		return moduleID;
 	}
 
 	private int getMaxEnergy() {
@@ -97,42 +111,44 @@ public class MovementMeterModule extends
 			expParams[i] = "eLevel_" + i;
 			energyBins.add(0);
 		}
-		
-		//////// in case of 3 levels:
-		expParams[0]=Constants.CLIMBING;
-		expParams[1]=Constants.SWIMMING;
-		expParams[2]=Constants.FLOATING;
-		////////
-		
+
+		// ////// in case of 3 levels:
+		expParams[0] = Constants.CLIMBING;
+		expParams[1] = Constants.SWIMMING;
+		expParams[2] = Constants.FLOATING;
+		// //////
+
 		fileCargo = new Cargo(expParams);
 		guiCargo = new Cargo(expParams);
-		
+
 		for (final String param : expParams)
 			data.addParameter(param);
 
 		expType = new ExperimentType[] { ExperimentType.FORCED_SWIMMING };
 		maxEnergy = 0;
 		minEnergy = 100000000;
+		ignoredFramesNormalized = false;
+		sectorizeFlag=0;
 	}
 
 	@Override
 	public void process() {
 		int newVal = movementMeterFilterData.getWhiteSummation()
 				/ ENERGY_DIVISION_FACTOR;
-		if (energyData.size() > MIN_SAMPLES) {
-			final int oldVal1 = energyData.get(energyData.size() - 5);
-/*			final int oldVal2 = energyData.get(energyData.size() - 10);
-			final int oldVal3 = energyData.get(energyData.size() - 15);
-			final int oldVal4 = energyData.get(energyData.size() - 20);
-			final int oldVal5 = energyData.get(energyData.size() - 25);
-			final int oldVal6 = energyData.get(energyData.size() - 30);*/
+		final int size = energyData.size();
+		if (size > MIN_SAMPLES + IGNORED_FRAMES) {
+			for (int i = 0; i < OLD_VAL_COUNT; i++) {
+				oldValues[i] = energyData.get(size - i - 1);
+			}
 
 			// filter out abrupt changes (spikes)
-			if (Math.abs(newVal - oldVal1) > getMaxEnergy() / 2)
-				newVal = oldVal1;// +(newVal - oldVal1)/5;
+			if (Math.abs(newVal - oldValues[0]) > getMaxEnergy() / 2)
+				newVal = oldValues[0];// +(newVal - oldVal1)/5;
+
+			newVal = smoothCurve(newVal);
 
 			// smooth curve
-			newVal = (int) (0.2*newVal+0.8*oldVal1);
+			// newVal = (int) (0.1*newVal+0.9*oldVal1);
 
 			if (newVal > getMaxEnergy())
 				setMaxEnergy(newVal);
@@ -141,9 +157,16 @@ public class MovementMeterModule extends
 				setMinEnergy(newVal);
 		}
 		energyData.add(newVal);
-		
+
+		// normalize ignored frames
+		if ((size > IGNORED_FRAMES) && !ignoredFramesNormalized) {
+			for (int i = 0; i < IGNORED_FRAMES; i++)
+				energyData.add(i, newVal);
+			ignoredFramesNormalized = true;
+		}
+
 		sectorizeFlag++;
-		if(sectorizeFlag%30==0)
+		if (sectorizeFlag % 30 == 0)
 			sectorizeEnergy();
 	}
 
@@ -157,8 +180,8 @@ public class MovementMeterModule extends
 
 	@Override
 	public void registerModuleDataObject(final ModuleData data) {
-		if(data instanceof SessionModuleData)
-			sessionModuleData=(SessionModuleData) data;
+		if (data instanceof SessionModuleData)
+			sessionModuleData = (SessionModuleData) data;
 	}
 
 	private void sectorizeEnergy() {
@@ -186,7 +209,7 @@ public class MovementMeterModule extends
 			}
 		}
 
-		accumulatedSessionTime = sessionModuleData.getAccumulatedSessionTime()/1000;
+		accumulatedSessionTime = sessionModuleData.getAccumulatedSessionTime() / 1000;
 		final double climbingTime = accumulatedSessionTime * energyBins.get(0)
 				/ (double) energyData.size();
 		guiCargo.setDataByTag(expParams[0], formatTime(climbingTime));
@@ -197,10 +220,6 @@ public class MovementMeterModule extends
 				/ (double) energyData.size();
 		guiCargo.setDataByTag(expParams[2], formatTime(floatingTime));
 	}
-	int accumulatedSessionTime;
-	private String formatTime(final double time) {
-		return String.format("%.1f", time);
-	}
 
 	private void setMaxEnergy(final int maxEnergy) {
 		this.maxEnergy = maxEnergy;
@@ -210,6 +229,15 @@ public class MovementMeterModule extends
 	private void setMinEnergy(final int minEnergy) {
 		this.minEnergy = minEnergy;
 		updateEnergyLevels();
+	}
+
+	private int smoothCurve(final int newVal) {
+		int sum = 0;
+		for (int i = 0; i < OLD_VAL_COUNT; i++) {
+			sum += oldValues[i];
+		}
+		final int avg = sum / OLD_VAL_COUNT;
+		return (int) (0.3 * newVal + 0.7 * avg);
 	}
 
 	@Override
@@ -223,17 +251,14 @@ public class MovementMeterModule extends
 
 	@Override
 	public void updateFileCargoData() {
-/*		final String[] sectorsDataStr = new String[energyBins.size()];
-		int k = 0;
-		
-		// TODO: consider using HashMap to map bin name to each bin, to avoid
-		// order index dependency!
-		for (final int i : energyBins) {
-			sectorsDataStr[k] = Double.toString(100*i/(double)energyData.size());
-			k++;
-		}
-		fileCargo.setData(sectorsDataStr);*/
-		accumulatedSessionTime = sessionModuleData.getAccumulatedSessionTime()/1000;
+		/*
+		 * final String[] sectorsDataStr = new String[energyBins.size()]; int k
+		 * = 0; // TODO: consider using HashMap to map bin name to each bin, to
+		 * avoid // order index dependency! for (final int i : energyBins) {
+		 * sectorsDataStr[k] = Double.toString(100*i/(double)energyData.size());
+		 * k++; } fileCargo.setData(sectorsDataStr);
+		 */
+		accumulatedSessionTime = sessionModuleData.getAccumulatedSessionTime() / 1000;
 		final double climbingTime = accumulatedSessionTime * energyBins.get(0)
 				/ (double) energyData.size();
 		fileCargo.setDataByTag(expParams[0], formatTime(climbingTime));
@@ -254,10 +279,9 @@ public class MovementMeterModule extends
 		if (energyData.size() > MIN_SAMPLES) {
 			final int newData = energyData.get(energyData.size() - 1);
 			gui.addPoint(newData);
-			
+
 			gui.setEnergyLevels(energyLevels);
 		}
 	}
-	public final static String			moduleID=Constants.MODULE_ID+".movementmeter";
 
 }

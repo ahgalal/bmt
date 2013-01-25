@@ -17,6 +17,9 @@ import org.swtchart.Chart;
 import org.swtchart.ILineSeries;
 import org.swtchart.ISeries.SeriesType;
 import org.swtchart.LineStyle;
+import org.swtchart.Range;
+import org.swtchart.internal.series.LineSeries;
+import org.swtchart.internal.series.Series;
 
 import ui.GraphShell;
 import ui.PluggedGUI;
@@ -27,14 +30,14 @@ public class MovementMeterModuleGUI extends PluggedGUI<MovementMeterModule> {
 	public class Curve {
 		private final ArrayList<Double>	data;
 		private final Chart				mainChart;
-		private final ILineSeries		mainLineSeries;
+		private final LineSeries		mainLineSeries;
 		private final Chart				secChart;
-		private final ILineSeries		secLineSeries;
+		private final LineSeries		secLineSeries;
 		private int						updatePlotterDataFlag	= 0;
 
 		public Curve(final Chart mainChart, final Chart secChart,
-				final ILineSeries mainLineSeries,
-				final ILineSeries secLineSeries) {
+				final LineSeries mainLineSeries,
+				final LineSeries secLineSeries) {
 			this.mainLineSeries = mainLineSeries;
 			this.secLineSeries = secLineSeries;
 			this.mainChart = mainChart;
@@ -61,13 +64,17 @@ public class MovementMeterModuleGUI extends PluggedGUI<MovementMeterModule> {
 					tmpData[i] = d;
 					i++;
 				}
-				updateChart(mainLineSeries, mainChart, tmpData);
-
-				if (secChartParent.getShell().isVisible()) {
-					updateChart(secLineSeries, secChart, tmpData);
-				}
+				updateCharts(tmpData);
 			}
 			updatePlotterDataFlag++;
+		}
+
+		private void updateCharts(final double[] tmpData) {
+			updateChart(mainLineSeries, mainChart, tmpData);
+
+			if (secChartParent.getShell().isVisible()) {
+				updateChart(secLineSeries, secChart, tmpData);
+			}
 		}
 
 		public void clear() {
@@ -107,7 +114,7 @@ public class MovementMeterModuleGUI extends PluggedGUI<MovementMeterModule> {
 		energyCurve.addPoint(y);
 	}
 
-	private ILineSeries createChart(final Chart chart, final boolean full,
+	private LineSeries createChart(final Chart chart, final boolean full,
 			final String name, final Color color) {
 		// set titles
 		if (full) {
@@ -121,7 +128,7 @@ public class MovementMeterModuleGUI extends PluggedGUI<MovementMeterModule> {
 		chart.getAxisSet().getYAxis(0).getTitle().setText("Energy");
 
 		// create line series
-		final ILineSeries lineSeries = (ILineSeries) chart.getSeriesSet()
+		final LineSeries lineSeries = (LineSeries) chart.getSeriesSet()
 				.createSeries(SeriesType.LINE, name);
 		lineSeries.setLineStyle(LineStyle.SOLID);
 		lineSeries.setSymbolSize(1);
@@ -151,20 +158,15 @@ public class MovementMeterModuleGUI extends PluggedGUI<MovementMeterModule> {
 		cmpstPlotter.setBounds(10, 20, 232, 135);
 		levelCurves = new ArrayList<Curve>();
 
-		// data = new ArrayList<Double>();
-		/*
-		 * mainLevelsILineSeries=new ArrayList<ILineSeries>();
-		 * secLevelsILineSeries=new ArrayList<ILineSeries>();
-		 */
 		final Chart mainChart = new Chart(cmpstPlotter, SWT.NONE);
-		final ILineSeries mainLineSeries = createChart(mainChart, false,
+		final LineSeries mainLineSeries = createChart(mainChart, false,
 				"energy", Display.getDefault().getSystemColor(SWT.COLOR_BLUE));
 
 		secChartParent = new GraphShell(SWT.DIALOG_TRIM | SWT.RESIZE);
 		secChartParent.getShell().setBounds(100, 100, 400, 300);
 		final Chart secChart = new Chart(secChartParent.getShell(), SWT.NONE);
 		secChartParent.setControl(secChart);
-		final ILineSeries secLineSeries = createChart(secChart, true, "energy",
+		final LineSeries secLineSeries = createChart(secChart, true, "energy",
 				Display.getDefault().getSystemColor(SWT.COLOR_BLUE));
 
 		mainChart.getPlotArea().addMouseListener(new MouseListener() {
@@ -187,18 +189,18 @@ public class MovementMeterModuleGUI extends PluggedGUI<MovementMeterModule> {
 		energyCurve = new Curve(mainChart, secChart, mainLineSeries,
 				secLineSeries);
 
-		final ILineSeries mainLevelSeries1 = createChart(mainChart, false,
+		final LineSeries mainLevelSeries1 = createChart(mainChart, false,
 				"level1", Display.getDefault().getSystemColor(SWT.COLOR_BLACK));
-		final ILineSeries mainLevelSeries2 = createChart(mainChart, false,
+		final LineSeries mainLevelSeries2 = createChart(mainChart, false,
 				"level2", Display.getDefault().getSystemColor(SWT.COLOR_BLACK));
-		final ILineSeries mainLevelSeries3 = createChart(mainChart, false,
+		final LineSeries mainLevelSeries3 = createChart(mainChart, false,
 				"level3", Display.getDefault().getSystemColor(SWT.COLOR_BLACK));
 
-		final ILineSeries secLevelSeries1 = createChart(secChart, true,
+		final LineSeries secLevelSeries1 = createChart(secChart, true,
 				"level1", Display.getDefault().getSystemColor(SWT.COLOR_BLACK));
-		final ILineSeries secLevelSeries2 = createChart(secChart, true,
+		final LineSeries secLevelSeries2 = createChart(secChart, true,
 				"level2", Display.getDefault().getSystemColor(SWT.COLOR_BLACK));
-		final ILineSeries secLevelSeries3 = createChart(secChart, true,
+		final LineSeries secLevelSeries3 = createChart(secChart, true,
 				"level3", Display.getDefault().getSystemColor(SWT.COLOR_BLACK));
 
 		levelCurves.add(new Curve(mainChart, secChart, mainLevelSeries1,
@@ -228,8 +230,9 @@ public class MovementMeterModuleGUI extends PluggedGUI<MovementMeterModule> {
 	@Override
 	public void trackingStartedHandler() {
 		super.trackingStartedHandler();
-		System.out.println("trackingStartedHandler");
 		energyCurve.clear();
+		for(Curve curve:levelCurves)
+			curve.clear();
 	}
 
 }

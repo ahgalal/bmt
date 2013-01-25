@@ -92,6 +92,8 @@ public class MovementMeter extends
 		// System.out.println(tc.end());
 
 		final int tmp = addAllPixelsValues(outputData);
+		
+		// pseudo coloring the image
 		pseudoColors(outputData);
 		if (tmp == 0)
 			linkOut.setData(prevOutputData);
@@ -105,6 +107,7 @@ public class MovementMeter extends
 
 		System.arraycopy(greyData, 0, prevGreyData, 0, greyData.length);
 		filterData.setWhiteSummation(summation);
+		//System.out.println(summation);
 	}
 
 	private void pseudoColors(int[] outputData2) {
@@ -126,13 +129,13 @@ public class MovementMeter extends
 			int i = x+y*width;
 			int grayVal=outputData2[i]>>16;
 			if(grayVal>greenMin &&grayVal<=greenMax){
-				int g=(int) ((grayVal/(float)greenMax)*255);
+				int g=(int) (100+(grayVal/(float)greenMax)*155);
 				outputData2[i]=0 | (g << 8) | (0 << 16);
 			}else if(grayVal>blueMin &&grayVal<blueMax){
-				int b=(int) (((grayVal-blueMin)/(float)(blueMax-blueMin))*255);
+				int b=(int) (100+((grayVal-blueMin)/(float)(blueMax-blueMin))*155);
 				outputData2[i]=b | (0 << 8) | (0 << 16);
 			}else if(grayVal>redMin &&grayVal<redMax){
-				int r=(int) (((grayVal-redMin)/(float)(redMax-redMin))*255);
+				int r=(int) (100+((grayVal-redMin)/(float)(redMax-redMin))*155);
 				outputData2[i]=0 | (0 << 8) | (r << 16);
 			}else
 				outputData2[i]=0;
