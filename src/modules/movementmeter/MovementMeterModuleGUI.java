@@ -17,9 +17,7 @@ import org.swtchart.Chart;
 import org.swtchart.ILineSeries;
 import org.swtchart.ISeries.SeriesType;
 import org.swtchart.LineStyle;
-import org.swtchart.Range;
 import org.swtchart.internal.series.LineSeries;
-import org.swtchart.internal.series.Series;
 
 import ui.GraphShell;
 import ui.PluggedGUI;
