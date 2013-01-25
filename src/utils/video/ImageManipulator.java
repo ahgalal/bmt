@@ -387,7 +387,7 @@ public class ImageManipulator {
 			sub = (img1[i] & 0x000000FF) - (img2[i] & 0x000000FF);
 			sub = sub < 0 ? sub * -1 : sub;
 			sub = sub | sub << 8 | sub << 16;
-			if(sub>threshold)
+			if((sub & 0x000000FF)>threshold)
 				subResult[i] = sub;
 			else
 				subResult[i] = 0;
