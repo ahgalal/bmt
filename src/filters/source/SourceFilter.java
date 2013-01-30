@@ -50,8 +50,9 @@ public class SourceFilter extends
 
 	@Override
 	public void process() {
-		linkOut.setData(configs.getFrameIntArray().getFrameData());
-		filterData.setData(configs.getFrameIntArray().getFrameData());
+		int[] frameData = configs.getFrameIntArray().getFrameData();
+		linkOut.setData(frameData);
+		filterData.setData(frameData);
 	}
 
 	@Override
