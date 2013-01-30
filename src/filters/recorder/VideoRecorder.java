@@ -40,15 +40,16 @@ public class VideoRecorder extends VideoFilter<RecorderConfigs, FilterData> {
 	private final PManager	pm;
 
 	private Thread			frameWriterThread;
+	private Object			frameWriterLock;
 
 	private class FrameWriterRunnable implements Runnable {
 
 		@Override
 		public void run() {
-			while (frameWriterThread != null) {
-				synchronized (frameWriterThread) {
+			while (frameWriterLock != null) {
+				synchronized (frameWriterLock) {
 					try {
-						frameWriterThread.wait();
+						frameWriterLock.wait();
 					} catch (InterruptedException e) {
 						// do nothing when interrupted
 					}
@@ -103,6 +104,7 @@ public class VideoRecorder extends VideoFilter<RecorderConfigs, FilterData> {
 				// start frame writer
 				frameWriterThread = new Thread(new FrameWriterRunnable(),
 						"Record Frame Writer");
+				frameWriterLock = new Integer(0);
 				frameWriterThread.start();
 
 				configs.setEnabled(true);
@@ -116,9 +118,9 @@ public class VideoRecorder extends VideoFilter<RecorderConfigs, FilterData> {
 				isRecording = false;
 
 				// stop frame writer thread
+				frameWriterLock = null; // break the while loop
 				frameWriterThread.interrupt(); // wake up from wait
-				frameWriterThread = null; // break the while loop
-
+				
 				final Thread thStopRecording = new Thread(new Runnable() {
 					@Override
 					public void run() {
@@ -142,11 +144,11 @@ public class VideoRecorder extends VideoFilter<RecorderConfigs, FilterData> {
 	@Override
 	public void process() {
 		if (configs.isEnabled()) {
-			if (frameWriterThread != null)
-				synchronized (frameWriterThread) {
+			if (frameWriterLock != null)
+				synchronized (frameWriterLock) {
 					frameAvailable = true;
 					// notify the waiting "frame writer thread"
-					frameWriterThread.notify();
+					frameWriterLock.notify();
 				}
 		}
 	}
