@@ -56,7 +56,7 @@ public class ScreenDrawer extends VideoFilter<ScreenDrawerConfigs, FilterData> {
 
 				while (configs.isEnabled()) {
 					configs.getShapeController()
-							.drawaAllShapes(configs.getRefGfxMainScreen());
+							.drawAllShapes(configs.getRefGfxMainScreen());
 					Utils.sleep(1000 / configs.getCommonConfigs().getFrameRate());
 
 					if (linkIn.getData() != null) {
@@ -64,11 +64,14 @@ public class ScreenDrawer extends VideoFilter<ScreenDrawerConfigs, FilterData> {
 						System.arraycopy(linkIn.getData(), 0,
 								dataMainScreen, 0, linkIn.getData().length);
 
+						// draw main screen
 						configs.getRefGfxMainScreen().drawImage(bufImgMain, 0,
 								0, configs.getCommonConfigs().getWidth(),
 								configs.getCommonConfigs().getHeight(), 0, 0,
 								configs.getCommonConfigs().getWidth(),
 								configs.getCommonConfigs().getHeight(), null);
+						
+						// draw frame rate on main screen
 						configs.getRefGfxMainScreen().setColor(Color.GREEN);
 						try {
 							configs.getRefGfxMainScreen()
@@ -82,6 +85,8 @@ public class ScreenDrawer extends VideoFilter<ScreenDrawerConfigs, FilterData> {
 						} catch (final Exception e) {
 							e.printStackTrace();
 						}
+						
+						// draw second screen
 						if (configs.isEnableSecScreen())
 							configs.getRefGfxSecScreen().drawImage(bufImgSec
 									.getScaledInstance(289, 214,

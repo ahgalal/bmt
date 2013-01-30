@@ -89,7 +89,7 @@ public class ShapeController implements GfxPanelNotifiee, ShapeCollection {
 	 * @see control.ShapeCollection#drawaAllShapes(java.awt.Graphics)
 	 */
 	@Override
-	public void drawaAllShapes(final Graphics gfx) {
+	public void drawAllShapes(final Graphics gfx) {
 		int i = 0;
 		for (i = 0; i < this.getNumberOfShapes(); i++)
 			this.shapes.get(i).draw(gfx);

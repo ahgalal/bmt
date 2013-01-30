@@ -135,6 +135,9 @@ public class FilterManager {
 
 		filters.clear();
 
+		// TODO: this is a tmp fix to prevent drawing zones on
+		// the main screen in case of FST (search for #abc to find other edits)
+		ShapeController.getDefault().clearAllShapes();
 		// TODO: ??
 	}
 

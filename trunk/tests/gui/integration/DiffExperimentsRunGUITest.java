@@ -12,6 +12,7 @@ public class DiffExperimentsRunGUITest {
 		suite.addTestSuite(ForcedSwimmingIntegrationTest.class);
 		suite.addTestSuite(OpenFieldIntegrationTest.class);
 		suite.addTestSuite(ForcedSwimmingIntegrationTest.class);
+		suite.addTestSuite(OpenFieldIntegrationTest.class);
 		//$JUnit-END$
 		return suite;
 	}

@@ -28,5 +28,5 @@ public interface ShapeCollection {
 	 * @param gfx
 	 *            Graphics object to draw the shapes on
 	 */
-	void drawaAllShapes(final Graphics gfx);
+	void drawAllShapes(final Graphics gfx);
 }
