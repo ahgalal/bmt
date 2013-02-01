@@ -15,8 +15,8 @@
 package utils.video.input;
 
 import hypermedia.video.OpenCV;
+import sys.utils.Utils;
 import utils.PManager;
-import utils.Utils;
 import utils.video.FrameIntArray;
 
 /**

@@ -14,7 +14,7 @@
 
 package utils.video.input;
 
-import utils.Utils;
+import sys.utils.Utils;
 import utils.video.FrameIntArray;
 import JMyron.JMyron;
 

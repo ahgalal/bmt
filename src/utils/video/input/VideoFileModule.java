@@ -22,7 +22,7 @@ import jagvidlib.JAGVidLib.StreamState;
 
 import java.awt.Point;
 
-import utils.Utils;
+import sys.utils.Utils;
 import utils.video.FrameIntArray;
 
 /**
