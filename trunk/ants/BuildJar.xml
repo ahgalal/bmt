@@ -7,29 +7,29 @@
                    
      Creative                                                                
      ====================================================================== -->
-<project name="BMT" default="release">
+<project name="BMT" default="release" basedir="../">
 	<description>
             Build and Release the BMT project
     </description>
 
 	<property environment="env"/>
-	<property name="bmt_version" value="0.5_pre"/>
-	<property name="libs_version" value="0.5_pre"/>
-	<property name="bin_libs_version" value="0.5_pre"/>
+	<property name="bmt_version" value="0.5_RC"/>
+	<property name="libs_version" value="0.5_RC"/>
+	<property name="bin_libs_version" value="0.5_RC"/>
 	<property name="jarfile.name" value="BMT_v${bmt_version}.jar"/>
 	<property name="exefile.name" value="BMT_v${bmt_version}.exe"/>
 
-	<property name="jarfile" value="../output/release/${jarfile.name}" />
-	<property name="exefile" value="../output/release/${exefile.name}" />
-	<property name="output_dir" value="../output/" />
-	<property name="release_dir" value="../output/release" />
-	<property name="uploads_dir" value="../output/uploads" />
+	<property name="jarfile" value="output/release/${jarfile.name}" />
+	<property name="exefile" value="output/release/${exefile.name}" />
+	<property name="output_dir" value="output/" />
+	<property name="release_dir" value="output/release" />
+	<property name="uploads_dir" value="output/uploads" />
 	<property name="libs_dir.name" value="libs" />
 	<property name="libs_dir" value="${release_dir}/${libs_dir.name}" />
 	<property name="launch4j.dir" value="${env.tools}/launch4j-3.0.2-win32/launch4j"/>
-	<property name="dir.bin" value="../bin" />
-	<property name="dir.src" value="../src" />
-	<property name="dir.tests" value="../tests" />
+	<property name="dir.bin" value="bin" />
+	<property name="dir.src" value="src" />
+	<property name="dir.tests" value="tests" />
 	
 
 
@@ -56,12 +56,12 @@
           target: prepare              
          - - - - - - - - - - - - - - - - - -->
 	<target name="prepare">
-		<mkdir dir="../output" />
-		<mkdir dir="../output/release" />
-		<mkdir dir="../output/release/libs" />
+		<mkdir dir="output" />
+		<mkdir dir="output/release" />
+		<mkdir dir="output/release/libs" />
 	</target>
 
-	<fileset id="libs" dir="../libs">
+	<fileset id="libs" dir="libs">
 		<include name="**/*.jar" />
 		<include name="**/*.txt" />
 	</fileset>
@@ -83,7 +83,7 @@
 		</copy>
 	</target>
 
-	<fileset id="bin_libs" dir="../libs">
+	<fileset id="bin_libs" dir="libs">
 		<include name="**/*.dll" />
 		<include name="**/*.so*" />
 		<include name="**/*.jnilib" />
@@ -124,7 +124,7 @@
 				<attribute name="Class-Path" value=". ${jar.classpath}" />
 			</manifest>
 			<fileset dir="${dir.bin}" />
-			<fileset dir="../" includes="images/**" />
+			<fileset dir="." includes="images/**" />
 		</jar>
 
 		<copy file="${jarfile}" todir="${uploads_dir}"/>
@@ -207,7 +207,7 @@
          - - - - - - - - - - - - - - - - - -->
 	<target name="zip_pkg">
 		<zip destfile="${uploads_dir}/BMT_v${bmt_version}.zip" basedir="${release_dir}">
-			<!--fileset dir="../">
+			<!--fileset dir=".">
 				<include name="src/**"/>
 			</fileset-->
 		</zip>
@@ -224,7 +224,7 @@
           target: zip_src                      
          - - - - - - - - - - - - - - - - - -->
 	<target name="zip_src">
-		<zip destfile="${uploads_dir}/src_v${bmt_version}.zip" basedir="../" includes="src/**"/>
+		<zip destfile="${uploads_dir}/src_v${bmt_version}.zip" basedir="." includes="src/**"/>
 	</target>
 
 	<!-- - - - - - - - - - - - - - - - - - 
@@ -232,11 +232,11 @@
          - - - - - - - - - - - - - - - - - -->
 	<target name="zip_src_all">
 		<zip destfile="${uploads_dir}/src_all.zip">
-			<fileset dir="../">
+			<fileset dir=".">
 				<include name="src/**" />
 				<include name="libs/**" />
 			</fileset>
-			<fileset dir="../">
+			<fileset dir=".">
 				<include name=".*" />
 			</fileset>
 		</zip>
@@ -246,7 +246,7 @@
 		<pathelement path="${dir.bin}"/>
 		<path refid="classpath.swt" />
 		<path refid="classpath.junit" />
-		<fileset dir="../libs">
+		<fileset dir="libs">
 			<include name="**/*.jar" />
 		</fileset>
 	</path>
@@ -269,7 +269,7 @@
           target: copy_license              
          ================================= -->
 	<target name="copy_license">
-		<copy tofile="${release_dir}/license.txt" file="../deploy/license/license.txt"/>
+		<copy tofile="${release_dir}/license.txt" file="deploy/license/license.txt"/>
 	</target>
 
 
