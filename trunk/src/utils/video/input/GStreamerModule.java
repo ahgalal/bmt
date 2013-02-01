@@ -23,8 +23,8 @@ import org.gstreamer.State;
 import org.gstreamer.elements.RGBDataSink;
 import org.gstreamer.elements.RGBDataSink.Listener;
 
+import sys.utils.Utils;
 import utils.PManager;
-import utils.Utils;
 import utils.video.FrameIntArray;
 import utils.video.ImageManipulator;
 

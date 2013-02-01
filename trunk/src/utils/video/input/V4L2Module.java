@@ -16,9 +16,9 @@ package utils.video.input;
 
 import java.util.List;
 
+import sys.utils.Utils;
 import utils.PManager;
 import utils.StatusManager.StatusSeverity;
-import utils.Utils;
 import utils.video.FrameIntArray;
 import utils.video.ImageManipulator;
 import au.edu.jcu.v4l4j.CaptureCallback;

@@ -14,9 +14,9 @@
 
 package utils.video.input;
 
+import sys.utils.Utils;
 import utils.PManager;
 import utils.StatusManager.StatusSeverity;
-import utils.Utils;
 import utils.video.FrameIntArray;
 import cam_lib.JAGCamLib;
 import cam_lib.ReturnValue;
