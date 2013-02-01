@@ -17,11 +17,11 @@ package filters.recorder;
 import java.io.File;
 
 import lib_avi.AVIOutputStream.VideoFormat;
+import sys.utils.Utils;
 import utils.PManager;
 import utils.PManager.ProgramState;
 import utils.PManager.ProgramState.GeneralState;
 import utils.StatusManager.StatusSeverity;
-import utils.Utils;
 import filters.FilterConfigs;
 import filters.FilterData;
 import filters.Link;
