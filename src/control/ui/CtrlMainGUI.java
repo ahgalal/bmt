@@ -28,6 +28,7 @@ import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
 
+import sys.utils.Utils;
 import ui.MainGUI;
 import ui.PluggedGUI;
 import utils.PManager;
@@ -36,7 +37,6 @@ import utils.PManager.ProgramState.GeneralState;
 import utils.PManager.ProgramState.StreamState;
 import utils.StateListener;
 import utils.StatusManager.StatusSeverity;
-import utils.Utils;
 import filters.CommonFilterConfigs;
 import filters.screendrawer.ScreenDrawerConfigs;
 
