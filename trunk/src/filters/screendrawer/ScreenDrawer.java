@@ -19,10 +19,10 @@ import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferInt;
 
+import sys.utils.Utils;
 import utils.PManager;
 import utils.PManager.ProgramState;
 import utils.StatusManager.StatusSeverity;
-import utils.Utils;
 import filters.FilterConfigs;
 import filters.FilterData;
 import filters.Link;

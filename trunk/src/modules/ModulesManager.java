@@ -29,12 +29,12 @@ import modules.zones.ZonesModuleConfigs;
 
 import org.eclipse.swt.widgets.Shell;
 
+import sys.utils.Utils;
 import ui.PluggedGUI;
 import utils.Logger.Details;
 import utils.PManager;
 import utils.PManager.ProgramState.StreamState;
 import utils.StatusManager.StatusSeverity;
-import utils.Utils;
 import filters.Data;
 
 @SuppressWarnings("rawtypes")

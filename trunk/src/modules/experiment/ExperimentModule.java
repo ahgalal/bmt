@@ -26,9 +26,9 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
 
+import sys.utils.Utils;
 import utils.Logger.Details;
 import utils.PManager;
-import utils.Utils;
 import filters.Data;
 
 /**
