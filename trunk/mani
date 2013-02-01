@@ -1,3 +1,0 @@
-Manifest-Version: 1.0
-Main-Class: utils.PManager
-Class-Path: . libs/POI/commons-logging-1.1.jar libs/POI/dom4j-1.6.1.jar libs/POI/junit-3.8.1.jar libs/POI/log4j-1.2.13.jar  libs/POI/poi-3.7-20101029.jar libs/POI/poi-ooxml-3.7-20101029.jar libs/POI/poi-ooxml-schemas-3.7-20101029.jar libs/POI/poi-scratchpad-3.7-20101029.jar libs/POI/xmlbeans-2.3.0.jar libs/OpenCV/OpenCV.jar libs/JMyron/JMyron.jar libs/JAGCamLib/JAGCamLib.jar libs/LibAVI/LibAVI.jar C:/Program Files/JMF2.1.1e/lib/custom.jar C:/Program Files/JMF2.1.1e/lib/jmf.jar  C:/Program Files/JMF2.1.1e/lib/mediaplayer.jar C:/Program Files/JMF2.1.1e/lib/multiplayer.jar C:/Program Files/JMF2.1.1e/lib/sound.jar
