@@ -8,7 +8,7 @@ import modules.experiment.Experiment;
 import modules.experiment.ExperimentType;
 import sys.utils.EnvVar;
 import sys.utils.Files;
-import utils.Utils;
+import sys.utils.Utils;
 
 /**
  * Tests creating new experiments of types "Open Field" and "Forced Swimming",

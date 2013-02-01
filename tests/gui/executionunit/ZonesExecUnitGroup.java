@@ -4,7 +4,7 @@
 package gui.executionunit;
 
 import utils.DialogBoxUtils;
-import utils.Utils;
+import sys.utils.Utils;
 
 import com.windowtester.runtime.IUIContext;
 import com.windowtester.runtime.WidgetSearchException;

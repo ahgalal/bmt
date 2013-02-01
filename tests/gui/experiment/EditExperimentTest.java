@@ -11,7 +11,7 @@ import modules.experiment.Experiment;
 
 import org.junit.After;
 
-import utils.Utils;
+import sys.utils.Utils;
 
 /**
  * Tests editing experiments of types "Open Field" and "Forced Swimming",
