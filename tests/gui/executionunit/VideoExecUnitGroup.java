@@ -8,7 +8,7 @@ import org.eclipse.swt.widgets.Combo;
 import utils.DialogBoxUtils;
 import utils.PManager;
 import utils.ReflectUtils;
-import utils.Utils;
+import sys.utils.Utils;
 import utils.video.FrameIntArray;
 import utils.video.input.VidInputter.SourceType;
 
