@@ -143,6 +143,7 @@
 
 		<javac destdir="${binloctmp.tests}" debug="on" source="1.6" target="1.6">
 			<src path="${dir.tests}" />
+			<src path="${dir.src}" />
 			<classpath>
 				<path refid="classpath.main" />
 				<path refid="classpath.windowtester" />
