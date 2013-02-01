@@ -1,5 +1,7 @@
 package utils;
 
+import sys.utils.Utils;
+
 import com.windowtester.runtime.IUIContext;
 import com.windowtester.runtime.WT;
 
