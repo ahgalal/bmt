@@ -1,1 +1,1 @@
-ant BMTTestGUI -f %BMT_WS%\BMT\ants\test\regressGUI.xml -Declipse.home=%ECLIPSE_HOME% -Dbasedir=%BMT_WS%\BMT
+ant BMTTestGUI -f %BMT_WS%\BMT\ants\test\regressGUI.xml -Dbinloctmp=%BMT_WS%\BMT\output\release\*.jar -Declipse.home=%ECLIPSE_HOME% -Dbasedir=%BMT_WS%\BMT
