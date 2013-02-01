@@ -10,7 +10,7 @@ import gui.integration.OpenFieldIntegrationTest;
 import sys.utils.Files;
 import utils.DialogBoxUtils;
 import utils.PManager;
-import utils.Utils;
+import sys.utils.Utils;
 
 import com.windowtester.runtime.WidgetSearchException;
 
