@@ -12,12 +12,12 @@
             Build and Release the BMT project
     </description>
 
-	<property environment="env"/>
-	<property name="bmt_version" value="0.5_RC"/>
-	<property name="libs_version" value="0.5_RC"/>
-	<property name="bin_libs_version" value="0.5_RC"/>
-	<property name="jarfile.name" value="BMT_v${bmt_version}.jar"/>
-	<property name="exefile.name" value="BMT_v${bmt_version}.exe"/>
+	<property environment="env" />
+	<property name="bmt_version" value="0.5_RC" />
+	<property name="libs_version" value="0.5_RC" />
+	<property name="bin_libs_version" value="0.5_RC" />
+	<property name="jarfile.name" value="BMT_v${bmt_version}.jar" />
+	<property name="exefile.name" value="BMT_v${bmt_version}.exe" />
 
 	<property name="jarfile" value="output/release/${jarfile.name}" />
 	<property name="exefile" value="output/release/${exefile.name}" />
@@ -26,11 +26,11 @@
 	<property name="uploads_dir" value="output/uploads" />
 	<property name="libs_dir.name" value="libs" />
 	<property name="libs_dir" value="${release_dir}/${libs_dir.name}" />
-	<property name="launch4j.dir" value="${env.tools}/launch4j-3.0.2-win32/launch4j"/>
+	<property name="launch4j.dir" value="${env.tools}/launch4j-3.0.2-win32/launch4j" />
 	<property name="dir.bin" value="bin" />
 	<property name="dir.src" value="src" />
 	<property name="dir.tests" value="tests" />
-	
+
 
 
 	<!-- ================================= 
@@ -66,7 +66,7 @@
 		<include name="**/*.txt" />
 	</fileset>
 	<fileset id="jface_libs" dir="${eclipse.home}\plugins">
-		<include name="org.eclipse.core.commands_3.6.0.I20100512-1500.jar"/>
+		<include name="org.eclipse.core.commands_3.6.0.I20100512-1500.jar" />
 		<include name="org.eclipse.jface_3.6.2.M20110210-1200.jar" />
 		<include name="org.eclipse.ui.forms_3.5.2.r36_v20100702.jar" />
 		<include name="org.eclipse.ui.workbench_3.6.2.M20110210-1200.jar" />
@@ -79,7 +79,7 @@
 	<target name="copy_libs">
 		<copy flatten="true" todir="${libs_dir}" verbose="true">
 			<fileset refid="libs" />
-			<fileset refid="jface_libs"/>
+			<fileset refid="jface_libs" />
 		</copy>
 	</target>
 
@@ -94,7 +94,7 @@
          - - - - - - - - - - - - - - - - - -->
 	<target name="copy_bin_libs">
 		<copy flatten="true" todir="${release_dir}">
-			<fileset refid="bin_libs"/>
+			<fileset refid="bin_libs" />
 		</copy>
 	</target>
 
@@ -112,7 +112,7 @@
 			<classpath>
 				<fileset dir="${libs_dir}">
 					<include name="**/*.jar" />
-					<exclude name="*swt*.jar"/>
+					<exclude name="*swt*.jar" />
 				</fileset>
 			</classpath>
 		</manifestclasspath>
@@ -127,15 +127,15 @@
 			<fileset dir="." includes="images/**" />
 		</jar>
 
-		<copy file="${jarfile}" todir="${uploads_dir}"/>
+		<copy file="${jarfile}" todir="${uploads_dir}" />
 	</target>
-	
-	
+
+
 	<import file="test/base/build.xml" />
 
 	<target name="compile" depends="init">
 		<property name="binloctmp" value="${dir.bin}" />
-		
+
 		<echo message="${java.runtime.version}" />
 
 		<delete dir="${binloctmp}" />
@@ -150,6 +150,13 @@
 				<path location="." />
 			</classpath>
 		</javac>
+
+		<!-- copy *.properties files to bin dir -->
+		<copy flatten="false" todir="bin">
+			<fileset dir="src">
+				<include name="**/*.properties"/>
+			</fileset>
+		</copy>
 	</target>
 
 
@@ -174,7 +181,7 @@
 			    :${launch4j.dir}/lib/xstream.jar" />
 
 		<launch4j configFile="exe_config.xml" />
-		<delete file="exe_config.xml"/>
+		<delete file="exe_config.xml" />
 
 	</target>
 
@@ -189,7 +196,7 @@
          - - - - - - - - - - - - - - - - - -->
 	<target name="zip_libs">
 		<mkdir dir="${uploads_dir}" />
-		<zip destfile="${uploads_dir}/libs_v${libs_version}.zip" basedir="${libs_dir}/../" includes="libs/**"/>
+		<zip destfile="${uploads_dir}/libs_v${libs_version}.zip" basedir="${libs_dir}/../" includes="libs/**" />
 	</target>
 
 	<!-- - - - - - - - - - - - - - - - - - 
@@ -197,8 +204,8 @@
          - - - - - - - - - - - - - - - - - -->
 	<target name="zip_bin_libs">
 		<mkdir dir="${uploads_dir}" />
-		<zip destfile="${uploads_dir}/link_libs_v${bin_libs_version}.zip" filesonly="true" >
-			<fileset refid="bin_libs_flat"/>
+		<zip destfile="${uploads_dir}/link_libs_v${bin_libs_version}.zip" filesonly="true">
+			<fileset refid="bin_libs_flat" />
 		</zip>
 	</target>
 
@@ -224,7 +231,7 @@
           target: zip_src                      
          - - - - - - - - - - - - - - - - - -->
 	<target name="zip_src">
-		<zip destfile="${uploads_dir}/src_v${bmt_version}.zip" basedir="." includes="src/**"/>
+		<zip destfile="${uploads_dir}/src_v${bmt_version}.zip" basedir="." includes="src/**" />
 	</target>
 
 	<!-- - - - - - - - - - - - - - - - - - 
@@ -243,7 +250,7 @@
 	</target>
 
 	<path id="classpath.main">
-		<pathelement path="${dir.bin}"/>
+		<pathelement path="${dir.bin}" />
 		<path refid="classpath.swt" />
 		<path refid="classpath.junit" />
 		<fileset dir="libs">
@@ -255,21 +262,17 @@
           target: create_runner              
          ================================= -->
 	<target name="create_runners">
-		<property name="swt.jar.linux" value="org.eclipse.swt.gtk.linux.x86_3.6.2.v3659b.jar"/>
-		<property name="swt.jar.win" value="org.eclipse.swt.win32.win32.x86_3.6.2.v3659c.jar"/>
-		<echo file="${release_dir}/run.bat"
-			message="set PATH=%PATH%;%CD%${line.separator}java -classpath ${libs_dir.name}\${swt.jar.win};libs\*;BMT_v${bmt_version}.jar utils.PManager${line.separator}pause"
-        />
-		<echo file="${release_dir}/run.sh"
-			message="export LD_LIBRARY_PATH=.:$LD_LIBRARY_PATH${line.separator}java -classpath ${libs_dir.name}/${swt.jar.linux}:libs/*:BMT_v${bmt_version}.jar utils.PManager"
-        />
+		<property name="swt.jar.linux" value="org.eclipse.swt.gtk.linux.x86_3.6.2.v3659b.jar" />
+		<property name="swt.jar.win" value="org.eclipse.swt.win32.win32.x86_3.6.2.v3659c.jar" />
+		<echo file="${release_dir}/run.bat" message="set PATH=%PATH%;%CD%${line.separator}java -classpath ${libs_dir.name}\${swt.jar.win};libs\*;BMT_v${bmt_version}.jar utils.PManager${line.separator}pause" />
+		<echo file="${release_dir}/run.sh" message="export LD_LIBRARY_PATH=.:$LD_LIBRARY_PATH${line.separator}java -classpath ${libs_dir.name}/${swt.jar.linux}:libs/*:BMT_v${bmt_version}.jar utils.PManager" />
 	</target>
 
 	<!-- ================================= 
           target: copy_license              
          ================================= -->
 	<target name="copy_license">
-		<copy tofile="${release_dir}/license.txt" file="deploy/license/license.txt"/>
+		<copy tofile="${release_dir}/license.txt" file="deploy/license/license.txt" />
 	</target>
 
 
