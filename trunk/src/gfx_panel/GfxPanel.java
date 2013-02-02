@@ -269,12 +269,10 @@ public class GfxPanel {
 
 					final Shape draggedOnShape = getDraggedOnShape(x, y);
 					notifyTargettedDragOperation(shpSelected, draggedOnShape);
-				} else {
-					currentClickPos.x = e.getX();
-					currentClickPos.y = e.getY();
-
-					notifyMouseClick(currentClickPos);
 				}
+				currentClickPos.x = e.getX();
+				currentClickPos.y = e.getY();
+				notifyMouseClick(currentClickPos);
 			}
 		});
 
