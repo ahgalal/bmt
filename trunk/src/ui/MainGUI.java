@@ -115,12 +115,12 @@ public class MainGUI extends BaseUI {
 		super.sShell = this.sShell;
 		grpGraphs = new Group(sShell, SWT.NONE);
 		grpGraphs.setText("Graphs");
-		grpGraphs.setBounds(10, 524, 969, 152);
+		grpGraphs.setBounds(556, 524, 423, 152);
 		
 		txtConsole = new StyledText(sShell, SWT.BORDER | SWT.WRAP | SWT.V_SCROLL | SWT.MULTI);
-		txtConsole.setBounds(10, 511, 662, 82);
+		txtConsole.setBounds(10, 524, 540, 152);
 		txtConsole.setEditable(false);
-		txtConsole.setVisible(false); // TODO: reenable console when graphs are in a separate window
+		txtConsole.setVisible(true); // TODO: reenable console when graphs are in a separate window
 	}
 
 	/**
