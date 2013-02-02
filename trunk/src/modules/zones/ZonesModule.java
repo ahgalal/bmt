@@ -216,7 +216,7 @@ public class ZonesModule extends
 		fileCargo = new Cargo(expParams);
 		for (final String param : expParams)
 			data.addParameter(param);
-		zoneMap = new byte[configs.getWidth() * configs.getHeight()];
+
 		updateZoneMap();
 	}
 
@@ -340,8 +340,10 @@ public class ZonesModule extends
 
 	@Override
 	public void updateConfigs(final ModuleConfigs config) {
-		if (config instanceof ZonesModuleConfigs)
+		if (config instanceof ZonesModuleConfigs){
 			configs.mergeConfigs(config);
+			updateZoneMap();
+		}
 	}
 
 	@Override
