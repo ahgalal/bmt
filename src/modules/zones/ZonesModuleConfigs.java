@@ -53,6 +53,7 @@ public class ZonesModuleConfigs extends ModuleConfigs {
 
 	@Override
 	protected void mergeConfigs(final ModuleConfigs configs) {
+		super.mergeConfigs(configs);
 		final ZonesModuleConfigs tmpZonConfigs = (ZonesModuleConfigs) configs;
 		if (tmpZonConfigs.getHystValue() != -1)
 			setHystValue(tmpZonConfigs.getHystValue());
