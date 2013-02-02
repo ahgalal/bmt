@@ -71,7 +71,7 @@ public class StatusManager {
 				clr = clrBlack;
 			else
 				clr = clrBlack;
-System.out.println(msg);
+
 			Display.getDefault().asyncExec(new Runnable() {
 				@Override
 				public void run() {
