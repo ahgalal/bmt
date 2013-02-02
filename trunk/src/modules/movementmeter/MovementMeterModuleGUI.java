@@ -32,22 +32,20 @@ public class MovementMeterModuleGUI extends PluggedGUI<MovementMeterModule> {
 		private final Chart				secChart;
 		private final LineSeries		secLineSeries;
 		private int						updatePlotterDataFlag	= 0;
+		private boolean	level;
 
 		public Curve(final Chart mainChart, final Chart secChart,
 				final LineSeries mainLineSeries,
-				final LineSeries secLineSeries) {
+				final LineSeries secLineSeries,boolean isLevel) {
 			this.mainLineSeries = mainLineSeries;
 			this.secLineSeries = secLineSeries;
 			this.mainChart = mainChart;
 			this.secChart = secChart;
 			data = new ArrayList<Double>();
+			this.level=isLevel;
 		}
 
 		public void addPoint(final int y) {
-			addPoint(y, false);
-		}
-
-		public void addPoint(final int y, final boolean level) {
 			final double value = y;
 			data.add(value);
 			if (level) {
@@ -56,15 +54,19 @@ public class MovementMeterModuleGUI extends PluggedGUI<MovementMeterModule> {
 			}
 
 			if (updatePlotterDataFlag % 5 == 0) {
-				final double[] tmpData = new double[data.size()];
-				int i = 0;
-				for (final Double d : data) {
-					tmpData[i] = d;
-					i++;
-				}
-				updateCharts(tmpData);
+				redraw();
 			}
 			updatePlotterDataFlag++;
+		}
+		
+		public void redraw(){
+			final double[] tmpData = new double[data.size()];
+			int i = 0;
+			for (final Double d : data) {
+				tmpData[i] = d;
+				i++;
+			}
+			updateCharts(tmpData);
 		}
 
 		private void updateCharts(final double[] tmpData) {
@@ -173,6 +175,10 @@ public class MovementMeterModuleGUI extends PluggedGUI<MovementMeterModule> {
 			public void mouseDoubleClick(final MouseEvent arg0) {
 				secChartParent.getShell().setVisible(true);
 				secChartParent.getShell().setActive();
+				
+				energyCurve.redraw();
+				for(Curve curve:levelCurves)
+					curve.redraw();
 			}
 
 			@Override
@@ -185,7 +191,7 @@ public class MovementMeterModuleGUI extends PluggedGUI<MovementMeterModule> {
 		});
 
 		energyCurve = new Curve(mainChart, secChart, mainLineSeries,
-				secLineSeries);
+				secLineSeries,false);
 
 		final LineSeries mainLevelSeries1 = createChart(mainChart, false,
 				"level1", Display.getDefault().getSystemColor(SWT.COLOR_BLACK));
@@ -202,17 +208,17 @@ public class MovementMeterModuleGUI extends PluggedGUI<MovementMeterModule> {
 				"level3", Display.getDefault().getSystemColor(SWT.COLOR_BLACK));
 
 		levelCurves.add(new Curve(mainChart, secChart, mainLevelSeries1,
-				secLevelSeries1));
+				secLevelSeries1,true));
 		levelCurves.add(new Curve(mainChart, secChart, mainLevelSeries2,
-				secLevelSeries2));
+				secLevelSeries2,true));
 		levelCurves.add(new Curve(mainChart, secChart, mainLevelSeries3,
-				secLevelSeries3));
+				secLevelSeries3,true));
 	}
 
 	public void setEnergyLevels(final int levels[]) {
 		if (levels.length == levelCurves.size()) {
 			for (int i = 0; i < levels.length; i++)
-				levelCurves.get(i).addPoint(levels[i], true);
+				levelCurves.get(i).addPoint(levels[i]);
 		} else
 			throw new RuntimeException("Size mismatch");
 	}
