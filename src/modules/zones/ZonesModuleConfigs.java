@@ -56,10 +56,6 @@ public class ZonesModuleConfigs extends ModuleConfigs {
 		final ZonesModuleConfigs tmpZonConfigs = (ZonesModuleConfigs) configs;
 		if (tmpZonConfigs.getHystValue() != -1)
 			setHystValue(tmpZonConfigs.getHystValue());
-		if (tmpZonConfigs.getWidth() != -1)
-			setWidth(tmpZonConfigs.getWidth());
-		if (tmpZonConfigs.getHeight() != -1)
-			setHeight(tmpZonConfigs.getHeight());
 	}
 
 	public void setHystValue(int hystValue) {

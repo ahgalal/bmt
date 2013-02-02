@@ -20,6 +20,7 @@ import modules.zones.ZonesModule;
 import modules.zones.ZonesModuleConfigs;
 import ui.OptionsWindow;
 import utils.PManager;
+import utils.StatusManager.StatusSeverity;
 import filters.FilterConfigs;
 import filters.rearingdetection.RearingDetector;
 import filters.rearingdetection.RearingFilterConfigs;
@@ -108,7 +109,7 @@ public class CtrlOptionsWindow extends ControllerUI<OptionsWindow> {
 					.enableFilter(RearingDetector.class, enableAutoRearing);
 			show(showWindow);
 		} catch (final NumberFormatException e1) {
-			System.out.print("Error in user input ... aborting !\n");
+			PManager.getDefault().getStatusMgr().setStatus("input is not correct",StatusSeverity.ERROR);
 		}
 	}
 }

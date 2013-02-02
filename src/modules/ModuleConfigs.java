@@ -55,7 +55,12 @@ public abstract class ModuleConfigs {
 	 * @param config
 	 *            incoming configurations object
 	 */
-	protected abstract void mergeConfigs(ModuleConfigs config);
+	protected void mergeConfigs(ModuleConfigs config){
+		if (config.getWidth() != -1)
+			setWidth(config.getWidth());
+		if (config.getHeight() != -1)
+			setHeight(config.getHeight());
+	}
 
 	public void setHeight(int height) {
 		this.height = height;
