@@ -94,7 +94,7 @@ public class OpenFieldExperimentModuleGUI extends ExperimentModuleGUI {
 		xpndtmOptions.setControl(cmpstOptions);
 		btnSetBackground = new Button(cmpstOptions, SWT.NONE);
 		btnSetBackground.setBounds(new Rectangle(10, 10, 109, 25));
-		btnSetBackground.setText("Set Background");
+		btnSetBackground.setText("Snap Background");
 		btnSetBackground.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(final SelectionEvent e) {
