@@ -39,7 +39,7 @@ public class ExperimentExecUnitGroup extends ExecutionUnitGroup {
 		});
 	}
 	public static void setBackground() throws WidgetSearchException{
-		ui.click(new ButtonLocator("Set Background"));
+		ui.click(new ButtonLocator("Snap Background"));
 	}
 	
 	public static void startTracking(String ratNumber) throws WidgetSearchException{
