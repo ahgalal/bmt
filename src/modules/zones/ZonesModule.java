@@ -367,9 +367,9 @@ public class ZonesModule extends
 		guiCargo.setDataByTag(Constants.GUI_CENTRAL_ENTRANCE,
 				Integer.toString(data.getCentralEntrance()));
 		guiCargo.setDataByTag(Constants.GUI_CENTRAL_TIME,
-				Integer.toString(data.getCentralZoneTime()));
+				Integer.toString(data.getCentralZoneTime()) + " s");
 		guiCargo.setDataByTag(Constants.GUI_TOTAL_DISTANCE,
-				Long.toString(data.getTotalDistance()));
+				Long.toString(data.getTotalDistance()) + " cm");
 	}
 
 	/**
