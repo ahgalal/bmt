@@ -174,7 +174,7 @@ Module<PluggedGUI<?>, SessionModuleConfigs, SessionModuleData> {
 	@Override
 	public void updateGUICargoData() {
 		guiCargo.setDataByTag(Constants.GUI_SESSION_TIME,
-				Float.toString(getSessionTimeTillNow()));
+				Float.toString(getSessionTimeTillNow()) +" s");
 	}
 	public final static String			moduleID=Constants.MODULE_ID+".session";
 

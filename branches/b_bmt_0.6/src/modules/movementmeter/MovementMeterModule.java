@@ -212,13 +212,13 @@ public class MovementMeterModule extends
 		accumulatedSessionTime = sessionModuleData.getAccumulatedSessionTime() / 1000;
 		final double climbingTime = accumulatedSessionTime * energyBins.get(0)
 				/ (double) energyData.size();
-		guiCargo.setDataByTag(expParams[0], formatTime(climbingTime));
+		guiCargo.setDataByTag(expParams[0], formatTime(climbingTime) + " s");
 		final double swimmingTime = accumulatedSessionTime * energyBins.get(1)
 				/ (double) energyData.size();
-		guiCargo.setDataByTag(expParams[1], formatTime(swimmingTime));
+		guiCargo.setDataByTag(expParams[1], formatTime(swimmingTime) + " s");
 		final double floatingTime = accumulatedSessionTime * energyBins.get(2)
 				/ (double) energyData.size();
-		guiCargo.setDataByTag(expParams[2], formatTime(floatingTime));
+		guiCargo.setDataByTag(expParams[2], formatTime(floatingTime) + " s");
 	}
 
 	private void setMaxEnergy(final int maxEnergy) {
