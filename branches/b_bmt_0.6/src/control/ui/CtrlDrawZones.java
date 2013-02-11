@@ -26,6 +26,7 @@ import org.eclipse.swt.widgets.Shell;
 
 import ui.DrawZones;
 import utils.PManager;
+import utils.StatusManager.StatusSeverity;
 
 /**
  * Controller of the DrawZones GUI window.
@@ -142,7 +143,7 @@ public class CtrlDrawZones extends ControllerUI<DrawZones> {
 
 	/**
 	 * Sends measure points selected by the user along with the real distance
-	 * between the two points in reality to the StatsController.
+	 * between the two points in reality to the ZonesModule.
 	 * 
 	 * @param measurePnt1
 	 *            First point that the user selected
@@ -151,11 +152,16 @@ public class CtrlDrawZones extends ControllerUI<DrawZones> {
 	 * @param strRealDistance
 	 *            Real distance between the two points
 	 */
-	public void sendScaletoStatsCtrlr(final Point measurePnt1,
+	public void sendScaletoZonesModule(final Point measurePnt1,
 			final Point measurePnt2, final String strRealDistance) {
-		((ZonesModule) ModulesManager.getDefault().getModuleByID(
-				ZonesModule.moduleID)).setScale(measurePnt1, measurePnt2,
-				Integer.parseInt(strRealDistance));
+		try {
+			int realDist=Integer.parseInt(strRealDistance);
+			((ZonesModule) ModulesManager.getDefault().getModuleByID(
+					ZonesModule.moduleID)).setScale(measurePnt1, measurePnt2,
+					realDist);
+		} catch (NumberFormatException e) {
+			PManager.getDefault().getStatusMgr().setStatus("Invalid distance, please try again.", StatusSeverity.ERROR);
+		}
 	}
 
 	/**
