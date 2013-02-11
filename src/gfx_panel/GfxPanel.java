@@ -736,6 +736,10 @@ public class GfxPanel {
 	public void registerForNotifications(final GfxPanelNotifiee notifiee) {
 		arrNotifiee.add(notifiee);
 	}
+	
+	public BufferedImage getBGImage(){
+		return bgBuffImg;
+	}
 
 	/**
 	 * Resizes the shape.

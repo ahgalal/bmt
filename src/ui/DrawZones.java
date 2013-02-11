@@ -16,7 +16,11 @@ package ui;
 
 import gfx_panel.GfxPanel;
 
+import java.awt.Color;
+import java.awt.Graphics;
 import java.awt.Point;
+import java.awt.image.BufferedImage;
+import java.awt.image.DataBufferInt;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
@@ -42,6 +46,8 @@ import control.ui.CtrlDrawZones;
  * @author Creative
  */
 public class DrawZones extends BaseUI {
+	private static final int	FRAME_HEIGHT	= 480;
+	private static final int	FRAME_WIDTH	= 640;
 	private Button			btnHide		= null;
 	private Button			btnLoadZones	= null;
 	private Button			btnSaveZones	= null;
@@ -79,13 +85,39 @@ public class DrawZones extends BaseUI {
 	 *            position of the new point (x,y)
 	 */
 	public void addMeasurePoint(final Point pos) {
-		if (measurePnt1 == null)
+		if (measurePnt1 == null){
 			measurePnt1 = new Point(pos.x, pos.y);
-		else
+			bgNoScaleMarkers=drawMeasurePoint(pos);
+			gfxPanel.refreshDrawingArea();
+		}
+		else{
 			measurePnt2 = new Point(pos.x, pos.y);
+			drawMeasurePoint(pos);
+			gfxPanel.refreshDrawingArea();
+			
+			// restore original BG, but don't refresh, to hold the second
+			// measure point on screen
+			gfxPanel.setBackground(bgNoScaleMarkers);
+			bgNoScaleMarkers=null;
+		}
 		PManager.log.print("New Measure point Added: " + pos.x + " " + pos.y,
 				this);
 	}
+
+	private int[] drawMeasurePoint(final Point pos) {
+		BufferedImage currentBG = gfxPanel.getBGImage();
+		int[] srcData = ((DataBufferInt)currentBG.getRaster().getDataBuffer()).getData();
+		int[] bgBeforeDrawingMarker = new int[srcData.length];
+		System.arraycopy(srcData, 0, bgBeforeDrawingMarker, 0, srcData.length);
+		
+		// draw marker at click's position
+		Graphics graphics = currentBG.getGraphics();
+		graphics.setColor(Color.RED);
+		graphics.fillOval(pos.x, pos.y, 5, 5);
+		
+		return bgBeforeDrawingMarker;
+	}
+	private int[] bgNoScaleMarkers;
 
 	/**
 	 * Adds zone to the GUI table.
@@ -139,7 +171,7 @@ public class DrawZones extends BaseUI {
 	private void createComposite() {
 		composite = new Composite(sShell, SWT.BORDER);
 		composite.setLayout(null);
-		composite.setBounds(5, 5, 640, 480 + 35);
+		composite.setBounds(5, 5, FRAME_WIDTH, FRAME_HEIGHT + 35);
 		gfxPanel = new GfxPanel(sShell, composite, composite.getSize().x,
 				composite.getSize().y);
 		gfxPanel.setEnableSnap(true);
@@ -199,12 +231,13 @@ public class DrawZones extends BaseUI {
 								Display.getDefault().syncExec(new Runnable() {
 									@Override
 									public void run() {
+										
 										strRealDistance = inputboxGetrealDist
 												.show();
 										gfxPanel.enableDraw(true);
 									}
 								});
-								controller.sendScaletoStatsCtrlr(measurePnt1,
+								controller.sendScaletoZonesModule(measurePnt1,
 										measurePnt2, strRealDistance);
 								measurePnt1 = null;
 								measurePnt2 = null;
