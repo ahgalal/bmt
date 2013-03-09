@@ -49,6 +49,6 @@ public interface Exp2GUI {
 	 */
 	String getUser();
 	
-	String getType();
+	ExperimentType getType();
 
 }

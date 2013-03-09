@@ -14,10 +14,15 @@
 
 package filters.rearingdetection;
 
+import java.awt.Point;
+
 import utils.PManager.ProgramState;
 import filters.FilterConfigs;
+import filters.FilterData;
 import filters.Link;
 import filters.VideoFilter;
+import filters.ratfinder.RatFinder;
+import filters.ratfinder.RatFinderData;
 
 /**
  * Detects whether the rat is rearing or not.
@@ -26,6 +31,8 @@ import filters.VideoFilter;
  */
 public class RearingDetector extends
 		VideoFilter<RearingFilterConfigs, RearingFilterData> {
+	private static final String ID = "filters.rearingdetector";
+
 	/**
 	 * Runnable to calculate the mean rat area.
 	 * 
@@ -79,7 +86,10 @@ public class RearingDetector extends
 		gui = new RearingDetectorGUI(this);
 		filterData.setRearing(false);
 	}
-
+	/**
+	 * reference to the current object's position.
+	 */
+	private Point	centerPoint;
 	@Override
 	public boolean configure(final FilterConfigs configs) {
 		this.configs = (RearingFilterConfigs) configs;
@@ -92,11 +102,11 @@ public class RearingDetector extends
 		if (configs.isEnabled())
 			if (imageData != null) {
 				int whiteArea = 0;
-				for (int x = configs.getCenterPoint().x
-						- (configs.getMarginX() / 2); x < configs.getCenterPoint().x
+				for (int x = getCenterPoint().x
+						- (configs.getMarginX() / 2); x < getCenterPoint().x
 						+ (configs.getMarginX() / 2); x++)
-					for (int y = configs.getCenterPoint().y
-							- (configs.getMarginY() / 2); y < configs.getCenterPoint().y
+					for (int y = getCenterPoint().y
+							- (configs.getMarginY() / 2); y < getCenterPoint().y
 							+ (configs.getMarginY() / 2); y++)
 						if ((x < configs.getCommonConfigs().getWidth()) & (x >= 0)
 								& (y < configs.getCommonConfigs().getHeight())
@@ -140,6 +150,31 @@ public class RearingDetector extends
 	public void updateProgramState(final ProgramState state) {
 		// TODO Auto-generated method stub
 
+	}
+	
+	@Override
+	public String getID() {
+		return ID;
+	}
+
+	@Override
+	public VideoFilter<?, ?> newInstance(String filterName) {
+		return new RearingDetector(filterName, null, null);
+	}
+
+	@Override
+	public void registerDependentData(FilterData data) {
+		if(data.getId().equals(RatFinderData.dataID)){
+			centerPoint=((RatFinderData)data).getCenterPoint();
+		}
+	}
+
+	private void setCenterPoint(Point centerPoint) {
+		this.centerPoint = centerPoint;
+	}
+
+	private Point getCenterPoint() {
+		return centerPoint;
 	}
 
 }

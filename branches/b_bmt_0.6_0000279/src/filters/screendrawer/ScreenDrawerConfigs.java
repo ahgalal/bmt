@@ -15,6 +15,7 @@
 package filters.screendrawer;
 
 import java.awt.Graphics;
+import java.awt.Point;
 
 import modules.zones.ShapeCollection;
 import utils.PManager;
@@ -29,18 +30,13 @@ import filters.FilterConfigs;
  */
 public class ScreenDrawerConfigs extends FilterConfigs {
 	/**
-	 * enable drawing of the secondary stream.
-	 */
-	private boolean			enableSecScreen;
-
-	/**
 	 * refGfxMainScreen reference to a Graphics object that the filter will
 	 * draw on the main data stream. refGfxSecScreen reference to a Graphics
 	 * object that the filter will draw on the secondary data stream.
 	 */
-	private Graphics			refGfxMainScreen;
+	private Graphics			refGfxScreen;
+	private Point canvasDims;
 
-	private Graphics	refGfxSecScreen;
 	/**
 	 * instance of a ShapeCollection that will draw its shapes on the main
 	 * stream.
@@ -52,7 +48,7 @@ public class ScreenDrawerConfigs extends FilterConfigs {
 	 * 
 	 * @param filterName
 	 *            name of the filter this configurations will be applied to
-	 * @param refGfxMainScreen
+	 * @param refGfxScreen
 	 *            reference to a Graphics object that the filter will draw on
 	 *            the main data stream
 	 * @param refGfxSecScreen
@@ -65,17 +61,16 @@ public class ScreenDrawerConfigs extends FilterConfigs {
 	 * @param shpController
 	 *            instance of ShapeController that will draw its shapes on the
 	 *            main stream
+	 * @param canvasDims 
 	 */
 	public ScreenDrawerConfigs(final String filterName,
-			final Graphics refGfxMainScreen, final Graphics refGfxSecScreen,
+			final Graphics refGfxScreen,
 			final CommonFilterConfigs commonConfigs,
-			final boolean enableSecScreen,
-			final ShapeCollection shpController) {
+			final ShapeCollection shpController, Point canvasDims) {
 		super(filterName, commonConfigs);
-		this.setRefGfxMainScreen(refGfxMainScreen);
-		this.setRefGfxSecScreen(refGfxSecScreen);
-		this.setEnableSecScreen(enableSecScreen);
+		this.setRefGfxMainScreen(refGfxScreen);
 		this.setShapeController(shpController);
+		this.setCanvasDims(canvasDims);
 	}
 
 	@Override
@@ -83,13 +78,12 @@ public class ScreenDrawerConfigs extends FilterConfigs {
 		final ScreenDrawerConfigs tmpScnDrwrCfgs = (ScreenDrawerConfigs) configs;
 		if (tmpScnDrwrCfgs.getCommonConfigs() != null)
 			setCommonConfigs(tmpScnDrwrCfgs.getCommonConfigs());
-		if (tmpScnDrwrCfgs.getRefGfxMainScreen() != null)
-			setRefGfxMainScreen(tmpScnDrwrCfgs.getRefGfxMainScreen());
-		if (tmpScnDrwrCfgs.getRefGfxSecScreen() != null)
-			setRefGfxSecScreen(tmpScnDrwrCfgs.getRefGfxSecScreen());
-		this.setEnableSecScreen(tmpScnDrwrCfgs.isEnableSecScreen());
+		if (tmpScnDrwrCfgs.getRefGfxScreen() != null)
+			setRefGfxMainScreen(tmpScnDrwrCfgs.getRefGfxScreen());
 		if (tmpScnDrwrCfgs.getShapeController() != null)
 			setShapeController(tmpScnDrwrCfgs.getShapeController());
+		if(tmpScnDrwrCfgs.getCanvasDims()!=null)
+			setCanvasDims(tmpScnDrwrCfgs.getCanvasDims());
 	}
 
 	@Override
@@ -102,28 +96,12 @@ public class ScreenDrawerConfigs extends FilterConfigs {
 		return true;
 	}
 
-	public void setEnableSecScreen(boolean enableSecScreen) {
-		this.enableSecScreen = enableSecScreen;
-	}
-
-	public boolean isEnableSecScreen() {
-		return enableSecScreen;
-	}
-
 	public void setRefGfxMainScreen(Graphics refGfxMainScreen) {
-		this.refGfxMainScreen = refGfxMainScreen;
+		this.refGfxScreen = refGfxMainScreen;
 	}
 
-	public Graphics getRefGfxMainScreen() {
-		return refGfxMainScreen;
-	}
-
-	public void setRefGfxSecScreen(Graphics refGfxSecScreen) {
-		this.refGfxSecScreen = refGfxSecScreen;
-	}
-
-	public Graphics getRefGfxSecScreen() {
-		return refGfxSecScreen;
+	public Graphics getRefGfxScreen() {
+		return refGfxScreen;
 	}
 
 	public void setShapeController(ShapeCollection shapeController) {
@@ -132,6 +110,14 @@ public class ScreenDrawerConfigs extends FilterConfigs {
 
 	public ShapeCollection getShapeController() {
 		return shapeController;
+	}
+
+	public void setCanvasDims(Point canvasDims) {
+		this.canvasDims = canvasDims;
+	}
+
+	public Point getCanvasDims() {
+		return canvasDims;
 	}
 
 }

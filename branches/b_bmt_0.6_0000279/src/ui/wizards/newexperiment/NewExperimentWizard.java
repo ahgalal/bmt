@@ -46,7 +46,7 @@ public class NewExperimentWizard extends Wizard {
 
 	public void loadInfoToGUI(final Exp2GUI expInfo, final Grp2GUI[] grpsInfo) {
 		expBasicInfoPage.loadData(new String[] { expInfo.getName(),
-				expInfo.getUser(), expInfo.getNotes(), expInfo.getDate(),expInfo.getType() });
+				expInfo.getUser(), expInfo.getNotes(), expInfo.getDate(),expInfo.getType().toString() });
 
 		for (final Grp2GUI grp : grpsInfo) {
 			grpBasicInfoPage.addNewTab(grp.getId(), grp.getName(),

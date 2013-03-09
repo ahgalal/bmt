@@ -32,6 +32,8 @@ import filters.VideoFilter;
  */
 public class SubtractorFilter extends
 		VideoFilter<SubtractionConfigs, FilterData> {
+	private static final String ID = "filters.subtractor";
+
 	private final FrameIntArray	bgImageGray;
 
 	private int[]				localData;
@@ -68,15 +70,15 @@ public class SubtractorFilter extends
 	@Override
 	public void process() {
 		int tmp;
-		final int threshMask = configs.getThreshold() | configs.getThreshold() << 8
-				| configs.getThreshold() << 16;
+		final int threshMask = configs.getThreshold()/* | configs.getThreshold() << 8
+				| configs.getThreshold() << 16*/;
 		if (configs.isEnabled())
 			if (linkIn.getData().length == bgImageGray.getFrameData().length) {
 				localData = ImageManipulator.rgbIntArray2GrayIntArray(linkIn
 						.getData(),localData);
 				tmp = 0;
 				for (int i = 0; i < localData.length; i++) {
-					tmp = localData[i] - bgImageGray.getFrameData()[i];
+					tmp = (0x000000FF & localData[i]) - (0x000000FF & bgImageGray.getFrameData()[i]);
 
 					if (tmp < 0)
 						tmp *= -1;
@@ -141,5 +143,19 @@ public class SubtractorFilter extends
 		// TODO Auto-generated method stub
 
 	}
+	@Override
+	public String getID() {
+		return ID;
+	}
 
+	@Override
+	public VideoFilter<?, ?> newInstance(String filterName) {
+		return new SubtractorFilter(filterName, null, null);
+	}
+
+	@Override
+	public void registerDependentData(FilterData data) {
+		// TODO Auto-generated method stub
+		
+	}
 }

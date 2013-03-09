@@ -92,7 +92,7 @@ public class CtrlOptionsWindow extends ControllerUI<OptionsWindow> {
 					// margin option in
 					// GUI
 					-1, // TODO: add set margin option in GUI
-					null, null);
+					null);
 
 			final FilterConfigs[] filtersConfigs = new FilterConfigs[2];
 			filtersConfigs[0] = subtractionConfigs;

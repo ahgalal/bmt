@@ -17,6 +17,10 @@ package modules.experiment;
 import java.io.Serializable;
 import java.util.ArrayList;
 
+import filters.FiltersConnectionRequirements;
+import filters.FiltersNamesRequirements;
+import filters.FiltersSetup;
+
 /**
  * Handles all the experiments info.
  * 
@@ -36,7 +40,7 @@ public class Experiment implements Exp2GUI, Serializable {
 	private String										notes;
 	private String[]									params;
 
-	public ExperimentType								type;
+	private ExperimentType								type;
 	private String										user;
 
 	/**
@@ -44,9 +48,57 @@ public class Experiment implements Exp2GUI, Serializable {
 	 */
 	public Experiment() {
 		groups = new ArrayList<Group>();
-		// params = new String[0];
 	}
 
+	public FiltersSetup getFiltersSetup(){
+		FiltersNamesRequirements filtersRequirements = new FiltersNamesRequirements();
+		FiltersConnectionRequirements connectionRequirements = new FiltersConnectionRequirements();
+		
+		switch (type) {
+		case OPEN_FIELD:
+			// required filters
+			filtersRequirements.addFilter("SourceFilter", "filters.source");
+			filtersRequirements.addFilter("ScreenDrawer", "filters.screendrawer");
+			filtersRequirements.addFilter("ScreenDrawerSec", "filters.screendrawer");
+			filtersRequirements.addFilter("RatFinder", "filters.ratfinder");
+			filtersRequirements.addFilter("RearingDetector", "filters.rearingdetector");
+			filtersRequirements.addFilter("Recorder", "filters.videorecorder");
+			filtersRequirements.addFilter("SubtractionFilter", "filters.subtractor");
+			filtersRequirements.addFilter("AverageFilter", "filters.average");
+			
+			// connections
+			connectionRequirements.connectFilters("SourceFilter", "ScreenDrawer");
+			connectionRequirements.connectFilters("SourceFilter", "Recorder");
+			connectionRequirements.connectFilters("SourceFilter", "SubtractionFilter");
+			connectionRequirements.connectFilters("SubtractionFilter", "AverageFilter");
+			connectionRequirements.connectFilters("SubtractionFilter", "RearingDetector");
+
+			connectionRequirements.connectFilters("RatFinder", "ScreenDrawerSec");
+			connectionRequirements.connectFilters("AverageFilter", "RatFinder");
+			
+			break;
+		case FORCED_SWIMMING:
+			
+			// required filters
+			filtersRequirements.addFilter("SourceFilter", "filters.source");
+			filtersRequirements.addFilter("ScreenDrawer", "filters.screendrawer");
+			filtersRequirements.addFilter("ScreenDrawerSec", "filters.screendrawer");
+			filtersRequirements.addFilter("Recorder", "filters.videorecorder");
+			filtersRequirements.addFilter("MovementMeter", "filters.mevementmeter");
+			
+			// connections
+			
+			connectionRequirements.connectFilters("SourceFilter", "ScreenDrawer");
+			connectionRequirements.connectFilters("MovementMeter", "ScreenDrawerSec");
+			connectionRequirements.connectFilters("SourceFilter", "Recorder");
+			connectionRequirements.connectFilters("SourceFilter", "MovementMeter");
+			
+			break;
+		}
+		
+		return new FiltersSetup(filtersRequirements , connectionRequirements );
+	}
+	
 	/**
 	 * Adds a new group to the experiment groups by calling the add() method.
 	 * 
@@ -82,7 +134,7 @@ public class Experiment implements Exp2GUI, Serializable {
 					+ System.getProperty("line.separator")
 					+ Constants.H_EXP_NAME + getName()
 					+ System.getProperty("line.separator")
-					+ Constants.H_EXP_TYPES + type
+					+ Constants.H_EXP_TYPES + getType()
 					+ System.getProperty("line.separator")
 					+ Constants.H_EXP_USER + getUser()
 					+ System.getProperty("line.separator")
@@ -209,12 +261,12 @@ public class Experiment implements Exp2GUI, Serializable {
 	 */
 	public void setExperimentInfo(final String name, final String user,
 			final String date2, final String notes, final String type) {
-		this.name = name;
-		this.user = user;
-		this.date = date2;
-		this.notes = notes;
-		this.type = ExperimentType.enumOf(type);
-		System.out.println(this.type);
+		this.setName(name);
+		this.setUser(user);
+		this.setDate(date2);
+		this.setNotes(notes);
+		this.setType(ExperimentType.enumOf(type));
+		System.out.println(this.getType());
 	}
 
 	/**
@@ -248,8 +300,8 @@ public class Experiment implements Exp2GUI, Serializable {
 	}
 
 	@Override
-	public String getType() {
-		return type.toString();
+	public ExperimentType getType() {
+		return type;
 	}
 
 	public void setFileName(String fileName) {
@@ -258,6 +310,18 @@ public class Experiment implements Exp2GUI, Serializable {
 
 	public String getFileName() {
 		return fileName;
+	}
+
+	private void setDate(String date) {
+		this.date = date;
+	}
+
+	private void setNotes(String notes) {
+		this.notes = notes;
+	}
+
+	public void setType(ExperimentType type) {
+		this.type = type;
 	}
 
 }

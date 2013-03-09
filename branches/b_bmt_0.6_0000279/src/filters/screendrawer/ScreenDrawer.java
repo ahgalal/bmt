@@ -34,6 +34,8 @@ import filters.VideoFilter;
  * @author Creative
  */
 public class ScreenDrawer extends VideoFilter<ScreenDrawerConfigs, FilterData> {
+	private static final String ID = "filters.screendrawer";
+
 	/**
 	 * Runnable for drawing the incoming data on the Graphics objects.
 	 * 
@@ -42,15 +44,7 @@ public class ScreenDrawer extends VideoFilter<ScreenDrawerConfigs, FilterData> {
 	private class RunnableDrawer implements Runnable {
 		@Override
 		public void run() {
-			int waitCount = 0;
-			while ((configs.getRefGfxSecScreen() == null)
-					|| (configs.getRefGfxSecScreen() == null))
-				Utils.sleep(100);
-			waitCount++;
-			if (waitCount == 10)
-				PManager.log.print("Drawing Screen is NULL!", this,
-						StatusSeverity.ERROR);
-
+			System.out.println("running filter: " + getName());
 			try {
 				Utils.sleep(100);
 
@@ -58,25 +52,45 @@ public class ScreenDrawer extends VideoFilter<ScreenDrawerConfigs, FilterData> {
 					if (linkIn.getData() != null) {
 						Utils.sleep(1000 / configs.getCommonConfigs()
 								.getFrameRate());
-						
-						System.arraycopy(linkIn.getData(), 0,
-								dataMainScreen, 0, linkIn.getData().length);
-						
+
+						System.arraycopy(linkIn.getData(), 0, dataScreen, 0,
+								linkIn.getData().length);
+
 						// draw main screen
-						configs.getRefGfxMainScreen().drawImage(bufImgMain, 0,
-								0, configs.getCommonConfigs().getWidth(),
-								configs.getCommonConfigs().getHeight(), 0, 0,
-								configs.getCommonConfigs().getWidth(),
-								configs.getCommonConfigs().getHeight(), null);
-						
+						int canvasWidth = configs.getCanvasDims().x;
+						int canvasHeight = configs.getCanvasDims().y;
+
+						if (canvasWidth != configs.getCommonConfigs()
+								.getWidth()
+								|| canvasHeight != configs.getCommonConfigs()
+										.getHeight()) {
+
+							configs.getRefGfxScreen().drawImage(
+									bufImg.getScaledInstance(canvasWidth,
+											canvasHeight, Image.SCALE_DEFAULT),
+									0, 0,
+									configs.getCommonConfigs().getWidth(),
+									configs.getCommonConfigs().getHeight(), 0,
+									0, configs.getCommonConfigs().getWidth(),
+									configs.getCommonConfigs().getHeight(),
+									null);
+						} else {
+							configs.getRefGfxScreen().drawImage(bufImg, 0, 0,
+									configs.getCommonConfigs().getWidth(),
+									configs.getCommonConfigs().getHeight(), 0,
+									0, configs.getCommonConfigs().getWidth(),
+									configs.getCommonConfigs().getHeight(),
+									null);
+						}
 						// draw zones
 						configs.getShapeController().drawAllShapes(
-								configs.getRefGfxMainScreen());
+								configs.getRefGfxScreen());
 						
 						// draw frame rate on main screen
-						configs.getRefGfxMainScreen().setColor(Color.GREEN);
+						configs.getRefGfxScreen().setColor(Color.GREEN);
 						try {
-							configs.getRefGfxMainScreen()
+
+							configs.getRefGfxScreen()
 									.drawString(
 											"FPS="
 													+ 3000
@@ -87,16 +101,6 @@ public class ScreenDrawer extends VideoFilter<ScreenDrawerConfigs, FilterData> {
 						} catch (final Exception e) {
 							e.printStackTrace();
 						}
-
-						// draw second screen
-						if (configs.isEnableSecScreen())
-							configs.getRefGfxSecScreen().drawImage(bufImgSec
-									.getScaledInstance(289, 214,
-											Image.SCALE_DEFAULT), 0, 0,
-									configs.getCommonConfigs().getWidth(),
-									configs.getCommonConfigs().getHeight(), 0, 0,
-									configs.getCommonConfigs().getWidth(),
-									configs.getCommonConfigs().getHeight(), null);
 					} else
 						PManager.log.print("invalid frame! .. skipping!", this);
 				}
@@ -108,15 +112,11 @@ public class ScreenDrawer extends VideoFilter<ScreenDrawerConfigs, FilterData> {
 		}
 	}
 
-	private BufferedImage	bufImgMain;
+	private BufferedImage	bufImg;
 
-	private BufferedImage	bufImgSec;
-
-	private int[]			dataMainScreen;
-	private int[]			dataSecScreen;
+	private int[]			dataScreen;
 	private final int[]		frameInterval	= new int[3];
 	private long			frameTimeStamp;
-	private final Link		linkIn2;
 
 	private Thread			thDrawer;
 
@@ -126,16 +126,13 @@ public class ScreenDrawer extends VideoFilter<ScreenDrawerConfigs, FilterData> {
 	 * @param name
 	 *            filter's name
 	 * @param linkIn
-	 *            main input Link for the filter
-	 * @param linkIn2
-	 *            secondary input Link for the filter
+	 *            input Link for the filter
 	 * @param linkOut
 	 *            output Link from the filter
 	 */
 	public ScreenDrawer(final String name, final Link linkIn,
-			final Link linkIn2, final Link linkOut) {
+			final Link linkOut) {
 		super(name, linkIn, linkOut);
-		this.linkIn2 = linkIn2;
 		frameInterval[0] = 1;
 		frameInterval[1] = 1;
 		frameInterval[2] = 1;
@@ -145,15 +142,11 @@ public class ScreenDrawer extends VideoFilter<ScreenDrawerConfigs, FilterData> {
 	public boolean configure(final FilterConfigs configs) {
 		this.configs = (ScreenDrawerConfigs) configs;
 
-		bufImgMain = new BufferedImage(configs.getCommonConfigs().getWidth(),
+		bufImg = new BufferedImage(configs.getCommonConfigs().getWidth(),
 				configs.getCommonConfigs().getHeight(), BufferedImage.TYPE_INT_RGB);
-		dataMainScreen = ((DataBufferInt) bufImgMain.getRaster()
+		dataScreen = ((DataBufferInt) bufImg.getRaster()
 				.getDataBuffer()).getData();
 
-		bufImgSec = new BufferedImage(configs.getCommonConfigs().getWidth(),
-				configs.getCommonConfigs().getHeight(), BufferedImage.TYPE_INT_RGB);
-		dataSecScreen = ((DataBufferInt) bufImgSec.getRaster()
-				.getDataBuffer()).getData();
 		return super.configure(configs);
 	}
 
@@ -173,8 +166,8 @@ public class ScreenDrawer extends VideoFilter<ScreenDrawerConfigs, FilterData> {
 	@Override
 	public void process() {
 		if (configs.isEnabled()) {
-			System.arraycopy(linkIn2.getData(), 0, dataSecScreen, 0,
-					linkIn2.getData().length);
+/*			System.arraycopy(linkIn2.getData(), 0, dataSecScreen, 0,
+					linkIn2.getData().length);*/
 			frameInterval[2] = frameInterval[1];
 			frameInterval[1] = frameInterval[0];
 			frameInterval[0] = (int) (System.currentTimeMillis() - frameTimeStamp);
@@ -186,6 +179,22 @@ public class ScreenDrawer extends VideoFilter<ScreenDrawerConfigs, FilterData> {
 	public void updateProgramState(final ProgramState state) {
 		// TODO Auto-generated method stub
 
+	}
+	
+	@Override
+	public String getID() {
+		return ID;
+	}
+
+	@Override
+	public VideoFilter<?, ?> newInstance(String filterName) {
+		return new ScreenDrawer(filterName, null, null);
+	}
+
+	@Override
+	public void registerDependentData(FilterData data) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

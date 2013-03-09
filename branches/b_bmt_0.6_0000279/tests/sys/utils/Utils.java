@@ -21,7 +21,7 @@ public class Utils {
 	}
 	
 	public static boolean compareExperiments(Experiment exp1,Experiment exp2){
-		if(exp1.type!=exp2.type)
+		if(exp1.getType()!=exp2.getType())
 			return false;
 		if(exp1.getDate().equals(exp2.getDate())==false)
 			return false;

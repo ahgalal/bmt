@@ -56,10 +56,7 @@ public class RearingFilterConfigs extends FilterConfigs {
 	 */
 	private int		rearingThresh;
 
-	/**
-	 * reference to the current object's position.
-	 */
-	private Point	centerPoint;
+
 
 	/**
 	 * Initializes the configurations.
@@ -79,13 +76,11 @@ public class RearingFilterConfigs extends FilterConfigs {
 	 */
 	public RearingFilterConfigs(final String filterName,
 			final int rearingThresh, final int marginX, final int marginY,
-			final Point centerPoint,
 			final CommonFilterConfigs commonConfigs) {
 		super(filterName, commonConfigs);
 		this.setRearingThresh(rearingThresh);
 		this.setMarginX(marginX);
 		this.setMarginY(marginY);
-		this.setCenterPoint(centerPoint);
 	}
 
 	@Override
@@ -97,8 +92,6 @@ public class RearingFilterConfigs extends FilterConfigs {
 			this.setMarginY(tmpRearingConfigs.getMarginY());
 		if (tmpRearingConfigs.getRearingThresh() != -1)
 			this.setRearingThresh(tmpRearingConfigs.getRearingThresh());
-		if (tmpRearingConfigs.getCenterPoint() != null)
-			this.setCenterPoint(tmpRearingConfigs.getCenterPoint());
 		if (tmpRearingConfigs.getCommonConfigs() != null)
 			this.setCommonConfigs(tmpRearingConfigs.getCommonConfigs());
 	}
@@ -141,13 +134,4 @@ public class RearingFilterConfigs extends FilterConfigs {
 	public int getRearingThresh() {
 		return rearingThresh;
 	}
-
-	public void setCenterPoint(Point centerPoint) {
-		this.centerPoint = centerPoint;
-	}
-
-	public Point getCenterPoint() {
-		return centerPoint;
-	}
-
 }

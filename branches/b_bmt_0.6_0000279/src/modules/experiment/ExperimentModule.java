@@ -181,7 +181,7 @@ Module<ExperimentModuleGUI, ExperimentModuleConfigs, ExperimentModuleData> {
 		guiCargo.setDataByTag(Constants.GUI_GROUP_NAME,
 				configs.getCurrGrpName());
 		guiCargo.setDataByTag(Constants.GUI_EXP_TYPE,
-				configs.exp.type.toString());
+				configs.exp.getType().toString());
 		guiCargo.setDataByTag(Constants.GUI_RAT_NUMBER,
 				Integer.toString(configs.getCurrRatNumber()));
 	}

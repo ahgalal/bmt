@@ -9,13 +9,13 @@ import filters.FilterConfigs;
 import filters.FilterData;
 import filters.Link;
 import filters.VideoFilter;
-import filters.source.SourceFilterConfigs;
 
 /**
  * @author Creative
  */
-public class AverageFilter extends VideoFilter<SourceFilterConfigs, FilterData> {
+public class AverageFilter extends VideoFilter<AverageFilterConfigs, FilterData> {
 
+	private static final String ID = "filters.average";
 	private short[]		currentFramGrayMap;
 	private int[]		dataOut;
 	private int			height;
@@ -105,4 +105,20 @@ public class AverageFilter extends VideoFilter<SourceFilterConfigs, FilterData> 
 
 	}
 
+	
+	@Override
+	public String getID() {
+		return ID;
+	}
+
+	@Override
+	public VideoFilter<?, ?> newInstance(String filterName) {
+		return new AverageFilter(filterName, null, null);
+	}
+
+	@Override
+	public void registerDependentData(FilterData data) {
+		// TODO Auto-generated method stub
+		
+	}
 }
