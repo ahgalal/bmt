@@ -525,7 +525,7 @@ public class ModulesManager {
 		final ModulesSet forcedSwimmingModulesSetup = new ModulesSet(
 				new String[] { SessionModule.moduleID, MovementMeterModule.moduleID });
 
-		switch (exp.type) {
+		switch (exp.getType()) {
 			case FORCED_SWIMMING:
 				instantiateModules(forcedSwimmingModulesSetup.getModulesNames());
 				break;

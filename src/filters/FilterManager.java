@@ -14,11 +14,11 @@
 
 package filters;
 
-import java.awt.Point;
 import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.Map.Entry;
 
 import modules.ModulesManager;
-import modules.experiment.ExperimentType;
 import modules.zones.ShapeController;
 import ui.PluggedGUI;
 import utils.Logger.Details;
@@ -26,9 +26,10 @@ import utils.PManager;
 import utils.StatusManager.StatusSeverity;
 import utils.video.FrameIntArray;
 import filters.avg.AverageFilter;
+import filters.avg.AverageFilterConfigs;
 import filters.movementmeter.MovementMeter;
+import filters.movementmeter.MovementMeterFilterConfigs;
 import filters.ratfinder.RatFinder;
-import filters.ratfinder.RatFinderData;
 import filters.ratfinder.RatFinderFilterConfigs;
 import filters.rearingdetection.RearingDetector;
 import filters.rearingdetection.RearingFilterConfigs;
@@ -47,7 +48,8 @@ import filters.subtractionfilter.SubtractorFilter;
  * @author Creative
  */
 public class FilterManager {
-	private final ArrayList<VideoFilter<?, ?>>	filters;
+	private final FiltersCollection	filters;
+	private final FiltersCollection	installedFilters;
 	private final ArrayList<FilterConfigs>		configs;
 
 	private CommonFilterConfigs					commonConfigs;
@@ -61,7 +63,18 @@ public class FilterManager {
 	public FilterManager(final CommonFilterConfigs commonConfigs,
 			final FrameIntArray refFia/* , final ExperimentType expType */) {
 		PManager.log.print("instantiating..", this, Details.VERBOSE);
-		filters = new ArrayList<VideoFilter<?, ?>>();
+		filters = new FiltersCollection();
+
+		installedFilters=new FiltersCollection();
+		installedFilters.add(new SourceFilter("", null, null));
+		installedFilters.add(new AverageFilter("", null, null));
+		installedFilters.add(new MovementMeter("", null, null));
+		installedFilters.add(new RatFinder("", null, null));
+		installedFilters.add(new RearingDetector("", null, null));
+		installedFilters.add(new ScreenDrawer("", null, null));
+		installedFilters.add(new SubtractorFilter("", null, null));
+		installedFilters.add(new VideoRecorder("", null, null));
+		
 		configs = new ArrayList<FilterConfigs>();
 		this.commonConfigs = commonConfigs;
 	}
@@ -145,8 +158,10 @@ public class FilterManager {
 	 * Disables all filter.
 	 */
 	public void disableAll() {
-		for (final VideoFilter<?, ?> vf : filters)
+		for (Iterator<VideoFilter<?, ?>> it=filters.getIterator();it.hasNext();){
+			VideoFilter<?, ?> vf = it.next();
 			vf.enable(false);
+		}
 	}
 
 	/**
@@ -185,10 +200,7 @@ public class FilterManager {
 	 * @return VideoFilter having the name specified
 	 */
 	public VideoFilter<?, ?> getFilterByName(final String name) {
-		for (final VideoFilter<?, ?> vf : filters)
-			if (vf.getName().equals(name))
-				return vf;
-		return null;
+		return filters.getFilterByName(name);
 	}
 
 	/**
@@ -200,10 +212,7 @@ public class FilterManager {
 	 *         the same type, first one found will be returned)
 	 */
 	private VideoFilter<?, ?> getFilterByType(final Class<?> type) {
-		for (final VideoFilter<?, ?> vf : filters)
-			if (vf.getClass() == type)
-				return vf;
-		return null;
+		return filters.getFilterByType(type);
 	}
 
 	private FilterConfigs getFilterConfigByName(final String configName) {
@@ -218,23 +227,27 @@ public class FilterManager {
 	 * 
 	 * @return array of filters
 	 */
-	public ArrayList<VideoFilter<?, ?>> getFilters() {
-		return filters;
+	public Iterator<VideoFilter<?, ?>> getFilters() {
+		return filters.getIterator();
 	}
 
 	@SuppressWarnings("rawtypes")
 	public PluggedGUI[] getFiltersGUI() {
 		int validGUIsNumber = 0;
-		for (final VideoFilter<?, ?> vf : filters)
+		for (Iterator<VideoFilter<?, ?>> it=filters.getIterator();it.hasNext();){
+			VideoFilter<?, ?> vf = it.next();
 			if (vf.getGUI() != null)
 				validGUIsNumber++;
+		}
 		final PluggedGUI[] arr = new PluggedGUI[validGUIsNumber];
 		int i = 0;
-		for (final VideoFilter<?, ?> vf : filters)
+		for (Iterator<VideoFilter<?, ?>> it=filters.getIterator();it.hasNext();){
+			VideoFilter<?, ?> vf = it.next();
 			if (vf.getGUI() != null) {
 				arr[i] = vf.getGUI();
 				i++;
 			}
+		}
 		return arr;
 	}
 
@@ -246,26 +259,30 @@ public class FilterManager {
 	public ArrayList<String> getRegisteredFiltersNames() {
 		final ArrayList<String> strNames = new ArrayList<String>();
 
-		for (final VideoFilter<?, ?> vf : filters)
+		for (Iterator<VideoFilter<?, ?>> it=filters.getIterator();it.hasNext();){
+			VideoFilter<?, ?> vf = it.next();
 			strNames.add(vf.getName());
-
+		}
 		return strNames;
 	}
 
 	public void initializeConfigs(final CommonFilterConfigs commonConfigs) {
 		this.commonConfigs = commonConfigs;
 		final SourceFilterConfigs sourceConfigs = new SourceFilterConfigs(
-				"Source Filter", commonConfigs, null);
+				"SourceFilter", commonConfigs, null);
 
 		final ScreenDrawerConfigs scrnDrwrCnfgs = new ScreenDrawerConfigs(
-				"ScreenDrawer", null, null, commonConfigs, true,
-				ShapeController.getDefault());
+				"ScreenDrawer", null, commonConfigs,
+				ShapeController.getDefault(),null);
+		final ScreenDrawerConfigs scrnDrwrCnfgsSec = new ScreenDrawerConfigs(
+				"ScreenDrawerSec", null, commonConfigs,
+				ShapeController.getDefault(),null);
 
 		final RatFinderFilterConfigs ratFinderConfigs = new RatFinderFilterConfigs(
 				"RatFinder", commonConfigs);
 
 		final RearingFilterConfigs rearingConfigs = new RearingFilterConfigs(
-				"RearingDetector", 1000, 200, 200, null, commonConfigs);
+				"RearingDetector", 1000, 200, 200, commonConfigs);
 
 		final RecorderConfigs vidRecorderConfigs = new RecorderConfigs(
 				"Recorder", commonConfigs);
@@ -274,14 +291,15 @@ public class FilterManager {
 				"SubtractionFilter", SubtractionConfigs.defaultThreshold,
 				commonConfigs);
 
-		final SourceFilterConfigs avgFilterConfigs = new SourceFilterConfigs(
-				"Average Filter", commonConfigs, null);
+		final AverageFilterConfigs avgFilterConfigs = new AverageFilterConfigs(
+				"AverageFilter", commonConfigs);
 
-		final SourceFilterConfigs movementFilterConfigs = new SourceFilterConfigs(
-				"Movement Meter", commonConfigs, null);
+		final MovementMeterFilterConfigs movementFilterConfigs = new MovementMeterFilterConfigs(
+				"MovementMeter", commonConfigs);
 
 		addFilterConfiguration(sourceConfigs, false);
 		addFilterConfiguration(scrnDrwrCnfgs, false);
+		addFilterConfiguration(scrnDrwrCnfgsSec, false);
 		addFilterConfiguration(ratFinderConfigs, false);
 		addFilterConfiguration(rearingConfigs, false);
 		addFilterConfiguration(vidRecorderConfigs, false);
@@ -296,26 +314,46 @@ public class FilterManager {
 	 * @param refFia
 	 */
 	private boolean instantiateAndConnectFilters(final FrameIntArray refFia,
-			final ExperimentType expType) {
-		String[] filtersNames = null;
+			final FiltersSetup filtersSetup) {
+		
+		// extract filters' names and ID's, create filters' instances
+		FiltersNamesRequirements filtersNamesRequirements=filtersSetup.getFiltersNamesRequirements();
+		for(Iterator<Entry<String, String>> it=filtersNamesRequirements.getFilters();it.hasNext();){
+			Entry<String, String> entry = it.next();
+			String filterName = entry.getKey();
+			String filterID = entry.getValue();
+			
+			VideoFilter<?, ?> filter = createFilter(filterName,filterID);
+			filters.add(filter);
+		}
+		
+		// pass filtersCollection to the filterSetup to connect them
+		filtersSetup.setFiltersCollection(filters);
+		filtersSetup.connectFilters();
 
-		AverageFilter avgFilter;
+		// set filter's configurations to the default values
+		for( Iterator<VideoFilter<?, ?>> it=filters.getIterator();it.hasNext();){
+			VideoFilter<?, ?> vf = it.next();
+			applyConfigsToFilter(getFilterConfigByName(vf.getName()));
+		}
+
+/*		AverageFilter avgFilter;
 		MovementMeter movementMeter;
 		RatFinder ratFinder;
 		RearingDetector rearingDet;
 		ScreenDrawer screenDrawer = null;
 		SourceFilter sourceFilter;
 		SubtractorFilter subtractorFilter;
-		VideoRecorder vidRec;
+		VideoRecorder vidRec;*/
 
-		final FiltersSetup openFieldFiltersSetup = new FiltersSetup(
+/*		final FiltersSetup openFieldFiltersSetup = new FiltersSetup(
 				new String[] { "RatFinder", "RearingDetector", "Recorder",
 						"SubtractionFilter", "Average Filter" });
 
 		final FiltersSetup forcedSwimmingFiltersSetup = new FiltersSetup(
-				new String[] { "Recorder", "Movement Meter" });
+				new String[] { "Recorder", "Movement Meter" });*/
 
-		PManager.log.print("Connecting video filters", this, Details.VERBOSE);
+/*		PManager.log.print("Connecting video filters", this, Details.VERBOSE);
 		final Point dims = new Point(commonConfigs.getWidth(),
 				commonConfigs.getHeight());
 
@@ -323,103 +361,34 @@ public class FilterManager {
 		final Link greyLink = new Link(dims);
 		final Link markerLink = new Link(dims);
 		final Link avgLink = new Link(dims);
-		final Link differentialLink = new Link(dims);
+		final Link differentialLink = new Link(dims);*/
 
-		sourceFilter = new SourceFilter("Source Filter", null, srcRGBLink);
+		//sourceFilter = new SourceFilter("Source Filter", null, srcRGBLink);
 		final SourceFilterConfigs sourceConfigs = new SourceFilterConfigs(
-				"Source Filter", commonConfigs, refFia);
-		addFilter(sourceFilter);
+				"SourceFilter", commonConfigs, refFia);
+		//addFilter(sourceFilter);
 		applyConfigsToFilter(sourceConfigs);
-
-		switch (expType) {
-			case OPEN_FIELD:
-				screenDrawer = new ScreenDrawer(
-				// "ScreenDrawer", /*src_rgb_link*/avg_link, /*marker_link*/
-				// grey_link, null);
-						"ScreenDrawer", /* grey_link */
-						srcRGBLink/* avg_link */, /* marker_link */
-						/* grey_link, */markerLink, null);
-				filtersNames = openFieldFiltersSetup.getFiltersNames();
-				break;
-			case FORCED_SWIMMING:
-				screenDrawer = new ScreenDrawer(
-				// "ScreenDrawer", /*src_rgb_link*/avg_link, /*marker_link*/
-				// grey_link, null);
-						"ScreenDrawer", /* grey_link */
-						/*differentialLink*/ srcRGBLink /* avg_link */, /* marker_link */
-						differentialLink /* grey_link */, null);
-				filtersNames = forcedSwimmingFiltersSetup.getFiltersNames();
-				break;
+		
+		// broadcast filters' data
+		ArrayList<FilterData> filtersData = new ArrayList<FilterData>();
+		for (Iterator<VideoFilter<?, ?>> it=filters.getIterator();it.hasNext();){
+			VideoFilter<?, ?> vf = it.next();
+			if(vf.getFilterData()!=null)
+				filtersData.add((FilterData) vf.getFilterData());
 		}
-
-		addFilter(screenDrawer);
-		applyConfigsToFilter(getFilterConfigByName("ScreenDrawer"));
-
-		if (isWithinArray("RatFinder", filtersNames))
-			if (isWithinArray("SubtractionFilter", filtersNames)) {
-				ratFinder = new RatFinder("RatFinder", /* grey_link */
-				avgLink, markerLink);
-				/*
-				 * rat_finder = new RatFinder2( "RatFinder", grey_link,
-				 * marker_link);
-				 */
-				addFilter(ratFinder);
-				applyConfigsToFilter(getFilterConfigByName("RatFinder"));
-			} else
-				PManager.log
-						.print("Can't find the SubtractionFilter Filter, it is needed to run the RatFinder filter; please check filters list!",
-								this, StatusSeverity.ERROR);
-		if (isWithinArray("RearingDetector", filtersNames)) {
-			rearingDet = new RearingDetector("RearingDetector", greyLink,
-					null);
-			final RatFinderData rfd = (RatFinderData) getFilterByName(
-					"RatFinder").getFilterData();
-			if (rfd == null)
-				PManager.log
-						.print("Can't find the RatFinder Filter, it is needed to run the RearingDetector filter; please check filters list!",
-								this, StatusSeverity.ERROR);
-			else {
-				final RearingFilterConfigs rearingConfigs = new RearingFilterConfigs(
-						"RearingDetector", -1, -1, -1, (rfd.getCenterPoint()),
-						null);
-				addFilter(rearingDet);
-				applyConfigsToFilter(rearingConfigs);
+		
+		for(FilterData fd:filtersData){
+			for (Iterator<VideoFilter<?, ?>> it=filters.getIterator();it.hasNext();){
+				VideoFilter<?, ?> vf = it.next();
+				vf.registerDependentData(fd);
 			}
 		}
-		if (isWithinArray("Recorder", filtersNames)) {
-			vidRec = new VideoRecorder("Recorder", srcRGBLink, null);
-			addFilter(vidRec);
-			applyConfigsToFilter(getFilterConfigByName("Recorder"));
-		}
-		if (isWithinArray("SubtractionFilter", filtersNames)) {
-			subtractorFilter = new SubtractorFilter("SubtractionFilter",
-					srcRGBLink, greyLink);
-			addFilter(subtractorFilter);
-			applyConfigsToFilter(getFilterConfigByName("SubtractionFilter"));
-		}
 
-		if (isWithinArray("Average Filter", filtersNames)) {
-			avgFilter = new AverageFilter("Average Filter", greyLink, avgLink);
-			// TODO: create a config class for avg filter
-			// avgFilter.configure(source_configs);
-			addFilter(avgFilter);
-			final SourceFilterConfigs avgFilterConfigs = new SourceFilterConfigs(
-					"Average Filter", null, refFia);
-			applyConfigsToFilter(avgFilterConfigs);
-		}
-		if (isWithinArray("Movement Meter", filtersNames)) {
-			movementMeter = new MovementMeter("Movement Meter", srcRGBLink,
-					differentialLink);
-			// TODO: create a config class for MovementMeter
-			// movementMeter.configure(source_configs);
-			final SourceFilterConfigs movementFilterConfigs = new SourceFilterConfigs(
-					"Movement Meter", null, refFia);
-			addFilter(movementMeter);
-			applyConfigsToFilter(movementFilterConfigs);
-		}
 		PManager.log.print("finished connecting video filters", this,
 				Details.VERBOSE);
 		PManager.log.print("loading filters' GUI..", this, Details.VERBOSE);
+		
+		
 		PManager.mainGUI.loadPluggedGUI(getFiltersGUI());
 
 		System.out.println("Configurations available: =====");
@@ -430,9 +399,22 @@ public class FilterManager {
 		return validateFiltersConfigurations();
 	}
 
+	private VideoFilter<?, ?> createFilter(String filterName, String filterID) {
+		VideoFilter<?, ?> filter = null;
+		for (Iterator<VideoFilter<?, ?>> it=installedFilters.getIterator();it.hasNext();){
+			VideoFilter<?, ?> vf = it.next();
+			
+			if(vf.getID().equals(filterID)){
+				filter = vf.newInstance(filterName);
+				break;
+			}
+		}
+		return filter;
+	}
+
 	public void instantiateFilters(final FrameIntArray refFia,
-			final ExperimentType expType) {
-		instantiateAndConnectFilters(refFia, expType);
+			final FiltersSetup setup) {
+		instantiateAndConnectFilters(refFia, setup);
 	}
 
 	private boolean isWithinArray(final String name, final String[] array) {
@@ -450,9 +432,7 @@ public class FilterManager {
 	 *            type will be removed)
 	 */
 	public void removeFilter(final Class<?> type) {
-		final VideoFilter<?, ?> tmp = getFilterByType(type);
-		if (tmp != null)
-			filters.remove(tmp);
+		filters.removeFilter(type);
 	}
 
 	/**
@@ -462,9 +442,7 @@ public class FilterManager {
 	 *            name of the filter to remove
 	 */
 	public void removeFilter(final String filterName) {
-		final VideoFilter<?, ?> tmp = getFilterByName(filterName);
-		if (tmp != null)
-			filters.remove(tmp);
+		filters.removeFilter(filterName);
 	}
 
 	/**
@@ -472,23 +450,27 @@ public class FilterManager {
 	 * the modules to receive data from Filters.
 	 */
 	public void submitDataObjects() {
-		for (final VideoFilter<?, ?> v : filters)
-			if (v.getFilterData() != null)
+		for (Iterator<VideoFilter<?, ?>> it=filters.getIterator();it.hasNext();){
+			VideoFilter<?, ?> vf = it.next();
+			if (vf.getFilterData() != null)
 				ModulesManager.getDefault().addFilterDataObject(
-						v.getFilterData());
+						vf.getFilterData());
+		}
 	}
 
 	/**
 	 * @return
 	 */
 	private boolean validateFiltersConfigurations() {
-		for (final VideoFilter<?, ?> vf : getFilters())
+		for (Iterator<VideoFilter<?, ?>> it=filters.getIterator();it.hasNext();){
+			VideoFilter<?, ?> vf = it.next();
 			if (!vf.getConfigs().validate()) {
 				PManager.log.print(
 						"Filter Configurations failed for: " + vf.getName(),
 						this, StatusSeverity.ERROR);
 				return false;
 			}
+		}
 		return true;
 	}
 

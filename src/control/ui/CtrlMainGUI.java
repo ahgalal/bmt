@@ -14,6 +14,7 @@
 
 package control.ui;
 
+import java.awt.Point;
 import java.io.File;
 import java.util.ArrayList;
 
@@ -179,15 +180,27 @@ public class CtrlMainGUI extends ControllerUI<MainGUI> implements StateListener 
 	 * @param enableSecScreen
 	 *            whether to enable secondary screen
 	 */
-	public void configureScreenDrawerFilter(final String name,
-			final CommonFilterConfigs configs, final boolean enableSecScreen) {
+	public void configureMainScreenDrawerFilter(final String name,
+			final CommonFilterConfigs configs) {
+		Point canvasDims=new Point(ui.getAwtVideoMain().getBounds().width, ui.getAwtVideoMain().getBounds().height);
 		pm.getVideoManager()
 				.getFilterManager()
 				.applyConfigsToFilter(
 						new ScreenDrawerConfigs(name, ui.getAwtVideoMain()
-								.getGraphics(), ui.getAwtVideoSec()
-								.getGraphics(), null, true, pm
-								.getShapeController()));
+								.getGraphics(), null,pm
+								.getShapeController(),canvasDims));
+
+	}
+	
+	public void configureSecScreenDrawerFilter(final String name,
+			final CommonFilterConfigs configs) {
+		Point canvasDims=new Point(ui.getAwtVideoSec().getBounds().width, ui.getAwtVideoSec().getBounds().height);
+		pm.getVideoManager()
+		.getFilterManager()
+		.applyConfigsToFilter(
+				new ScreenDrawerConfigs(name, ui.getAwtVideoSec()
+						.getGraphics(), null, pm
+						.getShapeController(),canvasDims));
 	}
 
 	/**
@@ -258,7 +271,8 @@ public class CtrlMainGUI extends ControllerUI<MainGUI> implements StateListener 
 			final CommonFilterConfigs commonConfigs = new CommonFilterConfigs(
 					-1, -1, -1, -1, "Cam", null);
 			pm.initializeVideoManager(commonConfigs, null);
-			configureScreenDrawerFilter("ScreenDrawer", null, true);
+			configureMainScreenDrawerFilter("ScreenDrawer", null);
+			configureSecScreenDrawerFilter("ScreenDrawerSec", null);
 			pm.getStatusMgr().setStatus("Camera is Starting..",
 					StatusSeverity.WARNING);
 		} else
@@ -364,7 +378,8 @@ public class CtrlMainGUI extends ControllerUI<MainGUI> implements StateListener 
 				final CommonFilterConfigs commonConfigs = new CommonFilterConfigs(
 						-1, -1, -1, -1, "VideoFile", null);
 				pm.initializeVideoManager(commonConfigs, fileName);
-				configureScreenDrawerFilter("ScreenDrawer", commonConfigs, true);
+				configureMainScreenDrawerFilter("ScreenDrawer", commonConfigs);
+				configureSecScreenDrawerFilter("ScreenDrawerSec", commonConfigs);
 				pm.getStatusMgr().setStatus(
 						"Stream is started from file: " + fileName,
 						StatusSeverity.WARNING);

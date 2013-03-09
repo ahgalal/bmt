@@ -34,6 +34,7 @@ import filters.VideoFilter;
  */
 public class VideoRecorder extends VideoFilter<RecorderConfigs, FilterData> {
 
+	private static final String ID = "filters.videorecorder";
 	private StreamToAVI		aviSaver;
 	private boolean			isRecording	= false;
 
@@ -182,5 +183,21 @@ public class VideoRecorder extends VideoFilter<RecorderConfigs, FilterData> {
 	@Override
 	public void updateProgramState(final ProgramState state) {
 
+	}
+	
+	@Override
+	public String getID() {
+		return ID;
+	}
+
+	@Override
+	public VideoFilter<?, ?> newInstance(String filterName) {
+		return new VideoRecorder(filterName, null, null);
+	}
+
+	@Override
+	public void registerDependentData(FilterData data) {
+		// TODO Auto-generated method stub
+		
 	}
 }

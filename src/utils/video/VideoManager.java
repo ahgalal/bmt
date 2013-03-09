@@ -15,9 +15,11 @@
 package utils.video;
 
 import jagvidlib.JAGVidLib.VideoLoadException;
+
+import java.util.Iterator;
+
 import modules.ModulesManager;
 import modules.experiment.Experiment;
-import modules.experiment.ExperimentType;
 import sys.utils.Utils;
 import utils.PManager;
 import utils.PManager.ProgramState.GeneralState;
@@ -85,8 +87,11 @@ public class VideoManager {
 				long t1=System.currentTimeMillis();
 				if ((vInput != null)
 						&& (vInput.getStatus() == SourceStatus.STREAMING))
-					for (final VideoFilter<?, ?> v : filterManager.getFilters())
-						v.process();
+					for (Iterator<VideoFilter<?, ?>> it=filterManager.getFilters();it.hasNext();){
+						VideoFilter<?, ?> vf = it.next();
+						vf.process();
+						//System.out.println("running filter: " + vf.getName());
+					}
 				long t2=System.currentTimeMillis();
 				
 				//Utils.sleep(1000 / commonConfigs.getFrameRate());
@@ -252,10 +257,10 @@ public class VideoManager {
 		return isInitialized;
 	}
 	
-	private void initFilters(final ExperimentType expType){
+	private void initFilters(final Experiment exp){
 		if (filterManager != null)
 			filterManager.deInitialize();
-		filterManager.instantiateFilters(fia, expType);
+		filterManager.instantiateFilters(fia, exp.getFiltersSetup());
 	}
 
 	public boolean isInitialized() {
@@ -270,7 +275,7 @@ public class VideoManager {
 		filterManager.initializeConfigs(commonConfigs);
 		ModulesManager.getDefault().setupModules(exp);
 		ModulesManager.getDefault().setModulesWidthandHeight(commonConfigs.getWidth(), commonConfigs.getHeight());
-		initFilters(exp.type);
+		initFilters(exp);
 		PManager.getDefault().signalProgramStateUpdate();
 	}
 
@@ -279,6 +284,7 @@ public class VideoManager {
 			paused = true;
 			vInput.pauseStream();
 			filterManager.enableFilter("ScreenDrawer", false);
+			filterManager.enableFilter("ScreenDrawerSec", false);
 		}
 	}
 
@@ -288,6 +294,7 @@ public class VideoManager {
 			vInput.resumeStream();
 			thFiltersProcess.interrupt();
 			filterManager.enableFilter("ScreenDrawer", true);
+			filterManager.enableFilter("ScreenDrawerSec", true);
 		}
 	}
 
@@ -299,7 +306,7 @@ public class VideoManager {
 		filterManager.enableFilter("SubtractionFilter", true);
 		filterManager.enableFilter("RatFinder", true);
 		filterManager.enableFilter("RearingDetector", true);
-		filterManager.enableFilter("Average Filter", true);
+		filterManager.enableFilter("AverageFilter", true);
 		PManager.getDefault().getState().setGeneral(GeneralState.TRACKING);
 	}
 
@@ -312,6 +319,7 @@ public class VideoManager {
 			while (!vInput.startStream())
 				Thread.sleep(100);
 			filterManager.enableFilter("ScreenDrawer", true);
+			filterManager.enableFilter("ScreenDrawerSec", true);
 			thFiltersProcess = new Thread(new RunnableProcessor(),"Filters process");
 			thFiltersProcess.start();
 			PManager.getDefault().getState().setStream(StreamState.STREAMING);
@@ -351,6 +359,7 @@ public class VideoManager {
 		if (PManager.getDefault().getState().getStream() == StreamState.PAUSED) {
 			resumeStream();
 			filterManager.enableFilter("ScreenDrawer", false);
+			filterManager.enableFilter("ScreenDrawerSec", false);
 		}
 
 		isInitialized = false;

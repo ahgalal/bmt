@@ -163,7 +163,7 @@ public class ExperimentManager {
 
 	public ExperimentModule instantiateExperimentModule() {
 
-		switch (exp.type) {
+		switch (exp.getType()) {
 			case OPEN_FIELD:
 				experimentConfigs = new ExperimentModuleConfigs(
 						OpenFieldExperimentModule.moduleID, exp);

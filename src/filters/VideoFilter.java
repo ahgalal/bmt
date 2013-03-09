@@ -51,6 +51,22 @@ public abstract class VideoFilter<ConfigsType extends FilterConfigs, DataType ex
 		this.linkIn = linkIn;
 		this.linkOut = linkOut;
 	}
+	
+	public void setLinkIn(Link linkIn){
+		this.linkIn=linkIn;
+	}
+	
+	public void setLinkOut(Link linkOut){
+		this.linkOut = linkOut;
+	}
+	
+	public Link getLinkOut(){
+		return linkOut;
+	}
+	
+	public Link getLinkIn(){
+		return linkIn;
+	}
 
 	/**
 	 * Optional initializations for the filter.
@@ -149,4 +165,11 @@ public abstract class VideoFilter<ConfigsType extends FilterConfigs, DataType ex
 		configure(getConfigs());
 	}
 
+	public String getID() {
+		throw new IllegalAccessError("Cannot call this method in parent, are you missing a child implementation?");
+	}
+	
+	public abstract void registerDependentData(FilterData data);
+
+	public abstract VideoFilter<?, ?> newInstance(String filterName);
 }

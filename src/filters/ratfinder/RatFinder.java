@@ -24,6 +24,7 @@ import java.util.concurrent.ArrayBlockingQueue;
 
 import utils.PManager.ProgramState;
 import filters.FilterConfigs;
+import filters.FilterData;
 import filters.Link;
 import filters.VideoFilter;
 import filters.ratfinder.markers.CrossMarker;
@@ -37,6 +38,7 @@ import filters.ratfinder.markers.RectangularMarker;
  */
 public class RatFinder extends
 		VideoFilter<RatFinderFilterConfigs, RatFinderData> {
+	public static final String ID = "filters.ratfinder";
 	private static final int			PATH_QUEUE_LENGTH						= 100;
 	protected final Point				centerPoint;
 	private final Point[]				centroidHistory							= new Point[2];
@@ -293,5 +295,18 @@ public class RatFinder extends
 		// TODO Auto-generated method stub
 
 	}
+	@Override
+	public String getID() {
+		return ID;
+	}
 
+	@Override
+	public VideoFilter<?, ?> newInstance(String filterName) {
+		return new RatFinder(filterName, null, null);
+	}
+
+	@Override
+	public void registerDependentData(FilterData data) {
+		
+	}
 }

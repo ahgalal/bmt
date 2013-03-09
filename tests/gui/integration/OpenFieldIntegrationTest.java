@@ -149,7 +149,7 @@ public class OpenFieldIntegrationTest extends ExperimentIntegrationTestBase {
 				.getEnvVariableValue("BMT_WS")
 				+ "/BMT/ants/test/resources/zones_test.bmt");
 
-		sessionTimeMin = 18; // TODO: tighten
+		sessionTimeMin = 17; // TODO: tighten
 		sessionTimeMax = 24;
 		sleepTime1 = 24;
 		sleepTime2 = 0;
