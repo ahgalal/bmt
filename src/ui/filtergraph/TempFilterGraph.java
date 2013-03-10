@@ -1,27 +1,29 @@
 package ui.filtergraph;
 
+import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 
-public class TempFilterGraph extends Shell {
-	public TempFilterGraph() {
-		FilterGraph filterGraph=new FilterGraph(this);
-	}
+public class TempFilterGraph {
+	static Shell shell;
 	
 	public static void main(String[] args){
-		TempFilterGraph tempFilterGraph =new TempFilterGraph();
-		
 		Display display=Display.getDefault();
-		tempFilterGraph.open();
-		while (!tempFilterGraph.isDisposed())
+		shell=new Shell(display);
+		shell.setSize(640, 480);
+		shell.setLayout(new FillLayout());
+		
+		
+		FilterGraph filterGraph=new FilterGraph(shell);
+		filterGraph.setFilterSetup(filterGraph.test());
+		shell.open();
+		
+		
+		while (!shell.isDisposed())
 			if (!display.readAndDispatch())
 				display.sleep();
 		
 	}
 	
-	@Override
-	protected void checkSubclass() {
-		// TODO Auto-generated method stub
-	}
 	
 }
