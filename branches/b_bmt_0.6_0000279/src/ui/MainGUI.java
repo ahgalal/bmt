@@ -526,7 +526,22 @@ public class MainGUI extends BaseUI {
 		mnuEditItem.setEnabled(false);
 
 		final MenuItem mnutmEditOptions = new MenuItem(mnuEdit, SWT.PUSH);
-		mnutmEditOptions.setText(ExternalStrings.get("MainGUI.Menu.Options")); //$NON-NLS-1$
+		mnutmEditOptions.setText(ExternalStrings.get("MainGUI.Menu.Options"));
+		
+		MenuItem mntmAdvanced_1 = new MenuItem(mnuEdit, SWT.CASCADE);
+		mntmAdvanced_1.setText("Advanced");
+		
+		Menu menu_1 = new Menu(mntmAdvanced_1);
+		mntmAdvanced_1.setMenu(menu_1);
+		
+		MenuItem mntmFiltersSetup = new MenuItem(menu_1, SWT.NONE);
+		mntmFiltersSetup.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				controller.showFiltersSetup();
+			}
+		});
+		mntmFiltersSetup.setText("Filters setup ..");
 		mnutmEditOptions.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(final SelectionEvent e) {
