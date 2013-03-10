@@ -8,15 +8,18 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Listener;
+import org.eclipse.swt.widgets.Shell;
+import org.eclipse.swt.widgets.Widget;
 import org.eclipse.zest.core.widgets.Graph;
 import org.eclipse.zest.core.widgets.GraphConnection;
 import org.eclipse.zest.core.widgets.GraphNode;
 import org.eclipse.zest.core.widgets.ZestStyles;
 import org.eclipse.zest.layouts.LayoutStyles;
-import org.eclipse.zest.layouts.algorithms.HorizontalLayoutAlgorithm;
 import org.eclipse.zest.layouts.algorithms.HorizontalTreeLayoutAlgorithm;
-import org.eclipse.zest.layouts.algorithms.SpringLayoutAlgorithm;
 
 import filters.FiltersConnectionRequirements;
 import filters.FiltersNamesRequirements;
@@ -24,11 +27,24 @@ import filters.FiltersSetup;
 
 public class FilterGraph {
 
-	private final Composite container;
+	private Composite container;
 	private Graph graph;
 	private ArrayList<GraphNode> nodes;
 	private ArrayList<GraphConnection> links;
-	public FilterGraph(final Composite parent) {
+	private Shell shell;
+	private static FilterGraph self;
+	
+	public static FilterGraph getDefault(){
+		if(self==null)
+			self = new FilterGraph();
+		return self;
+	}
+	
+	private FilterGraph(final Composite parent) {
+		initializeForm(parent);
+	}
+
+	private void initializeForm(final Composite parent) {
 		container = new Composite(parent, SWT.NONE);
 		container.setSize(parent.getSize());
 		container.setLayout(new FillLayout());
@@ -37,15 +53,44 @@ public class FilterGraph {
 		// test:
 		graph= new Graph(container, SWT.NONE);
 		
+		layout();
+	}
+
+	private void layout() {
 		graph.setLayoutAlgorithm(new HorizontalTreeLayoutAlgorithm(LayoutStyles.NO_LAYOUT_NODE_RESIZING), true);
 	}
 	
+	private FilterGraph() {
+		shell=new Shell();
+		shell.setSize(640, 480);
+		shell.setLayout(new FillLayout());
+		
+		shell.addListener(SWT.Close, new Listener() {
+			
+			@Override
+			public void handleEvent(Event event) {
+				event.doit=false;
+				shell.setVisible(false);
+			}
+		});
+		initializeForm(shell);
+	}
+
+	public void openWindow(){
+		shell.open();
+	}
+	
 	public void setFilterSetup(FiltersSetup filtersSetup){
+		
 		FiltersConnectionRequirements connectionRequirements = filtersSetup.getConnectionRequirements();
 		FiltersNamesRequirements filtersNamesRequirements = filtersSetup.getFiltersNamesRequirements();
 		
+		clearGraph();
+		
 		nodes=new ArrayList<GraphNode>();
 		links=new ArrayList<GraphConnection>();
+
+		
 		
 		for(Iterator<Entry<String, String>> it = filtersNamesRequirements.getFilters();it.hasNext();){
 			Entry<String, String> entry = it.next();
@@ -59,6 +104,26 @@ public class FilterGraph {
 			String dstName = pair[1];
 			GraphConnection graphConnection = new GraphConnection(graph, ZestStyles.CONNECTIONS_DIRECTED, getNode(srcName), getNode(dstName));
 			links.add(graphConnection);
+		}
+		
+		layout();
+	}
+
+	private void clearGraph() {
+		if(nodes!=null){
+			disposeAll(nodes);
+			nodes.clear();
+		}
+		
+		if(links!=null){
+			// we just need to clear links array, as links are already disposed along with associated nodes.
+			links.clear();
+		}
+	}
+
+	private void disposeAll(ArrayList<? extends Widget> arr) {
+		for(Widget w:arr){
+			w.dispose();
 		}
 	}
 	

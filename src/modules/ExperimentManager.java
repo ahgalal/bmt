@@ -9,6 +9,8 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 
+import filters.FiltersSetup;
+
 import modules.experiment.ExcelEngine;
 import modules.experiment.Exp2GUI;
 import modules.experiment.Experiment;
@@ -408,5 +410,9 @@ public class ExperimentManager {
 	 */
 	public void writeToExcelFile(final String FilePath) {
 		getExcelEngine().writeExpInfoToExcelFile(FilePath, exp);
+	}
+
+	public FiltersSetup getFilterSetup() {
+		return exp.getFiltersSetup();
 	}
 }

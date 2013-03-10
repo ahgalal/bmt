@@ -32,6 +32,7 @@ import org.eclipse.swt.widgets.Shell;
 import sys.utils.Utils;
 import ui.MainGUI;
 import ui.PluggedGUI;
+import ui.filtergraph.FilterGraph;
 import utils.PManager;
 import utils.PManager.ProgramState;
 import utils.PManager.ProgramState.GeneralState;
@@ -559,6 +560,12 @@ public class CtrlMainGUI extends ControllerUI<MainGUI> implements StateListener 
 				}
 			}
 		});
+	}
+
+	public void showFiltersSetup() {
+		FilterGraph filterGraph = FilterGraph.getDefault();
+		filterGraph.setFilterSetup(ExperimentManager.getDefault().getFilterSetup());
+		filterGraph.openWindow();
 	}
 
 }
