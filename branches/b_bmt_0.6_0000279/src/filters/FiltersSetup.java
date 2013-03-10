@@ -14,6 +14,10 @@ public class FiltersSetup {
 	private FiltersNamesRequirements filtersRequirements;
 	private FiltersConnectionRequirements connectionRequirements;
 
+	public FiltersConnectionRequirements getConnectionRequirements() {
+		return connectionRequirements;
+	}
+
 	public FiltersSetup(FiltersNamesRequirements filtersRequirements,FiltersConnectionRequirements connectionRequirements) {
 		this.filtersRequirements=filtersRequirements;
 		this.connectionRequirements=connectionRequirements;

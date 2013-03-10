@@ -16,6 +16,10 @@ public class FiltersConnectionRequirements {
 		filtersConnections.put(dstFilterName, srcFilterName);
 	}
 	
+	/**
+	 * Gets available connections as filter pairs: Src,Dst.
+	 * @return
+	 */
 	public ArrayList<String[]> getConnections(){
 		ArrayList<String[]> ret = new ArrayList<String[]>();
 		
