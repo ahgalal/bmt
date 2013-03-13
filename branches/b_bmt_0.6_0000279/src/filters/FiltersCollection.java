@@ -1,9 +1,14 @@
 package filters;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-public class FiltersCollection {
+public class FiltersCollection{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 4727846193802923762L;
 	private ArrayList<VideoFilter<?, ?>> filters;
 	
 	public FiltersCollection() {

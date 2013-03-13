@@ -17,8 +17,6 @@ package modules.experiment;
 import java.io.Serializable;
 import java.util.ArrayList;
 
-import filters.FiltersConnectionRequirements;
-import filters.FiltersNamesRequirements;
 import filters.FiltersSetup;
 
 /**
@@ -26,7 +24,7 @@ import filters.FiltersSetup;
  * 
  * @author ShaQ
  */
-public class Experiment implements Exp2GUI, Serializable {
+public abstract class Experiment implements Exp2GUI, Serializable {
 	/**
      * 
      */
@@ -34,14 +32,12 @@ public class Experiment implements Exp2GUI, Serializable {
 	private String date;
 	private String fileName;
 
-	// TODO: FilterSetup shall not be transient, and need to be serialized along
-	// with the Experiment object.
-	private transient FiltersSetup forcedSwimmingFiltersSetup;
+	protected FiltersSetup filtersSetup;
+
 	private final ArrayList<Group> groups;
 
 	private String name;
 	private String notes;
-	private transient FiltersSetup openFieldFiltersSetup;
 
 	private String[] params;
 	private ExperimentType type;
@@ -54,77 +50,17 @@ public class Experiment implements Exp2GUI, Serializable {
 		groups = new ArrayList<Group>();
 
 		initializeFiltersSetup();
-	}
+		initializeParams();
+		final String[] generalParams = new String[] {
+				Constants.FILE_RAT_NUMBER, Constants.FILE_GROUP_NAME };
 
-	private void initializeFiltersSetup() {
-		final FiltersNamesRequirements openFieldFiltersRequirements = new FiltersNamesRequirements();
-		final FiltersConnectionRequirements openFieldConnectionRequirements = new FiltersConnectionRequirements();
+		final ArrayList<String> allParams = new ArrayList<String>();
+		for (final String param : generalParams)
+			allParams.add(param);
+		for (final String param : params)
+			allParams.add(param);
 
-		// required filters
-		openFieldFiltersRequirements
-				.addFilter("SourceFilter", "filters.source");
-		openFieldFiltersRequirements.addFilter("ScreenDrawer",
-				"filters.screendrawer");
-		openFieldFiltersRequirements.addFilter("ScreenDrawerSec",
-				"filters.screendrawer");
-		openFieldFiltersRequirements
-				.addFilter("RatFinder", "filters.ratfinder");
-		openFieldFiltersRequirements.addFilter("RearingDetector",
-				"filters.rearingdetector");
-		openFieldFiltersRequirements.addFilter("Recorder",
-				"filters.videorecorder");
-		openFieldFiltersRequirements.addFilter("SubtractionFilter",
-				"filters.subtractor");
-		openFieldFiltersRequirements.addFilter("AverageFilter",
-				"filters.average");
-
-		// connections
-		openFieldConnectionRequirements.connectFilters("SourceFilter",
-				"ScreenDrawer");
-		openFieldConnectionRequirements.connectFilters("SourceFilter",
-				"Recorder");
-		openFieldConnectionRequirements.connectFilters("SourceFilter",
-				"SubtractionFilter");
-		openFieldConnectionRequirements.connectFilters("SubtractionFilter",
-				"AverageFilter");
-		openFieldConnectionRequirements.connectFilters("SubtractionFilter",
-				"RearingDetector");
-		openFieldConnectionRequirements.connectFilters("RatFinder",
-				"ScreenDrawerSec");
-		openFieldConnectionRequirements.connectFilters("AverageFilter",
-				"RatFinder");
-
-		openFieldFiltersSetup = new FiltersSetup(openFieldFiltersRequirements,
-				openFieldConnectionRequirements);
-
-		final FiltersNamesRequirements forcedSwimmingFiltersRequirements = new FiltersNamesRequirements();
-		final FiltersConnectionRequirements forcedSwimmingConnectionRequirements = new FiltersConnectionRequirements();
-
-		// required filters
-		forcedSwimmingFiltersRequirements.addFilter("SourceFilter",
-				"filters.source");
-		forcedSwimmingFiltersRequirements.addFilter("ScreenDrawer",
-				"filters.screendrawer");
-		forcedSwimmingFiltersRequirements.addFilter("ScreenDrawerSec",
-				"filters.screendrawer");
-		forcedSwimmingFiltersRequirements.addFilter("Recorder",
-				"filters.videorecorder");
-		forcedSwimmingFiltersRequirements.addFilter("MovementMeter",
-				"filters.mevementmeter");
-
-		// connections
-		forcedSwimmingConnectionRequirements.connectFilters("SourceFilter",
-				"ScreenDrawer");
-		forcedSwimmingConnectionRequirements.connectFilters("MovementMeter",
-				"ScreenDrawerSec");
-		forcedSwimmingConnectionRequirements.connectFilters("SourceFilter",
-				"Recorder");
-		forcedSwimmingConnectionRequirements.connectFilters("SourceFilter",
-				"MovementMeter");
-
-		forcedSwimmingFiltersSetup = new FiltersSetup(
-				forcedSwimmingFiltersRequirements,
-				forcedSwimmingConnectionRequirements);
+		setParametersList(allParams.toArray(new String[0]));
 	}
 
 	/**
@@ -209,18 +145,7 @@ public class Experiment implements Exp2GUI, Serializable {
 	}
 
 	public FiltersSetup getFiltersSetup() {
-		
-		switch (type) {
-		case OPEN_FIELD:
-			if(openFieldFiltersSetup==null)
-				initializeFiltersSetup();
-			return openFieldFiltersSetup;
-		case FORCED_SWIMMING:
-			if(forcedSwimmingFiltersSetup==null)
-				initializeFiltersSetup();
-			return forcedSwimmingFiltersSetup;
-		}
-		return null;
+		return filtersSetup;
 	}
 
 	/**
@@ -303,6 +228,10 @@ public class Experiment implements Exp2GUI, Serializable {
 		return user;
 	}
 
+	protected abstract void initializeFiltersSetup();
+
+	protected abstract void initializeParams();
+
 	private void setDate(final String date) {
 		this.date = date;
 	}
@@ -371,5 +300,4 @@ public class Experiment implements Exp2GUI, Serializable {
 	public void setUser(final String user) {
 		this.user = user;
 	}
-
 }

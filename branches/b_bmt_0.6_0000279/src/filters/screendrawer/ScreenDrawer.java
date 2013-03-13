@@ -44,7 +44,6 @@ public class ScreenDrawer extends VideoFilter<ScreenDrawerConfigs, FilterData> {
 	private class RunnableDrawer implements Runnable {
 		@Override
 		public void run() {
-			System.out.println("running filter: " + getName());
 			try {
 				Utils.sleep(100);
 

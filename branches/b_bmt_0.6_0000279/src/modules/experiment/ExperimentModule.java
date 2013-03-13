@@ -65,8 +65,9 @@ Module<ExperimentModuleGUI, ExperimentModuleConfigs, ExperimentModuleData> {
 			// if we had an empty experiment (no parameters), we assign the
 			// set of parameters from the module manager to the exp.
 			if (ExperimentManager.getDefault().getNumberOfExpParams() == 0)
-				configs.exp.setParametersList(ModulesManager.getDefault()
-						.getCodeNames());
+				throw new RuntimeException("No params for this experiment");
+				/*configs.exp.setParametersList(ModulesManager.getDefault()
+						.getCodeNames());*/
 			if (ExperimentManager.getDefault().getNumberOfExpParams() != ModulesManager
 					.getDefault().getNumberOfFileParameters())
 				Display.getDefault().asyncExec(new Runnable() {

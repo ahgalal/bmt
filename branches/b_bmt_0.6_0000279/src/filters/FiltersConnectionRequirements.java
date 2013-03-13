@@ -1,9 +1,14 @@
 package filters;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class FiltersConnectionRequirements {
+public class FiltersConnectionRequirements implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 2201049999499751252L;
 	private HashMap<String, String> filtersConnections;
 	
 	public FiltersConnectionRequirements() {
