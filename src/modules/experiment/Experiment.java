@@ -27,78 +27,106 @@ import filters.FiltersSetup;
  * @author ShaQ
  */
 public class Experiment implements Exp2GUI, Serializable {
-
 	/**
      * 
      */
-	private static final long							serialVersionUID	= -786827888276630828L;
+	private static final long serialVersionUID = -786827888276630828L;
+	private String date;
+	private String fileName;
 
-	private String										date;
-	private String										fileName;
-	private final ArrayList<modules.experiment.Group>	groups;
-	private String										name;
-	private String										notes;
-	private String[]									params;
+	// TODO: FilterSetup shall not be transient, and need to be serialized along
+	// with the Experiment object.
+	private transient FiltersSetup forcedSwimmingFiltersSetup;
+	private final ArrayList<Group> groups;
 
-	private ExperimentType								type;
-	private String										user;
+	private String name;
+	private String notes;
+	private transient FiltersSetup openFieldFiltersSetup;
+
+	private String[] params;
+	private ExperimentType type;
+	private String user;
 
 	/**
 	 * Initializes the experiment.
 	 */
 	public Experiment() {
 		groups = new ArrayList<Group>();
+
+		initializeFiltersSetup();
 	}
 
-	public FiltersSetup getFiltersSetup(){
-		FiltersNamesRequirements filtersRequirements = new FiltersNamesRequirements();
-		FiltersConnectionRequirements connectionRequirements = new FiltersConnectionRequirements();
-		
-		switch (type) {
-		case OPEN_FIELD:
-			// required filters
-			filtersRequirements.addFilter("SourceFilter", "filters.source");
-			filtersRequirements.addFilter("ScreenDrawer", "filters.screendrawer");
-			filtersRequirements.addFilter("ScreenDrawerSec", "filters.screendrawer");
-			filtersRequirements.addFilter("RatFinder", "filters.ratfinder");
-			filtersRequirements.addFilter("RearingDetector", "filters.rearingdetector");
-			filtersRequirements.addFilter("Recorder", "filters.videorecorder");
-			filtersRequirements.addFilter("SubtractionFilter", "filters.subtractor");
-			filtersRequirements.addFilter("AverageFilter", "filters.average");
-			
-			// connections
-			connectionRequirements.connectFilters("SourceFilter", "ScreenDrawer");
-			connectionRequirements.connectFilters("SourceFilter", "Recorder");
-			connectionRequirements.connectFilters("SourceFilter", "SubtractionFilter");
-			connectionRequirements.connectFilters("SubtractionFilter", "AverageFilter");
-			connectionRequirements.connectFilters("SubtractionFilter", "RearingDetector");
+	private void initializeFiltersSetup() {
+		final FiltersNamesRequirements openFieldFiltersRequirements = new FiltersNamesRequirements();
+		final FiltersConnectionRequirements openFieldConnectionRequirements = new FiltersConnectionRequirements();
 
-			connectionRequirements.connectFilters("RatFinder", "ScreenDrawerSec");
-			connectionRequirements.connectFilters("AverageFilter", "RatFinder");
-			
-			break;
-		case FORCED_SWIMMING:
-			
-			// required filters
-			filtersRequirements.addFilter("SourceFilter", "filters.source");
-			filtersRequirements.addFilter("ScreenDrawer", "filters.screendrawer");
-			filtersRequirements.addFilter("ScreenDrawerSec", "filters.screendrawer");
-			filtersRequirements.addFilter("Recorder", "filters.videorecorder");
-			filtersRequirements.addFilter("MovementMeter", "filters.mevementmeter");
-			
-			// connections
-			
-			connectionRequirements.connectFilters("SourceFilter", "ScreenDrawer");
-			connectionRequirements.connectFilters("MovementMeter", "ScreenDrawerSec");
-			connectionRequirements.connectFilters("SourceFilter", "Recorder");
-			connectionRequirements.connectFilters("SourceFilter", "MovementMeter");
-			
-			break;
-		}
-		
-		return new FiltersSetup(filtersRequirements , connectionRequirements );
+		// required filters
+		openFieldFiltersRequirements
+				.addFilter("SourceFilter", "filters.source");
+		openFieldFiltersRequirements.addFilter("ScreenDrawer",
+				"filters.screendrawer");
+		openFieldFiltersRequirements.addFilter("ScreenDrawerSec",
+				"filters.screendrawer");
+		openFieldFiltersRequirements
+				.addFilter("RatFinder", "filters.ratfinder");
+		openFieldFiltersRequirements.addFilter("RearingDetector",
+				"filters.rearingdetector");
+		openFieldFiltersRequirements.addFilter("Recorder",
+				"filters.videorecorder");
+		openFieldFiltersRequirements.addFilter("SubtractionFilter",
+				"filters.subtractor");
+		openFieldFiltersRequirements.addFilter("AverageFilter",
+				"filters.average");
+
+		// connections
+		openFieldConnectionRequirements.connectFilters("SourceFilter",
+				"ScreenDrawer");
+		openFieldConnectionRequirements.connectFilters("SourceFilter",
+				"Recorder");
+		openFieldConnectionRequirements.connectFilters("SourceFilter",
+				"SubtractionFilter");
+		openFieldConnectionRequirements.connectFilters("SubtractionFilter",
+				"AverageFilter");
+		openFieldConnectionRequirements.connectFilters("SubtractionFilter",
+				"RearingDetector");
+		openFieldConnectionRequirements.connectFilters("RatFinder",
+				"ScreenDrawerSec");
+		openFieldConnectionRequirements.connectFilters("AverageFilter",
+				"RatFinder");
+
+		openFieldFiltersSetup = new FiltersSetup(openFieldFiltersRequirements,
+				openFieldConnectionRequirements);
+
+		final FiltersNamesRequirements forcedSwimmingFiltersRequirements = new FiltersNamesRequirements();
+		final FiltersConnectionRequirements forcedSwimmingConnectionRequirements = new FiltersConnectionRequirements();
+
+		// required filters
+		forcedSwimmingFiltersRequirements.addFilter("SourceFilter",
+				"filters.source");
+		forcedSwimmingFiltersRequirements.addFilter("ScreenDrawer",
+				"filters.screendrawer");
+		forcedSwimmingFiltersRequirements.addFilter("ScreenDrawerSec",
+				"filters.screendrawer");
+		forcedSwimmingFiltersRequirements.addFilter("Recorder",
+				"filters.videorecorder");
+		forcedSwimmingFiltersRequirements.addFilter("MovementMeter",
+				"filters.mevementmeter");
+
+		// connections
+		forcedSwimmingConnectionRequirements.connectFilters("SourceFilter",
+				"ScreenDrawer");
+		forcedSwimmingConnectionRequirements.connectFilters("MovementMeter",
+				"ScreenDrawerSec");
+		forcedSwimmingConnectionRequirements.connectFilters("SourceFilter",
+				"Recorder");
+		forcedSwimmingConnectionRequirements.connectFilters("SourceFilter",
+				"MovementMeter");
+
+		forcedSwimmingFiltersSetup = new FiltersSetup(
+				forcedSwimmingFiltersRequirements,
+				forcedSwimmingConnectionRequirements);
 	}
-	
+
 	/**
 	 * Adds a new group to the experiment groups by calling the add() method.
 	 * 
@@ -155,6 +183,7 @@ public class Experiment implements Exp2GUI, Serializable {
 
 	/*
 	 * (non-Javadoc)
+	 * 
 	 * @see model.business.Exp2GUI#getDate()
 	 */
 	@Override
@@ -168,10 +197,30 @@ public class Experiment implements Exp2GUI, Serializable {
 	 * @return array of strings containing experiment's parameters
 	 */
 	public String[] getExpParametersList() {
-		/*if(params!=null)
-		for(String param:params)
-			PManager.log.print("Experimant param: "+ param, this, Details.NOTES);*/
+		/*
+		 * if(params!=null) for(String param:params)
+		 * PManager.log.print("Experimant param: "+ param, this, Details.NOTES);
+		 */
 		return params;
+	}
+
+	public String getFileName() {
+		return fileName;
+	}
+
+	public FiltersSetup getFiltersSetup() {
+		
+		switch (type) {
+		case OPEN_FIELD:
+			if(openFieldFiltersSetup==null)
+				initializeFiltersSetup();
+			return openFieldFiltersSetup;
+		case FORCED_SWIMMING:
+			if(forcedSwimmingFiltersSetup==null)
+				initializeFiltersSetup();
+			return forcedSwimmingFiltersSetup;
+		}
+		return null;
 	}
 
 	/**
@@ -214,6 +263,7 @@ public class Experiment implements Exp2GUI, Serializable {
 
 	/*
 	 * (non-Javadoc)
+	 * 
 	 * @see model.business.Exp2GUI#getName()
 	 */
 	@Override
@@ -230,6 +280,7 @@ public class Experiment implements Exp2GUI, Serializable {
 
 	/*
 	 * (non-Javadoc)
+	 * 
 	 * @see model.business.Exp2GUI#getNotes()
 	 */
 	@Override
@@ -237,13 +288,23 @@ public class Experiment implements Exp2GUI, Serializable {
 		return notes;
 	}
 
+	@Override
+	public ExperimentType getType() {
+		return type;
+	}
+
 	/*
 	 * (non-Javadoc)
+	 * 
 	 * @see model.business.Exp2GUI#getUser()
 	 */
 	@Override
 	public String getUser() {
 		return user;
+	}
+
+	private void setDate(final String date) {
+		this.date = date;
 	}
 
 	/**
@@ -269,6 +330,10 @@ public class Experiment implements Exp2GUI, Serializable {
 		System.out.println(this.getType());
 	}
 
+	public void setFileName(final String fileName) {
+		this.fileName = fileName;
+	}
+
 	/**
 	 * Sets the experiment's name.
 	 * 
@@ -277,6 +342,10 @@ public class Experiment implements Exp2GUI, Serializable {
 	 */
 	public void setName(final String name) {
 		this.name = name;
+	}
+
+	private void setNotes(final String notes) {
+		this.notes = notes;
 	}
 
 	/**
@@ -289,6 +358,10 @@ public class Experiment implements Exp2GUI, Serializable {
 		params = expParameters;
 	}
 
+	public void setType(final ExperimentType type) {
+		this.type = type;
+	}
+
 	/**
 	 * Sets the experiment's user name.
 	 * 
@@ -297,31 +370,6 @@ public class Experiment implements Exp2GUI, Serializable {
 	 */
 	public void setUser(final String user) {
 		this.user = user;
-	}
-
-	@Override
-	public ExperimentType getType() {
-		return type;
-	}
-
-	public void setFileName(String fileName) {
-		this.fileName = fileName;
-	}
-
-	public String getFileName() {
-		return fileName;
-	}
-
-	private void setDate(String date) {
-		this.date = date;
-	}
-
-	private void setNotes(String notes) {
-		this.notes = notes;
-	}
-
-	public void setType(ExperimentType type) {
-		this.type = type;
 	}
 
 }

@@ -53,7 +53,7 @@ public class FiltersSetup {
 
 	private void connectFilters(final String filterSrcName,
 			final String filterDstName) {
-		// TODO: make dims configurable instead of 640x480
+		
 		final VideoFilter<?, ?> srcFilter = filters
 				.getFilterByName(filterSrcName);
 		final VideoFilter<?, ?> dstFilter = filters
@@ -63,6 +63,7 @@ public class FiltersSetup {
 		if (srcFilter.getLinkOut() != null)
 			lnk = srcFilter.getLinkOut();
 		else {
+			// TODO: make dims configurable instead of 640x480
 			lnk = new Link(new Point(640, 480));
 			srcFilter.setLinkOut(lnk);
 		}
@@ -73,7 +74,11 @@ public class FiltersSetup {
 		System.out.println("link added, from: " + filterSrcName + " to: " + dstFilter.getName());
 	}
 	
+	/**
+	 * Connects filters in FilterCollection instance according to specifications found in ConnectionRequirements instance.
+	 */
 	public void connectFilters(){
+		links.clear();
 		for(String[] connection:connectionRequirements.getConnections()){
 			String srcFilterName = connection[0];
 			String dstFilterName = connection[1];
