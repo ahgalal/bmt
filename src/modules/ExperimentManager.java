@@ -16,8 +16,10 @@ import modules.experiment.Exp2GUI;
 import modules.experiment.Experiment;
 import modules.experiment.ExperimentModule;
 import modules.experiment.ExperimentModuleConfigs;
+import modules.experiment.ForcedSwimmingExperiment;
 import modules.experiment.Group;
 import modules.experiment.Grp2GUI;
+import modules.experiment.OpenFieldExperiment;
 import modules.experiment.Rat;
 import modules.experiment.TextEngine;
 import modules.experiment.forcedswimming.ForcedSwimmingExperimentModule;
@@ -92,7 +94,7 @@ public class ExperimentManager {
 			allParams.add(param);
 		}
 
-		exp.setParametersList(allParams.toArray(new String[0]));
+		//exp.setParametersList(allParams.toArray(new String[0]));
 	}
 
 	public String getCurrGrpName() {
@@ -234,9 +236,11 @@ public class ExperimentManager {
 	 */
 	public boolean saveRatInfo() {
 		if (isExperimentPresent()) {
-			if (exp.getExpParametersList() == null)
-				exp.setParametersList(ModulesManager.getDefault()
-						.getCodeNames());
+			if (exp.getExpParametersList() == null){
+				throw new NullPointerException();
+				/*exp.setParametersList(ModulesManager.getDefault()
+						.getCodeNames());*/
+			}
 			else if (getNumberOfExpParams() != ModulesManager.getDefault()
 					.getCodeNames().length) {
 				PManager.getDefault()
@@ -326,7 +330,13 @@ public class ExperimentManager {
 	public void setExpInfo(final String name, final String user,
 			final String date, final String notes, final String type) {
 		if (exp == null)
-			exp = new Experiment();
+			if(type.equals("Open Field")){
+				exp = new OpenFieldExperiment();
+			}else if(type.equals("Forced Swimming")){
+				exp = new ForcedSwimmingExperiment();
+			}else{
+				throw new RuntimeException("Unknown Experiment type");
+			}
 		exp.setExperimentInfo(name, user, date, notes, type);
 		setExpLoaded(true);
 		setExperimantLoadedInGUI(true);

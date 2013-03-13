@@ -90,7 +90,6 @@ public class VideoManager {
 					for (Iterator<VideoFilter<?, ?>> it=filterManager.getFilters();it.hasNext();){
 						VideoFilter<?, ?> vf = it.next();
 						vf.process();
-						//System.out.println("running filter: " + vf.getName());
 					}
 				long t2=System.currentTimeMillis();
 				

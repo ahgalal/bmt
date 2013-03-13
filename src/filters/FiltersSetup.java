@@ -1,6 +1,7 @@
 package filters;
 
 import java.awt.Point;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Map.Entry;
@@ -8,52 +9,44 @@ import java.util.Map.Entry;
 /**
  * @author Creative
  */
-public class FiltersSetup {
-	private FiltersCollection filters;
-	private final ArrayList<Link> links;
-	private FiltersNamesRequirements filtersRequirements;
-	private FiltersConnectionRequirements connectionRequirements;
+public class FiltersSetup implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -162165122516343763L;
+	private final FiltersConnectionRequirements connectionRequirements;
+	private transient FiltersCollection filters;
+	private final FiltersNamesRequirements filtersRequirements;
+	private transient ArrayList<Link> links;
 
-	public FiltersConnectionRequirements getConnectionRequirements() {
-		return connectionRequirements;
-	}
-
-	public FiltersSetup(FiltersNamesRequirements filtersRequirements,FiltersConnectionRequirements connectionRequirements) {
-		this.filtersRequirements=filtersRequirements;
-		this.connectionRequirements=connectionRequirements;
+	public FiltersSetup(final FiltersNamesRequirements filtersRequirements,
+			final FiltersConnectionRequirements connectionRequirements) {
+		this.filtersRequirements = filtersRequirements;
+		this.connectionRequirements = connectionRequirements;
 		links = new ArrayList<Link>();
 	}
-	
-	public FiltersNamesRequirements getFiltersNamesRequirements(){
-		return filtersRequirements;
-	}
-	
-	public void setFiltersCollection(final FiltersCollection filters){
-		for(Iterator<Entry<String , String>> it=filtersRequirements.getFilters();it.hasNext();){
-			Entry<String , String> entry = it.next();
-			
-			// search in the input filtersCollection
-			boolean found=false;
-			for(Iterator<VideoFilter<?, ?>> it2=filters.getIterator();it2.hasNext();){
-				VideoFilter<?, ?> videoFilter = it2.next();
-				
-				if(videoFilter.getName().equals(entry.getKey()) &&
-						videoFilter.getID().equals(entry.getValue())){
-					found=true;
-					break;
-				}
-			}
-			
-			if(found==false){
-				throw new RuntimeException("Input Filters does not match that required by the Experiment");
-			}
+
+	/**
+	 * Connects filters in FilterCollection instance according to specifications
+	 * found in ConnectionRequirements instance.
+	 */
+	public void connectFilters() {
+		if(links==null)
+			links=new ArrayList<Link>();
+		else
+			links.clear();
+		for (final String[] connection : connectionRequirements
+				.getConnections()) {
+			final String srcFilterName = connection[0];
+			final String dstFilterName = connection[1];
+
+			connectFilters(srcFilterName, dstFilterName);
 		}
-		this.filters = filters;
 	}
 
 	private void connectFilters(final String filterSrcName,
 			final String filterDstName) {
-		
+
 		final VideoFilter<?, ?> srcFilter = filters
 				.getFilterByName(filterSrcName);
 		final VideoFilter<?, ?> dstFilter = filters
@@ -71,44 +64,68 @@ public class FiltersSetup {
 		dstFilter.setLinkIn(lnk);
 
 		links.add(lnk);
-		System.out.println("link added, from: " + filterSrcName + " to: " + dstFilter.getName());
+		System.out.println("link added, from: " + filterSrcName + " to: "
+				+ dstFilter.getName());
 	}
-	
-	/**
-	 * Connects filters in FilterCollection instance according to specifications found in ConnectionRequirements instance.
-	 */
-	public void connectFilters(){
-		links.clear();
-		for(String[] connection:connectionRequirements.getConnections()){
-			String srcFilterName = connection[0];
-			String dstFilterName = connection[1];
-			
-			connectFilters(srcFilterName, dstFilterName);
+
+	public FiltersConnectionRequirements getConnectionRequirements() {
+		return connectionRequirements;
+	}
+
+	public ArrayList<VideoFilter<?, ?>> getFiltersByLinkIn(final Link linkIn) {
+		final ArrayList<VideoFilter<?, ?>> ret = new ArrayList<VideoFilter<?, ?>>();
+		for (final Iterator<VideoFilter<?, ?>> it = filters.getIterator(); it
+				.hasNext();) {
+			final VideoFilter<?, ?> filter = it.next();
+			if (filter.getLinkIn() == linkIn)
+				ret.add(filter);
 		}
+		return ret;
+	}
+
+	public FiltersNamesRequirements getFiltersNamesRequirements() {
+		return filtersRequirements;
 	}
 
 	public void removeFilter(final String filterName) {
 		final VideoFilter<?, ?> filter = filters.getFilterByName(filterName);
-		
+
 		// remove linkOut of the removed filter
-		Link linkOut=filter.getLinkOut();
+		final Link linkOut = filter.getLinkOut();
 		links.remove(linkOut);
-		
-		// remove linkOut from all dependent filters (i.e. linkOut is their linkIn)
-		for(VideoFilter<?, ?> depFilter:getFiltersByLinkIn(linkOut)){
+
+		// remove linkOut from all dependent filters (i.e. linkOut is their
+		// linkIn)
+		for (final VideoFilter<?, ?> depFilter : getFiltersByLinkIn(linkOut)) {
 			depFilter.setLinkIn(null);
 		}
-		
+
 	}
-	
-	public ArrayList<VideoFilter<?, ?>> getFiltersByLinkIn(Link linkIn){
-		ArrayList<VideoFilter<?, ?>> ret=new ArrayList<VideoFilter<?,?>>();
-		for(Iterator<VideoFilter<?, ?>> it=filters.getIterator();it.hasNext(); ){
-			VideoFilter<?, ?> filter = it.next();
-			if(filter.getLinkIn()==linkIn)
-				ret.add(filter);
+
+	public void setFiltersCollection(final FiltersCollection filters) {
+		for (final Iterator<Entry<String, String>> it = filtersRequirements
+				.getFilters(); it.hasNext();) {
+			final Entry<String, String> entry = it.next();
+
+			// search in the input filtersCollection
+			boolean found = false;
+			for (final Iterator<VideoFilter<?, ?>> it2 = filters.getIterator(); it2
+					.hasNext();) {
+				final VideoFilter<?, ?> videoFilter = it2.next();
+
+				if (videoFilter.getName().equals(entry.getKey())
+						&& videoFilter.getID().equals(entry.getValue())) {
+					found = true;
+					break;
+				}
+			}
+
+			if (found == false) {
+				throw new RuntimeException(
+						"Input Filters does not match that required by the Experiment");
+			}
 		}
-		return ret;
+		this.filters = filters;
 	}
 
 	/**

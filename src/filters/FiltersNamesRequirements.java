@@ -1,10 +1,15 @@
 package filters;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map.Entry;
 
-public class FiltersNamesRequirements {
+public class FiltersNamesRequirements implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 5586878050722171261L;
 	private HashMap<String, String> filtersRequirements;
 	
 	public FiltersNamesRequirements() {
