@@ -5,7 +5,6 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map.Entry;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseEvent;
@@ -84,8 +83,6 @@ public class FilterGraph {
 	private FiltersSetup filtersSetup;
 	private Graph graph;
 
-	private ArrayList<GraphConnection> connections;
-
 	private HashMap<Filter,GraphNode> nodes;
 	private Shell shell;
 	private GraphNode srcNode;
@@ -116,12 +113,6 @@ public class FilterGraph {
 	private void clearGraph() {
 		if (nodes != null) {
 			disposeAllNodes(nodes.values());
-		}
-
-		if (connections != null) {
-			// we just need to clear links array, as links are already disposed
-			// along with associated nodes.
-			connections.clear();
 		}
 	}
 
@@ -165,9 +156,8 @@ public class FilterGraph {
 							if (srcNode == null)
 								srcNode = selectedNode;
 							else {
-								GraphConnection connection = new GraphConnection(graph, ZestStyles.CONNECTIONS_DIRECTED, srcNode, selectedNode);
+								new GraphConnection(graph, ZestStyles.CONNECTIONS_DIRECTED, srcNode, selectedNode);
 								
-								connections.add(connection);
 								System.out
 										.println("a new link is added with:\nsrc: "
 												+ srcNode
@@ -297,7 +287,6 @@ public class FilterGraph {
 
 	private void removeConnection(final GraphConnection connection) {
 		connection.dispose();
-		connections.remove(connection);
 	}
 
 	private void removeNode(final GraphNode node) {
@@ -308,8 +297,10 @@ public class FilterGraph {
 	private Object getKey(Object value,HashMap<?,?> map){
 		Object key=null;
 		for(Object tmpKey:map.keySet()){
-			if(map.get(tmpKey)==value)
+			if(map.get(tmpKey)==value){
+				key=tmpKey;
 				break;
+			}
 		}
 		return key;
 	}
@@ -317,8 +308,8 @@ public class FilterGraph {
 	/**
 	 * Saves the current filters' connections into the FiltersSetup instance.
 	 */
+	@SuppressWarnings("unchecked")
 	private void saveToFiltersSetup(){
-		// TODO: support adding new filters to the graph
 		filtersSetup.getFiltersNamesRequirements().clearFilterNames();
 		for(Filter filter:nodes.keySet()){
 			filtersSetup.getFiltersNamesRequirements().addFilter(filter.getName(), filter.getId(),filter.getTrigger());
@@ -326,15 +317,13 @@ public class FilterGraph {
 		
 		filtersSetup.getConnectionRequirements().clearConnections();
 		
-		for(GraphConnection connection:connections){
+		for(GraphConnection connection:(List<GraphConnection>)graph.getConnections()){
 			filtersSetup.getConnectionRequirements().connectFilters(connection.getSource().getText(), connection.getDestination().getText());	
 		}
 		
 		PManager.getDefault().getVideoManager().signalFiltersSetupChange();
 	}
 	
-	// TODO: filter rename
-
 	public void setFilterSetup(final FiltersSetup filtersSetup) {
 		this.filtersSetup = filtersSetup;
 		final FiltersConnectionRequirements connectionRequirements = filtersSetup
@@ -345,7 +334,6 @@ public class FilterGraph {
 		clearGraph();
 
 		nodes = new HashMap<Filter,GraphNode>();
-		connections = new ArrayList<GraphConnection>();
 
 		for (final Iterator<FilterRequirement> it = filtersNamesRequirements
 				.getFilters(); it.hasNext();) {
@@ -361,10 +349,9 @@ public class FilterGraph {
 		for (final String[] pair : connectionsReq) {
 			final String srcName = pair[0];
 			final String dstName = pair[1];
-			final GraphConnection graphConnection = new GraphConnection(graph,
+			new GraphConnection(graph,
 					ZestStyles.CONNECTIONS_DIRECTED, getNode(srcName),
 					getNode(dstName));
-			connections.add(graphConnection);
 		}
 
 		layout();
