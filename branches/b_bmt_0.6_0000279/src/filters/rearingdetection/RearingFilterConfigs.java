@@ -14,8 +14,6 @@
 
 package filters.rearingdetection;
 
-import java.awt.Point;
-
 import utils.PManager;
 import utils.StatusManager.StatusSeverity;
 import filters.CommonFilterConfigs;
@@ -77,7 +75,7 @@ public class RearingFilterConfigs extends FilterConfigs {
 	public RearingFilterConfigs(final String filterName,
 			final int rearingThresh, final int marginX, final int marginY,
 			final CommonFilterConfigs commonConfigs) {
-		super(filterName, commonConfigs);
+		super(filterName,RearingDetector.ID, commonConfigs);
 		this.setRearingThresh(rearingThresh);
 		this.setMarginX(marginX);
 		this.setMarginY(marginY);
@@ -133,5 +131,11 @@ public class RearingFilterConfigs extends FilterConfigs {
 
 	public int getRearingThresh() {
 		return rearingThresh;
+	}
+
+	@Override
+	public FilterConfigs newInstance(String filterName,
+			CommonFilterConfigs commonConfigs) {
+		return new RearingFilterConfigs(filterName, 1000, 200, 200, commonConfigs);
 	}
 }

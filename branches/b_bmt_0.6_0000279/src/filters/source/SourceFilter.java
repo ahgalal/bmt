@@ -28,7 +28,7 @@ import filters.VideoFilter;
  */
 public class SourceFilter extends
 		VideoFilter<SourceFilterConfigs, SourceFilterData> {
-	private static final String ID = "filters.source";
+	public static final String ID = "filters.source";
 
 	/**
 	 * Initializes the filter.

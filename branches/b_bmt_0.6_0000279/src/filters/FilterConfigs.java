@@ -30,6 +30,7 @@ public abstract class FilterConfigs {
 	 */
 	private boolean				enabled;
 	private final String		name;
+	private String		filterId;
 
 	/**
 	 * Initializes configurations.
@@ -39,13 +40,14 @@ public abstract class FilterConfigs {
 	 * @param commonConfigs
 	 *            CommonFilterConfigs object, needed by almost all filters
 	 */
-	public FilterConfigs(final String name,
+	public FilterConfigs(final String name,String filterId,
 			final CommonFilterConfigs commonConfigs) {
 		if(commonConfigs!=null)
 			this.setCommonConfigs(commonConfigs);
 		this.name = name;
+		this.filterId=filterId;
 	}
-
+	
 	/**
 	 * Gets the filter name for this configuration object.
 	 * 
@@ -93,4 +95,10 @@ public abstract class FilterConfigs {
 	public CommonFilterConfigs getCommonConfigs() {
 		return commonConfigs;
 	}
+
+	public String getFilterId() {
+		return filterId;
+	}
+	
+	public abstract FilterConfigs newInstance(String filterName,CommonFilterConfigs commonConfigs);
 }

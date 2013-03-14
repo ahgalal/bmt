@@ -18,6 +18,7 @@ import jagvidlib.JAGVidLib.VideoLoadException;
 
 import java.util.Iterator;
 
+import modules.ExperimentManager;
 import modules.ModulesManager;
 import modules.experiment.Experiment;
 import sys.utils.Utils;
@@ -282,8 +283,7 @@ public class VideoManager {
 		if ((vInput != null) && (vInput.getStatus() == SourceStatus.STREAMING)) {
 			paused = true;
 			vInput.pauseStream();
-			filterManager.enableFilter("ScreenDrawer", false);
-			filterManager.enableFilter("ScreenDrawerSec", false);
+			filterManager.pauseStream();
 		}
 	}
 
@@ -292,8 +292,7 @@ public class VideoManager {
 			paused = false;
 			vInput.resumeStream();
 			thFiltersProcess.interrupt();
-			filterManager.enableFilter("ScreenDrawer", true);
-			filterManager.enableFilter("ScreenDrawerSec", true);
+			filterManager.resumeStream();
 		}
 	}
 
@@ -302,10 +301,7 @@ public class VideoManager {
 	 * filters.
 	 */
 	public void startProcessing() {
-		filterManager.enableFilter("SubtractionFilter", true);
-		filterManager.enableFilter("RatFinder", true);
-		filterManager.enableFilter("RearingDetector", true);
-		filterManager.enableFilter("AverageFilter", true);
+		filterManager.startProcessing();
 		PManager.getDefault().getState().setGeneral(GeneralState.TRACKING);
 	}
 
@@ -317,8 +313,8 @@ public class VideoManager {
 			videoProcessorEnabled = true;
 			while (!vInput.startStream())
 				Thread.sleep(100);
-			filterManager.enableFilter("ScreenDrawer", true);
-			filterManager.enableFilter("ScreenDrawerSec", true);
+			filterManager.startStreaming();
+
 			thFiltersProcess = new Thread(new RunnableProcessor(),"Filters process");
 			thFiltersProcess.start();
 			PManager.getDefault().getState().setStream(StreamState.STREAMING);
@@ -343,11 +339,7 @@ public class VideoManager {
 	 * Stops processing of the video stream.
 	 */
 	public void stopProcessing() {
-		filterManager.enableFilter("SubtractionFilter", false);
-		filterManager.enableFilter("RearingDetector", false);
-		filterManager.enableFilter("RatFinder", false);
-		filterManager.enableFilter("Average Filter", false);
-		// PManager.getDefault().getState().setStream(StreamState.STREAMING);
+		filterManager.stopProcessing();
 	}
 
 	/**
@@ -357,8 +349,7 @@ public class VideoManager {
 		// if paused, we need to resume to unlock the paused thread
 		if (PManager.getDefault().getState().getStream() == StreamState.PAUSED) {
 			resumeStream();
-			filterManager.enableFilter("ScreenDrawer", false);
-			filterManager.enableFilter("ScreenDrawerSec", false);
+			filterManager.stopStreaming();
 		}
 
 		isInitialized = false;
@@ -416,6 +407,10 @@ public class VideoManager {
 		if(vInput!=null)
 			streamLength= vInput.getStreamLength();
 		return streamLength;
+	}
+
+	public void signalFiltersSetupChange() {
+		ExperimentManager.getDefault().signalFiltersSetupChange();
 	}
 
 }

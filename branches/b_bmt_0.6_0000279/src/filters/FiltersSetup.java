@@ -4,7 +4,8 @@ import java.awt.Point;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.Map.Entry;
+
+import filters.FiltersNamesRequirements.FilterRequirement;
 
 /**
  * @author Creative
@@ -77,7 +78,18 @@ public class FiltersSetup implements Serializable {
 		for (final Iterator<VideoFilter<?, ?>> it = filters.getIterator(); it
 				.hasNext();) {
 			final VideoFilter<?, ?> filter = it.next();
-			if (filter.getLinkIn() == linkIn)
+			if (filter.getLinkIn() == linkIn && linkIn !=null)
+				ret.add(filter);
+		}
+		return ret;
+	}
+	
+	public ArrayList<VideoFilter<?, ?>> getFiltersByLinkOut(final Link linkOut) {
+		final ArrayList<VideoFilter<?, ?>> ret = new ArrayList<VideoFilter<?, ?>>();
+		for (final Iterator<VideoFilter<?, ?>> it = filters.getIterator(); it
+				.hasNext();) {
+			final VideoFilter<?, ?> filter = it.next();
+			if (filter.getLinkOut() == linkOut && linkOut !=null)
 				ret.add(filter);
 		}
 		return ret;
@@ -103,9 +115,9 @@ public class FiltersSetup implements Serializable {
 	}
 
 	public void setFiltersCollection(final FiltersCollection filters) {
-		for (final Iterator<Entry<String, String>> it = filtersRequirements
+		for (final Iterator<FilterRequirement> it = filtersRequirements
 				.getFilters(); it.hasNext();) {
-			final Entry<String, String> entry = it.next();
+			final FilterRequirement filterRequirement = it.next();
 
 			// search in the input filtersCollection
 			boolean found = false;
@@ -113,8 +125,8 @@ public class FiltersSetup implements Serializable {
 					.hasNext();) {
 				final VideoFilter<?, ?> videoFilter = it2.next();
 
-				if (videoFilter.getName().equals(entry.getKey())
-						&& videoFilter.getID().equals(entry.getValue())) {
+				if (videoFilter.getName().equals(filterRequirement.getName())
+						&& videoFilter.getID().equals(filterRequirement.getID())) {
 					found = true;
 					break;
 				}

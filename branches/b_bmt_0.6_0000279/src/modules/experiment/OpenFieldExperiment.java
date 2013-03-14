@@ -6,6 +6,7 @@ package modules.experiment;
 import filters.FiltersConnectionRequirements;
 import filters.FiltersNamesRequirements;
 import filters.FiltersSetup;
+import filters.FiltersNamesRequirements.FilterTrigger;
 
 /**
  * @author Creative
@@ -29,21 +30,21 @@ public class OpenFieldExperiment extends Experiment {
 
 		// required filters
 		openFieldFiltersRequirements
-				.addFilter("SourceFilter", "filters.source");
+				.addFilter("SourceFilter", "filters.source",FilterTrigger.STREAMING);
 		openFieldFiltersRequirements.addFilter("ScreenDrawer",
-				"filters.screendrawer");
+				"filters.screendrawer",FilterTrigger.STREAMING);
 		openFieldFiltersRequirements.addFilter("ScreenDrawerSec",
-				"filters.screendrawer");
+				"filters.screendrawer",FilterTrigger.PROCESSING);
 		openFieldFiltersRequirements
-				.addFilter("RatFinder", "filters.ratfinder");
+				.addFilter("RatFinder", "filters.ratfinder",FilterTrigger.PROCESSING);
 		openFieldFiltersRequirements.addFilter("RearingDetector",
-				"filters.rearingdetector");
+				"filters.rearingdetector",FilterTrigger.PROCESSING);
 		openFieldFiltersRequirements.addFilter("Recorder",
-				"filters.videorecorder");
+				"filters.videorecorder",FilterTrigger.MANUAL);
 		openFieldFiltersRequirements.addFilter("SubtractionFilter",
-				"filters.subtractor");
+				"filters.subtractor",FilterTrigger.PROCESSING);
 		openFieldFiltersRequirements.addFilter("AverageFilter",
-				"filters.average");
+				"filters.average",FilterTrigger.PROCESSING);
 
 		// connections
 		openFieldConnectionRequirements.connectFilters("SourceFilter",

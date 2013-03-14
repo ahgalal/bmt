@@ -45,7 +45,7 @@ public class SubtractionConfigs extends FilterConfigs {
 	 */
 	public SubtractionConfigs(final String filterName, final int threshold,
 			final CommonFilterConfigs commonConfigs) {
-		super(filterName, commonConfigs);
+		super(filterName,SubtractorFilter.ID, commonConfigs);
 		this.setThreshold(threshold);
 	}
 
@@ -79,5 +79,11 @@ public class SubtractionConfigs extends FilterConfigs {
 
 	public int getThreshold() {
 		return threshold;
+	}
+
+	@Override
+	public FilterConfigs newInstance(String filterName,
+			CommonFilterConfigs commonConfigs) {
+		return new SubtractionConfigs(filterName, defaultThreshold, commonConfigs);
 	}
 }

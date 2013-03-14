@@ -425,4 +425,8 @@ public class ExperimentManager {
 	public FiltersSetup getFilterSetup() {
 		return exp.getFiltersSetup();
 	}
+
+	public void signalFiltersSetupChange() {
+		loadExperiment(exp);
+	}
 }

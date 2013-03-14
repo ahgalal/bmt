@@ -36,7 +36,7 @@ public class RecorderConfigs extends FilterConfigs {
 	 */
 	public RecorderConfigs(final String filterName,
 			final CommonFilterConfigs commonConfigs) {
-		super(filterName, commonConfigs);
+		super(filterName,VideoRecorder.ID, commonConfigs);
 	}
 
 	@Override
@@ -53,6 +53,12 @@ public class RecorderConfigs extends FilterConfigs {
 			return false;
 		}
 		return true;
+	}
+
+	@Override
+	public FilterConfigs newInstance(String filterName,
+			CommonFilterConfigs commonConfigs) {
+		return new RecorderConfigs(filterName, commonConfigs);
 	}
 
 }

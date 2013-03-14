@@ -1,6 +1,8 @@
 package ui.filtergraph;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map.Entry;
@@ -25,8 +27,12 @@ import org.eclipse.zest.core.widgets.ZestStyles;
 import org.eclipse.zest.layouts.LayoutStyles;
 import org.eclipse.zest.layouts.algorithms.HorizontalTreeLayoutAlgorithm;
 
+import ui.box.InputBox;
+import utils.PManager;
 import filters.FiltersConnectionRequirements;
 import filters.FiltersNamesRequirements;
+import filters.FiltersNamesRequirements.FilterRequirement;
+import filters.FiltersNamesRequirements.FilterTrigger;
 import filters.FiltersSetup;
 
 public class FilterGraph {
@@ -38,6 +44,38 @@ public class FilterGraph {
 			self = new FilterGraph();
 		return self;
 	}
+	
+	private static class Filter{
+		private FilterRequirement filterRequirement;
+		private int numberInPorts=0;
+		private int numberOutPorts=0;
+		public void setName(String name) {
+			filterRequirement.setName(name);
+		}
+		public String getName() {
+			return filterRequirement.getName();
+		}
+		public void setId(String id) {
+			filterRequirement.setID(id);
+		}
+		public String getId() {
+			return filterRequirement.getID();
+		}
+		
+		public FilterTrigger getTrigger(){
+			return filterRequirement.getTrigger();
+		}
+		
+		public void setTrigger(FilterTrigger trigger){
+			filterRequirement.setTrigger(trigger);
+		}
+		
+		public Filter(String name,String id, FilterTrigger trigger) {
+			filterRequirement=new FilterRequirement(name, id, trigger);
+			setName(name);
+			setId(id);
+		}
+	}
 
 	private boolean addingLink;
 	private Button btnNewLink;
@@ -46,9 +84,9 @@ public class FilterGraph {
 	private FiltersSetup filtersSetup;
 	private Graph graph;
 
-	private ArrayList<GraphConnection> links;
+	private ArrayList<GraphConnection> connections;
 
-	private ArrayList<GraphNode> nodes;
+	private HashMap<Filter,GraphNode> nodes;
 	private Shell shell;
 	private GraphNode srcNode;
 
@@ -77,17 +115,17 @@ public class FilterGraph {
 
 	private void clearGraph() {
 		if (nodes != null) {
-			disposeAllNodes(nodes);
+			disposeAllNodes(nodes.values());
 		}
 
-		if (links != null) {
+		if (connections != null) {
 			// we just need to clear links array, as links are already disposed
 			// along with associated nodes.
-			links.clear();
+			connections.clear();
 		}
 	}
 
-	private void disposeAllNodes(final ArrayList<? extends GraphNode> arr) {
+	private void disposeAllNodes(final Collection<? extends GraphNode> arr) {
 		for (final GraphNode w : arr) {
 			w.dispose();
 		}
@@ -95,7 +133,7 @@ public class FilterGraph {
 	}
 
 	private GraphNode getNode(final String name) {
-		for (final GraphNode graphNode : nodes) {
+		for (final GraphNode graphNode : nodes.values()) {
 			if (graphNode.getText().equals(name))
 				return graphNode;
 		}
@@ -114,8 +152,6 @@ public class FilterGraph {
 
 			@Override
 			public void mouseDoubleClick(final MouseEvent arg0) {
-				// TODO Auto-generated method stub
-
 			}
 
 			@Override
@@ -129,13 +165,9 @@ public class FilterGraph {
 							if (srcNode == null)
 								srcNode = selectedNode;
 							else {
-								// TODO: update FilterSetup with the new
-								// connection
 								GraphConnection connection = new GraphConnection(graph, ZestStyles.CONNECTIONS_DIRECTED, srcNode, selectedNode);
 								
-								//filtersSetup.getConnectionRequirements().connectFilters(srcNode.getText(), selectedNode.getText());
-								
-								links.add(connection);
+								connections.add(connection);
 								System.out
 										.println("a new link is added with:\nsrc: "
 												+ srcNode
@@ -155,8 +187,6 @@ public class FilterGraph {
 
 			@Override
 			public void mouseUp(final MouseEvent arg0) {
-				// TODO Auto-generated method stub
-
 			}
 		});
 
@@ -196,7 +226,37 @@ public class FilterGraph {
 		btnNewNode.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(final SelectionEvent e) {
-				// TODO: implement
+				InputBox boxID = new InputBox(shell, "Filter ID", "Please enter new filter's ID", true);
+				String id = boxID.show();
+				if(id!=null){
+					InputBox boxName = new InputBox(shell, "Filter Name", "Please enter new filter's name", true);
+					String name = boxName.show();
+					if(name!=null){
+						InputBox triggerBox = new InputBox(shell, "Filter Trigger", "Please enter new filter's trigger type", true);
+						String trigger = triggerBox.show();
+						if(trigger!=null){
+							
+							FilterTrigger filterTrigger=null;
+							if(trigger.equals("manual"))
+								filterTrigger=FilterTrigger.MANUAL;
+							else if(trigger.equals("processing"))
+								filterTrigger=FilterTrigger.PROCESSING;
+							else if(trigger.equals("streaming"))
+								filterTrigger=FilterTrigger.STREAMING;
+							
+							Filter filter = new Filter(name, id,filterTrigger);
+							GraphNode node = new GraphNode(graph, SWT.NULL,name);
+							nodes.put(filter , node);
+							layout();
+						}else{
+							// TODO: implement cancel
+						}
+					}else{
+						// TODO: implement cancel
+					}
+				}else{
+					// TODO: implement cancel
+				}
 			}
 		});
 		btnNewNode.setBounds(539, 376, 75, 25);
@@ -212,6 +272,16 @@ public class FilterGraph {
 		});
 		btnNewLink.setBounds(539, 345, 75, 25);
 		btnNewLink.setText("add link");
+		
+		Button btnApply = new Button(graph, SWT.NONE);
+		btnApply.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				saveToFiltersSetup();
+			}
+		});
+		btnApply.setBounds(539, 314, 75, 25);
+		btnApply.setText("apply");
 
 		layout();
 	}
@@ -227,20 +297,43 @@ public class FilterGraph {
 
 	private void removeConnection(final GraphConnection connection) {
 		connection.dispose();
-		links.remove(connection);
+		connections.remove(connection);
 	}
 
 	private void removeNode(final GraphNode node) {
 		node.dispose();
-		nodes.remove(node);
+		nodes.remove(getKey(node, nodes));
+	}
+	
+	private Object getKey(Object value,HashMap<?,?> map){
+		Object key=null;
+		for(Object tmpKey:map.keySet()){
+			if(map.get(tmpKey)==value)
+				break;
+		}
+		return key;
 	}
 	
 	/**
 	 * Saves the current filters' connections into the FiltersSetup instance.
 	 */
 	private void saveToFiltersSetup(){
-		// TODO: implement
+		// TODO: support adding new filters to the graph
+		filtersSetup.getFiltersNamesRequirements().clearFilterNames();
+		for(Filter filter:nodes.keySet()){
+			filtersSetup.getFiltersNamesRequirements().addFilter(filter.getName(), filter.getId(),filter.getTrigger());
+		}
+		
+		filtersSetup.getConnectionRequirements().clearConnections();
+		
+		for(GraphConnection connection:connections){
+			filtersSetup.getConnectionRequirements().connectFilters(connection.getSource().getText(), connection.getDestination().getText());	
+		}
+		
+		PManager.getDefault().getVideoManager().signalFiltersSetupChange();
 	}
+	
+	// TODO: filter rename
 
 	public void setFilterSetup(final FiltersSetup filtersSetup) {
 		this.filtersSetup = filtersSetup;
@@ -251,25 +344,27 @@ public class FilterGraph {
 
 		clearGraph();
 
-		nodes = new ArrayList<GraphNode>();
-		links = new ArrayList<GraphConnection>();
+		nodes = new HashMap<Filter,GraphNode>();
+		connections = new ArrayList<GraphConnection>();
 
-		for (final Iterator<Entry<String, String>> it = filtersNamesRequirements
+		for (final Iterator<FilterRequirement> it = filtersNamesRequirements
 				.getFilters(); it.hasNext();) {
-			final Entry<String, String> entry = it.next();
-			nodes.add(new GraphNode(graph, SWT.NULL, entry.getKey()));
+			final FilterRequirement filterRequirement = it.next();
+			String filterName = filterRequirement.getName();
+			String filterID = filterRequirement.getID();
+			nodes.put(new Filter(filterName, filterID,filterRequirement.getTrigger()), new GraphNode(graph, SWT.NULL, filterName));
 		}
 
-		final ArrayList<String[]> connections = connectionRequirements
+		final ArrayList<String[]> connectionsReq = connectionRequirements
 				.getConnections();
 
-		for (final String[] pair : connections) {
+		for (final String[] pair : connectionsReq) {
 			final String srcName = pair[0];
 			final String dstName = pair[1];
 			final GraphConnection graphConnection = new GraphConnection(graph,
 					ZestStyles.CONNECTIONS_DIRECTED, getNode(srcName),
 					getNode(dstName));
-			links.add(graphConnection);
+			connections.add(graphConnection);
 		}
 
 		layout();
