@@ -15,7 +15,7 @@ import filters.FilterConfigs;
 public class MovementMeterFilterConfigs extends FilterConfigs {
 
 	public MovementMeterFilterConfigs(String name, CommonFilterConfigs commonConfigs) {
-		super(name, commonConfigs);
+		super(name,MovementMeter.ID, commonConfigs);
 	}
 
 	/* (non-Javadoc)
@@ -38,6 +38,12 @@ public class MovementMeterFilterConfigs extends FilterConfigs {
 			return false;
 		}
 		return true;
+	}
+
+	@Override
+	public FilterConfigs newInstance(String filterName,
+			CommonFilterConfigs commonConfigs) {
+		return new MovementMeterFilterConfigs(filterName, commonConfigs);
 	}
 
 }

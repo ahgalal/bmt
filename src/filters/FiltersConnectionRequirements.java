@@ -36,4 +36,8 @@ public class FiltersConnectionRequirements implements Serializable {
 		
 		return ret;
 	}
+	
+	public void clearConnections(){
+		filtersConnections.clear();
+	}
 }

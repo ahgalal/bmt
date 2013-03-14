@@ -21,7 +21,6 @@ import filters.FilterConfigs;
 import filters.FilterData;
 import filters.Link;
 import filters.VideoFilter;
-import filters.ratfinder.RatFinder;
 import filters.ratfinder.RatFinderData;
 
 /**
@@ -31,7 +30,7 @@ import filters.ratfinder.RatFinderData;
  */
 public class RearingDetector extends
 		VideoFilter<RearingFilterConfigs, RearingFilterData> {
-	private static final String ID = "filters.rearingdetector";
+	public static final String ID = "filters.rearingdetector";
 
 	/**
 	 * Runnable to calculate the mean rat area.

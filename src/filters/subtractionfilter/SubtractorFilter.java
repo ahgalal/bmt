@@ -32,7 +32,7 @@ import filters.VideoFilter;
  */
 public class SubtractorFilter extends
 		VideoFilter<SubtractionConfigs, FilterData> {
-	private static final String ID = "filters.subtractor";
+	public static final String ID = "filters.subtractor";
 
 	private final FrameIntArray	bgImageGray;
 

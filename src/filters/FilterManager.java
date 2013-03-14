@@ -16,7 +16,6 @@ package filters;
 
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.Map.Entry;
 
 import modules.ModulesManager;
 import modules.zones.ShapeController;
@@ -25,6 +24,7 @@ import utils.Logger.Details;
 import utils.PManager;
 import utils.StatusManager.StatusSeverity;
 import utils.video.FrameIntArray;
+import filters.FiltersNamesRequirements.FilterRequirement;
 import filters.avg.AverageFilter;
 import filters.avg.AverageFilterConfigs;
 import filters.movementmeter.MovementMeter;
@@ -316,15 +316,30 @@ public class FilterManager {
 	private boolean instantiateAndConnectFilters(final FrameIntArray refFia,
 			final FiltersSetup filtersSetup) {
 		
+		filters.clear();
+		filtersTriggeredByStreaming.clear();
+		filtersTriggeredByProcessing.clear();
+		
 		// extract filters' names and ID's, create filters' instances
 		FiltersNamesRequirements filtersNamesRequirements=filtersSetup.getFiltersNamesRequirements();
-		for(Iterator<Entry<String, String>> it=filtersNamesRequirements.getFilters();it.hasNext();){
-			Entry<String, String> entry = it.next();
-			String filterName = entry.getKey();
-			String filterID = entry.getValue();
+		for(Iterator<FilterRequirement> it=filtersNamesRequirements.getFilters();it.hasNext();){
+			FilterRequirement entry = it.next();
+			String filterName = entry.getName();
+			String filterID = entry.getID();
 			
 			VideoFilter<?, ?> filter = createFilter(filterName,filterID);
 			filters.add(filter);
+			
+			switch (entry.getTrigger()) {
+			case STREAMING:
+				filtersTriggeredByStreaming.add(filterName);
+				break;
+			case PROCESSING:
+				filtersTriggeredByProcessing.add(filterName);
+				break;
+			default:
+				break;
+			}
 		}
 		
 		// pass filtersCollection to the filterSetup to connect them
@@ -334,39 +349,19 @@ public class FilterManager {
 		// set filter's configurations to the default values
 		for( Iterator<VideoFilter<?, ?>> it=filters.getIterator();it.hasNext();){
 			VideoFilter<?, ?> vf = it.next();
-			applyConfigsToFilter(getFilterConfigByName(vf.getName()));
+			FilterConfigs filterConfig = getFilterConfigByName(vf.getName());
+			if(filterConfig==null){
+				// apply default configs to the filter and display a warning
+				filterConfig = createDefaultConfigs(vf.getName(),vf.getID(), commonConfigs);
+				addFilterConfiguration(filterConfig, false);
+				PManager.log.print("Default Configs is applied to filter: "+ vf.getName(), this, StatusSeverity.WARNING);
+			}
+			
+			applyConfigsToFilter(filterConfig);
 		}
 
-/*		AverageFilter avgFilter;
-		MovementMeter movementMeter;
-		RatFinder ratFinder;
-		RearingDetector rearingDet;
-		ScreenDrawer screenDrawer = null;
-		SourceFilter sourceFilter;
-		SubtractorFilter subtractorFilter;
-		VideoRecorder vidRec;*/
-
-/*		final FiltersSetup openFieldFiltersSetup = new FiltersSetup(
-				new String[] { "RatFinder", "RearingDetector", "Recorder",
-						"SubtractionFilter", "Average Filter" });
-
-		final FiltersSetup forcedSwimmingFiltersSetup = new FiltersSetup(
-				new String[] { "Recorder", "Movement Meter" });*/
-
-/*		PManager.log.print("Connecting video filters", this, Details.VERBOSE);
-		final Point dims = new Point(commonConfigs.getWidth(),
-				commonConfigs.getHeight());
-
-		final Link srcRGBLink = new Link(dims);
-		final Link greyLink = new Link(dims);
-		final Link markerLink = new Link(dims);
-		final Link avgLink = new Link(dims);
-		final Link differentialLink = new Link(dims);*/
-
-		//sourceFilter = new SourceFilter("Source Filter", null, srcRGBLink);
 		final SourceFilterConfigs sourceConfigs = new SourceFilterConfigs(
 				"SourceFilter", commonConfigs, refFia);
-		//addFilter(sourceFilter);
 		applyConfigsToFilter(sourceConfigs);
 		
 		// broadcast filters' data
@@ -388,6 +383,16 @@ public class FilterManager {
 				Details.VERBOSE);
 		PManager.log.print("loading filters' GUI..", this, Details.VERBOSE);
 		
+		System.out.println("Filters connections: =====");
+		
+		for (Iterator<VideoFilter<?, ?>> it=filters.getIterator();it.hasNext();){
+			VideoFilter<?, ?> vf = it.next();
+			ArrayList<VideoFilter<?, ?>> srcFilters = filtersSetup.getFiltersByLinkOut(vf.getLinkIn());
+			if(srcFilters.size()>0)
+				System.out.println(srcFilters.get(0).getName()+"\t\t--->\t\t"+vf.getName());
+		}
+		
+		System.out.println("Filters connections end: =====");
 		
 		PManager.mainGUI.loadPluggedGUI(getFiltersGUI());
 
@@ -397,6 +402,15 @@ public class FilterManager {
 		System.out.println("===============================");
 
 		return validateFiltersConfigurations();
+	}
+
+	private FilterConfigs createDefaultConfigs(String filterName,String filterId,CommonFilterConfigs commonConfigs) {
+		for(FilterConfigs config: configs){
+			if(config.getFilterId().equals(filterId)){
+				return config.newInstance(filterName, commonConfigs);
+			}
+		}
+		return null;
 	}
 
 	private VideoFilter<?, ?> createFilter(String filterName, String filterID) {
@@ -415,13 +429,6 @@ public class FilterManager {
 	public void instantiateFilters(final FrameIntArray refFia,
 			final FiltersSetup setup) {
 		instantiateAndConnectFilters(refFia, setup);
-	}
-
-	private boolean isWithinArray(final String name, final String[] array) {
-		for (final String str : array)
-			if (str.equals(name))
-				return true;
-		return false;
 	}
 
 	/**
@@ -472,6 +479,60 @@ public class FilterManager {
 			}
 		}
 		return true;
+	}
+
+	public void pauseStream() {
+		stopStreaming();
+/*		enableFilter("ScreenDrawer", false);
+		enableFilter("ScreenDrawerSec", false);	*/	
+	}
+
+	public void resumeStream() {
+		startStreaming();
+		/*enableFilter("ScreenDrawer", true);
+		enableFilter("ScreenDrawerSec", true);*/		
+	}
+	
+	private ArrayList<String> filtersTriggeredByProcessing=new ArrayList<String>();
+	private ArrayList<String> filtersTriggeredByStreaming=new ArrayList<String>();
+
+	public void startProcessing() {
+		
+		for(String filterName: filtersTriggeredByProcessing){
+			enableFilter(filterName, true);
+		}
+/*		
+		enableFilter("SubtractionFilter", true);
+		enableFilter("RatFinder", true);
+		enableFilter("RearingDetector", true);
+		enableFilter("AverageFilter", true);*/		
+	}
+
+	public void startStreaming() {
+		for(String filterName: filtersTriggeredByStreaming){
+			enableFilter(filterName, true);
+		}
+		
+/*		enableFilter("ScreenDrawer", true);
+		enableFilter("ScreenDrawerSec", true);	*/	
+	}
+	
+	public void stopStreaming() {
+		for(String filterName: filtersTriggeredByStreaming){
+			enableFilter(filterName, false);
+		}
+	}
+
+	public void stopProcessing() {
+		
+		for(String filterName: filtersTriggeredByProcessing){
+			enableFilter(filterName, false);
+		}
+/*		
+		enableFilter("SubtractionFilter", false);
+		enableFilter("RearingDetector", false);
+		enableFilter("RatFinder", false);
+		enableFilter("Average Filter", false);	*/	
 	}
 
 }

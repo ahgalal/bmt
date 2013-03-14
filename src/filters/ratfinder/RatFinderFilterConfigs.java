@@ -36,7 +36,7 @@ public class RatFinderFilterConfigs extends FilterConfigs {
 	 */
 	public RatFinderFilterConfigs(final String filterName,
 			final CommonFilterConfigs commonConfigs) {
-		super(filterName, commonConfigs);
+		super(filterName,RatFinder.ID, commonConfigs);
 	}
 
 	@Override
@@ -59,6 +59,12 @@ public class RatFinderFilterConfigs extends FilterConfigs {
 			return false;
 		}
 		return true;
+	}
+
+	@Override
+	public FilterConfigs newInstance(String filterName,
+			CommonFilterConfigs commonConfigs) {
+		return new RatFinderFilterConfigs(filterName, commonConfigs);
 	}
 
 }

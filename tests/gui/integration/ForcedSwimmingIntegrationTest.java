@@ -27,7 +27,7 @@ public class ForcedSwimmingIntegrationTest extends
 	protected int	floatingTimeMax	= 26;
 	protected int	floatingTimeMin	= 10;
 	protected int	swimmingTimeMax	= 25; // need to be ~15
-	protected int	swimmingTimeMin	= 6;
+	protected int	swimmingTimeMin	= 4;
 
 	@Override
 	protected void afterStartTracking() throws WidgetSearchException {

@@ -67,7 +67,7 @@ public class ScreenDrawerConfigs extends FilterConfigs {
 			final Graphics refGfxScreen,
 			final CommonFilterConfigs commonConfigs,
 			final ShapeCollection shpController, Point canvasDims) {
-		super(filterName, commonConfigs);
+		super(filterName,ScreenDrawer.ID, commonConfigs);
 		this.setRefGfxMainScreen(refGfxScreen);
 		this.setShapeController(shpController);
 		this.setCanvasDims(canvasDims);
@@ -118,6 +118,12 @@ public class ScreenDrawerConfigs extends FilterConfigs {
 
 	public Point getCanvasDims() {
 		return canvasDims;
+	}
+
+	@Override
+	public FilterConfigs newInstance(String filterName,
+			CommonFilterConfigs commonConfigs) {
+		return new ScreenDrawerConfigs(filterName, null, commonConfigs, null, null);
 	}
 
 }

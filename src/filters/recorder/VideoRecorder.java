@@ -34,7 +34,7 @@ import filters.VideoFilter;
  */
 public class VideoRecorder extends VideoFilter<RecorderConfigs, FilterData> {
 
-	private static final String ID = "filters.videorecorder";
+	public static final String ID = "filters.videorecorder";
 	private StreamToAVI		aviSaver;
 	private boolean			isRecording	= false;
 

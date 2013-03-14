@@ -5,6 +5,7 @@ package modules.experiment;
 
 import filters.FiltersConnectionRequirements;
 import filters.FiltersNamesRequirements;
+import filters.FiltersNamesRequirements.FilterTrigger;
 import filters.FiltersSetup;
 
 /**
@@ -39,15 +40,15 @@ public class ForcedSwimmingExperiment extends Experiment {
 
 		// required filters
 		forcedSwimmingFiltersRequirements.addFilter("SourceFilter",
-				"filters.source");
+				"filters.source",FilterTrigger.STREAMING);
 		forcedSwimmingFiltersRequirements.addFilter("ScreenDrawer",
-				"filters.screendrawer");
+				"filters.screendrawer",FilterTrigger.STREAMING);
 		forcedSwimmingFiltersRequirements.addFilter("ScreenDrawerSec",
-				"filters.screendrawer");
+				"filters.screendrawer",FilterTrigger.PROCESSING);
 		forcedSwimmingFiltersRequirements.addFilter("Recorder",
-				"filters.videorecorder");
+				"filters.videorecorder",FilterTrigger.MANUAL);
 		forcedSwimmingFiltersRequirements.addFilter("MovementMeter",
-				"filters.mevementmeter");
+				"filters.mevementmeter",FilterTrigger.PROCESSING);
 
 		// connections
 		forcedSwimmingConnectionRequirements.connectFilters("SourceFilter",

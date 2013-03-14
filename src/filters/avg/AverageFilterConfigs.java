@@ -15,7 +15,7 @@ import filters.FilterConfigs;
 public class AverageFilterConfigs extends FilterConfigs {
 
 	public AverageFilterConfigs(String name, CommonFilterConfigs commonConfigs) {
-		super(name, commonConfigs);
+		super(name,AverageFilter.ID, commonConfigs);
 	}
 
 	/* (non-Javadoc)
@@ -38,6 +38,12 @@ public class AverageFilterConfigs extends FilterConfigs {
 			return false;
 		}
 		return true;
+	}
+
+	@Override
+	public FilterConfigs newInstance(String filterName,
+			CommonFilterConfigs commonConfigs) {
+		return new AverageFilterConfigs(filterName, commonConfigs);
 	}
 
 }

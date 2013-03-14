@@ -15,7 +15,7 @@ import filters.VideoFilter;
  */
 public class MovementMeter extends
 		VideoFilter<FilterConfigs, MovementMeterData> {
-	private static final String ID = "filters.mevementmeter";
+	public static final String ID = "filters.mevementmeter";
 	private int[]	greyData, prevGreyData;
 	private int[]	outputData, prevOutputData;
 	private int		summation;

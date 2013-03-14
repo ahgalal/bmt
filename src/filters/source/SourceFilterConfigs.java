@@ -41,7 +41,7 @@ public class SourceFilterConfigs extends FilterConfigs {
 	 */
 	public SourceFilterConfigs(final String name,
 			final CommonFilterConfigs commonConfigs, final FrameIntArray fia) {
-		super(name, commonConfigs);
+		super(name,SourceFilter.ID, commonConfigs);
 		this.setFrameIntArray(fia);
 	}
 
@@ -70,6 +70,12 @@ public class SourceFilterConfigs extends FilterConfigs {
 
 	public FrameIntArray getFrameIntArray() {
 		return fia;
+	}
+
+	@Override
+	public FilterConfigs newInstance(String filterName,
+			CommonFilterConfigs commonConfigs) {
+		return new SourceFilterConfigs(filterName, commonConfigs, null);
 	}
 
 }

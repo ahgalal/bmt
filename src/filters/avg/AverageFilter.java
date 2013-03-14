@@ -15,7 +15,7 @@ import filters.VideoFilter;
  */
 public class AverageFilter extends VideoFilter<AverageFilterConfigs, FilterData> {
 
-	private static final String ID = "filters.average";
+	public static final String ID = "filters.average";
 	private short[]		currentFramGrayMap;
 	private int[]		dataOut;
 	private int			height;

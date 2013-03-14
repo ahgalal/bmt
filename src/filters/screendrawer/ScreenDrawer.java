@@ -34,7 +34,7 @@ import filters.VideoFilter;
  * @author Creative
  */
 public class ScreenDrawer extends VideoFilter<ScreenDrawerConfigs, FilterData> {
-	private static final String ID = "filters.screendrawer";
+	public static final String ID = "filters.screendrawer";
 
 	/**
 	 * Runnable for drawing the incoming data on the Graphics objects.
