@@ -25,7 +25,6 @@ import utils.PManager;
 import utils.StatusManager.StatusSeverity;
 import utils.video.FrameIntArray;
 import filters.FiltersNamesRequirements.FilterRequirement;
-import filters.FiltersNamesRequirements.FilterTrigger;
 import filters.avg.AverageFilter;
 import filters.avg.AverageFilterConfigs;
 import filters.movementmeter.MovementMeter;

@@ -44,7 +44,7 @@ public class FilterNodeProperties {
 	private final Text text;
 
 	public FilterNodeProperties() {
-		shell = new Shell(SWT.CLOSE);
+		shell = new Shell(SWT.CLOSE|SWT.APPLICATION_MODAL);
 		shell.setSize(284, 309);
 		shell.addListener(SWT.Close, new Listener() {
 
@@ -120,7 +120,7 @@ public class FilterNodeProperties {
 				final FilterTrigger filterTrigger = FilterTrigger
 						.valueOf(trigger);
 				final Filter filter = new Filter(name, id, filterTrigger);
-				FilterGraph.getDefault().addNewNode(filter);
+				FilterGraph.getDefault().addUpdateNode(filter);
 
 				// hide dialog
 				hide();
@@ -150,5 +150,11 @@ public class FilterNodeProperties {
 			combo.add(trigger.toString());
 		}
 		combo.setText(combo.getItem(0));
+	}
+
+	public void loadFilter(Filter filter) {
+		text.setText(filter.getName());
+		list.setSelection(new String[]{filter.getId()});
+		combo.setText(filter.getTrigger().toString());
 	}
 }
