@@ -16,7 +16,7 @@ import filters.VideoFilter;
 public class AverageFilter extends VideoFilter<AverageFilterConfigs, FilterData> {
 
 	public static final String ID = "filters.average";
-	private short[]		currentFramGrayMap;
+	private short[]		currentFrameGrayMap;
 	private int[]		dataOut;
 	private int			height;
 
@@ -59,16 +59,16 @@ public class AverageFilter extends VideoFilter<AverageFilterConfigs, FilterData>
 			// form current frame's gray map (current frame is the subtraction
 			// between cam frame and background, thresholded by the Subtraction
 			// filter)
-			currentFramGrayMap = ImageManipulator
+			currentFrameGrayMap = ImageManipulator
 					.formGrayMapFromGrayImage(dataIn);
 
 			// only use average filter for effective pixels to enhance
 			// performance
-			for (int i = 0; i < currentFramGrayMap.length; i++) {
+			for (int i = 0; i < currentFrameGrayMap.length; i++) {
 				final int x = i % width;
 				final int y = i / width;
 
-				if ((currentFramGrayMap[i] < THRESHOLD)
+				if ((currentFrameGrayMap[i] < THRESHOLD)
 						|| (x + maskWidth / 2 > width)
 						|| (y + maskHeight / 2 > height)
 						|| (x - maskWidth / 2 < 0) || (y - maskHeight / 2 < 0))
@@ -79,7 +79,7 @@ public class AverageFilter extends VideoFilter<AverageFilterConfigs, FilterData>
 				for (int xMask = x - maskWidth / 2; xMask < x + maskWidth / 2; xMask++)
 					for (int yMask = y - maskHeight / 2; yMask < y + maskHeight
 							/ 2; yMask++)
-						maskSum = currentFramGrayMap[xMask + width * yMask]
+						maskSum = currentFrameGrayMap[xMask + width * yMask]
 								+ maskSum;
 				final int maskAverage = maskSum / maskArea;
 
