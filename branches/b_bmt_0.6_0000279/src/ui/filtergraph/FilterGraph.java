@@ -29,6 +29,9 @@ import org.eclipse.zest.layouts.LayoutStyles;
 import org.eclipse.zest.layouts.algorithms.HorizontalTreeLayoutAlgorithm;
 
 import utils.PManager;
+import utils.PManager.ProgramState.GeneralState;
+import utils.PManager.ProgramState.StreamState;
+import utils.StatusManager.StatusSeverity;
 import filters.FiltersConnectionRequirements;
 import filters.FiltersNamesRequirements;
 import filters.FiltersNamesRequirements.FilterRequirement;
@@ -337,22 +340,31 @@ public class FilterGraph {
 	 */
 	@SuppressWarnings("unchecked")
 	private void saveToFiltersSetup() {
-		filtersSetup.getFiltersNamesRequirements().clearFilterNames();
-		for (final Filter filter : nodes.keySet()) {
-			filtersSetup.getFiltersNamesRequirements().addFilter(
-					filter.getName(), filter.getId(), filter.getTrigger());
+		if (PManager.getDefault().getState().getStream() != StreamState.STREAMING &&
+				PManager.getDefault().getState().getStream() != StreamState.PAUSED) {
+			filtersSetup.getFiltersNamesRequirements().clearFilterNames();
+			for (final Filter filter : nodes.keySet()) {
+				filtersSetup.getFiltersNamesRequirements().addFilter(
+						filter.getName(), filter.getId(), filter.getTrigger());
+			}
+
+			filtersSetup.getConnectionRequirements().clearConnections();
+
+			for (final GraphConnection connection : (List<GraphConnection>) graph
+					.getConnections()) {
+				filtersSetup.getConnectionRequirements().connectFilters(
+						connection.getSource().getText(),
+						connection.getDestination().getText());
+			}
+
+			PManager.getDefault().getVideoManager().signalFiltersSetupChange();
+		} else {
+			PManager.getDefault()
+					.getStatusMgr()
+					.setStatus(
+							"Filter configuration can't be changed while streaming, please stop stream and try again.",
+							StatusSeverity.ERROR);
 		}
-
-		filtersSetup.getConnectionRequirements().clearConnections();
-
-		for (final GraphConnection connection : (List<GraphConnection>) graph
-				.getConnections()) {
-			filtersSetup.getConnectionRequirements().connectFilters(
-					connection.getSource().getText(),
-					connection.getDestination().getText());
-		}
-
-		PManager.getDefault().getVideoManager().signalFiltersSetupChange();
 	}
 
 	public void setFilterSetup(final FiltersSetup filtersSetup) {
