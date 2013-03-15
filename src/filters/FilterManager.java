@@ -25,6 +25,7 @@ import utils.PManager;
 import utils.StatusManager.StatusSeverity;
 import utils.video.FrameIntArray;
 import filters.FiltersNamesRequirements.FilterRequirement;
+import filters.FiltersNamesRequirements.FilterTrigger;
 import filters.avg.AverageFilter;
 import filters.avg.AverageFilterConfigs;
 import filters.movementmeter.MovementMeter;
@@ -535,4 +536,12 @@ public class FilterManager {
 		enableFilter("Average Filter", false);	*/	
 	}
 
+	public String[] getFiltersIDs() {
+		ArrayList<String> ids = new ArrayList<String>();
+		for(Iterator<VideoFilter<?, ?>> it=installedFilters.getIterator();it.hasNext();){
+			VideoFilter<?, ?> vf = it.next();
+			ids.add(vf.getID());
+		}
+		return ids.toArray(new String[0]);
+	}
 }
