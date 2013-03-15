@@ -84,9 +84,10 @@ public class FilterGraph {
 	private Button btnNewLink;
 	private Button btnNewNode;
 	private Composite container;
+	private boolean editingNode;
 	private FiltersSetup filtersSetup;
-	private Graph graph;
 
+	private Graph graph;
 	private HashMap<Filter, GraphNode> nodes;
 	private Shell shell;
 	private GraphNode srcNode;
@@ -114,10 +115,35 @@ public class FilterGraph {
 		initializeForm(parent);
 	}
 
-	public void addNewNode(final Filter filter) {
-		final GraphNode node = new GraphNode(graph, SWT.NULL, filter.getName());
-		nodes.put(filter, node);
+	public void addUpdateNode(final Filter filter) {
+		if (editingNode == false) {
+			addNewNode(filter);
+		} else {
+			final List<?> selection = graph.getSelection();
+			if (selection.size() == 1) {
+				final Object selectedItem = selection.get(0);
+				if (selectedItem instanceof GraphNode) {
+					final GraphNode selectedNode = (GraphNode) selectedItem;
+					
+					// update node's name
+					selectedNode.setText(filter.getName());
+
+					// remove old map entry
+					nodes.remove(getKey(selectedNode, nodes));
+					
+					// add new map entry
+					nodes.put(filter, selectedNode);
+				}
+			}
+			editingNode = false;
+		}
 		layout();
+	}
+
+	private void addNewNode(final Filter filter) {
+		final GraphNode node = new GraphNode(graph, SWT.NULL,
+				filter.getName());
+		nodes.put(filter, node);
 	}
 
 	private void clearGraph() {
@@ -164,6 +190,17 @@ public class FilterGraph {
 
 			@Override
 			public void mouseDoubleClick(final MouseEvent arg0) {
+				final List<?> selection = graph.getSelection();
+				if (selection.size() == 1) {
+					final Object selectedItem = selection.get(0);
+					if (selectedItem instanceof GraphNode) {
+						final GraphNode selectedNode = (GraphNode) selectedItem;
+						showFilterNodeProperties();
+						FilterNodeProperties.getDefault().loadFilter(
+								(Filter) getKey(selectedNode, nodes));
+						editingNode = true;
+					}
+				}
 			}
 
 			@Override
@@ -245,11 +282,10 @@ public class FilterGraph {
 		btnNewNode.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(final SelectionEvent e) {
-				FilterNodeProperties.getDefault().show();
-				FilterNodeProperties.getDefault().setFilterIDs(
-						PManager.getDefault().getVideoManager()
-								.getFilterManager().getFiltersIDs());
+				editingNode = false;
+				showFilterNodeProperties();
 			}
+
 		});
 		btnNewNode.setBounds(539, 376, 75, 25);
 		btnNewNode.setText("Add Node");
@@ -352,5 +388,12 @@ public class FilterGraph {
 		}
 
 		layout();
+	}
+
+	private void showFilterNodeProperties() {
+		FilterNodeProperties.getDefault().show();
+		FilterNodeProperties.getDefault().setFilterIDs(
+				PManager.getDefault().getVideoManager().getFilterManager()
+						.getFiltersIDs());
 	}
 }

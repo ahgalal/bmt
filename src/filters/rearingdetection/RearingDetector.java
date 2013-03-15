@@ -168,10 +168,6 @@ public class RearingDetector extends
 		}
 	}
 
-	private void setCenterPoint(Point centerPoint) {
-		this.centerPoint = centerPoint;
-	}
-
 	private Point getCenterPoint() {
 		return centerPoint;
 	}
