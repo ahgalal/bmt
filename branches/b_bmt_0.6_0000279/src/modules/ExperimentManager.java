@@ -1,15 +1,11 @@
 package modules;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.util.ArrayList;
-
-import filters.FiltersSetup;
 
 import modules.experiment.ExcelEngine;
 import modules.experiment.Exp2GUI;
@@ -26,6 +22,11 @@ import modules.experiment.forcedswimming.ForcedSwimmingExperimentModule;
 import modules.experiment.openfield.OpenFieldExperimentModule;
 import utils.PManager;
 import utils.StatusManager.StatusSeverity;
+
+import com.thoughtworks.xstream.XStream;
+import com.thoughtworks.xstream.io.xml.DomDriver;
+
+import filters.FiltersSetup;
 
 public class ExperimentManager {
 	public static final String			DELETED_GROUP_NAME	= "-";
@@ -44,8 +45,9 @@ public class ExperimentManager {
 	 *            file name to load the experiment from
 	 */
 	public static Experiment readExperimentFromFile(final String fileName) {
-		ObjectInputStream ois;
+		
 		Experiment exp = null;
+/*		ObjectInputStream ois;
 		try {
 			ois = new ObjectInputStream(new FileInputStream(new File(fileName)));
 			exp = (Experiment) ois.readObject();
@@ -57,6 +59,12 @@ public class ExperimentManager {
 					.println("Experiment loading error, Experiment file may be corrupted");
 		} catch (final ClassNotFoundException e) {
 			System.err.println("incompatible experiment file!");
+		}*/
+		XStream xstream = new XStream(new DomDriver());
+		try {
+			exp = (Experiment)xstream.fromXML(new FileReader(fileName));
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
 		}
 		return exp;
 	}
@@ -212,11 +220,11 @@ public class ExperimentManager {
 	/**
 	 * Writes the experiment to a text file.
 	 * 
-	 * @param FilePath
+	 * @param filePath
 	 *            file path to write to
 	 */
-	public void saveExperimentToFile(final String FilePath) {
-		try {
+	public void saveExperimentToFile(final String filePath) {
+/*		try {
 			final ObjectOutputStream oos = new ObjectOutputStream(
 					new FileOutputStream(new File(FilePath)));
 			oos.writeObject(exp);
@@ -225,6 +233,18 @@ public class ExperimentManager {
 		} catch (final FileNotFoundException e) {
 			e.printStackTrace();
 		} catch (final IOException e) {
+			e.printStackTrace();
+		}*/
+		XStream xstream = new XStream(new DomDriver());
+		exp.setFileName(filePath);
+		String xml = xstream.toXML(exp);
+		try {
+			FileWriter fileWriter=new FileWriter(new File(filePath));
+			fileWriter.write(xml);
+			fileWriter.close();
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
