@@ -14,6 +14,8 @@
 
 package modules.experiment;
 
+import java.util.Iterator;
+
 import modules.Cargo;
 import modules.ExperimentManager;
 import modules.Module;
@@ -29,6 +31,7 @@ import org.eclipse.swt.widgets.Shell;
 import sys.utils.Utils;
 import utils.Logger.Details;
 import utils.PManager;
+import utils.StatusManager.StatusSeverity;
 import filters.Data;
 
 /**
@@ -68,8 +71,7 @@ Module<ExperimentModuleGUI, ExperimentModuleConfigs, ExperimentModuleData> {
 				throw new RuntimeException("No params for this experiment");
 				/*configs.exp.setParametersList(ModulesManager.getDefault()
 						.getCodeNames());*/
-			if (ExperimentManager.getDefault().getNumberOfExpParams() != ModulesManager
-					.getDefault().getNumberOfFileParameters())
+			if (checkExperimentParams()==false)
 				Display.getDefault().asyncExec(new Runnable() {
 
 					@Override
@@ -118,6 +120,31 @@ Module<ExperimentModuleGUI, ExperimentModuleConfigs, ExperimentModuleData> {
 			if (forceReady)
 				return true;
 			return waitForRatFrm();
+	}
+	/**
+	 * Checks that the params required by the loaded experiment are exactly the same as those offered by Active Modules.
+	 * @return
+	 */
+	public static boolean checkExperimentParams() {
+		String[] modulesExperimentParams = ModulesManager.getDefault().getExperimentParams();
+		Iterator<String> it = ExperimentManager.getDefault().getExperimentParams();
+		
+		int iteratorSize = 0;
+		for(;it.hasNext();){
+			String tmpParam = it.next();
+			
+			if(Utils.equalsOneOf(tmpParam, modulesExperimentParams)==false){
+				PManager.log.print("Experiment Param does not match: " + tmpParam, ExperimentModule.class, StatusSeverity.ERROR);
+				return false;
+			}
+			iteratorSize++;
+		}
+		
+		if(iteratorSize !=modulesExperimentParams.length){
+			PManager.log.print("Experiment Param count does not match" , ExperimentModule.class, StatusSeverity.ERROR);
+			return false;
+		}
+		return true;
 	}
 
 	@Override

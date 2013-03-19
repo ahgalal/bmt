@@ -14,7 +14,7 @@ import org.junit.After;
 import sys.utils.Utils;
 
 /**
- * Tests editing experiments of types "Open Field" and "Forced Swimming",
+ * Tests editing experiments of types "Open Field" and "Forced Swimming -TODO-",
  * by saving the experiment info to file, then loads the file and compares the
  * saved info with the edited experiment.
  * @author Creative
@@ -32,7 +32,7 @@ public class EditExperimentTest extends UITest {
 		ExperimentExecUnitGroup.loadExperiment(TEST_EXP_FILE);
 		Experiment original = Reflections.getLoadedExperiment();
 		ExperimentExecUnitGroup.editExperiment(TEST_EXP_EDIT_FILE);
-		Experiment loadedFromFile = ExperimentManager.readExperimentFromFile(original.getFileName());
+		Experiment loadedFromFile = ExperimentManager.readExperimentFromFile(TEST_EXP_EDIT_FILE);
 		
 		assert(loadedFromFile.getDate().equals(original.getDate()));
 		assert(loadedFromFile.getGroups().size()==2);

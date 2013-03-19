@@ -232,7 +232,7 @@ public class ModulesManager {
 	 * @return String array containing parameters (columns names) to be sent to
 	 *         file writer
 	 */
-	public String[] getCodeNames() {
+	public String[] getExperimentParams() {
 		constructCargoArray();
 		return fileNamesArray;
 	}

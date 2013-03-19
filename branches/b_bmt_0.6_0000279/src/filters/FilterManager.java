@@ -51,9 +51,15 @@ public class FilterManager {
 	private final FiltersCollection	filters;
 	private final FiltersCollection	installedFilters;
 	private final ArrayList<FilterConfigs>		configs;
-
+	private static FilterManager self;
 	private CommonFilterConfigs					commonConfigs;
 
+	public static FilterManager getDefault(){
+		if(self==null)
+			throw new RuntimeException("FilterManager is called before it is instantiated");
+		return self;
+	}
+	
 	/**
 	 * Initializes the filters' array.
 	 * 
@@ -77,6 +83,7 @@ public class FilterManager {
 		
 		configs = new ArrayList<FilterConfigs>();
 		this.commonConfigs = commonConfigs;
+		self=this;
 	}
 
 	/**
@@ -144,6 +151,7 @@ public class FilterManager {
 		for (final PluggedGUI<?> pgui : getFiltersGUI()) {
 			PManager.getDefault().removeStateListener(pgui);
 			pgui.deInitialize();
+			System.out.println("sssssss");
 		}
 
 		filters.clear();
@@ -385,12 +393,12 @@ public class FilterManager {
 		
 		System.out.println("Filters connections: =====");
 		
-		for (Iterator<VideoFilter<?, ?>> it=filters.getIterator();it.hasNext();){
+/*		for (Iterator<VideoFilter<?, ?>> it=filters.getIterator();it.hasNext();){
 			VideoFilter<?, ?> vf = it.next();
 			ArrayList<VideoFilter<?, ?>> srcFilters = filtersSetup.getFiltersByLinkOut(vf.getLinkIn());
 			if(srcFilters.size()>0)
 				System.out.println(srcFilters.get(0).getName()+"\t\t--->\t\t"+vf.getName());
-		}
+		}*/
 		
 		System.out.println("Filters connections end: =====");
 		

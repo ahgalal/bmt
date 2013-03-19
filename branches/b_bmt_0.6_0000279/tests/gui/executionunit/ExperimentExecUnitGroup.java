@@ -1,8 +1,13 @@
 package gui.executionunit;
 
+import gui.utils.Reflections;
+
 import org.eclipse.swt.widgets.Display;
 
+import modules.ExperimentManager;
+import modules.experiment.Experiment;
 import modules.experiment.ExperimentType;
+import sys.utils.Utils;
 import ui.MainGUI;
 import utils.DialogBoxUtils;
 import utils.PManager;
@@ -155,5 +160,17 @@ public class ExperimentExecUnitGroup extends ExecutionUnitGroup {
 		
 		ui.click(new MenuItemLocator("Experiment/Export to Excel"));
 		DialogBoxUtils.fillDialog(file, ui);
+	}
+	
+	public static void checkExperimentCreated(){
+		// get the stored experiment object using reflection
+		Experiment saved = Reflections.getLoadedExperiment();
+		
+		// load the experiment saved in the file
+		Experiment loadedFromFile = ExperimentManager.readExperimentFromFile(saved.getFileName());
+		
+		// compare the two experiments
+		assert(Utils.compareExperiments(saved, loadedFromFile)):"Experiments do not match!";
+		PManager.log.print("Experiment creation check ... OK", ExperimentExecUnitGroup.class);
 	}
 }
