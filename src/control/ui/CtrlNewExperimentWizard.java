@@ -38,6 +38,8 @@ public class CtrlNewExperimentWizard {
 			final FileDialog fileDialog = new FileDialog(sShell, SWT.SAVE);
 			final String fileName = fileDialog.open();
 			if (fileName != null) {
+				if(ExperimentManager.getDefault().isExpLoaded()==false)
+					ExperimentManager.getDefault().unloadExperiment();
 				ExperimentManager.getDefault().setExpInfo(name, user, date,
 						notes, type);
 

@@ -29,7 +29,6 @@ import org.eclipse.zest.layouts.LayoutStyles;
 import org.eclipse.zest.layouts.algorithms.HorizontalTreeLayoutAlgorithm;
 
 import utils.PManager;
-import utils.PManager.ProgramState.GeneralState;
 import utils.PManager.ProgramState.StreamState;
 import utils.StatusManager.StatusSeverity;
 import filters.FiltersConnectionRequirements;

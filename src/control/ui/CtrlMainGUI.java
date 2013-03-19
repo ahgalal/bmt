@@ -313,13 +313,19 @@ public class CtrlMainGUI extends ControllerUI<MainGUI> implements StateListener 
 		if (fileName != null) {
 			PManager.mainGUI.clearForm();
 			ExperimentManager.getDefault().unloadExperiment();
-			ExperimentManager.getDefault().loadExperiment(
-					ExperimentManager.readExperimentFromFile(fileName));
+			if(ExperimentManager.getDefault().loadExperiment(
+					ExperimentManager.readExperimentFromFile(fileName)))
+				
 			PManager.getDefault()
 					.getStatusMgr()
 					.setStatus(
 							"Experiment is Loaded Successfully from file: "
 									+ fileName, StatusSeverity.WARNING);
+			else
+				PManager.getDefault()
+				.getStatusMgr()
+				.setStatus(
+						"Error in exp params!", StatusSeverity.ERROR);
 		}
 	}
 

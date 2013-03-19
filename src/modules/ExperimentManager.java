@@ -6,6 +6,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Iterator;
 
 import modules.experiment.ExcelEngine;
 import modules.experiment.Exp2GUI;
@@ -29,8 +30,8 @@ import com.thoughtworks.xstream.io.xml.DomDriver;
 import filters.FiltersSetup;
 
 public class ExperimentManager {
-	public static final String			DELETED_GROUP_NAME	= "-";
-	private static ExperimentManager	me;
+	public static final String DELETED_GROUP_NAME = "-";
+	private static ExperimentManager me;
 
 	public static ExperimentManager getDefault() {
 		if (me == null)
@@ -45,42 +46,39 @@ public class ExperimentManager {
 	 *            file name to load the experiment from
 	 */
 	public static Experiment readExperimentFromFile(final String fileName) {
-		
+
 		Experiment exp = null;
-/*		ObjectInputStream ois;
+		/*
+		 * ObjectInputStream ois; try { ois = new ObjectInputStream(new
+		 * FileInputStream(new File(fileName))); exp = (Experiment)
+		 * ois.readObject(); exp.setFileName(fileName); } catch (final
+		 * FileNotFoundException e) { e.printStackTrace(); } catch (final
+		 * IOException e) { System.err
+		 * .println("Experiment loading error, Experiment file may be corrupted"
+		 * ); } catch (final ClassNotFoundException e) {
+		 * System.err.println("incompatible experiment file!"); }
+		 */
+		final XStream xstream = new XStream(new DomDriver());
 		try {
-			ois = new ObjectInputStream(new FileInputStream(new File(fileName)));
-			exp = (Experiment) ois.readObject();
-			exp.setFileName(fileName);
+			exp = (Experiment) xstream.fromXML(new FileReader(fileName));
 		} catch (final FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (final IOException e) {
-			System.err
-					.println("Experiment loading error, Experiment file may be corrupted");
-		} catch (final ClassNotFoundException e) {
-			System.err.println("incompatible experiment file!");
-		}*/
-		XStream xstream = new XStream(new DomDriver());
-		try {
-			exp = (Experiment)xstream.fromXML(new FileReader(fileName));
-		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}
 		return exp;
 	}
 
-	private String					currGrpName;
-	private int						currRatNumber;
-	private ExcelEngine				excelEngine;
-	private Experiment				exp;
+	private String currGrpName;
+	private int currRatNumber;
+	private ExcelEngine excelEngine;
+	private Experiment exp;
 
-	private ExperimentModuleConfigs	experimentConfigs;
+	private ExperimentModuleConfigs experimentConfigs;
 
-	private ExperimentModule		experimentModule;
+	private ExperimentModule experimentModule;
 
-	private boolean					expLoaded;
+	private boolean expLoaded;
 
-	private TextEngine				textEngine;
+	private TextEngine textEngine;
 
 	private ExperimentManager() {
 		setTextEngine(new TextEngine());
@@ -102,7 +100,7 @@ public class ExperimentManager {
 			allParams.add(param);
 		}
 
-		//exp.setParametersList(allParams.toArray(new String[0]));
+		// exp.setParametersList(allParams.toArray(new String[0]));
 	}
 
 	public String getCurrGrpName() {
@@ -121,8 +119,19 @@ public class ExperimentManager {
 		return exp;
 	}
 
+	public Iterator<String> getExperimentParams() {
+		final ArrayList<String> arr = new ArrayList<String>();
+		for (final String str : exp.getExpParametersList())
+			arr.add(str);
+		return arr.iterator();
+	}
+
 	public Grp2GUI[] getExpGroupsInfo() {
 		return exp.getGroups().toArray(new Grp2GUI[0]);
+	}
+
+	public FiltersSetup getFilterSetup() {
+		return exp.getFiltersSetup();
 	}
 
 	/**
@@ -176,20 +185,19 @@ public class ExperimentManager {
 	public ExperimentModule instantiateExperimentModule() {
 
 		switch (exp.getType()) {
-			case OPEN_FIELD:
-				experimentConfigs = new ExperimentModuleConfigs(
-						OpenFieldExperimentModule.moduleID, exp);
-				experimentModule = new OpenFieldExperimentModule(
-						experimentConfigs);
-				break;
-			case FORCED_SWIMMING:
-				experimentConfigs = new ExperimentModuleConfigs(
-						ForcedSwimmingExperimentModule.moduleID, exp);
-				experimentModule = new ForcedSwimmingExperimentModule(
-						experimentConfigs);
-				break;
-			default:
-				break;
+		case OPEN_FIELD:
+			experimentConfigs = new ExperimentModuleConfigs(
+					OpenFieldExperimentModule.moduleID, exp);
+			experimentModule = new OpenFieldExperimentModule(experimentConfigs);
+			break;
+		case FORCED_SWIMMING:
+			experimentConfigs = new ExperimentModuleConfigs(
+					ForcedSwimmingExperimentModule.moduleID, exp);
+			experimentModule = new ForcedSwimmingExperimentModule(
+					experimentConfigs);
+			break;
+		default:
+			break;
 		}
 
 		return experimentModule;
@@ -208,13 +216,16 @@ public class ExperimentManager {
 		return expLoaded;
 	}
 
-	public void loadExperiment(final Experiment experiment) {
+	public boolean loadExperiment(final Experiment experiment) {
 		if (experiment != null) {
 			setExpLoaded(true);
 			this.exp = experiment;
 			PManager.getDefault().getVideoManager().setupModulesAndFilters(exp);
 			setExperimantLoadedInGUI(true);
+			
+			return ExperimentModule.checkExperimentParams();
 		}
+		return false;
 	}
 
 	/**
@@ -224,27 +235,23 @@ public class ExperimentManager {
 	 *            file path to write to
 	 */
 	public void saveExperimentToFile(final String filePath) {
-/*		try {
-			final ObjectOutputStream oos = new ObjectOutputStream(
-					new FileOutputStream(new File(FilePath)));
-			oos.writeObject(exp);
-			exp.setFileName(FilePath);
-			oos.close();
+		/*
+		 * try { final ObjectOutputStream oos = new ObjectOutputStream( new
+		 * FileOutputStream(new File(FilePath))); oos.writeObject(exp);
+		 * exp.setFileName(FilePath); oos.close(); } catch (final
+		 * FileNotFoundException e) { e.printStackTrace(); } catch (final
+		 * IOException e) { e.printStackTrace(); }
+		 */
+		final XStream xstream = new XStream(new DomDriver());
+		exp.setFileName(filePath);
+		final String xml = xstream.toXML(exp);
+		try {
+			final FileWriter fileWriter = new FileWriter(new File(filePath));
+			fileWriter.write(xml);
+			fileWriter.close();
 		} catch (final FileNotFoundException e) {
 			e.printStackTrace();
 		} catch (final IOException e) {
-			e.printStackTrace();
-		}*/
-		XStream xstream = new XStream(new DomDriver());
-		exp.setFileName(filePath);
-		String xml = xstream.toXML(exp);
-		try {
-			FileWriter fileWriter=new FileWriter(new File(filePath));
-			fileWriter.write(xml);
-			fileWriter.close();
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
@@ -256,13 +263,14 @@ public class ExperimentManager {
 	 */
 	public boolean saveRatInfo() {
 		if (isExperimentPresent()) {
-			if (exp.getExpParametersList() == null){
+			if (exp.getExpParametersList() == null) {
 				throw new NullPointerException();
-				/*exp.setParametersList(ModulesManager.getDefault()
-						.getCodeNames());*/
-			}
-			else if (getNumberOfExpParams() != ModulesManager.getDefault()
-					.getCodeNames().length) {
+				/*
+				 * exp.setParametersList(ModulesManager.getDefault()
+				 * .getCodeNames());
+				 */
+			} else if (getNumberOfExpParams() != ModulesManager.getDefault()
+					.getExperimentParams().length) {
 				PManager.getDefault()
 						.getStatusMgr()
 						.setStatus(
@@ -273,7 +281,7 @@ public class ExperimentManager {
 			final String[] paramsList = exp.getExpParametersList();
 			final String[] data = ModulesManager.getDefault().getFileData();
 			final String[] codeNames = ModulesManager.getDefault()
-					.getCodeNames();
+					.getExperimentParams();
 			boolean overrideRat = false;
 
 			Rat ratTmp = this.exp.getGroupByName(getCurrGrpName())
@@ -349,18 +357,24 @@ public class ExperimentManager {
 	 */
 	public void setExpInfo(final String name, final String user,
 			final String date, final String notes, final String type) {
-		if (exp == null)
-			if(type.equals("Open Field")){
+		/**
+		 * Note:
+		 * in case of creating new experiment, isExpLoaded() will return false
+		 */
+		if (isExpLoaded() == false) {
+			if (type.equals("Open Field")) {
 				exp = new OpenFieldExperiment();
-			}else if(type.equals("Forced Swimming")){
+			} else if (type.equals("Forced Swimming")) {
 				exp = new ForcedSwimmingExperiment();
-			}else{
+			} else {
 				throw new RuntimeException("Unknown Experiment type");
 			}
+		}
 		exp.setExperimentInfo(name, user, date, notes, type);
+
 		setExpLoaded(true);
 		setExperimantLoadedInGUI(true);
-
+		
 		PManager.getDefault().getVideoManager().setupModulesAndFilters(exp);
 	}
 
@@ -370,6 +384,10 @@ public class ExperimentManager {
 
 	public void setTextEngine(final TextEngine textEngine) {
 		this.textEngine = textEngine;
+	}
+
+	public void signalFiltersSetupChange() {
+		loadExperiment(exp);
 	}
 
 	/**
@@ -440,13 +458,5 @@ public class ExperimentManager {
 	 */
 	public void writeToExcelFile(final String FilePath) {
 		getExcelEngine().writeExpInfoToExcelFile(FilePath, exp);
-	}
-
-	public FiltersSetup getFilterSetup() {
-		return exp.getFiltersSetup();
-	}
-
-	public void signalFiltersSetupChange() {
-		loadExperiment(exp);
 	}
 }
