@@ -272,7 +272,10 @@ public class VideoManager {
 	 * @param exp
 	 */
 	public void setupModulesAndFilters(Experiment exp){
+		// TODO: remove the next 2 lines??
 		filterManager.initializeConfigs(commonConfigs);
+		ModulesManager.getDefault().initializeConfigs();
+		
 		ModulesManager.getDefault().setupModules(exp);
 		ModulesManager.getDefault().setModulesWidthandHeight(commonConfigs.getWidth(), commonConfigs.getHeight());
 		initFilters(exp);

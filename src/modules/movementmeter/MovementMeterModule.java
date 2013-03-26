@@ -4,7 +4,6 @@ import java.util.ArrayList;
 
 import modules.Cargo;
 import modules.Module;
-import modules.ModuleConfigs;
 import modules.ModuleData;
 import modules.experiment.Constants;
 import modules.experiment.ExperimentType;
@@ -17,30 +16,32 @@ import utils.PManager;
 import filters.Data;
 import filters.movementmeter.MovementMeterData;
 
-public class MovementMeterModule extends
-		Module<MovementMeterModuleGUI, ModuleConfigs, MovementMeterModuleData> {
-	private static final int			ENERGY_DIVISION_FACTOR	= 200;
-	private static final int			IGNORED_FRAMES			= 30;
-	private static final int			MIN_SAMPLES				= 31;
-	public final static String			moduleID				= Constants.MODULE_ID
-																		+ ".movementmeter";
-	private static final int			OLD_VAL_COUNT			= 20;
-	int									accumulatedSessionTime;
-	private ArrayList<Integer>			energyBins;
-	private final ArrayList<Integer>	energyData;
-	private int[]						energyLevels;
-	private String[]					expParams;
-	private boolean						ignoredFramesNormalized;
-	private int							maxEnergy;
-	private int							minEnergy;
-	private MovementMeterData			movementMeterFilterData;
-	private final int					noEnergyLevels			= 3;
-	private final int[]					oldValues				= new int[OLD_VAL_COUNT];
-	private int							sectorizeFlag;
-	private SessionModuleData			sessionModuleData;
+public class MovementMeterModule
+		extends
+		Module<MovementMeterModuleGUI, MovementMeterModuleConfigs, MovementMeterModuleData> {
+	private static final int ENERGY_DIVISION_FACTOR = 200;
+	private static final int IGNORED_FRAMES = 30;
+	private static final int MIN_SAMPLES = 31;
+	public final static String moduleID = Constants.MODULE_ID
+			+ ".movementmeter";
+	private static final int OLD_VAL_COUNT = 20;
+	int accumulatedSessionTime;
+	private ArrayList<Integer> energyBins;
+	private final ArrayList<Integer> energyData;
+	private int[] energyLevels;
+	private String[] expParams;
+	private boolean ignoredFramesNormalized;
+	private int maxEnergy;
+	private int minEnergy;
+	private MovementMeterData movementMeterFilterData;
+	private final int noEnergyLevels = 3;
+	private final int[] oldValues = new int[OLD_VAL_COUNT];
+	private int sectorizeFlag;
+	private SessionModuleData sessionModuleData;
 
-	public MovementMeterModule(final ModuleConfigs config) {
-		super(config);
+	public MovementMeterModule(final String name,
+			final MovementMeterModuleConfigs config) {
+		super(name, config);
 		filtersData = new Data[1];
 		energyData = new ArrayList<Integer>();
 		gui = new MovementMeterModuleGUI(this);
@@ -69,21 +70,18 @@ public class MovementMeterModule extends
 		return String.format("%.1f", time);
 	}
 
-	//@formatter:off	
+	// @formatter:off
 	/**
-	 * .............A
-	 * .............|....................___
-	 * Climbing (0).|-------------------/---\---------
+	 * .............A .............|....................___ Climbing
+	 * (0).|-------------------/---\---------
 	 * .............|..........________/.....\
-	 * .............|........./...............\
-	 * Swimming (1).|--------/-----------------\------
-	 * .............|.....__/...................\___
-	 * .............|..../
-	 * Floating (2).|---/-----------------------------
-	 * .............|../
-	 * .............|./
-	 * .............|/_________________________________
+	 * .............|........./...............\ Swimming
+	 * (1).|--------/-----------------\------
+	 * .............|.....__/...................\___ .............|..../
+	 * Floating (2).|---/----------------------------- .............|../
+	 * .............|./ .............|/_________________________________
 	 * ...............................................
+	 * 
 	 * @formatter:on
 	 */
 
@@ -128,7 +126,12 @@ public class MovementMeterModule extends
 		maxEnergy = 0;
 		minEnergy = 100000000;
 		ignoredFramesNormalized = false;
-		sectorizeFlag=0;
+		sectorizeFlag = 0;
+	}
+
+	@Override
+	public Module newInstance(final String name) {
+		return new MovementMeterModule(name, null);
 	}
 
 	@Override
@@ -241,7 +244,10 @@ public class MovementMeterModule extends
 	}
 
 	@Override
-	public void updateConfigs(final ModuleConfigs config) {
+	public void updateConfigs(final MovementMeterModuleConfigs config) {
+		if (this.configs == null)
+			this.configs = config;
+		this.configs.mergeConfigs(config);
 	}
 
 	private void updateEnergyLevels() {

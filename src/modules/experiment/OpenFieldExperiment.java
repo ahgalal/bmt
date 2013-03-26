@@ -3,6 +3,11 @@
  */
 package modules.experiment;
 
+import modules.ModulesNamesRequirements;
+import modules.ModulesSetup;
+import modules.rearing.RearingModule;
+import modules.session.SessionModule;
+import modules.zones.ZonesModule;
 import filters.FiltersConnectionRequirements;
 import filters.FiltersNamesRequirements;
 import filters.FiltersSetup;
@@ -73,6 +78,16 @@ public class OpenFieldExperiment extends Experiment {
 				Constants.FILE_CENTRAL_ENTRANCE, Constants.FILE_CENTRAL_TIME,
 				Constants.FILE_TOTAL_DISTANCE, Constants.FILE_SESSION_TIME};
 		setParametersList(expParameters);
+	}
+
+	@Override
+	protected void initializeModulesSetup() {
+		ModulesNamesRequirements modulesRequirements = new ModulesNamesRequirements();
+		modulesRequirements.addModule("RearingModule", RearingModule.moduleID);
+		modulesRequirements.addModule("ZonesModule", ZonesModule.moduleID);
+		modulesRequirements.addModule("SessionModule", SessionModule.moduleID);
+		
+		modulesSetup = new ModulesSetup(modulesRequirements );
 	}
 
 }

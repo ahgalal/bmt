@@ -1,6 +1,5 @@
 package gui;
 
-import utils.PManager;
 import gui.experiment.CreateExperimentSuiteTest;
 import gui.experiment.EditExperimentTest;
 import gui.experiment.ExportExperimentToExcelTest;
@@ -15,6 +14,7 @@ import gui.vidlibs.JMyronLibTest;
 import gui.vidlibs.V4L2CamLibTest;
 import junit.framework.Test;
 import junit.framework.TestSuite;
+import utils.PManager;
 
 public class AllTests {
 

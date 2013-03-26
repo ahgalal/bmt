@@ -17,6 +17,7 @@ package modules.experiment;
 import java.io.Serializable;
 import java.util.ArrayList;
 
+import modules.ModulesSetup;
 import filters.FiltersSetup;
 
 /**
@@ -33,6 +34,7 @@ public abstract class Experiment implements Exp2GUI, Serializable {
 	private String fileName;
 
 	protected FiltersSetup filtersSetup;
+	protected ModulesSetup modulesSetup;
 
 	private final ArrayList<Group> groups;
 
@@ -50,6 +52,7 @@ public abstract class Experiment implements Exp2GUI, Serializable {
 		groups = new ArrayList<Group>();
 
 		initializeFiltersSetup();
+		initializeModulesSetup();
 		initializeParams();
 		final String[] generalParams = new String[] {
 				Constants.FILE_RAT_NUMBER, Constants.FILE_GROUP_NAME };
@@ -147,6 +150,10 @@ public abstract class Experiment implements Exp2GUI, Serializable {
 	public FiltersSetup getFiltersSetup() {
 		return filtersSetup;
 	}
+	
+	public ModulesSetup getModulesSetup() {
+		return modulesSetup;
+	}
 
 	/**
 	 * @param id
@@ -229,6 +236,7 @@ public abstract class Experiment implements Exp2GUI, Serializable {
 	}
 
 	protected abstract void initializeFiltersSetup();
+	protected abstract void initializeModulesSetup();
 
 	protected abstract void initializeParams();
 

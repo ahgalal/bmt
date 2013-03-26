@@ -50,7 +50,7 @@ import filters.subtractionfilter.SubtractorFilter;
 public class FilterManager {
 	private final FiltersCollection	filters;
 	private final FiltersCollection	installedFilters;
-	private final ArrayList<FilterConfigs>		configs;
+	private FiltersConfigurationManager configurationManager;
 	private static FilterManager self;
 	private CommonFilterConfigs					commonConfigs;
 
@@ -81,7 +81,7 @@ public class FilterManager {
 		installedFilters.add(new SubtractorFilter("", null, null));
 		installedFilters.add(new VideoRecorder("", null, null));
 		
-		configs = new ArrayList<FilterConfigs>();
+		configurationManager = new FiltersConfigurationManager(filters.getFilters());
 		this.commonConfigs = commonConfigs;
 		self=this;
 	}
@@ -96,29 +96,6 @@ public class FilterManager {
 		filters.add(filter);
 	}
 
-	public FilterConfigs addFilterConfiguration(final FilterConfigs cfgs,
-			final boolean updateExisting) {
-		FilterConfigs existing = null;
-		for (final FilterConfigs filterConfigs : configs)
-			if (filterConfigs.getConfigurablename().equals(
-					cfgs.getConfigurablename())) {
-				existing = filterConfigs;
-				break;
-			}
-		if (existing != null) {
-			if (updateExisting) {
-				existing.mergeConfigs(cfgs);
-			} /*else
-				
-				throw new RuntimeException("Error adding an already existing filter configuration, try updating the existing configuration instead.");*/
-			return existing;
-		} else {
-			configs.add(cfgs);
-			return cfgs;
-		}
-
-	}
-
 	/**
 	 * Applies a configuration object to a filter, using the name of the filter
 	 * specified in the configuration object.</br>Also adds the filter
@@ -128,18 +105,7 @@ public class FilterManager {
 	 *            configurations object
 	 */
 	public void applyConfigsToFilter(FilterConfigs cfgs) {
-		final VideoFilter<?, ?> tmpFilter = getFilterByName(cfgs
-				.getConfigurablename());
-		if (tmpFilter != null) {
-			try {
-				// try to add the config to the list, or get the existing one
-				// after it is updated by the incoming config
-				cfgs = addFilterConfiguration(cfgs, true);
-			} catch (final RuntimeException e) {
-			} finally {
-				tmpFilter.updateConfigs(cfgs);
-			}
-		}
+		configurationManager.applyConfigs(cfgs);
 	}
 
 	/**
@@ -223,13 +189,6 @@ public class FilterManager {
 		return filters.getFilterByType(type);
 	}
 
-	private FilterConfigs getFilterConfigByName(final String configName) {
-		for (final FilterConfigs filterConfigs: configs)
-			if (filterConfigs.getConfigurablename().equals(configName))
-				return filterConfigs;
-		return null;
-	}
-
 	/**
 	 * Gets the array of filters.
 	 * 
@@ -305,15 +264,16 @@ public class FilterManager {
 		final MovementMeterFilterConfigs movementFilterConfigs = new MovementMeterFilterConfigs(
 				"MovementMeter", commonConfigs);
 
-		addFilterConfiguration(sourceConfigs, false);
-		addFilterConfiguration(scrnDrwrCnfgs, false);
-		addFilterConfiguration(scrnDrwrCnfgsSec, false);
-		addFilterConfiguration(ratFinderConfigs, false);
-		addFilterConfiguration(rearingConfigs, false);
-		addFilterConfiguration(vidRecorderConfigs, false);
-		addFilterConfiguration(subtractionConfigs, false);
-		addFilterConfiguration(avgFilterConfigs, false);
-		addFilterConfiguration(movementFilterConfigs, false);
+		configurationManager.reset();
+		configurationManager.addConfiguration(sourceConfigs, false);
+		configurationManager.addConfiguration(scrnDrwrCnfgs, false);
+		configurationManager.addConfiguration(scrnDrwrCnfgsSec, false);
+		configurationManager.addConfiguration(ratFinderConfigs, false);
+		configurationManager.addConfiguration(rearingConfigs, false);
+		configurationManager.addConfiguration(vidRecorderConfigs, false);
+		configurationManager.addConfiguration(subtractionConfigs, false);
+		configurationManager.addConfiguration(avgFilterConfigs, false);
+		configurationManager.addConfiguration(movementFilterConfigs, false);
 	}
 
 	/**
@@ -357,11 +317,11 @@ public class FilterManager {
 		// set filter's configurations to the default values
 		for( Iterator<VideoFilter<?, ?>> it=filters.getIterator();it.hasNext();){
 			VideoFilter<?, ?> vf = it.next();
-			FilterConfigs filterConfig = getFilterConfigByName(vf.getName());
+			FilterConfigs filterConfig = configurationManager.getConfigByName(vf.getName());
 			if(filterConfig==null){
 				// apply default configs to the filter and display a warning
-				filterConfig = createDefaultConfigs(vf.getName(),vf.getID(), commonConfigs);
-				addFilterConfiguration(filterConfig, false);
+				filterConfig = configurationManager.createDefaultConfigs(vf.getName(),vf.getID(), commonConfigs);
+				configurationManager.addConfiguration(filterConfig, false);
 				PManager.log.print("Default Configs is applied to filter: "+ vf.getName(), this, StatusSeverity.WARNING);
 			}
 			
@@ -404,21 +364,9 @@ public class FilterManager {
 		
 		PManager.mainGUI.loadPluggedGUI(getFiltersGUI());
 
-		System.out.println("Configurations available: =====");
-		for (final FilterConfigs filterConfigs: configs)
-			System.out.println(filterConfigs.toString());
-		System.out.println("===============================");
+		configurationManager.printConfiguration();
 
 		return validateFiltersConfigurations();
-	}
-
-	private FilterConfigs createDefaultConfigs(String filterName,String filterId,CommonFilterConfigs commonConfigs) {
-		for(FilterConfigs config: configs){
-			if(config.getFilterId().equals(filterId)){
-				return config.newInstance(filterName, commonConfigs);
-			}
-		}
-		return null;
 	}
 
 	private VideoFilter<?, ?> createFilter(String filterName, String filterID) {

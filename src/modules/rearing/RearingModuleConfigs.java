@@ -33,8 +33,18 @@ public class RearingModuleConfigs extends ModuleConfigs {
 	}
 
 	@Override
-	protected void mergeConfigs(final ModuleConfigs config) {
+	protected void initializeModuleID() {
+		moduleID = RearingModule.moduleID;
+	}
 
+	@Override
+	public void mergeConfigs(final ModuleConfigs config) {
+
+	}
+
+	@Override
+	public ModuleConfigs newInstance(final String moduleName) {
+		return new RearingModuleConfigs(moduleName);
 	}
 
 }

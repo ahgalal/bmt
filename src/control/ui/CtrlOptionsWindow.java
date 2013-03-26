@@ -102,8 +102,7 @@ public class CtrlOptionsWindow extends ControllerUI<OptionsWindow> {
 			final ZonesModuleConfigs zonesConfigs = new ZonesModuleConfigs(
 					ZonesModule.moduleID, hyst, -1, -1);
 
-			ModulesManager.getDefault().updateModuleConfigs(
-					new ModuleConfigs[] { zonesConfigs });
+			ModulesManager.getDefault().applyConfigsToModule(zonesConfigs);
 
 			pm.getVideoManager().getFilterManager()
 					.enableFilter(RearingDetector.class, enableAutoRearing);

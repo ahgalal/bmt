@@ -18,6 +18,7 @@
 package filters;
 
 import ui.PluggedGUI;
+import utils.Configurable;
 import utils.Logger.Details;
 import utils.PManager;
 import utils.StateListener;
@@ -28,7 +29,7 @@ import utils.StateListener;
  * @author Creative
  */
 public abstract class VideoFilter<ConfigsType extends FilterConfigs, DataType extends FilterData>
-		implements StateListener {
+		implements StateListener,Configurable<ConfigsType> {
 	protected ConfigsType	configs;
 	protected DataType		filterData;
 	protected PluggedGUI<?>	gui;

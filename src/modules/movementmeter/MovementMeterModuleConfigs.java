@@ -9,9 +9,18 @@ public class MovementMeterModuleConfigs extends ModuleConfigs {
 	}
 
 	@Override
-	protected void mergeConfigs(final ModuleConfigs config) {
-		// TODO Auto-generated method stub
+	protected void initializeModuleID() {
+		moduleID = MovementMeterModule.moduleID;
+	}
 
+	@Override
+	public void mergeConfigs(final ModuleConfigs config) {
+		// TODO
+	}
+
+	@Override
+	public ModuleConfigs newInstance(final String moduleName) {
+		return new MovementMeterModuleConfigs(moduleName);
 	}
 
 }

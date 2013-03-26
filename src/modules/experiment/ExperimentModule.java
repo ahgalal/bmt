@@ -50,9 +50,9 @@ Module<ExperimentModuleGUI, ExperimentModuleConfigs, ExperimentModuleData> {
 	private boolean	ratFrmShown	= false;
 	
 
-	public ExperimentModule(
+	public ExperimentModule(String name,
 			final ExperimentModuleConfigs config) {
-		super(config);
+		super(name, config);
 		initialize();
 	}
 	protected void addDefaultModuleDataParams() {
@@ -192,7 +192,7 @@ Module<ExperimentModuleGUI, ExperimentModuleConfigs, ExperimentModuleData> {
 	}
 
 	@Override
-	public void updateConfigs(final ModuleConfigs config) {
+	public void updateConfigs(final ExperimentModuleConfigs config) {
 	}
 
 	@Override
