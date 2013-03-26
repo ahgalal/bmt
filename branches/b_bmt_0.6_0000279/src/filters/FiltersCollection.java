@@ -40,6 +40,11 @@ public class FiltersCollection{
 		return filters.iterator();
 	}
 	
+	// TODO: are we breaking encapsulation with this methid????
+	public ArrayList<VideoFilter<?, ?>> getFilters(){
+		return filters;
+	}
+	
 	/**
 	 * Gets a filter using the filter's type.
 	 * 

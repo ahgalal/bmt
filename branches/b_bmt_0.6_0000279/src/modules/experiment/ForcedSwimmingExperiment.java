@@ -3,6 +3,10 @@
  */
 package modules.experiment;
 
+import modules.ModulesNamesRequirements;
+import modules.ModulesSetup;
+import modules.movementmeter.MovementMeterModule;
+import modules.session.SessionModule;
 import filters.FiltersConnectionRequirements;
 import filters.FiltersNamesRequirements;
 import filters.FiltersNamesRequirements.FilterTrigger;
@@ -63,6 +67,15 @@ public class ForcedSwimmingExperiment extends Experiment {
 		filtersSetup = new FiltersSetup(
 				forcedSwimmingFiltersRequirements,
 				forcedSwimmingConnectionRequirements);
+	}
+
+	@Override
+	protected void initializeModulesSetup() {
+		ModulesNamesRequirements modulesRequirements = new ModulesNamesRequirements();
+		modulesRequirements.addModule("SessionModule", SessionModule.moduleID);
+		modulesRequirements.addModule("MovementMeterModule", MovementMeterModule.moduleID);
+		
+		modulesSetup = new ModulesSetup(modulesRequirements );
 	}
 
 }

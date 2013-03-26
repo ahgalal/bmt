@@ -14,12 +14,14 @@
 
 package filters;
 
+import utils.Configuration;
+
 /**
  * Configurations of a VideoFilter.
  * 
  * @author Creative
  */
-public abstract class FilterConfigs {
+public abstract class FilterConfigs implements Configuration<FilterConfigs> {
 	/**
 	 * Needed by all filters, contains properties like: image width,height ..
 	 * etc.
@@ -29,7 +31,7 @@ public abstract class FilterConfigs {
 	 * is the filter enable.
 	 */
 	private boolean				enabled;
-	private final String		name;
+	private String		name;
 	private String		filterId;
 
 	/**
@@ -53,7 +55,7 @@ public abstract class FilterConfigs {
 	 * 
 	 * @return String containing the filter's name
 	 */
-	public String getConfigurablename() {
+	public String getName() {
 		return name;
 	}
 
@@ -77,7 +79,7 @@ public abstract class FilterConfigs {
 	
 	@Override
 	public String toString() {
-		return "name: "+getConfigurablename();
+		return "name: "+getName();
 	}
 
 	public void setEnabled(boolean enabled) {
@@ -86,6 +88,11 @@ public abstract class FilterConfigs {
 
 	public boolean isEnabled() {
 		return enabled;
+	}
+	
+	@Override
+	public void setName(String name) {
+		this.name=name;
 	}
 
 	public void setCommonConfigs(CommonFilterConfigs commonConfigs) {
@@ -96,8 +103,13 @@ public abstract class FilterConfigs {
 		return commonConfigs;
 	}
 
-	public String getFilterId() {
+	public String getID() {
 		return filterId;
+	}
+	
+	@Override
+	public FilterConfigs newInstance(String name) {
+		throw new RuntimeException("Illegal method call, should have called the overload");
 	}
 	
 	public abstract FilterConfigs newInstance(String filterName,CommonFilterConfigs commonConfigs);

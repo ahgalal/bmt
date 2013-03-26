@@ -1,5 +1,5 @@
 <modules.experiment.ForcedSwimmingExperiment>
-  <date>Thu Mar 14 18:59:25 GMT+02:00 2013</date>
+  <date>Tue Mar 26 22:35:53 GMT+02:00 2013</date>
   <fileName>E:\Documents\eclipse\Java\BMT_0.6\BMT\ants\test\resources\TestForcedSwimming.bmt_tmp</fileName>
   <filtersSetup>
     <connectionRequirements>
@@ -52,30 +52,23 @@
       </filtersRequirements>
     </filtersRequirements>
   </filtersSetup>
+  <modulesSetup>
+    <modulesRequirements>
+      <moduleRequirements>
+        <modules.ModulesNamesRequirements_-ModuleRequirement>
+          <ID>bmt.module.session</ID>
+          <name>SessionModule</name>
+        </modules.ModulesNamesRequirements_-ModuleRequirement>
+        <modules.ModulesNamesRequirements_-ModuleRequirement>
+          <ID>bmt.module.movementmeter</ID>
+          <name>MovementMeterModule</name>
+        </modules.ModulesNamesRequirements_-ModuleRequirement>
+      </moduleRequirements>
+    </modulesRequirements>
+  </modulesSetup>
   <groups>
     <modules.experiment.Group>
-      <rats>
-        <modules.experiment.Rat>
-          <info>
-            <data>
-              <string>0</string>
-              <string>Group1</string>
-              <string>3.3</string>
-              <string>9.6</string>
-              <string>22.4</string>
-              <string>36.0</string>
-            </data>
-            <tags>
-              <string>Number</string>
-              <string>Group</string>
-              <string>Climbing</string>
-              <string>Swimming</string>
-              <string>Floating</string>
-              <string>ST</string>
-            </tags>
-          </info>
-        </modules.experiment.Rat>
-      </rats>
+      <rats/>
       <id>0</id>
       <name>Group1</name>
       <notes>This note is for Group1</notes>
@@ -89,7 +82,14 @@
   </groups>
   <name>TestExperiment</name>
   <notes>This Note is for the Experiment.</notes>
-  <params reference="../groups/modules.experiment.Group/rats/modules.experiment.Rat/info/tags"/>
+  <params>
+    <string>Number</string>
+    <string>Group</string>
+    <string>Climbing</string>
+    <string>Swimming</string>
+    <string>Floating</string>
+    <string>ST</string>
+  </params>
   <type>FORCED_SWIMMING</type>
   <user>AGalal</user>
 </modules.experiment.ForcedSwimmingExperiment>

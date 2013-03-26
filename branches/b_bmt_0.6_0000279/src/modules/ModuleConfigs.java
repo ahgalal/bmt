@@ -14,17 +14,20 @@
 
 package modules;
 
+import utils.Configuration;
+
 /**
  * Parent of all Configurations Classes of modules.
  * 
  * @author Creative
  */
-public abstract class ModuleConfigs {
+public abstract class ModuleConfigs implements Configuration<ModuleConfigs> {
 
-	protected boolean	enable;
-	private int			height;
-	protected String	moduleID;
-	private int			width;
+	protected boolean enable;
+	private int height;
+	protected String moduleID;
+	protected String moduleName;
+	private int width;
 
 	/**
 	 * Initializes the configurations.
@@ -32,8 +35,13 @@ public abstract class ModuleConfigs {
 	 * @param moduleID
 	 *            id of the Module this configuration is to be applied to
 	 */
-	public ModuleConfigs(final String moduleID) {
-		this.moduleID = moduleID;
+	public ModuleConfigs(final String moduleName) {
+		this.moduleName = moduleName;
+		initializeModuleID();
+	}
+
+	public int getHeight() {
+		return height;
 	}
 
 	/**
@@ -42,9 +50,21 @@ public abstract class ModuleConfigs {
 	 * @return String containing the name of the module this configuration
 	 *         object is to be applied to
 	 */
-	public String getModuleID() {
+	@Override
+	public String getID() {
 		return moduleID;
 	}
+
+	@Override
+	public String getName() {
+		return moduleName;
+	}
+
+	public int getWidth() {
+		return width;
+	}
+
+	protected abstract void initializeModuleID();
 
 	/**
 	 * Merges the current configurations with the incoming configurations
@@ -55,26 +75,27 @@ public abstract class ModuleConfigs {
 	 * @param config
 	 *            incoming configurations object
 	 */
-	protected void mergeConfigs(ModuleConfigs config){
+	@Override
+	public void mergeConfigs(final ModuleConfigs config) {
 		if (config.getWidth() != -1)
 			setWidth(config.getWidth());
 		if (config.getHeight() != -1)
 			setHeight(config.getHeight());
 	}
 
-	public void setHeight(int height) {
+	@Override
+	public abstract ModuleConfigs newInstance(String moduleName);
+
+	public void setHeight(final int height) {
 		this.height = height;
 	}
 
-	public int getHeight() {
-		return height;
+	@Override
+	public void setName(final String moduleName) {
+		this.moduleName = moduleName;
 	}
 
-	public void setWidth(int width) {
+	public void setWidth(final int width) {
 		this.width = width;
-	}
-
-	public int getWidth() {
-		return width;
 	}
 }

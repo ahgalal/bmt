@@ -1,5 +1,6 @@
 package modules.experiment.forcedswimming;
 
+import modules.Module;
 import modules.experiment.Constants;
 import modules.experiment.ExperimentModule;
 import modules.experiment.ExperimentModuleConfigs;
@@ -10,9 +11,9 @@ import modules.experiment.ExperimentModuleData;
  */
 public class ForcedSwimmingExperimentModule extends ExperimentModule {
 
-	public ForcedSwimmingExperimentModule(
+	public ForcedSwimmingExperimentModule(String name,
 			final ExperimentModuleConfigs config) {
-		super(config);
+		super(name, config);
 		// gui = new ExperimentModuleGUI(this);
 		data = new ExperimentModuleData();
 		addDefaultModuleDataParams();
@@ -24,4 +25,8 @@ public class ForcedSwimmingExperimentModule extends ExperimentModule {
 		return moduleID;
 	}
 	public final static String			moduleID=Constants.EXPERIMENT_ID+".forcedswimming";
+	@Override
+	public Module newInstance(String name) {
+		return null; // ExperimentModules are instantiated explicitly
+	}
 }

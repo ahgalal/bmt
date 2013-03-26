@@ -1,5 +1,5 @@
 <modules.experiment.OpenFieldExperiment>
-  <date>Thu Mar 14 18:43:16 GMT+02:00 2013</date>
+  <date>Tue Mar 26 22:28:46 GMT+02:00 2013</date>
   <fileName>E:\Documents\eclipse\Java\BMT_0.6\BMT\ants\test\resources\TestOpenField.bmt_tmp</fileName>
   <filtersSetup>
     <connectionRequirements>
@@ -79,34 +79,27 @@
       </filtersRequirements>
     </filtersRequirements>
   </filtersSetup>
+  <modulesSetup>
+    <modulesRequirements>
+      <moduleRequirements>
+        <modules.ModulesNamesRequirements_-ModuleRequirement>
+          <ID>bmt.module.rearing</ID>
+          <name>RearingModule</name>
+        </modules.ModulesNamesRequirements_-ModuleRequirement>
+        <modules.ModulesNamesRequirements_-ModuleRequirement>
+          <ID>bmt.module.zones</ID>
+          <name>ZonesModule</name>
+        </modules.ModulesNamesRequirements_-ModuleRequirement>
+        <modules.ModulesNamesRequirements_-ModuleRequirement>
+          <ID>bmt.module.session</ID>
+          <name>SessionModule</name>
+        </modules.ModulesNamesRequirements_-ModuleRequirement>
+      </moduleRequirements>
+    </modulesRequirements>
+  </modulesSetup>
   <groups>
     <modules.experiment.Group>
-      <rats>
-        <modules.experiment.Rat>
-          <info>
-            <data>
-              <string>0</string>
-              <string>Group1</string>
-              <string>1</string>
-              <string>4</string>
-              <string>0</string>
-              <string>0</string>
-              <string>111</string>
-              <string>2.0</string>
-            </data>
-            <tags>
-              <string>Number</string>
-              <string>Group</string>
-              <string>RRNG</string>
-              <string>AZE</string>
-              <string>CZE</string>
-              <string>CT</string>
-              <string>Distance</string>
-              <string>ST</string>
-            </tags>
-          </info>
-        </modules.experiment.Rat>
-      </rats>
+      <rats/>
       <id>0</id>
       <name>Group1</name>
       <notes>This note is for Group1</notes>
@@ -120,7 +113,16 @@
   </groups>
   <name>TestExperiment</name>
   <notes>This Note is for the Experiment.</notes>
-  <params reference="../groups/modules.experiment.Group/rats/modules.experiment.Rat/info/tags"/>
+  <params>
+    <string>Number</string>
+    <string>Group</string>
+    <string>RRNG</string>
+    <string>AZE</string>
+    <string>CZE</string>
+    <string>CT</string>
+    <string>Distance</string>
+    <string>ST</string>
+  </params>
   <type>OPEN_FIELD</type>
   <user>AGalal</user>
 </modules.experiment.OpenFieldExperiment>

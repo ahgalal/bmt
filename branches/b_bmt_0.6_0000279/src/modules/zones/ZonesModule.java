@@ -70,8 +70,8 @@ public class ZonesModule extends
 	 * @param configs
 	 *            ZonesModuleConfigs object to configure the module
 	 */
-	public ZonesModule(final ZonesModuleConfigs configs) {
-		super(configs);
+	public ZonesModule(String name,final ZonesModuleConfigs configs) {
+		super(name, configs);
 		data = new ZonesModuleData();
 		oldPosition = new Point();
 
@@ -217,7 +217,8 @@ public class ZonesModule extends
 		for (final String param : expParams)
 			data.addParameter(param);
 
-		updateZoneMap();
+		if(configs!=null)
+			updateZoneMap();
 	}
 
 	/**
@@ -339,11 +340,11 @@ public class ZonesModule extends
 	}
 
 	@Override
-	public void updateConfigs(final ModuleConfigs config) {
-		if (config instanceof ZonesModuleConfigs){
-			configs.mergeConfigs(config);
-			updateZoneMap();
-		}
+	public void updateConfigs(final ZonesModuleConfigs config) {
+		if(this.configs==null)
+			this.configs=(ZonesModuleConfigs) config;
+		configs.mergeConfigs(config);
+		updateZoneMap();
 	}
 
 	@Override
@@ -503,6 +504,11 @@ public class ZonesModule extends
 			}
 
 		}
+	}
+
+	@Override
+	public Module newInstance(String name) {
+		return new ZonesModule(name,null);
 	}
 
 }

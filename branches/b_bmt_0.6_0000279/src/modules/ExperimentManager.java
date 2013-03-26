@@ -187,13 +187,13 @@ public class ExperimentManager {
 		switch (exp.getType()) {
 		case OPEN_FIELD:
 			experimentConfigs = new ExperimentModuleConfigs(
-					OpenFieldExperimentModule.moduleID, exp);
-			experimentModule = new OpenFieldExperimentModule(experimentConfigs);
+					"experiment", exp, OpenFieldExperimentModule.moduleID);
+			experimentModule = new OpenFieldExperimentModule("experiment",experimentConfigs);
 			break;
 		case FORCED_SWIMMING:
-			experimentConfigs = new ExperimentModuleConfigs(
-					ForcedSwimmingExperimentModule.moduleID, exp);
-			experimentModule = new ForcedSwimmingExperimentModule(
+			experimentConfigs = new ExperimentModuleConfigs("experiment",
+					exp, ForcedSwimmingExperimentModule.moduleID);
+			experimentModule = new ForcedSwimmingExperimentModule("experiment",
 					experimentConfigs);
 			break;
 		default:

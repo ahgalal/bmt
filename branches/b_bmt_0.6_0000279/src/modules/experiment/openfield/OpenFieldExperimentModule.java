@@ -3,6 +3,7 @@
  */
 package modules.experiment.openfield;
 
+import modules.Module;
 import modules.experiment.Constants;
 import modules.experiment.ExperimentModule;
 import modules.experiment.ExperimentModuleConfigs;
@@ -23,9 +24,9 @@ public class OpenFieldExperimentModule extends ExperimentModule {
 	private int[]				bgImageRGB;
 	private boolean				bgSet;
 	private SourceFilterData	rgbData;
-	public OpenFieldExperimentModule(
+	public OpenFieldExperimentModule(String name,
 			final ExperimentModuleConfigs config) {
-		super(config);
+		super(name, config);
 		gui = new OpenFieldExperimentModuleGUI(this);
 		
 		data = new ExperimentModuleData();
@@ -83,6 +84,9 @@ public class OpenFieldExperimentModule extends ExperimentModule {
 		bgSet = true;
 		return bgImageRGB;
 	}
-
+	@Override
+	public Module newInstance(String name) {
+		return null; // ExperimentModules are instantiated explicitly
+	}
 
 }

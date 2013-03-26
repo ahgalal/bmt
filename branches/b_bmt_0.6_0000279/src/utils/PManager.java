@@ -413,7 +413,6 @@ public class PManager {
 	
 	public static String getOS() {
 		final String os = System.getProperty("os.name");
-		PManager.log.print("OS: " + os, PManager.class, Details.VERBOSE);
 		if (os.contains("Linux"))
 			return "Linux";
 		else if (os.contains("Windows"))

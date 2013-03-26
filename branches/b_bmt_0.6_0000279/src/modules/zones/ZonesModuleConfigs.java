@@ -16,6 +16,8 @@ package modules.zones;
 
 import javax.annotation.Resource;
 
+import utils.Configuration;
+
 import modules.ModuleConfigs;
 
 /**
@@ -52,7 +54,7 @@ public class ZonesModuleConfigs extends ModuleConfigs {
 	}
 
 	@Override
-	protected void mergeConfigs(final ModuleConfigs configs) {
+	public void mergeConfigs(final ModuleConfigs configs) {
 		super.mergeConfigs(configs);
 		final ZonesModuleConfigs tmpZonConfigs = (ZonesModuleConfigs) configs;
 		if (tmpZonConfigs.getHystValue() != -1)
@@ -65,5 +67,15 @@ public class ZonesModuleConfigs extends ModuleConfigs {
 
 	public int getHystValue() {
 		return hystValue;
+	}
+
+	@Override
+	protected void initializeModuleID() {
+		moduleID = ZonesModule.moduleID;
+	}
+
+	@Override
+	public ModuleConfigs newInstance(String moduleName) {
+		return new ZonesModuleConfigs(moduleName, ZonesModule.DEFAULT_HYSTRISES_VALUE, 0, 0);
 	}
 }
