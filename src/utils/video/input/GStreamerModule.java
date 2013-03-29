@@ -127,4 +127,14 @@ public class GStreamerModule extends VidInputter<VidSourceConfigs> {
 		return (int) (dataSink.getPosition().longValue()/10000);
 	}
 
+	@Override
+	public VidSourceConfigs newConfigurationInstance() {
+		return new VidSourceConfigs();
+	}
+
+	@Override
+	public VidInputter<VidSourceConfigs> newInstance() {
+		return new GStreamerModule();
+	}
+
 }

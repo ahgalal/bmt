@@ -33,10 +33,11 @@ public class NewExperimentWizard extends Wizard {
 			@Override
 			public ImageData getImageData() {
 				ImageData img;
+				String imgPath = "images/wizards/sa_samplecube48.gif";
 				try{
-					img=new ImageData("images/wizards/sa_samplecube48.gif");
+					img=new ImageData(imgPath);
 				}catch(Exception e){
-					img=new ImageData(this.getClass().getClassLoader().getResourceAsStream("images/wizards/sa_samplecube48.gif"));
+					img=new ImageData(this.getClass().getClassLoader().getResourceAsStream(imgPath));
 				}
 				return img;
 			}

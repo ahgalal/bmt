@@ -135,4 +135,14 @@ public class V4L2Module extends VidInputter<VidSourceConfigs> implements
 		return SourceType.CAM;
 	}
 
+	@Override
+	public VidSourceConfigs newConfigurationInstance() {
+		return new VidSourceConfigs();
+	}
+
+	@Override
+	public VidInputter<VidSourceConfigs> newInstance() {
+		return new V4L2Module();
+	}
+
 }
