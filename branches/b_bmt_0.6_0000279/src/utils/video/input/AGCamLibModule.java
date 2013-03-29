@@ -137,4 +137,14 @@ public class AGCamLibModule extends VidInputter<VidSourceConfigs> {
 		return SourceType.CAM;
 	}
 
+	@Override
+	public VidSourceConfigs newConfigurationInstance() {
+		return new VidSourceConfigs();
+	}
+
+	@Override
+	public VidInputter<VidSourceConfigs> newInstance() {
+		return new AGCamLibModule();
+	}
+
 }

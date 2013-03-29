@@ -33,6 +33,7 @@ import org.eclipse.swt.widgets.Shell;
 
 import sys.utils.Utils;
 import ui.PluggedGUI;
+import utils.Configuration;
 import utils.ConfigurationManager;
 import utils.Logger.Details;
 import utils.PManager;
@@ -237,8 +238,6 @@ public class ModulesManager {
 
 		int i = 0;
 		for (final Cargo cargo : guiCargos) {
-			if (cargo == null)
-				System.out.println();
 			final String[] tmpCargoNames = cargo.getTags();
 			for (int j = 0; j < tmpCargoNames.length; j++) {
 				guiNamesArray[i] = tmpCargoNames[j];
@@ -313,6 +312,7 @@ public class ModulesManager {
 		int i = 0;
 		for (final Cargo cargo : guiCargos) {
 			final String[] tmpCargoData = cargo.getData();
+			
 			for (int j = 0; j < tmpCargoData.length; j++) {
 				guiDataArray[i] = tmpCargoData[j];
 				i++;
@@ -515,8 +515,12 @@ public class ModulesManager {
 		this.width = width;
 		this.height = height;
 
-		configurationManager.applyConfigs(new ZonesModuleConfigs(
-				ZonesModule.moduleID, -1, width, height));
+		Iterator<ModuleConfigs> it = configurationManager.getConfigurations();
+		for(;it.hasNext();){
+			ModuleConfigs configs=it.next();
+			configs.setHeight(height);
+			configs.setWidth(width);
+		}
 	}
 
 	public void setupModules(final Experiment exp) {
@@ -563,7 +567,6 @@ public class ModulesManager {
 				.instantiateExperimentModule();
 		modules.add(expModule);
 
-		setModulesWidthandHeight(width, height);
 		connectModules();
 		loadModulesGUI();
 	}

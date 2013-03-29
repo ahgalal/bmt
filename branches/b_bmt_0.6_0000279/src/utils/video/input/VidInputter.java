@@ -41,6 +41,9 @@ public abstract class VidInputter<ConfigsType extends VidSourceConfigs> {
 		FILE,CAM;
 	}
 	
+	public abstract ConfigsType newConfigurationInstance();
+	public abstract VidInputter<ConfigsType> newInstance(); 
+	
 	public abstract SourceType getType();
 	
 	/**

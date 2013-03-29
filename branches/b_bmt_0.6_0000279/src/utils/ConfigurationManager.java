@@ -4,6 +4,9 @@
 package utils;
 
 import java.util.ArrayList;
+import java.util.Iterator;
+
+import modules.Module;
 
 import filters.FilterConfigs;
 
@@ -76,7 +79,35 @@ public class ConfigurationManager<ConfigurationType extends Configuration>  {
 			} finally {
 				module.updateConfigs(cfgs);
 			}
+		}else{
+			throw new RuntimeException("Could not find module to be configured: " + cfgs.getName()+":"+cfgs.getID());
 		}
+	}
+	
+	/**
+	 * Applies a configuration object to configurable instance(s), using the ID of the configurable instance(s)
+	 * specified in the configuration object.
+	 * 
+	 * @param cfgs
+	 *            configurations object
+	 */
+	public void applyConfigsByID(ConfigurationType cfgs) {
+		final ArrayList<Configurable> configurables = getConfigurablesByID(cfgs.getID());
+		if (configurables.size()>0) {
+				for(Configurable configurable:configurables)
+					configurable.updateConfigs(cfgs);
+		}else{
+			throw new RuntimeException("Could not find module to be configured: " + cfgs.getName()+":"+cfgs.getID());
+		}
+	}
+
+	private ArrayList<Configurable> getConfigurablesByID(String id) {
+		ArrayList<Configurable> ret=new ArrayList<Configurable>();
+		
+		for(Configurable<?> configurable:configurables)
+			if(configurable.getID().equals(id))
+				ret.add(configurable);
+		return ret;
 	}
 
 	public void reset() {
@@ -97,5 +128,9 @@ public class ConfigurationManager<ConfigurationType extends Configuration>  {
 		for (final ConfigurationType cfg: configs)
 			System.out.println(cfg.getName() + " : " + cfg.getID());
 		System.out.println("===============================");
+	}
+
+	public Iterator<ConfigurationType> getConfigurations() {
+		return configs.iterator();
 	}
 }

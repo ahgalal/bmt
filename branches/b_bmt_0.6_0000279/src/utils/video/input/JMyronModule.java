@@ -121,4 +121,14 @@ public class JMyronModule extends VidInputter<VidSourceConfigs> {
 	public SourceType getType() {
 		return SourceType.CAM;
 	}
+
+	@Override
+	public VidSourceConfigs newConfigurationInstance() {
+		return new VidSourceConfigs();
+	}
+
+	@Override
+	public VidInputter<VidSourceConfigs> newInstance() {
+		return new JMyronModule();
+	}
 }

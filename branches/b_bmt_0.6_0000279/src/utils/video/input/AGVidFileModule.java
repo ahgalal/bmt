@@ -28,7 +28,7 @@ import utils.video.FrameIntArray;
 /**
  * @author Creative
  */
-public class VideoFileModule extends VidInputter<AGVidLibConfigs> {
+public class AGVidFileModule extends VidInputter<AGVidLibConfigs> {
 	private class RunnableAGVidLib implements Runnable {
 		@Override
 		public void run() {
@@ -103,7 +103,7 @@ public class VideoFileModule extends VidInputter<AGVidLibConfigs> {
 	/**
 	 * 
 	 */
-	public VideoFileModule() {
+	public AGVidFileModule() {
 		vidLib = new JAGVidLib();
 	}
 
@@ -202,6 +202,16 @@ public class VideoFileModule extends VidInputter<AGVidLibConfigs> {
 		paused=false;
 		vidLib.play();
 		thUpdateImage.interrupt();		
+	}
+
+	@Override
+	public AGVidLibConfigs newConfigurationInstance() {
+		return new AGVidLibConfigs();
+	}
+
+	@Override
+	public VidInputter<AGVidLibConfigs> newInstance() {
+		return new AGVidFileModule();
 	}
 
 }
