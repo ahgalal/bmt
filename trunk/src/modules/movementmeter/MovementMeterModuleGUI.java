@@ -105,9 +105,11 @@ public class MovementMeterModuleGUI extends PluggedGUI<MovementMeterModule> {
 	private Curve				energyCurve;
 	private ArrayList<Curve>	levelCurves;
 	private GraphShell			secChartParent;
-
-	public MovementMeterModuleGUI(final MovementMeterModule owner) {
+	private int numLevels;
+	
+	public MovementMeterModuleGUI(final MovementMeterModule owner,int numLevels) {
 		super(owner);
+		this.numLevels=numLevels;
 	}
 
 	public void addPoint(final int y) {
@@ -193,7 +195,17 @@ public class MovementMeterModuleGUI extends PluggedGUI<MovementMeterModule> {
 		energyCurve = new Curve(mainChart, secChart, mainLineSeries,
 				secLineSeries,false);
 
-		final LineSeries mainLevelSeries1 = createChart(mainChart, false,
+		for(int i=0;i<numLevels;i++){
+			final LineSeries mainLevelSeries1 = createChart(mainChart, false,
+					"level"+i, Display.getDefault().getSystemColor(SWT.COLOR_BLACK));
+			
+			final LineSeries secLevelSeries1 = createChart(secChart, true,
+					"level"+i, Display.getDefault().getSystemColor(SWT.COLOR_BLACK));
+			
+			levelCurves.add(new Curve(mainChart, secChart, mainLevelSeries1,
+					secLevelSeries1,true));
+		}
+/*		final LineSeries mainLevelSeries1 = createChart(mainChart, false,
 				"level1", Display.getDefault().getSystemColor(SWT.COLOR_BLACK));
 		final LineSeries mainLevelSeries2 = createChart(mainChart, false,
 				"level2", Display.getDefault().getSystemColor(SWT.COLOR_BLACK));
@@ -212,7 +224,7 @@ public class MovementMeterModuleGUI extends PluggedGUI<MovementMeterModule> {
 		levelCurves.add(new Curve(mainChart, secChart, mainLevelSeries2,
 				secLevelSeries2,true));
 		levelCurves.add(new Curve(mainChart, secChart, mainLevelSeries3,
-				secLevelSeries3,true));
+				secLevelSeries3,true));*/
 	}
 
 	public void setEnergyLevels(final int levels[]) {

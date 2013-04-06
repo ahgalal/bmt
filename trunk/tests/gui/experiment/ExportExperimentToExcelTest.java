@@ -46,10 +46,10 @@ public class ExportExperimentToExcelTest extends UITest {
 
 	public void testExportExperimentToExcelOF() throws Exception {
 		actualTest(expFileNameOF);
-		checkExperimentExported(3800);
+		checkExperimentExported(3700);
 		
 		actualTest(expFileNameFS);
-		checkExperimentExported(3760);
+		checkExperimentExported(3700);
 	}
 	
 	private void actualTest(String expFileName) throws Exception, WidgetSearchException {
