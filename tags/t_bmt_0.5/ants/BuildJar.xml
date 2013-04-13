@@ -1,0 +1,301 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- ====================================================================== 
+     Jul 3, 2011 11:22:07 PM                                                        
+
+     BMT    
+     Behavioral Monitoring Tool
+                   
+     Creative                                                                
+     ====================================================================== -->
+<project name="BMT" default="release" basedir="../">
+	<description>
+            Build and Release the BMT project
+    </description>
+
+	<property environment="env" />
+	<property name="bmt_version" value="0.5" />
+	<property name="libs_version" value="0.5" />
+	<property name="bin_libs_version" value="0.5" />
+	<property name="jarfile.name" value="BMT_v${bmt_version}.jar" />
+	<property name="exefile.name" value="BMT_v${bmt_version}.exe" />
+
+	<property name="jarfile" value="output/release/${jarfile.name}" />
+	<property name="exefile" value="output/release/${exefile.name}" />
+	<property name="output_dir" value="output/" />
+	<property name="release_dir" value="output/release" />
+	<property name="uploads_dir" value="output/uploads" />
+	<property name="libs_dir.name" value="libs" />
+	<property name="libs_dir" value="${release_dir}/${libs_dir.name}" />
+	<property name="launch4j.dir" value="${env.tools}/launch4j-3.0.2-win32/launch4j" />
+	<property name="dir.bin" value="bin" />
+	<property name="dir.src" value="src" />
+	<property name="dir.tests" value="tests" />
+
+
+
+	<!-- ================================= 
+          target: buildall              
+         ================================= -->
+	<target name="buildall" depends="clean,prepare,copy_libs,copy_bin_libs,build_jar">
+
+
+	</target>
+
+	<!-- ================================= 
+          target: release              
+         ================================= -->
+	<target name="release" depends="
+		buildall,
+		copy_license,
+		create_runners,
+		zip_all">
+
+	</target>
+
+	<!-- - - - - - - - - - - - - - - - - - 
+          target: prepare              
+         - - - - - - - - - - - - - - - - - -->
+	<target name="prepare">
+		<mkdir dir="output" />
+		<mkdir dir="output/release" />
+		<mkdir dir="output/release/libs" />
+	</target>
+
+	<fileset id="libs" dir="libs">
+		<include name="**/*.jar" />
+		<include name="**/*.txt" />
+	</fileset>
+	<fileset id="jface_libs" dir="${eclipse.home}\plugins">
+		<include name="org.eclipse.core.commands_3.6.0.I20100512-1500.jar" />
+		<include name="org.eclipse.jface_3.6.2.M20110210-1200.jar" />
+		<include name="org.eclipse.ui.forms_3.5.2.r36_v20100702.jar" />
+		<include name="org.eclipse.ui.workbench_3.6.2.M20110210-1200.jar" />
+		<include name="org.eclipse.equinox.common_3.6.0.v20100503.jar" />
+	</fileset>
+
+	<!-- - - - - - - - - - - - - - - - - - 
+          target: copy_libs                      
+         - - - - - - - - - - - - - - - - - -->
+	<target name="copy_libs">
+		<copy flatten="true" todir="${libs_dir}" verbose="true">
+			<fileset refid="libs" />
+			<fileset refid="jface_libs" />
+		</copy>
+	</target>
+
+	<fileset id="bin_libs" dir="libs">
+		<include name="**/*.dll" />
+		<include name="**/*.so*" />
+		<include name="**/*.jnilib" />
+	</fileset>
+
+	<!-- - - - - - - - - - - - - - - - - - 
+          target: copy_bin_libs                      
+         - - - - - - - - - - - - - - - - - -->
+	<target name="copy_bin_libs">
+		<copy flatten="true" todir="${release_dir}">
+			<fileset refid="bin_libs" />
+		</copy>
+	</target>
+
+	<fileset id="bin_libs_flat" dir="${release_dir}">
+		<include name="**/*.dll" />
+		<include name="**/*.so" />
+		<include name="**/*.jnilib" />
+	</fileset>
+
+	<!-- - - - - - - - - - - - - - - - - - 
+          target: build_jar                      
+         - - - - - - - - - - - - - - - - - -->
+	<target name="build_jar">
+		<manifestclasspath property="jar.classpath" jarfile="${jarfile}">
+			<classpath>
+				<fileset dir="${libs_dir}">
+					<include name="**/*.jar" />
+					<exclude name="*swt*.jar" />
+				</fileset>
+			</classpath>
+		</manifestclasspath>
+
+		<delete file="${jarfile}" />
+		<jar destfile="${jarfile}">
+			<manifest>
+				<attribute name="Main-Class" value="utils.PManager" />
+				<attribute name="Class-Path" value=". ${jar.classpath}" />
+			</manifest>
+			<fileset dir="${dir.bin}" />
+			<fileset dir="." includes="images/**" />
+		</jar>
+
+		<copy file="${jarfile}" todir="${uploads_dir}" />
+	</target>
+
+
+	<import file="test/base/build.xml" />
+	
+	<target name="compile_tests" depends="init">
+		<property name="binloctmp.tests" value="${dir.bin}" />
+
+		<echo message="${java.runtime.version}" />
+
+		<antcall target="compile"/>
+		
+		<javac destdir="${binloctmp.tests}" debug="on" source="1.6" target="1.6">
+			<src path="${dir.tests}" />
+			<classpath>
+				<path refid="classpath.main" />
+				<path refid="classpath.windowtester" />
+				<path location="." />
+			</classpath>
+		</javac>
+
+		<!-- copy *.properties files to bin dir -->
+		<copy flatten="false" todir="${binloctmp.tests}">
+			<fileset dir="${dir.tests}">
+				<include name="**/*.properties"/>
+			</fileset>
+		</copy>
+	</target>
+
+	<target name="compile" depends="init">
+		<property name="binloctmp" value="${dir.bin}" />
+
+		<echo message="${java.runtime.version}" />
+
+		<delete dir="${binloctmp}" />
+		<mkdir dir="${binloctmp}" />
+
+		<javac destdir="${binloctmp}" debug="on" source="1.6" target="1.6">
+			<src path="${dir.src}" />
+			<classpath>
+				<path refid="classpath.main" />
+				<path location="." />
+			</classpath>
+		</javac>
+
+		<!-- copy *.properties files to bin dir -->
+		<copy flatten="false" todir="${binloctmp}">
+			<fileset dir="${dir.src}">
+				<include name="**/*.properties"/>
+			</fileset>
+		</copy>
+	</target>
+
+
+	<!-- - - - - - - - - - - - - - - - - - 
+          target: build_exe                      
+         - - - - - - - - - - - - - - - - - -->
+	<target name="build_exe">
+		<delete file="${exefile}" />
+
+		<copy todir=".">
+			<fileset dir="buildexe">
+				<filename name="config_template.xml" />
+			</fileset>
+			<filterset>
+				<filter token="JAR_FILE" value="${jarfile.name}" />
+				<filter token="OUTPUT_FILE" value="${exefile}" />
+			</filterset>
+		</copy>
+		<move tofile="exe_config.xml" file="config_template.xml" />
+
+		<taskdef name="launch4j" classname="net.sf.launch4j.ant.Launch4jTask" classpath="${launch4j.dir}/launch4j.jar
+			    :${launch4j.dir}/lib/xstream.jar" />
+
+		<launch4j configFile="exe_config.xml" />
+		<delete file="exe_config.xml" />
+
+	</target>
+
+	<!-- - - - - - - - - - - - - - - - - - 
+          target: zip_all                      
+         - - - - - - - - - - - - - - - - - -->
+	<target name="zip_all" depends="zip_libs,zip_bin_libs,zip_pkg,zip_src">
+	</target>
+
+	<!-- - - - - - - - - - - - - - - - - - 
+          target: zip_libs                      
+         - - - - - - - - - - - - - - - - - -->
+	<target name="zip_libs">
+		<mkdir dir="${uploads_dir}" />
+		<zip destfile="${uploads_dir}/libs_v${libs_version}.zip" basedir="${libs_dir}/../" includes="libs/**" />
+	</target>
+
+	<!-- - - - - - - - - - - - - - - - - - 
+          target: zip_bin_libs                      
+         - - - - - - - - - - - - - - - - - -->
+	<target name="zip_bin_libs">
+		<mkdir dir="${uploads_dir}" />
+		<zip destfile="${uploads_dir}/link_libs_v${bin_libs_version}.zip" filesonly="true">
+			<fileset refid="bin_libs_flat" />
+		</zip>
+	</target>
+
+	<!-- - - - - - - - - - - - - - - - - - 
+          target: zip_pkg                      
+         - - - - - - - - - - - - - - - - - -->
+	<target name="zip_pkg">
+		<zip destfile="${uploads_dir}/BMT_v${bmt_version}.zip" basedir="${release_dir}">
+			<!--fileset dir=".">
+				<include name="src/**"/>
+			</fileset-->
+		</zip>
+	</target>
+
+	<!-- - - - - - - - - - - - - - - - - - 
+          target: clean                      
+         - - - - - - - - - - - - - - - - - -->
+	<target name="clean">
+		<delete dir="${output_dir}" />
+	</target>
+
+	<!-- - - - - - - - - - - - - - - - - - 
+          target: zip_src                      
+         - - - - - - - - - - - - - - - - - -->
+	<target name="zip_src">
+		<zip destfile="${uploads_dir}/src_v${bmt_version}.zip" basedir="." includes="src/**" />
+	</target>
+
+	<!-- - - - - - - - - - - - - - - - - - 
+          target: zip_src_all                      
+         - - - - - - - - - - - - - - - - - -->
+	<target name="zip_src_all">
+		<zip destfile="${uploads_dir}/src_all.zip">
+			<fileset dir=".">
+				<include name="src/**" />
+				<include name="libs/**" />
+			</fileset>
+			<fileset dir=".">
+				<include name=".*" />
+			</fileset>
+		</zip>
+	</target>
+
+	<path id="classpath.main">
+		<pathelement path="${dir.bin}" />
+		<path refid="classpath.swt" />
+		<path refid="classpath.junit" />
+		<fileset dir="libs">
+			<include name="**/*.jar" />
+		</fileset>
+	</path>
+
+	<!-- ================================= 
+          target: create_runner              
+         ================================= -->
+	<target name="create_runners">
+		<property name="swt.jar.linux" value="org.eclipse.swt.gtk.linux.x86_3.6.2.v3659b.jar" />
+		<property name="swt.jar.win" value="org.eclipse.swt.win32.win32.x86_3.6.2.v3659c.jar" />
+		<echo file="${release_dir}/run.bat" message="set PATH=%PATH%;%CD%${line.separator}java -classpath ${libs_dir.name}\${swt.jar.win};libs\*;BMT_v${bmt_version}.jar utils.PManager${line.separator}pause" />
+		<echo file="${release_dir}/run.sh" message="export LD_LIBRARY_PATH=.:$LD_LIBRARY_PATH${line.separator}java -classpath ${libs_dir.name}/${swt.jar.linux}:libs/*:BMT_v${bmt_version}.jar utils.PManager" />
+	</target>
+
+	<!-- ================================= 
+          target: copy_license              
+         ================================= -->
+	<target name="copy_license">
+		<copy tofile="${release_dir}/license.txt" file="deploy/license/license.txt" />
+	</target>
+
+
+</project>
