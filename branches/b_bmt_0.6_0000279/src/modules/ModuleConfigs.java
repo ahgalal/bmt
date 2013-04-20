@@ -24,10 +24,13 @@ import utils.Configuration;
 public abstract class ModuleConfigs implements Configuration<ModuleConfigs> {
 
 	protected boolean enable;
-	private int height;
 	protected String moduleID;
 	protected String moduleName;
-	private int width;
+	protected CommonModuleConfigs commonConfigs;
+
+	public CommonModuleConfigs getCommonConfigs() {
+		return commonConfigs;
+	}
 
 	/**
 	 * Initializes the configurations.
@@ -37,11 +40,8 @@ public abstract class ModuleConfigs implements Configuration<ModuleConfigs> {
 	 */
 	public ModuleConfigs(final String moduleName) {
 		this.moduleName = moduleName;
+		commonConfigs=new CommonModuleConfigs();
 		initializeModuleID();
-	}
-
-	public int getHeight() {
-		return height;
 	}
 
 	/**
@@ -60,10 +60,6 @@ public abstract class ModuleConfigs implements Configuration<ModuleConfigs> {
 		return moduleName;
 	}
 
-	public int getWidth() {
-		return width;
-	}
-
 	protected abstract void initializeModuleID();
 
 	/**
@@ -77,25 +73,17 @@ public abstract class ModuleConfigs implements Configuration<ModuleConfigs> {
 	 */
 	@Override
 	public void mergeConfigs(final ModuleConfigs config) {
-		if (config.getWidth() != -1)
-			setWidth(config.getWidth());
-		if (config.getHeight() != -1)
-			setHeight(config.getHeight());
+		if (config.commonConfigs.getWidth() != -1)
+			commonConfigs.setWidth(config.commonConfigs.getWidth());
+		if (config.commonConfigs.getHeight() != -1)
+			commonConfigs.setHeight(config.commonConfigs.getHeight());
 	}
 
 	@Override
 	public abstract ModuleConfigs newInstance(String moduleName);
 
-	public void setHeight(final int height) {
-		this.height = height;
-	}
-
 	@Override
 	public void setName(final String moduleName) {
 		this.moduleName = moduleName;
-	}
-
-	public void setWidth(final int width) {
-		this.width = width;
 	}
 }

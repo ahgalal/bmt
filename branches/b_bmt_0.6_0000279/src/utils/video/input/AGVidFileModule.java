@@ -213,5 +213,10 @@ public class AGVidFileModule extends VidInputter<AGVidLibConfigs> {
 	public VidInputter<AGVidLibConfigs> newInstance() {
 		return new AGVidFileModule();
 	}
+	
+	@Override
+	public Point getFrameSize() {
+		return vidLib.getVideoDimensions();
+	}
 
 }

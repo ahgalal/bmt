@@ -14,6 +14,8 @@
 
 package utils.video.input;
 
+import java.awt.Point;
+
 import utils.video.FrameIntArray;
 
 /**
@@ -124,4 +126,5 @@ public abstract class VidInputter<ConfigsType extends VidSourceConfigs> {
 	public int getStreamLength() {
 		return -1;
 	}
+	public abstract Point getFrameSize();
 }

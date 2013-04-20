@@ -19,7 +19,6 @@ import java.util.Iterator;
 import modules.Cargo;
 import modules.ExperimentManager;
 import modules.Module;
-import modules.ModuleConfigs;
 import modules.ModuleData;
 import modules.ModulesManager;
 
@@ -189,10 +188,6 @@ Module<ExperimentModuleGUI, ExperimentModuleConfigs, ExperimentModuleData> {
 	public void registerModuleDataObject(final ModuleData data) {
 		if(data.getParameters().size()>0)
 			ExperimentManager.getDefault().addExpParams(data.getParameters());
-	}
-
-	@Override
-	public void updateConfigs(final ExperimentModuleConfigs config) {
 	}
 
 	@Override

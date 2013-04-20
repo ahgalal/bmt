@@ -1,10 +1,10 @@
 package gui.experiment;
 
-import com.windowtester.runtime.WidgetSearchException;
-
 import gui.executionunit.ExperimentExecUnitGroup;
 import gui.integration.OpenFieldIntegrationTest;
 import modules.experiment.ExperimentType;
+
+import com.windowtester.runtime.WidgetSearchException;
 
 /**
  * Tests creating new experiments of type "Open Field",

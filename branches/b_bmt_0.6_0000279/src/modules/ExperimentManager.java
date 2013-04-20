@@ -74,6 +74,10 @@ public class ExperimentManager {
 
 	private ExperimentModuleConfigs experimentConfigs;
 
+	public ExperimentModuleConfigs getExperimentConfigs() {
+		return experimentConfigs;
+	}
+
 	private ExperimentModule experimentModule;
 
 	private boolean expLoaded;

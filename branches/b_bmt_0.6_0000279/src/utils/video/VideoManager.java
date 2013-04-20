@@ -16,6 +16,7 @@ package utils.video;
 
 import jagvidlib.JAGVidLib.VideoLoadException;
 
+import java.awt.Point;
 import java.util.ArrayList;
 import java.util.Iterator;
 
@@ -146,6 +147,8 @@ public class VideoManager {
 	@SuppressWarnings("rawtypes")
 	private VidInputter						vInput;
 
+	private ArrayList<ConfigsListener>	commonConfigsListeners;
+
 	/**
 	 * Initialization.
 	 */
@@ -156,7 +159,11 @@ public class VideoManager {
 		fia = new FrameIntArray();
 		filterManager = new FilterManager(commonConfigs, fia);
 		installedVidLibs = new ArrayList<VidInputter<?>>();
-
+		
+		commonConfigsListeners=new ArrayList<ConfigsListener>();
+		commonConfigsListeners.add(filterManager);
+		commonConfigsListeners.add(ModulesManager.getDefault());
+		
 		initializeInstalledVidLibs();
 	}
 
@@ -250,7 +257,7 @@ public class VideoManager {
 		if ((vidLib == null) || vidLib.equals("default"))
 			vidLib = getDefaultCamLibrary();
 
-		filterManager.initializeConfigs(commonConfigs);
+		//filterManager.initializeConfigs(commonConfigs);
 
 		VidSourceConfigs srcConfigs = null;
 
@@ -324,13 +331,7 @@ public class VideoManager {
 	 * @param exp
 	 */
 	public void setupModulesAndFilters(final Experiment exp) {
-		// TODO: remove the next 2 lines??
-		filterManager.initializeConfigs(commonConfigs);
-		ModulesManager.getDefault().initializeConfigs();
-
 		ModulesManager.getDefault().setupModules(exp);
-		ModulesManager.getDefault().setModulesWidthandHeight(
-				commonConfigs.getWidth(), commonConfigs.getHeight());
 		initFilters(exp);
 		PManager.getDefault().signalProgramStateUpdate();
 	}
@@ -356,6 +357,14 @@ public class VideoManager {
 			videoProcessorEnabled = true;
 			while (!vInput.startStream())
 				Thread.sleep(100);
+			
+			Point frameSize=vInput.getFrameSize();
+			
+			commonConfigs.setWidth(frameSize.x);
+			commonConfigs.setHeight(frameSize.y);
+			
+			signalCommonConfigsChange();
+			
 			filterManager.startStreaming();
 
 			thFiltersProcess = new Thread(new RunnableProcessor(),
@@ -378,6 +387,12 @@ public class VideoManager {
 			e.printStackTrace();
 		}
 		return false;
+	}
+
+	private void signalCommonConfigsChange() {
+		for(ConfigsListener listener:commonConfigsListeners){
+			listener.updateConfigs(commonConfigs);
+		}
 	}
 
 	/**

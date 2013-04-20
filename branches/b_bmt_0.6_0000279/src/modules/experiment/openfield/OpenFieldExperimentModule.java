@@ -3,6 +3,8 @@
  */
 package modules.experiment.openfield;
 
+import java.awt.Point;
+
 import modules.Module;
 import modules.experiment.Constants;
 import modules.experiment.ExperimentModule;
@@ -12,7 +14,6 @@ import modules.experiment.ExperimentModuleData;
 import org.eclipse.swt.widgets.Shell;
 
 import sys.utils.Utils;
-
 import filters.Data;
 import filters.source.SourceFilterData;
 
@@ -52,6 +53,14 @@ public class OpenFieldExperimentModule extends ExperimentModule {
 			return false;
 	}
 
+	@Override
+	public void updateConfigs(ExperimentModuleConfigs config) {
+		super.updateConfigs(config);
+		
+		// update GUI with the common configs
+		((OpenFieldExperimentModuleGUI)gui).setFrameDims(new Point(config.getCommonConfigs().getWidth(),config.getCommonConfigs().getHeight()));
+	}
+	
 	/**
 	 * Checks if the Background (Subtraction filter) has been set.
 	 * 

@@ -22,7 +22,7 @@ import utils.StatusManager.StatusSeverity;
  * 
  * @author Creative
  */
-public class CommonFilterConfigs {
+public class CommonFilterConfigs extends CommonConfigs {
 
 	/**
 	 * Check the documentation of the constructor.
@@ -34,9 +34,6 @@ public class CommonFilterConfigs {
 	/**
 	 * Check the documentation of the constructor.
 	 */
-	private int		width;
-
-	private int	height;
 
 	private int	frameRate;
 
@@ -102,22 +99,6 @@ public class CommonFilterConfigs {
 
 	public String getVidLibrary() {
 		return vidLibrary;
-	}
-
-	public void setWidth(int width) {
-		this.width = width;
-	}
-
-	public int getWidth() {
-		return width;
-	}
-
-	public void setHeight(int height) {
-		this.height = height;
-	}
-
-	public int getHeight() {
-		return height;
 	}
 
 	public void setFrameRate(int frameRate) {

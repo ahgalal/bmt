@@ -794,8 +794,19 @@ public class GfxPanel {
 	 * @param bgData
 	 *            new background image
 	 */
-	public void setBackground(final int[] bgData) {
-		System.arraycopy(bgData, 0, bg, 0, bgData.length);
+	public void setBackground(final int[] bgData,int width,int height) {
+		
+		// create a BufferedImage for the input background data
+		BufferedImage originalBG =new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+		// get the integer array of the created BufferedImage
+		int[] originalBGData= ((DataBufferInt) originalBG.getRaster().getDataBuffer())
+		.getData();
+		
+		// copy the input background data to the created BufferedImage
+		System.arraycopy(bgData, 0, originalBGData, 0, bgData.length);
+		
+		// scale the new background data and draw it on the BG of GfxPanel
+		getBGImage().getGraphics().drawImage(originalBG, 0, 0, this.width, this.height, 0, 0,originalBG.getWidth(), originalBG.getHeight() , null);
 	}
 
 	/**

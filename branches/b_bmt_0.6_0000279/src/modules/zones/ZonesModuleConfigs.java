@@ -16,8 +16,6 @@ package modules.zones;
 
 import javax.annotation.Resource;
 
-import utils.Configuration;
-
 import modules.ModuleConfigs;
 
 /**
@@ -49,8 +47,8 @@ public class ZonesModuleConfigs extends ModuleConfigs {
 			final int width, final int height) {
 		super(moduleName);
 		setHystValue(hystVal);
-		this.setWidth(width);
-		this.setHeight(height);
+		this.getCommonConfigs().setWidth(width);
+		this.getCommonConfigs().setHeight(height);
 	}
 
 	@Override

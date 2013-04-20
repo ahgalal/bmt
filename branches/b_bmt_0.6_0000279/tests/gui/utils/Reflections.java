@@ -1,8 +1,8 @@
 package gui.utils;
 
-import utils.ReflectUtils;
 import modules.ExperimentManager;
 import modules.experiment.Experiment;
+import utils.ReflectUtils;
 
 public class Reflections{
 	public static Experiment getLoadedExperiment(){

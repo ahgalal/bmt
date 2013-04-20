@@ -46,25 +46,25 @@ import control.ui.CtrlDrawZones;
  * @author Creative
  */
 public class DrawZones extends BaseUI {
-	private static final int	FRAME_HEIGHT	= 480;
-	private static final int	FRAME_WIDTH	= 640;
-	private Button			btnHide		= null;
-	private Button			btnLoadZones	= null;
-	private Button			btnSaveZones	= null;
-	private Button			btnSetScale	= null;
-	private Composite		composite		= null;
+	private static final int	CANVAS_HEIGHT	= 480;
+	private static final int	CANVAS_WIDTH	= 640;
+	private Button				btnHide			= null;
+	private Button				btnLoadZones	= null;
+	private Button				btnSaveZones	= null;
+	private Button				btnSetScale		= null;
+	private Composite			composite		= null;
 
 	// boolean is_drawing_now = false;
 
-	private CtrlDrawZones	controller;			// @jve:decl-index=0:
+	private CtrlDrawZones		controller;			// @jve:decl-index=0:
 
-	private GfxPanel		gfxPanel;
+	private GfxPanel			gfxPanel;
 
-	private Point			measurePnt1, measurePnt2; // @jve:decl-index=0:
+	private Point				measurePnt1, measurePnt2;	// @jve:decl-index=0:
 
-	private Shell			sShell			= null;	// @jve:decl-index=0:visual-constraint="7,-197"
-	private String			strRealDistance;
-	private Table			tblZones		= null;
+	private Shell				sShell			= null;	// @jve:decl-index=0:visual-constraint="7,-197"
+	private String				strRealDistance;
+	private Table				tblZones		= null;
 
 	/**
 	 * Creates GUI components, and links this Shell with the parent Shell.
@@ -85,20 +85,21 @@ public class DrawZones extends BaseUI {
 	 *            position of the new point (x,y)
 	 */
 	public void addMeasurePoint(final Point pos) {
-		if (measurePnt1 == null){
+		if (measurePnt1 == null) {
 			measurePnt1 = new Point(pos.x, pos.y);
-			bgNoScaleMarkers=drawMeasurePoint(pos);
+			bgNoScaleMarkers = drawMeasurePoint(pos);
 			gfxPanel.refreshDrawingArea();
-		}
-		else{
+		} else {
 			measurePnt2 = new Point(pos.x, pos.y);
 			drawMeasurePoint(pos);
 			gfxPanel.refreshDrawingArea();
-			
+
 			// restore original BG, but don't refresh, to hold the second
 			// measure point on screen
-			gfxPanel.setBackground(bgNoScaleMarkers);
-			bgNoScaleMarkers=null;
+			// TODO: fix the 640x480 constant ... maybe set it to -1, for
+			// default value in gfxPanel
+			gfxPanel.setBackground(bgNoScaleMarkers, 640, 480);
+			bgNoScaleMarkers = null;
 		}
 		PManager.log.print("New Measure point Added: " + pos.x + " " + pos.y,
 				this);
@@ -106,18 +107,20 @@ public class DrawZones extends BaseUI {
 
 	private int[] drawMeasurePoint(final Point pos) {
 		BufferedImage currentBG = gfxPanel.getBGImage();
-		int[] srcData = ((DataBufferInt)currentBG.getRaster().getDataBuffer()).getData();
+		int[] srcData = ((DataBufferInt) currentBG.getRaster().getDataBuffer())
+				.getData();
 		int[] bgBeforeDrawingMarker = new int[srcData.length];
 		System.arraycopy(srcData, 0, bgBeforeDrawingMarker, 0, srcData.length);
-		
+
 		// draw marker at click's position
 		Graphics graphics = currentBG.getGraphics();
 		graphics.setColor(Color.RED);
 		graphics.fillOval(pos.x, pos.y, 5, 5);
-		
+
 		return bgBeforeDrawingMarker;
 	}
-	private int[] bgNoScaleMarkers;
+
+	private int[]	bgNoScaleMarkers;
 
 	/**
 	 * Adds zone to the GUI table.
@@ -171,7 +174,7 @@ public class DrawZones extends BaseUI {
 	private void createComposite() {
 		composite = new Composite(sShell, SWT.BORDER);
 		composite.setLayout(null);
-		composite.setBounds(5, 5, FRAME_WIDTH, FRAME_HEIGHT + 35);
+		composite.setBounds(5, 5, CANVAS_WIDTH, CANVAS_HEIGHT + 35);
 		gfxPanel = new GfxPanel(sShell, composite, composite.getSize().x,
 				composite.getSize().y);
 		gfxPanel.setEnableSnap(true);
@@ -231,7 +234,7 @@ public class DrawZones extends BaseUI {
 								Display.getDefault().syncExec(new Runnable() {
 									@Override
 									public void run() {
-										
+
 										strRealDistance = inputboxGetrealDist
 												.show();
 										gfxPanel.enableDraw(true);
@@ -243,7 +246,7 @@ public class DrawZones extends BaseUI {
 								measurePnt2 = null;
 								controller.settingScale(false);
 							}
-						},"Scale setting");
+						}, "Scale setting");
 						th_2points.start();
 					}
 				});
@@ -380,8 +383,8 @@ public class DrawZones extends BaseUI {
 	 * @param zoneType
 	 *            zone type
 	 */
-	private void guiEditZoneDataInTable(final int zoneNo,
-			final String zoneCol, final String zoneType) {
+	private void guiEditZoneDataInTable(final int zoneNo, final String zoneCol,
+			final String zoneType) {
 		final TableItem tmpTi = getTableItemByNumber(zoneNo);
 		if (tmpTi != null) {
 			tmpTi.setText(1, zoneType);

@@ -62,11 +62,17 @@ public abstract class PluggedGUI<OwnerType> implements StateListener {
 					else if(programState.getGeneral()==GeneralState.IDLE &&
 							state.getGeneral()==GeneralState.TRACKING)
 						trackingStartedHandler();
+					//stateUpdated=true;
 				}
 
 
 
 			});
+		
+/*		// wait till state is updated (use this mechanism instead of using Display.syncExec())
+		while(!stateUpdated)
+			Utils.sleep(20);
+		stateUpdated=false;*/
 		programState.setStream(state.getStream());
 		programState.setGeneral(state.getGeneral());
 	}

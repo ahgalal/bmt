@@ -14,6 +14,7 @@
 
 package filters;
 
+import java.awt.Point;
 import java.util.ArrayList;
 import java.util.Iterator;
 
@@ -23,6 +24,7 @@ import ui.PluggedGUI;
 import utils.Logger.Details;
 import utils.PManager;
 import utils.StatusManager.StatusSeverity;
+import utils.video.ConfigsListener;
 import utils.video.FrameIntArray;
 import filters.FiltersNamesRequirements.FilterRequirement;
 import filters.avg.AverageFilter;
@@ -47,7 +49,7 @@ import filters.subtractionfilter.SubtractorFilter;
  * 
  * @author Creative
  */
-public class FilterManager {
+public class FilterManager implements ConfigsListener {
 	private final FiltersCollection	filters;
 	private final FiltersCollection	installedFilters;
 	private FiltersConfigurationManager configurationManager;
@@ -83,6 +85,7 @@ public class FilterManager {
 		
 		configurationManager = new FiltersConfigurationManager(filters.getFilters());
 		this.commonConfigs = commonConfigs;
+		initializeConfigs(commonConfigs);
 		self=this;
 	}
 
@@ -233,7 +236,12 @@ public class FilterManager {
 		return strNames;
 	}
 
-	public void initializeConfigs(final CommonFilterConfigs commonConfigs) {
+	/**
+	 * Adds default configuration instance of each installed configuration to the
+	 * ConfigurationManager list of configs.
+	 * @param commonConfigs
+	 */
+	private void initializeConfigs(final CommonFilterConfigs commonConfigs) {
 		this.commonConfigs = commonConfigs;
 		final SourceFilterConfigs sourceConfigs = new SourceFilterConfigs(
 				"SourceFilter", commonConfigs, null);
@@ -275,7 +283,7 @@ public class FilterManager {
 		configurationManager.addConfiguration(avgFilterConfigs, false);
 		configurationManager.addConfiguration(movementFilterConfigs, false);
 	}
-
+private FiltersSetup activeFiltersSetup;
 	/**
 	 * Connects the filters and adds them to the filters array.
 	 * 
@@ -287,6 +295,7 @@ public class FilterManager {
 		filters.clear();
 		filtersTriggeredByStreaming.clear();
 		filtersTriggeredByProcessing.clear();
+		activeFiltersSetup=filtersSetup;
 		
 		// extract filters' names and ID's, create filters' instances
 		FiltersNamesRequirements filtersNamesRequirements=filtersSetup.getFiltersNamesRequirements();
@@ -312,7 +321,7 @@ public class FilterManager {
 		
 		// pass filtersCollection to the filterSetup to connect them
 		filtersSetup.setFiltersCollection(filters);
-		filtersSetup.connectFilters();
+		filtersSetup.connectFilters(new Point(commonConfigs.getWidth(), commonConfigs.getHeight()));
 
 		// set filter's configurations to the default values
 		for( Iterator<VideoFilter<?, ?>> it=filters.getIterator();it.hasNext();){
@@ -498,5 +507,24 @@ public class FilterManager {
 			ids.add(vf.getID());
 		}
 		return ids.toArray(new String[0]);
+	}
+
+	@Override
+	public void updateConfigs(CommonConfigs commonConfigs) {
+		
+		// loop on all filters
+		for(Iterator<VideoFilter<?, ?>> it = filters.getIterator();it.hasNext();){
+			VideoFilter<?, ?> videoFilter=it.next();
+			
+			FilterConfigs configs = configurationManager.getConfigByName(videoFilter.getName());
+			
+			// update common configs
+			configs.getCommonConfigs().merge(commonConfigs);
+			
+			// re-apply configs
+			configurationManager.applyConfigs(configs);
+		}
+		// notify FilterSetup
+		activeFiltersSetup.connectFilters(new Point(commonConfigs.getWidth(), commonConfigs.getHeight()));
 	}
 }

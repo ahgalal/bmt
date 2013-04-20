@@ -6,14 +6,11 @@ package utils;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-import modules.Module;
-
-import filters.FilterConfigs;
-
 /**
  * @author Creative
  *
  */
+@SuppressWarnings("rawtypes")
 public class ConfigurationManager<ConfigurationType extends Configuration>  {
 
 	protected ArrayList<ConfigurationType> configs;

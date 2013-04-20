@@ -33,12 +33,13 @@ import org.eclipse.swt.widgets.Shell;
 
 import sys.utils.Utils;
 import ui.PluggedGUI;
-import utils.Configuration;
 import utils.ConfigurationManager;
 import utils.Logger.Details;
 import utils.PManager;
 import utils.PManager.ProgramState.StreamState;
 import utils.StatusManager.StatusSeverity;
+import utils.video.ConfigsListener;
+import filters.CommonConfigs;
 import filters.Data;
 
 @SuppressWarnings("rawtypes")
@@ -47,7 +48,7 @@ import filters.Data;
  * 
  * @author Creative
  */
-public class ModulesManager {
+public class ModulesManager implements ConfigsListener {
 
 	/**
 	 * Runnable for running Modules.
@@ -101,7 +102,6 @@ public class ModulesManager {
 	private String[] guiDataArray;
 	private String[] guiNamesArray;
 
-	private int height;
 	private final ModulesCollection installedModules;
 	private final ArrayList<Module> modules;
 	private final ArrayList<ModuleData> modulesData;
@@ -112,8 +112,6 @@ public class ModulesManager {
 	private RunnableModulesThread runnableModules;
 
 	private Thread thModules;
-
-	private int width;
 
 	/**
 	 * Initializes modules.
@@ -426,13 +424,6 @@ public class ModulesManager {
 		configurationManager.addConfiguration(zoneConfigs, false);
 	}
 
-	private boolean isWithinArray(final String name, final String[] array) {
-		for (final String str : array)
-			if (str.equals(name))
-				return true;
-		return false;
-	}
-
 	/**
      * 
      */
@@ -502,27 +493,6 @@ public class ModulesManager {
 		}
 	}
 
-	/**
-	 * Sets the width and height of the module manager, to be used by any module
-	 * later.
-	 * 
-	 * @param width
-	 *            webcam image's width
-	 * @param height
-	 *            webcam image's height
-	 */
-	public void setModulesWidthandHeight(final int width, final int height) {
-		this.width = width;
-		this.height = height;
-
-		Iterator<ModuleConfigs> it = configurationManager.getConfigurations();
-		for(;it.hasNext();){
-			ModuleConfigs configs=it.next();
-			configs.setHeight(height);
-			configs.setWidth(width);
-		}
-	}
-
 	public void setupModules(final Experiment exp) {
 		// unload old modules
 		for (final Module m : modules)
@@ -541,7 +511,6 @@ public class ModulesManager {
 					moduleRequirement.getID());
 			if(module==null)
 				throw new RuntimeException("Could not find the required module: " + moduleRequirement.getName()+" : " + moduleRequirement.getID());
-			if(module!=null)
 			modules.add(module);
 		}
 
@@ -566,9 +535,39 @@ public class ModulesManager {
 		final ExperimentModule expModule = ExperimentManager.getDefault()
 				.instantiateExperimentModule();
 		modules.add(expModule);
+		configurationManager.addConfiguration(ExperimentManager.getDefault().getExperimentConfigs(), true);
 
 		connectModules();
 		loadModulesGUI();
+	}
+
+	@Override
+	public void updateConfigs(CommonConfigs commonConfigs) {
+		
+		// loop on modules
+		for(Iterator<Module> it = modules.iterator();it.hasNext();){
+			Module module=it.next();
+			
+			ModuleConfigs configs = configurationManager.getConfigByName(module.getName());
+			
+			// update common configs
+			configs.getCommonConfigs().merge(commonConfigs);
+			
+			// re-apply configs
+			configurationManager.applyConfigs(configs);
+		}
+		
+		
+		
+/*		// loop on all configurations available
+		for(Iterator<ModuleConfigs> it=configurationManager.getConfigurations();it.hasNext();){
+			ModuleConfigs config = it.next();
+			// update common configs
+			config.commonConfigs.merge(commonConfigs);
+			
+			// re-apply configs
+			configurationManager.applyConfigs(config);
+		}*/
 	}
 
 }

@@ -204,7 +204,11 @@ public abstract class Module<GUIType extends PluggedGUI, ConfigsType extends Mod
 	 * @param config
 	 *            configurations object containing new values
 	 */
-	public abstract void updateConfigs(ConfigsType config);
+	public void updateConfigs(ConfigsType config){
+		if (this.configs == null)
+			this.configs = config;
+		this.configs.mergeConfigs(config);
+	}
 
 	/**
 	 * Updates the cargo data to be sent to file writer.

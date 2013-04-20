@@ -9,9 +9,9 @@ import gui.integration.OpenFieldIntegrationTest;
 import java.io.File;
 
 import sys.utils.Files;
+import sys.utils.Utils;
 import utils.DialogBoxUtils;
 import utils.PManager;
-import sys.utils.Utils;
 
 import com.windowtester.runtime.WidgetSearchException;
 
