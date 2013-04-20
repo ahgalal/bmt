@@ -14,6 +14,8 @@
 
 package utils.video.input;
 
+import java.awt.Point;
+
 import sys.utils.Utils;
 import utils.PManager;
 import utils.StatusManager.StatusSeverity;
@@ -145,6 +147,12 @@ public class AGCamLibModule extends VidInputter<VidSourceConfigs> {
 	@Override
 	public VidInputter<VidSourceConfigs> newInstance() {
 		return new AGCamLibModule();
+	}
+
+	@Override
+	public Point getFrameSize() {
+		// we get dimensions from  configuration instance, not from hardware
+		return new Point(configs.getWidth(), configs.getHeight());
 	}
 
 }

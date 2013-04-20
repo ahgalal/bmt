@@ -143,13 +143,6 @@ public class RearingModule extends
 	}
 
 	@Override
-	public void updateConfigs(final RearingModuleConfigs config) {
-		if (this.configs == null)
-			this.configs = config;
-		this.configs.mergeConfigs(config);
-	}
-
-	@Override
 	public void updateFileCargoData() {
 		fileCargo.setDataByTag(Constants.FILE_REARING_COUNTER,
 				Integer.toString(data.getRearingCtr()));

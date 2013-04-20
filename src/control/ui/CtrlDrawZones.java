@@ -170,8 +170,8 @@ public class CtrlDrawZones extends ControllerUI<DrawZones> {
 	 * @param img
 	 *            new Background image
 	 */
-	public void setBackground(final int[] img) {
-		ui.getGFXPanel().setBackground(img);
+	public void setBackground(final int[] img,int width,int height) {
+		ui.getGFXPanel().setBackground(img,width,height);
 	}
 
 	/**

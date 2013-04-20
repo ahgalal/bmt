@@ -14,6 +14,7 @@
 
 package utils.video.input;
 
+import java.awt.Point;
 import java.io.File;
 import java.nio.IntBuffer;
 
@@ -30,9 +31,18 @@ import utils.video.ImageManipulator;
 
 public class GStreamerModule extends VidInputter<VidSourceConfigs> {
 
+	private Point		actualFrameSize;
+	private RGBDataSink	dataSink;
+	private PlayBin		playBin;
+
 	@Override
 	public int displayMoreSettings() {
 		return 0;
+	}
+
+	@Override
+	public Point getFrameSize() {
+		return actualFrameSize;
 	}
 
 	@Override
@@ -47,37 +57,88 @@ public class GStreamerModule extends VidInputter<VidSourceConfigs> {
 
 	@Override
 	public SourceStatus getStatus() {
-		if(dataSink!=null){
-			//System.out.println("Duration: "+dataSink.getDuration().longValue()+" Position: "+dataSink.getPosition().longValue());
-			if((playBin.getState()==State.PLAYING || playBin.getState()==State.PAUSED) &&dataSink.getDuration().longValue()<=dataSink.getPosition().longValue())
-				status=SourceStatus.ERROR;
+		if (dataSink != null) {
+			// System.out.println("Duration: "+dataSink.getDuration().longValue()+" Position: "+dataSink.getPosition().longValue());
+			if (((playBin.getState() == State.PLAYING) || (playBin.getState() == State.PAUSED))
+					&& (dataSink.getDuration().longValue() <= dataSink
+							.getPosition().longValue()))
+				status = SourceStatus.ERROR;
 		}
 		return status;
 	}
-	private PlayBin playBin;
-	private RGBDataSink dataSink;
+
+	@Override
+	public int getStreamLength() {
+		// TODO: test this
+		return (int) (dataSink.getDuration().longValue() / 10000);
+	}
+
+	@Override
+	public int getStreamPosition() {
+		// TODO: test this
+		return (int) (dataSink.getPosition().longValue() / 10000);
+	}
+
+	@Override
+	public SourceType getType() {
+		return SourceType.FILE;
+	}
+
 	@Override
 	public boolean initialize(final FrameIntArray frameData,
 			final VidSourceConfigs configs) {
 		this.configs = configs;
-		Gst.init("GSMovie",new String[0]);
-		playBin=new PlayBin("PlayerBin");
-		PManager.log.print("initializing video file: "+configs.getVideoFilePath(), this);
+		actualFrameSize = null; // setting it to null, to be explicitly
+								// initialized in the sink call back method
+								// below
+		Gst.init("GSMovie", new String[0]);
+		playBin = new PlayBin("PlayerBin");
+		PManager.log.print(
+				"initializing video file: " + configs.getVideoFilePath(), this);
 		playBin.setInputFile(new File(configs.getVideoFilePath()));
-		fia=frameData;
+		fia = frameData;
 
-		dataSink=new RGBDataSink("rgb", new Listener() {
+		dataSink = new RGBDataSink("rgb", new Listener() {
 
 			@Override
-			public void rgbFrame(int arg0, int arg1, IntBuffer buf) {
-				if(paused==false){
-					fia.setFrameData(ImageManipulator.bgrIntArray2rgbIntArray(buf.array())); //ImageManipulator.byteBGR2IntRGB(buf.getBytes());
+			public void rgbFrame(final int width, final int height,
+					final IntBuffer buf) {
+				if (paused == false) {
+					if (actualFrameSize == null)
+						actualFrameSize = new Point();
+
+					actualFrameSize.x = width;
+					actualFrameSize.y = height;
+					fia.setFrameData(ImageManipulator
+							.bgrIntArray2rgbIntArray(buf.array())); // ImageManipulator.byteBGR2IntRGB(buf.getBytes());
 					updateStatus();
 				}
 			}
 		});
 		playBin.setVideoSink(dataSink);
 		return true;
+	}
+
+	@Override
+	public VidSourceConfigs newConfigurationInstance() {
+		return new VidSourceConfigs();
+	}
+
+	@Override
+	public VidInputter<VidSourceConfigs> newInstance() {
+		return new GStreamerModule();
+	}
+
+	@Override
+	public void pauseStream() {
+		super.pauseStream();
+		playBin.pause();
+	}
+
+	@Override
+	public void resumeStream() {
+		super.resumeStream();
+		playBin.play();
 	}
 
 	@Override
@@ -97,44 +158,4 @@ public class GStreamerModule extends VidInputter<VidSourceConfigs> {
 		playBin.stop();
 		playBin.dispose();
 	}
-
-	@Override
-	public SourceType getType() {
-		return SourceType.FILE;
-	}
-
-	@Override
-	public void pauseStream() {
-		super.pauseStream();
-		playBin.pause();
-	}
-
-	@Override
-	public void resumeStream() {
-		super.resumeStream();
-		playBin.play();
-	}
-	
-	@Override
-	public int getStreamLength() {
-		// TODO: test this
-		return (int) (dataSink.getDuration().longValue()/10000);
-	}
-	
-	@Override
-	public int getStreamPosition() {
-		// TODO: test this
-		return (int) (dataSink.getPosition().longValue()/10000);
-	}
-
-	@Override
-	public VidSourceConfigs newConfigurationInstance() {
-		return new VidSourceConfigs();
-	}
-
-	@Override
-	public VidInputter<VidSourceConfigs> newInstance() {
-		return new GStreamerModule();
-	}
-
 }

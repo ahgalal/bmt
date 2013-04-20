@@ -3,6 +3,8 @@
  */
 package modules.experiment.openfield;
 
+import java.awt.Point;
+
 import modules.experiment.ExperimentModule;
 import modules.experiment.ExperimentModuleGUI;
 
@@ -38,6 +40,10 @@ public class OpenFieldExperimentModuleGUI extends ExperimentModuleGUI {
 	public OpenFieldExperimentModuleGUI(final ExperimentModule owner) {
 		super(owner);
 	}
+	private Point frameDims;
+	public void setFrameDims(Point dims){
+		frameDims=dims;
+	}
 
 	/**
 	 * Enables/disables the set background button.
@@ -58,7 +64,7 @@ public class OpenFieldExperimentModuleGUI extends ExperimentModuleGUI {
 				|| (PManager.getDefault().getState().getStream() == StreamState.PAUSED)) {
 			PManager.getDefault().getDrawZns()
 					.setBackground(((OpenFieldExperimentModule) owner)
-							.updateRGBBackground());
+							.updateRGBBackground(),frameDims.x,frameDims.y);
 			((SubtractorFilter) PManager.getDefault().getVideoManager()
 					.getFilterManager().getFilterByName("SubtractionFilter"))
 					.updateBG();

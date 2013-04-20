@@ -174,13 +174,6 @@ public class SessionModule extends
 	}
 
 	@Override
-	public void updateConfigs(final SessionModuleConfigs config) {
-		if (this.configs == null)
-			this.configs = config;
-		this.configs.mergeConfigs(config);
-	}
-
-	@Override
 	public void updateFileCargoData() {
 		fileCargo.setDataByTag(Constants.FILE_SESSION_TIME,
 				Float.toString(getSessionTimeTillNow()));

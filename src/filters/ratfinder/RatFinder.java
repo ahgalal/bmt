@@ -40,6 +40,7 @@ public class RatFinder extends
 		VideoFilter<RatFinderFilterConfigs, RatFinderData> {
 	public static final String ID = "filters.ratfinder";
 	private static final int			PATH_QUEUE_LENGTH						= 100;
+	private static final int SMALLEST_WHITE_AREA = 10;
 	protected final Point				centerPoint;
 	private final Point[]				centroidHistory							= new Point[2];
 
@@ -55,7 +56,7 @@ public class RatFinder extends
 
 	protected ArrayBlockingQueue<Point>	pathQueue;
 
-	private final int					searchSideLength						= 600;
+	private int							searchSideLength						= 600;
 	private int							tmpMax;
 	private int[]						vertSum;
 
@@ -80,26 +81,7 @@ public class RatFinder extends
 	@Override
 	public boolean configure(final FilterConfigs configs) {
 		this.configs = (RatFinderFilterConfigs) configs;
-
-		marker = new CrossMarker(50, 50, 5, Color.RED, configs
-				.getCommonConfigs().getWidth(), configs.getCommonConfigs()
-				.getHeight());
-
-		marker2 = new RectangularMarker(configs.getCommonConfigs().getWidth(),
-				configs.getCommonConfigs().getHeight(), searchSideLength,
-				searchSideLength, Color.RED);
-
-		for (int i = 0; i < centroidHistory.length; i++)
-			centroidHistory[i] = new Point(-1, -1);
-		numFramesRemainingToGetReliableCentroid = 10;
-		pathQueue = new ArrayBlockingQueue<Point>(PATH_QUEUE_LENGTH);
-
-		/*
-		 * for(int i=0;i<PATH_QUEUE_LENGTH;i++){ pathQueue.add(new Point(0, 0));
-		 * }
-		 */
-
-		// super's stuff:
+		
 		width = configs.getCommonConfigs().getWidth();
 		height = configs.getCommonConfigs().getHeight();
 
@@ -109,9 +91,20 @@ public class RatFinder extends
 				.getData();
 		outputGraphics = outputImage.getGraphics();
 
-		// outData = new int[width * height];
 		this.linkOut.setData(outData);
 		specialConfiguration(configs);
+		searchSideLength = width/4;
+		
+		marker = new CrossMarker(50, 50, 5, Color.RED, width, height);
+
+		marker2 = new RectangularMarker(width,height, searchSideLength,
+				searchSideLength, Color.RED);
+
+		for (int i = 0; i < centroidHistory.length; i++)
+			centroidHistory[i] = new Point(-1, -1);
+		numFramesRemainingToGetReliableCentroid = 10;
+		pathQueue = new ArrayBlockingQueue<Point>(PATH_QUEUE_LENGTH);
+
 
 		return super.configure(configs);
 	}
@@ -122,8 +115,8 @@ public class RatFinder extends
 	protected void drawMarkerOnImg() {
 		try {
 			marker.draw(outData, centerPoint.x, centerPoint.y);
-			marker2.draw(outData, centerPoint.x - searchSideLength / 2,
-					centerPoint.y - searchSideLength / 2);
+			marker2.draw(outData, centerPoint.x - searchSideLength/2,
+					centerPoint.y - searchSideLength/2);
 		} catch (final Exception e) {
 			System.err.print("Error in marker");
 			e.printStackTrace();
@@ -238,8 +231,8 @@ public class RatFinder extends
 	 *            input image
 	 */
 	protected void updateCentroid(final int[] binaryImage) {
-		final int smallestWhiteAreaSize = 10;
-		tmpMax = smallestWhiteAreaSize;
+		
+		tmpMax = SMALLEST_WHITE_AREA;
 
 		int y1, y2;
 
@@ -248,7 +241,7 @@ public class RatFinder extends
 			y2 = height;
 		} else {
 			y1 = (centerPoint.y - searchSideLength) < 0 ? 0
-					: centerPoint.y - 40;
+					: centerPoint.y - searchSideLength;
 			y2 = (centerPoint.y + searchSideLength) > height ? height
 					: centerPoint.y + searchSideLength;
 		}
@@ -263,7 +256,7 @@ public class RatFinder extends
 			}
 		}
 
-		tmpMax = smallestWhiteAreaSize;
+		tmpMax = SMALLEST_WHITE_AREA;
 
 		int x1, x2;
 		if (centerPoint.x == 0) {
@@ -271,7 +264,7 @@ public class RatFinder extends
 			x2 = width;
 		} else {
 			x1 = (centerPoint.x - searchSideLength) < 0 ? 0
-					: centerPoint.x - 40;
+					: centerPoint.x - searchSideLength;
 			x2 = (centerPoint.x + searchSideLength) > width ? width
 					: centerPoint.x + searchSideLength;
 		}

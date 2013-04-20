@@ -10,8 +10,8 @@ import modules.session.SessionModule;
 import modules.zones.ZonesModule;
 import filters.FiltersConnectionRequirements;
 import filters.FiltersNamesRequirements;
-import filters.FiltersSetup;
 import filters.FiltersNamesRequirements.FilterTrigger;
+import filters.FiltersSetup;
 
 /**
  * @author Creative

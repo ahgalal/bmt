@@ -3,14 +3,15 @@
  */
 package gui.integration.recorder;
 
-import java.io.File;
-
 import gui.executionunit.VideoExecUnitGroup;
 import gui.integration.OpenFieldIntegrationTest;
+
+import java.io.File;
+
 import sys.utils.Files;
+import sys.utils.Utils;
 import utils.DialogBoxUtils;
 import utils.PManager;
-import sys.utils.Utils;
 
 import com.windowtester.runtime.WidgetSearchException;
 
@@ -48,7 +49,7 @@ public class OpenFieldIntegrationRecordStreamManStopTest extends
 		super.setUp();
 		sleepTime1 = 3; // after 3 seconds, start recording
 		sleepTime2 = 7; // after 7 seconds, stop recording
-		sleepTime3 = 10; // remaining of 25, to complete the experiment
+		sleepTime3 = 12; // remaining of 22, to complete the experiment
 	}
 	
 	@Override

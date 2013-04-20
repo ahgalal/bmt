@@ -32,7 +32,7 @@ public class OpenFieldIntegrationRecordStreamAutoStopTest extends
 	public void setUp() {
 		super.setUp();
 		sleepTime1 = 3; // after 3 seconds, start recording
-		sleepTime2 = 22; // keep tracking running
+		sleepTime2 = 20; // keep tracking running
 		sleepTime3 = 0;
 	}
 

@@ -26,16 +26,17 @@ public class FiltersSetup implements Serializable {
 		this.connectionRequirements = connectionRequirements;
 		links = new ArrayList<Link>();
 	}
-
+private Point dims;
 	/**
 	 * Connects filters in FilterCollection instance according to specifications
 	 * found in ConnectionRequirements instance.
 	 */
-	public void connectFilters() {
+	public void connectFilters(Point dims) {
 		if(links==null)
 			links=new ArrayList<Link>();
 		else
 			links.clear();
+		this.dims=dims;
 		for (final String[] connection : connectionRequirements
 				.getConnections()) {
 			final String srcFilterName = connection[0];
@@ -54,11 +55,11 @@ public class FiltersSetup implements Serializable {
 				.getFilterByName(filterDstName);
 
 		Link lnk;
-		if (srcFilter.getLinkOut() != null)
+		Link srcLinkOut = srcFilter.getLinkOut();
+		if (srcLinkOut != null && dims.x*dims.y ==srcFilter.getLinkOut().getData().length)
 			lnk = srcFilter.getLinkOut();
 		else {
-			// TODO: make dims configurable instead of 640x480
-			lnk = new Link(new Point(640, 480));
+			lnk = new Link(dims);
 			srcFilter.setLinkOut(lnk);
 		}
 

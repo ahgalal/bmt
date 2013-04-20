@@ -4,6 +4,8 @@ import gui.experiment.CreateExperimentSuiteTest;
 import gui.experiment.EditExperimentTest;
 import gui.experiment.ExportExperimentToExcelTest;
 import gui.integration.DiffExperimentsRunGUITest;
+import gui.integration.ForcedSwimmingIntegration1280x720FrameTest;
+import gui.integration.OpenFieldIntegration1280x720FrameTest;
 import gui.integration.OpenFieldIntegrationManStopStreamWhenPausedTest;
 import gui.integration.OpenFieldIntegrationManStopTrackTest;
 import gui.integration.recorder.OpenFieldIntegrationRecordStreamAutoStopTest;
@@ -25,6 +27,10 @@ public class AllTests {
 		suite.addTest(CreateExperimentSuiteTest.suite());
 		suite.addTestSuite(ExportExperimentToExcelTest.class);
 		suite.addTestSuite(EditExperimentTest.class);
+		
+		// Frame size
+		suite.addTestSuite(OpenFieldIntegration1280x720FrameTest.class);
+		suite.addTestSuite(ForcedSwimmingIntegration1280x720FrameTest.class);
 		
 		// Experiment loading
 		suite.addTest(DiffExperimentsRunGUITest.suite());

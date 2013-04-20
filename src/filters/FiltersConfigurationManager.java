@@ -15,6 +15,7 @@ import utils.ConfigurationManager;
 public class FiltersConfigurationManager extends
 		ConfigurationManager<FilterConfigs> {
 
+	@SuppressWarnings("rawtypes")
 	public FiltersConfigurationManager(ArrayList<? extends Configurable> configurables) {
 		super(configurables);
 	}

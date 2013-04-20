@@ -1,13 +1,14 @@
 package gui.integration;
 
+import gui.executionunit.ExperimentExecUnitGroup;
+import gui.executionunit.VideoExecUnitGroup;
+
 import java.io.File;
 
 import sys.utils.Files;
+import sys.utils.Utils;
 import utils.DialogBoxUtils;
 import utils.PManager;
-import sys.utils.Utils;
-import gui.executionunit.ExperimentExecUnitGroup;
-import gui.executionunit.VideoExecUnitGroup;
 
 import com.windowtester.runtime.WidgetSearchException;
 
@@ -64,8 +65,9 @@ public class OpenFieldIntegrationManStopTrackTest extends
 	@Override
 	public void setUp() {
 		super.setUp();
-		sleepTime1 = 10;
-		sleepTime2 = 5;
+		sleepTime1 = 10; // record for 10 secs
+		sleepTime2 = 5; // then stop tracking and wait 5 secs
+		sleepTime3 = 5; // rest of stream
 		sessionTimeMin = 10;
 		sessionTimeMax = 11;
 		centralTimeMin = 0;centralEntranceMax = 1;

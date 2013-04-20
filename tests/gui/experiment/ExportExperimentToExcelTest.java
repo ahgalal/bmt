@@ -5,11 +5,11 @@ import gui.utils.UITest;
 
 import java.io.File;
 
-import com.windowtester.runtime.WidgetSearchException;
-
 import sys.utils.EnvVar;
 import sys.utils.Files;
 import utils.PManager;
+
+import com.windowtester.runtime.WidgetSearchException;
 
 /**
  * Tests exporting the loaded experiment to an excel sheet.</br> Check is based

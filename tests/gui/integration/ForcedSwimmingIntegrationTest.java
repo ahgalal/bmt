@@ -1,7 +1,5 @@
 package gui.integration;
 
-import com.windowtester.runtime.WidgetSearchException;
-
 import gui.executionunit.VideoExecUnitGroup;
 import gui.utils.Reflections;
 import modules.experiment.Constants;
@@ -11,6 +9,8 @@ import modules.experiment.Rat;
 import sys.utils.EnvVar;
 import sys.utils.Files;
 import utils.PManager;
+
+import com.windowtester.runtime.WidgetSearchException;
 
 /**
  * Tests the integration of Forced Swimming Experiment, that all filters/modules

@@ -14,7 +14,6 @@
 
 package control.ui;
 
-import modules.ModuleConfigs;
 import modules.ModulesManager;
 import modules.zones.ZonesModule;
 import modules.zones.ZonesModuleConfigs;

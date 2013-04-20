@@ -22,6 +22,7 @@ import modules.zones.ShapeController;
 
 import org.eclipse.swt.widgets.Display;
 
+import sys.utils.Utils;
 import utils.Logger.Details;
 import utils.PManager.ProgramState.GeneralState;
 import utils.PManager.ProgramState.StreamState;
@@ -276,10 +277,22 @@ public class PManager {
 	public void linkGFXPanelWithShapeCtrlr(final GfxPanel gfxPanel) {
 		getShapeController().linkWithGFXPanel(gfxPanel);
 	}
-
+	private boolean arrStateListenersLock=false;
 	private void notifyStateListeners() {
+		acquireLockArrStateListeners();
 		for (final StateListener sl : arrStateListsners)
 			sl.updateProgramState(getState());
+		releaseLockArrStateListeners();
+	}
+
+	private void releaseLockArrStateListeners() {
+		arrStateListenersLock=false;
+	}
+
+	private void acquireLockArrStateListeners() {
+		while(arrStateListenersLock)
+			Utils.sleep(30);
+		arrStateListenersLock=true;
 	}
 
 	public void pauseResume() {
@@ -302,7 +315,9 @@ public class PManager {
 	}
 
 	public void removeStateListener(final StateListener sListener) {
+		acquireLockArrStateListeners();
 		arrStateListsners.remove(sListener);
+		releaseLockArrStateListeners();
 	}
 
 	public void signalProgramStateUpdate() {

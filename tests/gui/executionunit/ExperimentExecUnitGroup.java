@@ -1,12 +1,12 @@
 package gui.executionunit;
 
 import gui.utils.Reflections;
-
-import org.eclipse.swt.widgets.Display;
-
 import modules.ExperimentManager;
 import modules.experiment.Experiment;
 import modules.experiment.ExperimentType;
+
+import org.eclipse.swt.widgets.Display;
+
 import sys.utils.Utils;
 import ui.MainGUI;
 import utils.DialogBoxUtils;

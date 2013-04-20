@@ -19,7 +19,6 @@ import java.util.ArrayList;
 
 import modules.Cargo;
 import modules.Module;
-import modules.ModuleConfigs;
 import modules.ModuleData;
 import modules.experiment.Constants;
 import modules.experiment.ExperimentType;
@@ -43,6 +42,8 @@ import gfx_panel.Shape;
  */
 public class ZonesModule extends
 		Module<ZonesModuleGUI, ZonesModuleConfigs, ZonesModuleData> {
+	private static final int		DEFAULT_CANVAS_HEIGHT	= 480;
+	private static final int		DEFAULT_CANVAS_WIDTH	= 640;
 	public static final int			DEFAULT_HYSTRISES_VALUE	= 50;
 	public final static String		moduleID				= Constants.MODULE_ID
 																	+ ".zones";
@@ -70,7 +71,7 @@ public class ZonesModule extends
 	 * @param configs
 	 *            ZonesModuleConfigs object to configure the module
 	 */
-	public ZonesModule(String name,final ZonesModuleConfigs configs) {
+	public ZonesModule(final String name, final ZonesModuleConfigs configs) {
 		super(name, configs);
 		data = new ZonesModuleData();
 		oldPosition = new Point();
@@ -144,9 +145,10 @@ public class ZonesModule extends
 
 	@Override
 	public void deInitialize() {
-/*		for (final Point point : path) {
-			// System.out.println(point.x+"\t"+point.y);
-		}*/
+		/*
+		 * for (final Point point : path) { //
+		 * System.out.println(point.x+"\t"+point.y); }
+		 */
 	}
 
 	/**
@@ -186,8 +188,8 @@ public class ZonesModule extends
 	 * @return zone's number located at the pixel of x,y
 	 */
 	private int getZone(final int x, final int y) {
-		if (x + y * configs.getWidth() < zoneMap.length)
-			return zoneMap[x + y * configs.getWidth()];
+		if (x + y * configs.getCommonConfigs().getWidth() < zoneMap.length)
+			return zoneMap[x + y * configs.getCommonConfigs().getWidth()];
 		return -1;
 	}
 
@@ -217,7 +219,7 @@ public class ZonesModule extends
 		for (final String param : expParams)
 			data.addParameter(param);
 
-		if(configs!=null)
+		if (configs != null)
 			updateZoneMap();
 	}
 
@@ -240,6 +242,11 @@ public class ZonesModule extends
 	 */
 	public void loadZonesFromFile(final String fileName) {
 		data.getZones().loadZonesFromFile(fileName);
+	}
+
+	@Override
+	public Module newInstance(final String name) {
+		return new ZonesModule(name, null);
 	}
 
 	@Override
@@ -341,9 +348,7 @@ public class ZonesModule extends
 
 	@Override
 	public void updateConfigs(final ZonesModuleConfigs config) {
-		if(this.configs==null)
-			this.configs=(ZonesModuleConfigs) config;
-		configs.mergeConfigs(config);
+		super.updateConfigs(config);
 		updateZoneMap();
 	}
 
@@ -378,9 +383,14 @@ public class ZonesModule extends
 	 * experiment.
 	 */
 	private void updateTotalDistance() {
-		if (oldPosition != null)
-			data.setTotalDistance((long) (data.getTotalDistance() + (currentPosition
-					.distance(oldPosition) / data.getScale())));
+		if (oldPosition != null) {
+			int distanceX = (currentPosition.x - oldPosition.x)*DEFAULT_CANVAS_WIDTH/configs.getCommonConfigs().getWidth();
+			int distanceY = (currentPosition.y - oldPosition.y)*DEFAULT_CANVAS_HEIGHT/configs.getCommonConfigs().getHeight();
+			
+			double distance = Math.sqrt(Math.pow(distanceX, 2)+Math.pow(distanceY, 2));
+			long totalDistance = (long) (data.getTotalDistance() + distance / data.getScale());
+			data.setTotalDistance(totalDistance);
+		}
 	}
 
 	/**
@@ -423,7 +433,9 @@ public class ZonesModule extends
 		RectangleShape tmpRect;
 		OvalShape tmpOval;
 		int tmpZoneNumber;
-		zoneMap = new byte[configs.getWidth() * configs.getHeight()];
+		final int width = configs.getCommonConfigs().getWidth();
+		final int height = configs.getCommonConfigs().getHeight();
+		zoneMap = new byte[width * height];
 		initializeZoneMap(-1);
 		for (final Zone zone : data.getZones().getAllZones()) {
 			tmpZoneNumber = zone.getZoneNumber();
@@ -432,31 +444,42 @@ public class ZonesModule extends
 
 			if (tmpShp instanceof RectangleShape) {
 				tmpRect = (RectangleShape) tmpShp;
-				for (int x = tmpRect.getX(); x < tmpRect.getX()
-						+ tmpRect.getWidth(); x++)
-					if ((x > -1) & (x < configs.getWidth()))
-						for (int y = tmpRect.getY(); y < tmpRect.getY()
-								+ tmpRect.getHeight(); y++)
-							if ((y > -1) & (y < configs.getHeight()))
-								zoneMap[x + (/* configs.height - */y)
-										* configs.getWidth()] = (byte) tmpZoneNumber;
+				final int zoneStartX = tmpRect.getX() * width
+						/ DEFAULT_CANVAS_WIDTH;
+				final int zoneEndX = zoneStartX + tmpRect.getWidth() * width
+						/ DEFAULT_CANVAS_WIDTH;
+				final int zoneStartY = tmpRect.getY() * height
+						/ DEFAULT_CANVAS_HEIGHT;
+				final int zoneEndY = zoneStartY + tmpRect.getHeight() * height
+						/ DEFAULT_CANVAS_HEIGHT;
+				for (int x = zoneStartX; x < zoneEndX; x++)
+					if ((x > -1) & (x < width)) {
+						for (int y = zoneStartY; y < zoneEndY; y++)
+							if ((y > -1) & (y < height))
+								zoneMap[x + (/* height - */y) * width] = (byte) tmpZoneNumber;
+					}
 			} else if (tmpShp instanceof OvalShape) {
 				tmpOval = (OvalShape) tmpShp;
-				final int rx = tmpOval.getWidth() / 2, ry = tmpOval.getHeight() / 2, ovX = tmpOval
-						.getX() + rx, ovY = tmpOval.getY() + ry;
+				final int rx = tmpOval.getWidth() * width
+						/ DEFAULT_CANVAS_WIDTH / 2;
+				final int ry = tmpOval.getHeight() * height
+						/ DEFAULT_CANVAS_HEIGHT / 2;
+				final int ovX = tmpOval.getX() * width / DEFAULT_CANVAS_WIDTH
+						+ rx;
+				final int ovY = tmpOval.getY() * height / DEFAULT_CANVAS_HEIGHT
+						+ ry;
 				float xFinal, yFinal;
 
 				for (int x = tmpOval.getX(); x < tmpOval.getX() + rx * 2; x++)
-					if ((x > -1) & (x < configs.getWidth()))
+					if ((x > -1) & (x < width))
 						for (int y = tmpOval.getY(); y < tmpOval.getY() + ry
 								* 2; y++)
-							if ((y > -1) & (y < configs.getHeight())) {
+							if ((y > -1) & (y < height)) {
 								xFinal = x - ovX;
 								yFinal = y - ovY;
 								if ((xFinal * xFinal) / (rx * rx)
 										+ (yFinal * yFinal) / (ry * ry) < 1)
-									zoneMap[x + (configs.getHeight() - y)
-											* configs.getWidth()] = (byte) tmpZoneNumber;
+									zoneMap[x + (height - y) * width] = (byte) tmpZoneNumber;
 							}
 			}
 		}
@@ -504,11 +527,6 @@ public class ZonesModule extends
 			}
 
 		}
-	}
-
-	@Override
-	public Module newInstance(String name) {
-		return new ZonesModule(name,null);
 	}
 
 }

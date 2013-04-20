@@ -243,13 +243,6 @@ public class MovementMeterModule
 		return (int) (0.3 * newVal + 0.7 * avg);
 	}
 
-	@Override
-	public void updateConfigs(final MovementMeterModuleConfigs config) {
-		if (this.configs == null)
-			this.configs = config;
-		this.configs.mergeConfigs(config);
-	}
-
 	private void updateEnergyLevels() {
 		for (int i = 1; i <= energyLevels.length; i++)
 			energyLevels[i - 1] = (int) (getMinEnergy() + ((getMaxEnergy() - getMinEnergy()) * ((energyLevels.length + 1 - i) / (double) energyLevels.length)));
