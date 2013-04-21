@@ -85,7 +85,6 @@
   <params>
     <string>Number</string>
     <string>Group</string>
-    <string>Climbing</string>
     <string>Swimming</string>
     <string>Floating</string>
     <string>ST</string>

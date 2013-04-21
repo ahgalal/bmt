@@ -29,7 +29,7 @@ public class ForcedSwimmingExperiment extends Experiment {
 	@Override
 	protected void initializeParams() {
 		final String[] expParameters = new String[] {
-				Constants.CLIMBING, Constants.SWIMMING,
+				Constants.SWIMMING,
 				Constants.FLOATING, Constants.FILE_SESSION_TIME};
 		setParametersList(expParameters);
 	}
