@@ -21,13 +21,12 @@ import com.windowtester.runtime.WidgetSearchException;
 public class ForcedSwimmingIntegrationTest extends
 		ExperimentIntegrationTestBase {
 	
-	// TODO: tighten constrains
 	protected int	climbingTimeMax	= 9;
 	protected int	climbingTimeMin	= 2;
-	protected int	floatingTimeMax	= 26;
-	protected int	floatingTimeMin	= 10;
-	protected int	swimmingTimeMax	= 25; // need to be ~15
-	protected int	swimmingTimeMin	= 4;
+	protected int	floatingTimeMax	= 17;
+	protected int	floatingTimeMin	= 11;
+	protected int	swimmingTimeMax	= 26;
+	protected int	swimmingTimeMin	= 20;
 
 	@Override
 	protected void afterStartTracking() throws WidgetSearchException {
@@ -45,8 +44,11 @@ public class ForcedSwimmingIntegrationTest extends
 		final Group grp = exp.getGroupByName(groupName);
 		final Rat rat0 = grp.getRatByNumber(ratNumber);
 
-		checkParamValue(rat0, Constants.CLIMBING, climbingTimeMin,
-				climbingTimeMax);
+		
+		System.out.println(/*rat0.getValueByParameterName(Constants.CLIMBING) + "\t"+*/rat0.getValueByParameterName(Constants.SWIMMING)+"\t"+rat0.getValueByParameterName(Constants.FLOATING));
+		
+/*		checkParamValue(rat0, Constants.CLIMBING, climbingTimeMin,
+				climbingTimeMax);*/
 		checkParamValue(rat0, Constants.SWIMMING, swimmingTimeMin,
 				swimmingTimeMax);
 		checkParamValue(rat0, Constants.FLOATING, floatingTimeMin,
