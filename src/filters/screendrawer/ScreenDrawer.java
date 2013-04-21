@@ -19,6 +19,7 @@ import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferInt;
 
+import modules.zones.ShapeCollection;
 import sys.utils.Utils;
 import utils.PManager;
 import utils.PManager.ProgramState;
@@ -47,6 +48,8 @@ public class ScreenDrawer extends VideoFilter<ScreenDrawerConfigs, FilterData> {
 				final Graphics refGfxScreen = configs.getRefGfxScreen();
 				final int canvasWidth = configs.getCanvasDims().x;
 				final int canvasHeight = configs.getCanvasDims().y;
+				final ShapeCollection shapeController = configs
+						.getShapeController();
 
 				while (configs.isEnabled()) {
 					if (linkIn.getData() != null) {
@@ -62,8 +65,7 @@ public class ScreenDrawer extends VideoFilter<ScreenDrawerConfigs, FilterData> {
 										.getWidth(), configs.getCommonConfigs()
 										.getHeight(), null);
 						// draw zones
-						configs.getShapeController()
-								.drawAllShapes(refGfxScreen);
+						shapeController.drawAllShapes(refGfxScreen);
 
 						// draw frame rate on main screen
 						refGfxScreen.setColor(Color.GREEN);
