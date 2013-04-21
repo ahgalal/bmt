@@ -17,7 +17,6 @@ package utils;
 import java.util.ArrayList;
 
 import modules.ModulesManager;
-import modules.experiment.ExcelEngine;
 import modules.zones.ShapeController;
 
 import org.eclipse.swt.widgets.Display;
@@ -151,7 +150,7 @@ public class PManager {
 	/**
 	 * Excel engine instance, used to write data to excel sheets.
 	 */
-	private ExcelEngine						excelEngine;
+	
 	/**
 	 * Rat form, used to enter next rat number/group.
 	 */
@@ -184,7 +183,7 @@ public class PManager {
 	 */
 	public PManager() {
 		state = new ProgramState(StreamState.IDLE, GeneralState.IDLE);
-		this.excelEngine=new ExcelEngine();
+		
 		defaultInstance = this;
 		this.statusMgr=new StatusManager();
 
@@ -408,10 +407,6 @@ public class PManager {
 
 	public CtrlRatInfoForm getFrmRat() {
 		return frmRat;
-	}
-
-	public ExcelEngine getExcelEngine() {
-		return excelEngine;
 	}
 
 	public CtrlDrawZones getDrawZns() {

@@ -78,7 +78,6 @@ public class ModulesManager implements ConfigsListener {
 	}
 
 	private static ModulesManager me;
-
 	/**
 	 * Get the singleton instance.
 	 * 
@@ -121,7 +120,7 @@ public class ModulesManager implements ConfigsListener {
 		filtersData = new ArrayList<Data>();
 		modulesData = new ArrayList<ModuleData>();
 		modules = new ArrayList<Module>();
-
+		
 		configurationManager = new ConfigurationManager<ModuleConfigs>(modules);
 
 		installedModules = new ModulesCollection();
@@ -132,7 +131,6 @@ public class ModulesManager implements ConfigsListener {
 
 		initializeConfigs();
 	}
-
 	/**
 	 * Passes incoming data object to all modules, only modules interested in
 	 * that data object, will accept it.
