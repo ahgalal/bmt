@@ -20,21 +20,21 @@ public class MovementMeterModule
 		extends
 		Module<MovementMeterModuleGUI, MovementMeterModuleConfigs, MovementMeterModuleData> {
 	private static final int ENERGY_DIVISION_FACTOR = 200;
-	private static final int IGNORED_FRAMES = 30;
+	private static final int			GARBAGE_FRAMES			= 10;
 	private static final int MIN_SAMPLES = 31;
 	public final static String moduleID = Constants.MODULE_ID
 			+ ".movementmeter";
-	private static final int OLD_VAL_COUNT = 20;
-	int accumulatedSessionTime;
+	private static final int			OLD_VAL_COUNT			= 40;
 	private ArrayList<Integer> energyBins;
-	private final ArrayList<Integer> energyData;
+	private final ArrayList<Integer>	energyDataSmooth;
 	private int[] energyLevels;
+	private double[]					energyLevelsRatio;
 	private String[] expParams;
 	private boolean ignoredFramesNormalized;
 	private int maxEnergy;
 	private int minEnergy;
 	private MovementMeterData movementMeterFilterData;
-	private final int noEnergyLevels = 3;
+	private final int					noEnergyLevels			= 2;
 	private final int[] oldValues = new int[OLD_VAL_COUNT];
 	private int sectorizeFlag;
 	private SessionModuleData sessionModuleData;
@@ -43,8 +43,8 @@ public class MovementMeterModule
 			final MovementMeterModuleConfigs config) {
 		super(name, config);
 		filtersData = new Data[1];
-		energyData = new ArrayList<Integer>();
-		gui = new MovementMeterModuleGUI(this);
+		energyDataSmooth = new ArrayList<Integer>();
+		gui = new MovementMeterModuleGUI(this,noEnergyLevels);
 		data = new MovementMeterModuleData();
 		initialize();
 	}
@@ -101,19 +101,22 @@ public class MovementMeterModule
 	@Override
 	public void initialize() {
 		PManager.log.print("initializing..", this, Details.VERBOSE);
-		energyData.clear();
+		energyDataSmooth.clear();
+		energyDataRaw.clear();
 		expParams = new String[noEnergyLevels];
 		energyBins = new ArrayList<Integer>();
 		energyLevels = new int[noEnergyLevels];
+		energyLevelsRatio = new double[]{1,0.3};
+		
 		for (int i = 0; i < noEnergyLevels; i++) {
 			expParams[i] = "eLevel_" + i;
 			energyBins.add(0);
 		}
 
 		// ////// in case of 3 levels:
-		expParams[0] = Constants.CLIMBING;
-		expParams[1] = Constants.SWIMMING;
-		expParams[2] = Constants.FLOATING;
+		//expParams[0] = Constants.CLIMBING;
+		expParams[0] = Constants.SWIMMING;
+		expParams[1] = Constants.FLOATING;
 		// //////
 
 		fileCargo = new Cargo(expParams);
@@ -138,39 +141,68 @@ public class MovementMeterModule
 	public void process() {
 		int newVal = movementMeterFilterData.getWhiteSummation()
 				/ ENERGY_DIVISION_FACTOR;
-		final int size = energyData.size();
-		if (size > MIN_SAMPLES + IGNORED_FRAMES) {
-			for (int i = 0; i < OLD_VAL_COUNT; i++) {
-				oldValues[i] = energyData.get(size - i - 1);
+		final int size = energyDataSmooth.size();
+		
+		
+		// Semi-Stable: size > IGNORED_FRAMES & ignored frames are not added yet 
+		// normalize ignored frames
+		if (/*(size <= MIN_SAMPLES IGNORED_FRAMES) ||*/ !ignoredFramesNormalized) {
+			
+			// add average to energy array
+			energyDataSmooth.add(newVal);
+			energyDataRaw.add(newVal);
+			
+			//System.out.println("size: "+ size +" val: "+newVal);
+			
+			if(size>MIN_SAMPLES + GARBAGE_FRAMES){
+				// calculate average, ignoring garbage frames
+				int sum=0;
+				for(int i=0;i<energyDataSmooth.size();i++){
+					if(i>GARBAGE_FRAMES)
+						sum+=energyDataSmooth.get(i);
+				}
+				sum+=newVal;
+				int avg=sum/(size+1-GARBAGE_FRAMES);
+				
+				//System.out.println("avg: "+avg);
+				
+				// set all energy values in the interval [0,MIN_SAMPLES] to the avg value
+				for(int i=0;i<energyDataSmooth.size();i++){
+					energyDataSmooth.set(i, avg);
+					energyDataRaw.set(i, avg);
+				}
+				
+				// set flag to prevent executing this part again
+				ignoredFramesNormalized = true;
 			}
-
+		}
+		
+		// Stable: size > MIN_SAMPLES + IGNORED_FRAMES
+		else if (size > MIN_SAMPLES + GARBAGE_FRAMES /*+ IGNORED_FRAMES*/) {
+			for (int i = 0; i < OLD_VAL_COUNT; i++) {
+				//oldValues[i] = energyData.get(size - i - 1);
+				oldValues[i] = energyDataRaw.get(size - i - 1);
+			}
 			// filter out abrupt changes (spikes)
 			if (Math.abs(newVal - oldValues[0]) > getMaxEnergy() / 2)
 				newVal = oldValues[0];// +(newVal - oldVal1)/5;
 
 			newVal = smoothCurve(newVal);
 
-			// smooth curve
-			// newVal = (int) (0.1*newVal+0.9*oldVal1);
-
 			if (newVal > getMaxEnergy())
 				setMaxEnergy(newVal);
 
 			if (newVal < getMinEnergy())
 				setMinEnergy(newVal);
-		}
-		energyData.add(newVal);
-
-		// normalize ignored frames
-		if ((size > IGNORED_FRAMES) && !ignoredFramesNormalized) {
-			for (int i = 0; i < IGNORED_FRAMES; i++)
-				energyData.add(i, newVal);
-			ignoredFramesNormalized = true;
+			energyDataSmooth.add(newVal);
+			energyDataRaw.add(newVal);
 		}
 
 		sectorizeFlag++;
-		if (sectorizeFlag % 30 == 0)
+		if (sectorizeFlag % 30 == 0){
 			sectorizeEnergy();
+			updateGUISectors();
+	}
 	}
 
 	@Override
@@ -193,7 +225,7 @@ public class MovementMeterModule
 			energyBins.set(i, 0);
 
 		// sectorize
-		for (final int energy : energyData) {
+		for (final int energy : energyDataSmooth) {
 			boolean addedToBin = false;
 			for (int j = 1; j < noEnergyLevels; j++)
 				if ((energy < energyLevels[j - 1])
@@ -211,17 +243,15 @@ public class MovementMeterModule
 						.set(smallestValueBinIndex, smallestValueBinValue + 1);
 			}
 		}
+	}
 
-		accumulatedSessionTime = sessionModuleData.getAccumulatedSessionTime() / 1000;
-		final double climbingTime = accumulatedSessionTime * energyBins.get(0)
-				/ (double) energyData.size();
-		guiCargo.setDataByTag(expParams[0], formatTime(climbingTime) + " s");
-		final double swimmingTime = accumulatedSessionTime * energyBins.get(1)
-				/ (double) energyData.size();
-		guiCargo.setDataByTag(expParams[1], formatTime(swimmingTime) + " s");
-		final double floatingTime = accumulatedSessionTime * energyBins.get(2)
-				/ (double) energyData.size();
-		guiCargo.setDataByTag(expParams[2], formatTime(floatingTime) + " s");
+	private void updateGUISectors() {
+		int accumulatedSessionTime = sessionModuleData.getAccumulatedSessionTime() / 1000;
+		for(int i=0;i<noEnergyLevels;i++){
+			final double time = accumulatedSessionTime * energyBins.get(i)
+			/ (double) energyDataSmooth.size();
+			guiCargo.setDataByTag(expParams[i], formatTime(time));
+	}
 	}
 
 	private void setMaxEnergy(final int maxEnergy) {
@@ -234,49 +264,54 @@ public class MovementMeterModule
 		updateEnergyLevels();
 	}
 
+	ArrayList<Integer> energyDataRaw=new ArrayList<Integer>();
 	private int smoothCurve(final int newVal) {
-		int sum = 0;
-		for (int i = 0; i < OLD_VAL_COUNT; i++) {
-			sum += oldValues[i];
+		
+		/*double[] numCeoff={0.0321,0.0642,0.0321}; // Wn=0.13 (2 Hz)
+		double[] denCeoff={1.0000,-1.4331,0.5615};*/
+		
+		double[] numCeoff={0.1041,0.2082,0.1041}; // Wn=0.26 (4 Hz)
+		double[] denCeoff={1.0000,-0.9034,0.3197};
+		
+/*		double[] numCeoff={0.2929,0.5858,0.2929}; // Wn=0.5 (7.5 Hz)
+		double[] denCeoff={1.0000,-0.0000,0.1716};*/
+		
+		double num = numCeoff[0]*newVal + numCeoff[1]*oldValues[0] + numCeoff[2]*oldValues[1];
+		double part2=denCeoff[1]*oldValues[0] + denCeoff[2]*oldValues[1];
+		
+		double filteredVal = num -part2;
+		
+		
+		//System.out.println(oldValues[1] +" " + oldValues[0]+ " " + newVal+" : " + filteredVal);
+		return (int) Math.round(filteredVal);
 		}
-		final int avg = sum / OLD_VAL_COUNT;
-		return (int) (0.3 * newVal + 0.7 * avg);
-	}
 
 	private void updateEnergyLevels() {
-		for (int i = 1; i <= energyLevels.length; i++)
-			energyLevels[i - 1] = (int) (getMinEnergy() + ((getMaxEnergy() - getMinEnergy()) * ((energyLevels.length + 1 - i) / (double) energyLevels.length)));
+		int energySwing = getMaxEnergy() - getMinEnergy();
+		
+		for (int i = 0; i < energyLevels.length; i++){
+			energyLevels[i] = (int) (energyLevelsRatio[i]*energySwing);
+	}
+
 	}
 
 	@Override
 	public void updateFileCargoData() {
-		/*
-		 * final String[] sectorsDataStr = new String[energyBins.size()]; int k
-		 * = 0; // TODO: consider using HashMap to map bin name to each bin, to
-		 * avoid // order index dependency! for (final int i : energyBins) {
-		 * sectorsDataStr[k] = Double.toString(100*i/(double)energyData.size());
-		 * k++; } fileCargo.setData(sectorsDataStr);
-		 */
-		accumulatedSessionTime = sessionModuleData.getAccumulatedSessionTime() / 1000;
-		final double climbingTime = accumulatedSessionTime * energyBins.get(0)
-				/ (double) energyData.size();
-		fileCargo.setDataByTag(expParams[0], formatTime(climbingTime));
-		final double swimmingTime = accumulatedSessionTime * energyBins.get(1)
-				/ (double) energyData.size();
-		fileCargo.setDataByTag(expParams[1], formatTime(swimmingTime));
-		final double floatingTime = accumulatedSessionTime * energyBins.get(2)
-				/ (double) energyData.size();
-		fileCargo.setDataByTag(expParams[2], formatTime(floatingTime));
-		/*
-		 * fileCargo.setDataByIndex(0, "" +
-		 * movementMeterFilterData.getWhiteSummation());
-		 */
+		sectorizeEnergy();
+		
+		int accumulatedSessionTime = sessionModuleData.getAccumulatedSessionTime();
+		System.out.println(accumulatedSessionTime);
+		for(int i=0;i<noEnergyLevels;i++){
+			final double time = accumulatedSessionTime * energyBins.get(i)
+			/ (double) (energyDataSmooth.size()*1000);
+			fileCargo.setDataByTag(expParams[i], formatTime(time));
+	}
 	}
 
 	@Override
 	public void updateGUICargoData() {
-		if (energyData.size() > MIN_SAMPLES) {
-			final int newData = energyData.get(energyData.size() - 1);
+		if (energyDataSmooth.size() > MIN_SAMPLES + GARBAGE_FRAMES+ 10/* to prevent taking last energy value in the interval [0,MIN_SAMPLES] before normalization*/) {
+			final int newData = energyDataSmooth.get(energyDataSmooth.size() - 1);
 			gui.addPoint(newData);
 
 			gui.setEnergyLevels(energyLevels);
