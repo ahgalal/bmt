@@ -17,7 +17,6 @@ package filters.screendrawer;
 import java.awt.Graphics;
 import java.awt.Point;
 
-import modules.zones.ShapeCollection;
 import utils.PManager;
 import utils.StatusManager.StatusSeverity;
 import filters.CommonFilterConfigs;
@@ -36,12 +35,6 @@ public class ScreenDrawerConfigs extends FilterConfigs {
 	 */
 	private Graphics			refGfxScreen;
 	private Point canvasDims;
-
-	/**
-	 * instance of a ShapeCollection that will draw its shapes on the main
-	 * stream.
-	 */
-	private ShapeCollection	shapeController;
 
 	/**
 	 * Initializes the configurations.
@@ -66,29 +59,26 @@ public class ScreenDrawerConfigs extends FilterConfigs {
 	public ScreenDrawerConfigs(final String filterName,
 			final Graphics refGfxScreen,
 			final CommonFilterConfigs commonConfigs,
-			final ShapeCollection shpController, Point canvasDims) {
+			Point canvasDims) {
 		super(filterName,ScreenDrawer.ID, commonConfigs);
 		this.setRefGfxMainScreen(refGfxScreen);
-		this.setShapeController(shpController);
+		
 		this.setCanvasDims(canvasDims);
 	}
 
 	@Override
 	public void mergeConfigs(final FilterConfigs configs) {
+		super.mergeConfigs(configs);
 		final ScreenDrawerConfigs tmpScnDrwrCfgs = (ScreenDrawerConfigs) configs;
-		if (tmpScnDrwrCfgs.getCommonConfigs() != null)
-			setCommonConfigs(tmpScnDrwrCfgs.getCommonConfigs());
 		if (tmpScnDrwrCfgs.getRefGfxScreen() != null)
 			setRefGfxMainScreen(tmpScnDrwrCfgs.getRefGfxScreen());
-		if (tmpScnDrwrCfgs.getShapeController() != null)
-			setShapeController(tmpScnDrwrCfgs.getShapeController());
 		if(tmpScnDrwrCfgs.getCanvasDims()!=null)
 			setCanvasDims(tmpScnDrwrCfgs.getCanvasDims());
 	}
 
 	@Override
 	public boolean validate() {
-		if ((getCommonConfigs() == null) || (getShapeController() == null)) {
+		if (getCommonConfigs() == null) {
 			PManager.log.print("Configs are not completely configured!", this,
 					StatusSeverity.ERROR);
 			return false;
@@ -104,14 +94,6 @@ public class ScreenDrawerConfigs extends FilterConfigs {
 		return refGfxScreen;
 	}
 
-	public void setShapeController(ShapeCollection shapeController) {
-		this.shapeController = shapeController;
-	}
-
-	public ShapeCollection getShapeController() {
-		return shapeController;
-	}
-
 	public void setCanvasDims(Point canvasDims) {
 		this.canvasDims = canvasDims;
 	}
@@ -123,7 +105,7 @@ public class ScreenDrawerConfigs extends FilterConfigs {
 	@Override
 	public FilterConfigs newInstance(String filterName,
 			CommonFilterConfigs commonConfigs) {
-		return new ScreenDrawerConfigs(filterName, null, commonConfigs, null, null);
+		return new ScreenDrawerConfigs(filterName, null, commonConfigs, null);
 	}
 
 }

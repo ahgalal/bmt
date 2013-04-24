@@ -51,9 +51,8 @@ public class SubtractionConfigs extends FilterConfigs {
 
 	@Override
 	public void mergeConfigs(final FilterConfigs configs) {
+		super.mergeConfigs(configs);
 		final SubtractionConfigs tmpSubtractionConfigs = (SubtractionConfigs) configs;
-		if (tmpSubtractionConfigs.getCommonConfigs() != null)
-			this.setCommonConfigs(tmpSubtractionConfigs.getCommonConfigs());
 		if (tmpSubtractionConfigs.getThreshold() != -1)
 			this.setThreshold(tmpSubtractionConfigs.getThreshold());
 	}

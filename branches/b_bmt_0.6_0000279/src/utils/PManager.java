@@ -17,7 +17,6 @@ package utils;
 import java.util.ArrayList;
 
 import modules.ModulesManager;
-import modules.zones.ShapeController;
 
 import org.eclipse.swt.widgets.Display;
 
@@ -34,7 +33,6 @@ import control.ui.CtrlMainGUI;
 import control.ui.CtrlOptionsWindow;
 import control.ui.CtrlRatInfoForm;
 import filters.CommonFilterConfigs;
-import gfx_panel.GfxPanel;
 
 /**
  * Program Manager, contains the main function, creates GUI and Controllers.
@@ -130,8 +128,6 @@ public class PManager {
 				if (!display.readAndDispatch())
 					display.sleep();
 		}
-
-		// display.dispose();
 	}
 
 	/**
@@ -159,11 +155,6 @@ public class PManager {
 	 * Options window, used to alter filters/modules options.
 	 */
 	private CtrlOptionsWindow				optionsWindow;
-	/**
-	 * ShapeController instance, used to handle the graphical representation of
-	 * zones.
-	 */
-	private final ShapeController			shapeController;
 
 	/**
 	 * Program's state, check the documentation of ProgramState enumeration.
@@ -187,7 +178,6 @@ public class PManager {
 		defaultInstance = this;
 		this.statusMgr=new StatusManager();
 
-		shapeController = ShapeController.getDefault();
 		this.drawZns=new CtrlDrawZones();
 		this.frmRat=new CtrlRatInfoForm();
 		this.camOptions=new CtrlCamOptions();
@@ -266,16 +256,6 @@ public class PManager {
 		vidMgr.initialize(commonConfigs, vidFile);
 	}
 
-	/**
-	 * Links Gfx_panel with ShapeController, gives the gfx_panel instance to the
-	 * shape_controller instance.
-	 * 
-	 * @param gfxPanel
-	 *            GfxPanel object to send to the shape controller
-	 */
-	public void linkGFXPanelWithShapeCtrlr(final GfxPanel gfxPanel) {
-		getShapeController().linkWithGFXPanel(gfxPanel);
-	}
 	private boolean arrStateListenersLock=false;
 	private void notifyStateListeners() {
 		acquireLockArrStateListeners();
@@ -395,10 +375,6 @@ public class PManager {
 
 	public StatusManager getStatusMgr() {
 		return statusMgr;
-	}
-
-	public ShapeController getShapeController() {
-		return shapeController;
 	}
 
 	public CtrlOptionsWindow getOptionsWindow() {

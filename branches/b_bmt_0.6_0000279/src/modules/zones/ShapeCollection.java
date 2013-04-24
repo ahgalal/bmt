@@ -29,4 +29,6 @@ public interface ShapeCollection {
 	 *            Graphics object to draw the shapes on
 	 */
 	void drawAllShapes(final Graphics gfx);
+
+	void drawAllShapes(Graphics gfx, double xScale, double yScale);
 }

@@ -83,6 +83,7 @@ public class RearingFilterConfigs extends FilterConfigs {
 
 	@Override
 	public void mergeConfigs(final FilterConfigs configs) {
+		super.mergeConfigs(configs);
 		final RearingFilterConfigs tmpRearingConfigs = (RearingFilterConfigs) configs;
 		if (tmpRearingConfigs.getMarginX() != -1)
 			this.setMarginX(tmpRearingConfigs.getMarginX());
@@ -90,8 +91,6 @@ public class RearingFilterConfigs extends FilterConfigs {
 			this.setMarginY(tmpRearingConfigs.getMarginY());
 		if (tmpRearingConfigs.getRearingThresh() != -1)
 			this.setRearingThresh(tmpRearingConfigs.getRearingThresh());
-		if (tmpRearingConfigs.getCommonConfigs() != null)
-			this.setCommonConfigs(tmpRearingConfigs.getCommonConfigs());
 	}
 
 	@Override
