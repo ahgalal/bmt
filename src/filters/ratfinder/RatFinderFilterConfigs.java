@@ -39,13 +39,6 @@ public class RatFinderFilterConfigs extends FilterConfigs {
 		super(filterName,RatFinder.ID, commonConfigs);
 	}
 
-	@Override
-	public void mergeConfigs(final FilterConfigs configs) {
-		final RatFinderFilterConfigs tmpRatfinerConfigs = (RatFinderFilterConfigs) configs;
-		if (tmpRatfinerConfigs.getCommonConfigs() != null)
-			setCommonConfigs(tmpRatfinerConfigs.getCommonConfigs());
-	}
-
 	/**
 	 * Checks that All configurations are set. (for testing purposes only)
 	 * 

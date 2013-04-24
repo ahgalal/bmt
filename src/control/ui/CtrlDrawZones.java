@@ -36,14 +36,21 @@ import utils.StatusManager.StatusSeverity;
 public class CtrlDrawZones extends ControllerUI<DrawZones> {
 
 	/**
+	 * ShapeController instance, used to handle the graphical representation of
+	 * zones.
+	 */
+	private final ShapeController	shapeController;
+
+	/**
 	 * Initializes class attributes (DrawZones , PManager and ZoneController)
 	 * then gives the instance of GfxPanel to PManager to share it.
 	 */
 	public CtrlDrawZones() {
-		pm = PManager.getDefault();
+		shapeController = ShapeController.getDefault();
+
 		ui = new DrawZones();
 		ui.setController(this);
-		pm.linkGFXPanelWithShapeCtrlr(ui.getGFXPanel());
+		shapeController.linkWithGFXPanel(ui.getGFXPanel());
 	}
 
 	/**
@@ -155,12 +162,15 @@ public class CtrlDrawZones extends ControllerUI<DrawZones> {
 	public void sendScaletoZonesModule(final Point measurePnt1,
 			final Point measurePnt2, final String strRealDistance) {
 		try {
-			int realDist=Integer.parseInt(strRealDistance);
+			final int realDist = Integer.parseInt(strRealDistance);
 			((ZonesModule) ModulesManager.getDefault().getModuleByID(
 					ZonesModule.moduleID)).setScale(measurePnt1, measurePnt2,
 					realDist);
-		} catch (NumberFormatException e) {
-			PManager.getDefault().getStatusMgr().setStatus("Invalid distance, please try again.", StatusSeverity.ERROR);
+		} catch (final NumberFormatException e) {
+			PManager.getDefault()
+					.getStatusMgr()
+					.setStatus("Invalid distance, please try again.",
+							StatusSeverity.ERROR);
 		}
 	}
 
@@ -170,8 +180,8 @@ public class CtrlDrawZones extends ControllerUI<DrawZones> {
 	 * @param img
 	 *            new Background image
 	 */
-	public void setBackground(final int[] img,int width,int height) {
-		ui.getGFXPanel().setBackground(img,width,height);
+	public void setBackground(final int[] img, final int width, final int height) {
+		ui.getGFXPanel().setBackground(img, width, height);
 	}
 
 	/**

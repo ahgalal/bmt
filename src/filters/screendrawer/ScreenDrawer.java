@@ -48,8 +48,6 @@ public class ScreenDrawer extends VideoFilter<ScreenDrawerConfigs, FilterData> {
 				final Graphics refGfxScreen = configs.getRefGfxScreen();
 				final int canvasWidth = configs.getCanvasDims().x;
 				final int canvasHeight = configs.getCanvasDims().y;
-				final ShapeCollection shapeController = configs
-						.getShapeController();
 
 				while (configs.isEnabled()) {
 					if (linkIn.getData() != null) {
@@ -64,8 +62,6 @@ public class ScreenDrawer extends VideoFilter<ScreenDrawerConfigs, FilterData> {
 								canvasHeight, 0, 0, configs.getCommonConfigs()
 										.getWidth(), configs.getCommonConfigs()
 										.getHeight(), null);
-						// draw zones
-						shapeController.drawAllShapes(refGfxScreen);
 
 						// draw frame rate on main screen
 						refGfxScreen.setColor(Color.GREEN);

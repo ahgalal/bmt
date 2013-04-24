@@ -19,15 +19,6 @@ public class AverageFilterConfigs extends FilterConfigs {
 	}
 
 	/* (non-Javadoc)
-	 * @see filters.FilterConfigs#mergeConfigs(filters.FilterConfigs)
-	 */
-	@Override
-	public void mergeConfigs(FilterConfigs configs) {
-		if (configs.getCommonConfigs() != null)
-			setCommonConfigs(configs.getCommonConfigs());
-	}
-
-	/* (non-Javadoc)
 	 * @see filters.FilterConfigs#validate()
 	 */
 	@Override

@@ -16,11 +16,12 @@ package gfx_panel;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.text.AttributedString;
 
 import org.eclipse.swt.graphics.RGB;
 
 /**
- * Rectange Shape Class, represents a rectangle drawn on the GfxPanel.
+ * Rectangle Shape Class, represents a rectangle drawn on the GfxPanel.
  * 
  * @author Creative
  */
@@ -58,9 +59,7 @@ public class RectangleShape extends Shape {
 	 */
 	@Override
 	public void draw(final Graphics g) {
-		g.setColor(new Color(rgbColor.red, rgbColor.green, rgbColor.blue));
-		g.drawRect(x, y, width, height);
-		g.drawString(""+getShapeNumber(), x+2, y+12);
+		draw(g, 1, 1);
 	}
 
 	/*
@@ -108,4 +107,18 @@ public class RectangleShape extends Shape {
 		this.width = width;
 	}
 
+	@Override
+	public void draw(Graphics gfx, double xScale, double yScale) {
+		gfx.setColor(new Color(rgbColor.red, rgbColor.green, rgbColor.blue));
+		int xFinal = (int)(x*xScale);
+		int yFinal = (int)(y*yScale);
+		int widthFinal = (int)(width*xScale);
+		int heightFinal = (int) (height*yScale);
+		if(xScale!=1 || yScale!=1)
+			gfx.drawRect(xFinal-1, yFinal-1, widthFinal+2, heightFinal+2);
+		gfx.drawRect(xFinal, yFinal, widthFinal, heightFinal);
+		
+		AttributedString attributedString = getAttributedString((int) (xScale*12));
+		gfx.drawString(attributedString.getIterator(), (int)((x+2)*xScale), (int) ((y+12)*yScale));
+	}
 }

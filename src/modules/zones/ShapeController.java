@@ -89,10 +89,10 @@ public class ShapeController implements GfxPanelNotifiee, ShapeCollection {
 	 * @see control.ShapeCollection#drawaAllShapes(java.awt.Graphics)
 	 */
 	@Override
-	public void drawAllShapes(final Graphics gfx) {
+	public void drawAllShapes(final Graphics gfx,double xScale,double yScale) {
 		int i = 0;
 		for (i = 0; i < this.getNumberOfShapes(); i++)
-			this.shapes.get(i).draw(gfx);
+			this.shapes.get(i).draw(gfx,xScale,yScale);
 	}
 
 	/**
@@ -202,6 +202,11 @@ public class ShapeController implements GfxPanelNotifiee, ShapeCollection {
 	public void shapeSelected(final int shapeNumber) {
 		((ZonesModule) ModulesManager.getDefault().getModuleByID(
 				ZonesModule.moduleID)).selectZoneInGUI(shapeNumber);
+	}
+
+	@Override
+	public void drawAllShapes(Graphics gfx) {
+		drawAllShapes(gfx, 1, 1);
 	}
 
 }

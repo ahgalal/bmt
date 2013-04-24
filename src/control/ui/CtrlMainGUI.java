@@ -188,8 +188,7 @@ public class CtrlMainGUI extends ControllerUI<MainGUI> implements StateListener 
 				.getFilterManager()
 				.applyConfigsToFilter(
 						new ScreenDrawerConfigs(name, ui.getAwtVideoMain()
-								.getGraphics(), null,pm
-								.getShapeController(),canvasDims));
+								.getGraphics(), null,canvasDims));
 
 	}
 	
@@ -200,8 +199,7 @@ public class CtrlMainGUI extends ControllerUI<MainGUI> implements StateListener 
 		.getFilterManager()
 		.applyConfigsToFilter(
 				new ScreenDrawerConfigs(name, ui.getAwtVideoSec()
-						.getGraphics(), null, pm
-						.getShapeController(),canvasDims));
+						.getGraphics(), null,canvasDims));
 	}
 
 	/**

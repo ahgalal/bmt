@@ -47,9 +47,8 @@ public class SourceFilterConfigs extends FilterConfigs {
 
 	@Override
 	public void mergeConfigs(final FilterConfigs configs) {
+		super.mergeConfigs(configs);
 		final SourceFilterConfigs tmpSrcfilterConfigs = (SourceFilterConfigs) configs;
-		if (tmpSrcfilterConfigs.getCommonConfigs() != null)
-			setCommonConfigs(tmpSrcfilterConfigs.getCommonConfigs());
 		if (tmpSrcfilterConfigs.getFrameIntArray() != null)
 			this.setFrameIntArray(tmpSrcfilterConfigs.getFrameIntArray());
 	}

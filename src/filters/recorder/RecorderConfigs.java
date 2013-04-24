@@ -40,12 +40,6 @@ public class RecorderConfigs extends FilterConfigs {
 	}
 
 	@Override
-	public void mergeConfigs(final FilterConfigs configs) {
-		if (configs.getCommonConfigs() != null)
-			this.setCommonConfigs(configs.getCommonConfigs());
-	}
-
-	@Override
 	public boolean validate() {
 		if (getCommonConfigs() == null) {
 			PManager.log.print("Configs are not completely configured!", this,

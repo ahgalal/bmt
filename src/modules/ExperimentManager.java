@@ -48,16 +48,7 @@ public class ExperimentManager {
 	public static Experiment readExperimentFromFile(final String fileName) {
 
 		Experiment exp = null;
-		/*
-		 * ObjectInputStream ois; try { ois = new ObjectInputStream(new
-		 * FileInputStream(new File(fileName))); exp = (Experiment)
-		 * ois.readObject(); exp.setFileName(fileName); } catch (final
-		 * FileNotFoundException e) { e.printStackTrace(); } catch (final
-		 * IOException e) { System.err
-		 * .println("Experiment loading error, Experiment file may be corrupted"
-		 * ); } catch (final ClassNotFoundException e) {
-		 * System.err.println("incompatible experiment file!"); }
-		 */
+		
 		final XStream xstream = new XStream(new DomDriver());
 		try {
 			exp = (Experiment) xstream.fromXML(new FileReader(fileName));

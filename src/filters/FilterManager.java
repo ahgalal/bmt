@@ -43,6 +43,8 @@ import filters.source.SourceFilter;
 import filters.source.SourceFilterConfigs;
 import filters.subtractionfilter.SubtractionConfigs;
 import filters.subtractionfilter.SubtractorFilter;
+import filters.zonesdrawer.ZonesDrawerFilter;
+import filters.zonesdrawer.ZonesDrawerConfigs;
 
 /**
  * Manager of all filters, to enable, disable filters.
@@ -82,6 +84,7 @@ public class FilterManager implements ConfigsListener {
 		installedFilters.add(new ScreenDrawer("", null, null));
 		installedFilters.add(new SubtractorFilter("", null, null));
 		installedFilters.add(new VideoRecorder("", null, null));
+		installedFilters.add(new ZonesDrawerFilter("", null, null));
 		
 		configurationManager = new FiltersConfigurationManager(filters.getFilters());
 		this.commonConfigs = commonConfigs;
@@ -125,9 +128,6 @@ public class FilterManager implements ConfigsListener {
 
 		filters.clear();
 
-		// TODO: this is a tmp fix to prevent drawing zones on
-		// the main screen in case of FST (search for #abc to find other edits)
-		ShapeController.getDefault().clearAllShapes();
 		// TODO: ??
 	}
 
@@ -248,10 +248,10 @@ public class FilterManager implements ConfigsListener {
 
 		final ScreenDrawerConfigs scrnDrwrCnfgs = new ScreenDrawerConfigs(
 				"ScreenDrawer", null, commonConfigs,
-				ShapeController.getDefault(),null);
+				null);
 		final ScreenDrawerConfigs scrnDrwrCnfgsSec = new ScreenDrawerConfigs(
 				"ScreenDrawerSec", null, commonConfigs,
-				ShapeController.getDefault(),null);
+				null);
 
 		final RatFinderFilterConfigs ratFinderConfigs = new RatFinderFilterConfigs(
 				"RatFinder", commonConfigs);
@@ -271,6 +271,7 @@ public class FilterManager implements ConfigsListener {
 
 		final MovementMeterFilterConfigs movementFilterConfigs = new MovementMeterFilterConfigs(
 				"MovementMeter", commonConfigs);
+		ZonesDrawerConfigs zonesDrawerConfigs = new ZonesDrawerConfigs("ZonesDrawer", commonConfigs, ShapeController.getDefault());
 
 		configurationManager.reset();
 		configurationManager.addConfiguration(sourceConfigs, false);
@@ -282,6 +283,7 @@ public class FilterManager implements ConfigsListener {
 		configurationManager.addConfiguration(subtractionConfigs, false);
 		configurationManager.addConfiguration(avgFilterConfigs, false);
 		configurationManager.addConfiguration(movementFilterConfigs, false);
+		configurationManager.addConfiguration(zonesDrawerConfigs, false);
 	}
 private FiltersSetup activeFiltersSetup;
 	/**
@@ -526,5 +528,9 @@ private FiltersSetup activeFiltersSetup;
 		}
 		// notify FilterSetup
 		activeFiltersSetup.connectFilters(new Point(commonConfigs.getWidth(), commonConfigs.getHeight()));
+	}
+	
+	public void applyConfigsToFiltersByID(FilterConfigs configs){
+		configurationManager.applyConfigsByID(configs);
 	}
 }

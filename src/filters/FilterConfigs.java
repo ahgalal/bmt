@@ -68,7 +68,10 @@ public abstract class FilterConfigs implements Configuration<FilterConfigs> {
 	 * @param configs
 	 *            incoming configurations object
 	 */
-	public abstract void mergeConfigs(FilterConfigs configs);
+	public void mergeConfigs(FilterConfigs configs){
+		if (configs.getCommonConfigs() != null)
+			setCommonConfigs(configs.getCommonConfigs());
+	}
 
 	/**
 	 * Checks that All configurations are set. (for testing purposes only)
