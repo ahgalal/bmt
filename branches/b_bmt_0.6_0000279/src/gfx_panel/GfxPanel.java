@@ -258,6 +258,7 @@ public class GfxPanel {
 					final int newShapeNumber = addShape(shpBeingDrawn);
 					notifyShapeAdded(newShapeNumber);
 					shpBeingDrawn = null;
+					refreshDrawingArea();
 				}
 				/**
 				 * the next code is for resizing or moving
@@ -433,10 +434,9 @@ public class GfxPanel {
 		final int[] takenNumbers = new int[shapes.size()];
 		for (int y = 0; y < shapes.size(); y++)
 			takenNumbers[y] = shapes.get(y).getShapeNumber();
-
-		iterateI: for (int i = 0; i < 1000; i++) // we can handle up to 1000 of
-		// shapes
-		{
+		
+		// we can handle up to 1000 of shapes
+		iterateI: for (int i = 0; i < 1000; i++){
 			for (final int a : takenNumbers)
 				if (a == i) // this i is rejected .. go to next i
 					continue iterateI;

@@ -25,6 +25,7 @@ import modules.ModulesManager;
 import modules.experiment.Experiment;
 import sys.utils.Utils;
 import utils.PManager;
+import utils.Logger.Details;
 import utils.PManager.ProgramState.GeneralState;
 import utils.PManager.ProgramState.StreamState;
 import utils.StatusManager.StatusSeverity;

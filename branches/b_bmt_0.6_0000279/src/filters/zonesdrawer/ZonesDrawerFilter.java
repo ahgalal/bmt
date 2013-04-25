@@ -8,10 +8,6 @@ import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferInt;
 
 import modules.zones.ShapeCollection;
-import modules.zones.ZonesCollection;
-import modules.zones.ZonesModule;
-import modules.zones.ZonesModuleConfigs;
-import modules.zones.ZonesModuleGUI;
 import utils.PManager.ProgramState;
 import filters.FilterData;
 import filters.Link;

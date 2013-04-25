@@ -84,8 +84,7 @@ public class OvalShape extends Shape {
 			gfx.drawOval(xFinal, yFinal, diameterXFinal+2, diameterYFinal+2);
 		gfx.drawOval(xFinal, yFinal, diameterXFinal, diameterYFinal);
 		
-		AttributedString attributedString = getAttributedString((int) (12*xScale));
-		
+		AttributedString attributedString = getAttributedString((int) (12*xScale),Integer.toString(getShapeNumber()));
 		gfx.drawString(attributedString.getIterator(), xFinal+diameterXFinal/2-5, yFinal+diameterYFinal/2+5);
 	}
 	

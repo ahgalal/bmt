@@ -384,11 +384,17 @@ public class ZonesModule extends
 	 */
 	private void updateTotalDistance() {
 		if (oldPosition != null) {
-			int distanceX = (currentPosition.x - oldPosition.x)*DEFAULT_CANVAS_WIDTH/configs.getCommonConfigs().getWidth();
-			int distanceY = (currentPosition.y - oldPosition.y)*DEFAULT_CANVAS_HEIGHT/configs.getCommonConfigs().getHeight();
-			
-			double distance = Math.sqrt(Math.pow(distanceX, 2)+Math.pow(distanceY, 2));
-			long totalDistance = (long) (data.getTotalDistance() + distance / data.getScale());
+			final int distanceX = (currentPosition.x - oldPosition.x)
+					* DEFAULT_CANVAS_WIDTH
+					/ configs.getCommonConfigs().getWidth();
+			final int distanceY = (currentPosition.y - oldPosition.y)
+					* DEFAULT_CANVAS_HEIGHT
+					/ configs.getCommonConfigs().getHeight();
+
+			final double distance = Math.sqrt(Math.pow(distanceX, 2)
+					+ Math.pow(distanceY, 2));
+			final long totalDistance = (long) (data.getTotalDistance() + distance
+					/ data.getScale());
 			data.setTotalDistance(totalDistance);
 		}
 	}
@@ -456,31 +462,42 @@ public class ZonesModule extends
 					if ((x > -1) & (x < width)) {
 						for (int y = zoneStartY; y < zoneEndY; y++)
 							if ((y > -1) & (y < height))
-								zoneMap[x + (/* height - */y) * width] = (byte) tmpZoneNumber;
+								zoneMap[x + y * width] = (byte) tmpZoneNumber;
 					}
 			} else if (tmpShp instanceof OvalShape) {
 				tmpOval = (OvalShape) tmpShp;
-				final int rx = tmpOval.getWidth() * width
+				final int radiusX = tmpOval.getWidth() * width
 						/ DEFAULT_CANVAS_WIDTH / 2;
-				final int ry = tmpOval.getHeight() * height
+				final int radiusY = tmpOval.getHeight() * height
 						/ DEFAULT_CANVAS_HEIGHT / 2;
-				final int ovX = tmpOval.getX() * width / DEFAULT_CANVAS_WIDTH
-						+ rx;
-				final int ovY = tmpOval.getY() * height / DEFAULT_CANVAS_HEIGHT
-						+ ry;
-				float xFinal, yFinal;
 
-				for (int x = tmpOval.getX(); x < tmpOval.getX() + rx * 2; x++)
-					if ((x > -1) & (x < width))
-						for (int y = tmpOval.getY(); y < tmpOval.getY() + ry
-								* 2; y++)
+				final int centerX = tmpOval.getX() + radiusX;
+				final int centerY = tmpOval.getY() + radiusY;
+
+				float xRelToCenter, yRelToCenter;
+
+				for (int x = tmpOval.getX(); x < tmpOval.getX() + radiusX * 2; x++)
+
+					if ((x > -1) & (x < width)) {
+						xRelToCenter = x - centerX;
+						for (int y = tmpOval.getY(); y < tmpOval.getY()
+								+ radiusY * 2; y++)
 							if ((y > -1) & (y < height)) {
-								xFinal = x - ovX;
-								yFinal = y - ovY;
-								if ((xFinal * xFinal) / (rx * rx)
-										+ (yFinal * yFinal) / (ry * ry) < 1)
-									zoneMap[x + (height - y) * width] = (byte) tmpZoneNumber;
+								yRelToCenter = y - centerY;
+								/**@formatter:off
+								 * ellipse eq:
+								 *      x*x       y*y
+								 *    ------- + ------- = 1
+								 *     rx*rx     ry*ry
+								 */
+								//@formatter:on
+								if ((xRelToCenter * xRelToCenter)
+										/ (radiusX * radiusX)
+										+ (yRelToCenter * yRelToCenter)
+										/ (radiusY * radiusY) < 1)
+									zoneMap[x + y * width] = (byte) tmpZoneNumber;
 							}
+					}
 			}
 		}
 	}

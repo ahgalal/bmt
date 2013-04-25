@@ -79,21 +79,23 @@ public abstract class Shape {
 
 	private AttributedString attributedString;
 	private int attributedStringSize;
-	protected AttributedString getAttributedString(int size) {
+	private String attributedStringText;
+	protected AttributedString getAttributedString(int size, String string) {
 		if(attributedString!=null){
-			if(attributedStringSize==size)
+			if(attributedStringSize==size && attributedStringText.equals(string))
 				return attributedString;
 			else{
-				return createNewAttributedString(size);
+				return createNewAttributedString(size,string);
 			}
 		}
-		return createNewAttributedString(size);
+		return createNewAttributedString(size,string);
 	}
 
-	private AttributedString createNewAttributedString(int size) {
-		attributedString = new AttributedString(""+getShapeNumber());
+	private AttributedString createNewAttributedString(int size, String string) {
+		attributedString = new AttributedString(string);
 		attributedString.addAttribute(TextAttribute.SIZE, (int)(size));
 		attributedStringSize=size;
+		attributedStringText = string;
 		return attributedString;
 	}
 
