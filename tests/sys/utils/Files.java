@@ -9,6 +9,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.nio.channels.FileChannel;
 
 public class Files {
 	/**
@@ -95,5 +96,38 @@ public class Files {
 
 	public static String convertPathToPlatformPath(String string) {
 		return string.replace("/", File.separator);
+	}
+
+	public static void copy(String filePathSrc, String filePathDst) {
+		File fileSrc = new File(filePathSrc);
+		File fileDst = new File(filePathDst);
+		try {
+			copyFile(fileSrc, fileDst);
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
+	}
+	
+	public static void copyFile(File sourceFile, File destFile) throws IOException {
+	    if(!destFile.exists()) {
+	        destFile.createNewFile();
+	    }
+
+	    FileChannel source = null;
+	    FileChannel destination = null;
+
+	    try {
+	        source = new FileInputStream(sourceFile).getChannel();
+	        destination = new FileOutputStream(destFile).getChannel();
+	        destination.transferFrom(source, 0, source.size());
+	    }
+	    finally {
+	        if(source != null) {
+	            source.close();
+	        }
+	        if(destination != null) {
+	            destination.close();
+	        }
+	    }
 	}
 }

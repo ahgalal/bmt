@@ -8,6 +8,7 @@ import gui.integration.ForcedSwimmingIntegration1280x720FrameTest;
 import gui.integration.OpenFieldIntegration1280x720FrameTest;
 import gui.integration.OpenFieldIntegrationManStopStreamWhenPausedTest;
 import gui.integration.OpenFieldIntegrationManStopTrackTest;
+import gui.integration.OpenFieldIntegrationZonesCreationDeletionTest;
 import gui.integration.recorder.OpenFieldIntegrationRecordStreamAutoStopTest;
 import gui.integration.recorder.OpenFieldIntegrationRecordStreamManStopTest;
 import gui.integration.recorder.OpenFieldIntegrationRecordStreamPausedStopTest;
@@ -16,6 +17,8 @@ import gui.vidlibs.JMyronLibTest;
 import gui.vidlibs.V4L2CamLibTest;
 import junit.framework.Test;
 import junit.framework.TestSuite;
+import sys.utils.EnvVar;
+import sys.utils.Files;
 import utils.PManager;
 
 public class AllTests {
@@ -32,12 +35,17 @@ public class AllTests {
 		suite.addTestSuite(OpenFieldIntegration1280x720FrameTest.class);
 		suite.addTestSuite(ForcedSwimmingIntegration1280x720FrameTest.class);
 		
+		// Zones
+		suite.addTestSuite(OpenFieldIntegrationZonesCreationDeletionTest.class);
+		
 		// Experiment loading
 		suite.addTest(DiffExperimentsRunGUITest.suite());
 		
-		// Misc
+		// Stop Tracking handling
 		suite.addTestSuite(OpenFieldIntegrationManStopStreamWhenPausedTest.class);
 		suite.addTestSuite(OpenFieldIntegrationManStopTrackTest.class);
+		
+		// Recorder
 		suite.addTestSuite(OpenFieldIntegrationRecordStreamAutoStopTest.class);
 		suite.addTestSuite(OpenFieldIntegrationRecordStreamManStopTest.class);
 		suite.addTestSuite(OpenFieldIntegrationRecordStreamPausedStopTest.class);

@@ -118,7 +118,7 @@ public class RectangleShape extends Shape {
 			gfx.drawRect(xFinal-1, yFinal-1, widthFinal+2, heightFinal+2);
 		gfx.drawRect(xFinal, yFinal, widthFinal, heightFinal);
 		
-		AttributedString attributedString = getAttributedString((int) (xScale*12));
+		AttributedString attributedString = getAttributedString((int) (xScale*12),Integer.toString(getShapeNumber()));
 		gfx.drawString(attributedString.getIterator(), (int)((x+2)*xScale), (int) ((y+12)*yScale));
 	}
 }
