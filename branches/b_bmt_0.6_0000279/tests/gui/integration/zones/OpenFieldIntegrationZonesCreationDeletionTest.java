@@ -1,9 +1,10 @@
 /**
  * 
  */
-package gui.integration;
+package gui.integration.zones;
 
 import gui.executionunit.ZonesExecUnitGroup;
+import gui.integration.OpenFieldIntegrationTest;
 import sys.utils.Files;
 
 /**
