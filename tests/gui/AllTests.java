@@ -17,8 +17,6 @@ import gui.vidlibs.JMyronLibTest;
 import gui.vidlibs.V4L2CamLibTest;
 import junit.framework.Test;
 import junit.framework.TestSuite;
-import sys.utils.EnvVar;
-import sys.utils.Files;
 import utils.PManager;
 
 public class AllTests {
