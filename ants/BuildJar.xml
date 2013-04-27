@@ -48,6 +48,7 @@
 		buildall,
 		copy_license,
 		create_runners,
+		create_help,
 		zip_all">
 
 	</target>
@@ -132,6 +133,7 @@
 
 
 	<import file="test/base/build.xml" />
+	<import file="help/BuildHelp.xml" />
 	
 	<target name="compile_tests" depends="init">
 		<property name="binloctmp.tests" value="${dir.bin}" />
@@ -286,8 +288,8 @@
 	<target name="create_runners">
 		<property name="swt.jar.linux" value="org.eclipse.swt.gtk.linux.x86_3.6.2.v3659b.jar" />
 		<property name="swt.jar.win" value="org.eclipse.swt.win32.win32.x86_3.6.2.v3659c.jar" />
-		<echo file="${release_dir}/run.bat" message="set PATH=%PATH%;%CD%${line.separator}java -classpath ${libs_dir.name}\${swt.jar.win};libs\*;BMT_v${bmt_version}.jar utils.PManager${line.separator}pause" />
-		<echo file="${release_dir}/run.sh" message="export LD_LIBRARY_PATH=.:$LD_LIBRARY_PATH${line.separator}java -classpath ${libs_dir.name}/${swt.jar.linux}:libs/*:BMT_v${bmt_version}.jar utils.PManager" />
+		<echo file="${release_dir}/run.bat" message="set PATH=%PATH%;%CD%${line.separator}java -classpath ${libs_dir.name}\${swt.jar.win};libs\*;BMT_v${bmt_version}.jar;help\* utils.PManager${line.separator}pause" />
+		<echo file="${release_dir}/run.sh" message="export LD_LIBRARY_PATH=.:$LD_LIBRARY_PATH${line.separator}java -classpath ${libs_dir.name}/${swt.jar.linux}:libs/*:BMT_v${bmt_version}.jar:help\* utils.PManager" />
 	</target>
 
 	<!-- ================================= 
@@ -296,6 +298,14 @@
 	<target name="copy_license">
 		<copy tofile="${release_dir}/license.txt" file="deploy/license/license.txt" />
 	</target>
+
+	<!-- ================================= 
+          target: create_help              
+         ================================= -->
+    <target name="create_help">
+        <antcall target="build_help_jar"/>
+    	<copy todir="${release_dir}/help" file="help/help.jar"/>
+    </target>
 
 
 </project>

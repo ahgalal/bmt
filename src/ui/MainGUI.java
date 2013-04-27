@@ -633,6 +633,15 @@ public class MainGUI extends BaseUI {
 		mnuHelpItem.setText(ExternalStrings.get("MainGUI.Menu.Help")); //$NON-NLS-1$
 		mnuHelp = new Menu(mnuHelpItem);
 		mnuHelpItem.setMenu(mnuHelp);
+		
+		MenuItem mntmContents = new MenuItem(mnuHelp, SWT.NONE);
+		mntmContents.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				controller.mnutmHelpContentsAction();
+			}
+		});
+		mntmContents.setText("Contents ..");
 		final MenuItem mnutmHelpAbout = new MenuItem(mnuHelp, SWT.PUSH);
 		mnutmHelpAbout.setText(ExternalStrings.get("MainGUI.Menu.About")); //$NON-NLS-1$
 		mnutmHelpAbout.setEnabled(true);

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- ====================================================================== 
+     Jul 3, 2011 11:22:07 PM                                                        
+
+     BMT    
+     Behavioral Monitoring Tool
+                   
+     Creative                                                                
+     ====================================================================== -->
+<project name="BMT_help" default="build_help_jar" basedir="../../">
+	<description>
+            Builds BMT help jar file.
+    </description>
+
+	<property name="helpjarfile" value="help/help.jar" />
+
+
+	<!-- - - - - - - - - - - - - - - - - - 
+          target: build_jar                      
+         - - - - - - - - - - - - - - - - - -->
+	<target name="build_help_jar">
+		<delete file="${helpjarfile}" />
+		<jar destfile="${helpjarfile}">
+			<fileset dir="help/javahelp/content" includes="*/**" />
+		</jar>
+	</target>
+
+
+</project>
