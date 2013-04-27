@@ -14,6 +14,8 @@
 
 package control.ui;
 
+import help.HelpManager;
+
 import java.awt.Point;
 import java.io.File;
 import java.util.ArrayList;
@@ -167,7 +169,7 @@ public class CtrlMainGUI extends ControllerUI<MainGUI> implements StateListener 
 		}
 		ui.closeWindow();
 		pm.unloadGUI();
-		// System.exit(0);
+		System.exit(0);
 	}
 
 	/**
@@ -570,6 +572,10 @@ public class CtrlMainGUI extends ControllerUI<MainGUI> implements StateListener 
 		FilterGraph filterGraph = FilterGraph.getDefault();
 		filterGraph.setFilterSetup(ExperimentManager.getDefault().getFilterSetup());
 		filterGraph.openWindow();
+	}
+
+	public void mnutmHelpContentsAction() {
+		HelpManager.getDefault().openHelp();
 	}
 
 }
