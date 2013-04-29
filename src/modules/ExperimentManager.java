@@ -215,10 +215,10 @@ public class ExperimentManager {
 		if (experiment != null) {
 			setExpLoaded(true);
 			this.exp = experiment;
-			PManager.getDefault().getVideoManager().setupModulesAndFilters(exp);
+			boolean setupModulesAndFilters = PManager.getDefault().getVideoManager().setupModulesAndFilters(exp);
 			setExperimantLoadedInGUI(true);
 			
-			return ExperimentModule.checkExperimentParams();
+			return setupModulesAndFilters && ExperimentModule.checkExperimentParams();
 		}
 		return false;
 	}
@@ -381,8 +381,12 @@ public class ExperimentManager {
 		this.textEngine = textEngine;
 	}
 
-	public void signalFiltersSetupChange() {
-		loadExperiment(exp);
+	public boolean signalFiltersSetupChange() {
+		/* 
+		 * reload the same experiment, to activate the updated
+		 * filters setup stored in the experiment instance.
+		 */
+		return loadExperiment(exp);
 	}
 
 	/**

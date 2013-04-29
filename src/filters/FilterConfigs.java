@@ -31,8 +31,8 @@ public abstract class FilterConfigs implements Configuration<FilterConfigs> {
 	 * is the filter enable.
 	 */
 	private boolean				enabled;
-	private String		name;
-	private String		filterId;
+	private final String		filterId;
+	private String				name;
 
 	/**
 	 * Initializes configurations.
@@ -42,21 +42,36 @@ public abstract class FilterConfigs implements Configuration<FilterConfigs> {
 	 * @param commonConfigs
 	 *            CommonFilterConfigs object, needed by almost all filters
 	 */
-	public FilterConfigs(final String name,String filterId,
+	public FilterConfigs(final String name, final String filterId,
 			final CommonFilterConfigs commonConfigs) {
-		if(commonConfigs!=null)
+		if (commonConfigs != null)
 			this.setCommonConfigs(commonConfigs);
 		this.name = name;
-		this.filterId=filterId;
+		this.filterId = filterId;
 	}
-	
+
+	@Override
+	public CommonFilterConfigs getCommonConfigs() {
+		return commonConfigs;
+	}
+
+	@Override
+	public String getID() {
+		return filterId;
+	}
+
 	/**
 	 * Gets the filter name for this configuration object.
 	 * 
 	 * @return String containing the filter's name
 	 */
+	@Override
 	public String getName() {
 		return name;
+	}
+
+	public boolean isEnabled() {
+		return enabled;
 	}
 
 	/**
@@ -68,9 +83,37 @@ public abstract class FilterConfigs implements Configuration<FilterConfigs> {
 	 * @param configs
 	 *            incoming configurations object
 	 */
-	public void mergeConfigs(FilterConfigs configs){
+	@Override
+	public void mergeConfigs(final FilterConfigs configs) {
 		if (configs.getCommonConfigs() != null)
 			setCommonConfigs(configs.getCommonConfigs());
+	}
+
+	@Override
+	public FilterConfigs newInstance(final String name) {
+		throw new RuntimeException(
+				"Illegal method call, should have called the overload");
+	}
+
+	public abstract FilterConfigs newInstance(String filterName,
+			CommonFilterConfigs commonConfigs);
+
+	public void setCommonConfigs(final CommonFilterConfigs commonConfigs) {
+		this.commonConfigs = commonConfigs;
+	}
+
+	public void setEnabled(final boolean enabled) {
+		this.enabled = enabled;
+	}
+
+	@Override
+	public void setName(final String name) {
+		this.name = name;
+	}
+
+	@Override
+	public String toString() {
+		return "name: " + getName();
 	}
 
 	/**
@@ -79,41 +122,4 @@ public abstract class FilterConfigs implements Configuration<FilterConfigs> {
 	 * @return true: success
 	 */
 	public abstract boolean validate();
-	
-	@Override
-	public String toString() {
-		return "name: "+getName();
-	}
-
-	public void setEnabled(boolean enabled) {
-		this.enabled = enabled;
-	}
-
-	public boolean isEnabled() {
-		return enabled;
-	}
-	
-	@Override
-	public void setName(String name) {
-		this.name=name;
-	}
-
-	public void setCommonConfigs(CommonFilterConfigs commonConfigs) {
-		this.commonConfigs = commonConfigs;
-	}
-
-	public CommonFilterConfigs getCommonConfigs() {
-		return commonConfigs;
-	}
-
-	public String getID() {
-		return filterId;
-	}
-	
-	@Override
-	public FilterConfigs newInstance(String name) {
-		throw new RuntimeException("Illegal method call, should have called the overload");
-	}
-	
-	public abstract FilterConfigs newInstance(String filterName,CommonFilterConfigs commonConfigs);
 }

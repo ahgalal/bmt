@@ -44,7 +44,10 @@ public class SourceFilter extends
 		super(name, linkIn, linkOut);
 		filterData = new SourceFilterData();
 	}
-
+	@Override
+	public int getInPortCount() {
+		return 0;
+	}
 	@Override
 	public boolean configure(final FilterConfigs configs) {
 		this.configs = (SourceFilterConfigs) configs;

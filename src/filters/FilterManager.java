@@ -43,8 +43,8 @@ import filters.source.SourceFilter;
 import filters.source.SourceFilterConfigs;
 import filters.subtractionfilter.SubtractionConfigs;
 import filters.subtractionfilter.SubtractorFilter;
-import filters.zonesdrawer.ZonesDrawerFilter;
 import filters.zonesdrawer.ZonesDrawerConfigs;
+import filters.zonesdrawer.ZonesDrawerFilter;
 
 /**
  * Manager of all filters, to enable, disable filters.
@@ -52,18 +52,27 @@ import filters.zonesdrawer.ZonesDrawerConfigs;
  * @author Creative
  */
 public class FilterManager implements ConfigsListener {
-	private final FiltersCollection	filters;
-	private final FiltersCollection	installedFilters;
-	private FiltersConfigurationManager configurationManager;
-	private static FilterManager self;
-	private CommonFilterConfigs					commonConfigs;
+	private static FilterManager	self;
 
-	public static FilterManager getDefault(){
-		if(self==null)
-			throw new RuntimeException("FilterManager is called before it is instantiated");
+	public static FilterManager getDefault() {
+		if (self == null)
+			throw new RuntimeException(
+					"FilterManager is called before it is instantiated");
 		return self;
 	}
-	
+
+	private FiltersSetup						activeFiltersSetup;
+	private CommonFilterConfigs					commonConfigs;
+	private final FiltersConfigurationManager	configurationManager;
+
+	private final FiltersCollection				filters;
+
+	private final ArrayList<String>				filtersTriggeredByProcessing	= new ArrayList<String>();
+
+	private final ArrayList<String>				filtersTriggeredByStreaming		= new ArrayList<String>();
+
+	private final FiltersCollection				installedFilters;
+
 	/**
 	 * Initializes the filters' array.
 	 * 
@@ -75,7 +84,7 @@ public class FilterManager implements ConfigsListener {
 		PManager.log.print("instantiating..", this, Details.VERBOSE);
 		filters = new FiltersCollection();
 
-		installedFilters=new FiltersCollection();
+		installedFilters = new FiltersCollection();
 		installedFilters.add(new SourceFilter("", null, null));
 		installedFilters.add(new AverageFilter("", null, null));
 		installedFilters.add(new MovementMeter("", null, null));
@@ -85,11 +94,12 @@ public class FilterManager implements ConfigsListener {
 		installedFilters.add(new SubtractorFilter("", null, null));
 		installedFilters.add(new VideoRecorder("", null, null));
 		installedFilters.add(new ZonesDrawerFilter("", null, null));
-		
-		configurationManager = new FiltersConfigurationManager(filters.getFilters());
+
+		configurationManager = new FiltersConfigurationManager(
+				filters.getFilters());
 		this.commonConfigs = commonConfigs;
 		initializeConfigs(commonConfigs);
-		self=this;
+		self = this;
 	}
 
 	/**
@@ -110,8 +120,27 @@ public class FilterManager implements ConfigsListener {
 	 * @param cfgs
 	 *            configurations object
 	 */
-	public void applyConfigsToFilter(FilterConfigs cfgs) {
+	public void applyConfigsToFilter(final FilterConfigs cfgs) {
 		configurationManager.applyConfigs(cfgs);
+	}
+
+	public void applyConfigsToFiltersByID(final FilterConfigs configs) {
+		configurationManager.applyConfigsByID(configs);
+	}
+
+	private VideoFilter<?, ?> createFilter(final String filterName,
+			final String filterID) {
+		VideoFilter<?, ?> filter = null;
+		for (final Iterator<VideoFilter<?, ?>> it = installedFilters
+				.getIterator(); it.hasNext();) {
+			final VideoFilter<?, ?> vf = it.next();
+
+			if (vf.getID().equals(filterID)) {
+				filter = vf.newInstance(filterName);
+				break;
+			}
+		}
+		return filter;
 	}
 
 	/**
@@ -123,7 +152,6 @@ public class FilterManager implements ConfigsListener {
 		for (final PluggedGUI<?> pgui : getFiltersGUI()) {
 			PManager.getDefault().removeStateListener(pgui);
 			pgui.deInitialize();
-			System.out.println("sssssss");
 		}
 
 		filters.clear();
@@ -135,8 +163,9 @@ public class FilterManager implements ConfigsListener {
 	 * Disables all filter.
 	 */
 	public void disableAll() {
-		for (Iterator<VideoFilter<?, ?>> it=filters.getIterator();it.hasNext();){
-			VideoFilter<?, ?> vf = it.next();
+		for (final Iterator<VideoFilter<?, ?>> it = filters.getIterator(); it
+				.hasNext();) {
+			final VideoFilter<?, ?> vf = it.next();
 			vf.enable(false);
 		}
 	}
@@ -204,21 +233,33 @@ public class FilterManager implements ConfigsListener {
 	@SuppressWarnings("rawtypes")
 	public PluggedGUI[] getFiltersGUI() {
 		int validGUIsNumber = 0;
-		for (Iterator<VideoFilter<?, ?>> it=filters.getIterator();it.hasNext();){
-			VideoFilter<?, ?> vf = it.next();
+		for (final Iterator<VideoFilter<?, ?>> it = filters.getIterator(); it
+				.hasNext();) {
+			final VideoFilter<?, ?> vf = it.next();
 			if (vf.getGUI() != null)
 				validGUIsNumber++;
 		}
 		final PluggedGUI[] arr = new PluggedGUI[validGUIsNumber];
 		int i = 0;
-		for (Iterator<VideoFilter<?, ?>> it=filters.getIterator();it.hasNext();){
-			VideoFilter<?, ?> vf = it.next();
+		for (final Iterator<VideoFilter<?, ?>> it = filters.getIterator(); it
+				.hasNext();) {
+			final VideoFilter<?, ?> vf = it.next();
 			if (vf.getGUI() != null) {
 				arr[i] = vf.getGUI();
 				i++;
 			}
 		}
 		return arr;
+	}
+
+	public String[] getFiltersIDs() {
+		final ArrayList<String> ids = new ArrayList<String>();
+		for (final Iterator<VideoFilter<?, ?>> it = installedFilters
+				.getIterator(); it.hasNext();) {
+			final VideoFilter<?, ?> vf = it.next();
+			ids.add(vf.getID());
+		}
+		return ids.toArray(new String[0]);
 	}
 
 	/**
@@ -229,16 +270,18 @@ public class FilterManager implements ConfigsListener {
 	public ArrayList<String> getRegisteredFiltersNames() {
 		final ArrayList<String> strNames = new ArrayList<String>();
 
-		for (Iterator<VideoFilter<?, ?>> it=filters.getIterator();it.hasNext();){
-			VideoFilter<?, ?> vf = it.next();
+		for (final Iterator<VideoFilter<?, ?>> it = filters.getIterator(); it
+				.hasNext();) {
+			final VideoFilter<?, ?> vf = it.next();
 			strNames.add(vf.getName());
 		}
 		return strNames;
 	}
 
 	/**
-	 * Adds default configuration instance of each installed configuration to the
-	 * ConfigurationManager list of configs.
+	 * Adds default configuration instance of each installed configuration to
+	 * the ConfigurationManager list of configs.
+	 * 
 	 * @param commonConfigs
 	 */
 	private void initializeConfigs(final CommonFilterConfigs commonConfigs) {
@@ -247,11 +290,9 @@ public class FilterManager implements ConfigsListener {
 				"SourceFilter", commonConfigs, null);
 
 		final ScreenDrawerConfigs scrnDrwrCnfgs = new ScreenDrawerConfigs(
-				"ScreenDrawer", null, commonConfigs,
-				null);
+				"ScreenDrawer", null, commonConfigs, null);
 		final ScreenDrawerConfigs scrnDrwrCnfgsSec = new ScreenDrawerConfigs(
-				"ScreenDrawerSec", null, commonConfigs,
-				null);
+				"ScreenDrawerSec", null, commonConfigs, null);
 
 		final RatFinderFilterConfigs ratFinderConfigs = new RatFinderFilterConfigs(
 				"RatFinder", commonConfigs);
@@ -271,7 +312,8 @@ public class FilterManager implements ConfigsListener {
 
 		final MovementMeterFilterConfigs movementFilterConfigs = new MovementMeterFilterConfigs(
 				"MovementMeter", commonConfigs);
-		ZonesDrawerConfigs zonesDrawerConfigs = new ZonesDrawerConfigs("ZonesDrawer", commonConfigs, ShapeController.getDefault());
+		final ZonesDrawerConfigs zonesDrawerConfigs = new ZonesDrawerConfigs(
+				"ZonesDrawer", commonConfigs, ShapeController.getDefault());
 
 		configurationManager.reset();
 		configurationManager.addConfiguration(sourceConfigs, false);
@@ -285,7 +327,7 @@ public class FilterManager implements ConfigsListener {
 		configurationManager.addConfiguration(movementFilterConfigs, false);
 		configurationManager.addConfiguration(zonesDrawerConfigs, false);
 	}
-private FiltersSetup activeFiltersSetup;
+
 	/**
 	 * Connects the filters and adds them to the filters array.
 	 * 
@@ -293,67 +335,76 @@ private FiltersSetup activeFiltersSetup;
 	 */
 	private boolean instantiateAndConnectFilters(final FrameIntArray refFia,
 			final FiltersSetup filtersSetup) {
-		
+
 		filters.clear();
 		filtersTriggeredByStreaming.clear();
 		filtersTriggeredByProcessing.clear();
-		activeFiltersSetup=filtersSetup;
-		
+		activeFiltersSetup = filtersSetup;
+
 		// extract filters' names and ID's, create filters' instances
-		FiltersNamesRequirements filtersNamesRequirements=filtersSetup.getFiltersNamesRequirements();
-		for(Iterator<FilterRequirement> it=filtersNamesRequirements.getFilters();it.hasNext();){
-			FilterRequirement entry = it.next();
-			String filterName = entry.getName();
-			String filterID = entry.getID();
-			
-			VideoFilter<?, ?> filter = createFilter(filterName,filterID);
+		final FiltersNamesRequirements filtersNamesRequirements = filtersSetup
+				.getFiltersNamesRequirements();
+		for (final Iterator<FilterRequirement> it = filtersNamesRequirements
+				.getFilters(); it.hasNext();) {
+			final FilterRequirement entry = it.next();
+			final String filterName = entry.getName();
+			final String filterID = entry.getID();
+
+			final VideoFilter<?, ?> filter = createFilter(filterName, filterID);
 			filters.add(filter);
-			
+
 			switch (entry.getTrigger()) {
-			case STREAMING:
-				filtersTriggeredByStreaming.add(filterName);
-				break;
-			case PROCESSING:
-				filtersTriggeredByProcessing.add(filterName);
-				break;
-			default:
-				break;
+				case STREAMING:
+					filtersTriggeredByStreaming.add(filterName);
+					break;
+				case PROCESSING:
+					filtersTriggeredByProcessing.add(filterName);
+					break;
+				default:
+					break;
 			}
 		}
-		
+
 		// pass filtersCollection to the filterSetup to connect them
 		filtersSetup.setFiltersCollection(filters);
-		filtersSetup.connectFilters(new Point(commonConfigs.getWidth(), commonConfigs.getHeight()));
-
+		boolean connectFilters = filtersSetup.connectFilters(new Point(commonConfigs.getWidth(),
+				commonConfigs.getHeight()));
+		
 		// set filter's configurations to the default values
-		for( Iterator<VideoFilter<?, ?>> it=filters.getIterator();it.hasNext();){
-			VideoFilter<?, ?> vf = it.next();
-			FilterConfigs filterConfig = configurationManager.getConfigByName(vf.getName());
-			if(filterConfig==null){
+		for (final Iterator<VideoFilter<?, ?>> it = filters.getIterator(); it
+				.hasNext();) {
+			final VideoFilter<?, ?> vf = it.next();
+			FilterConfigs filterConfig = configurationManager
+					.getConfigByName(vf.getName());
+			if (filterConfig == null) {
 				// apply default configs to the filter and display a warning
-				filterConfig = configurationManager.createDefaultConfigs(vf.getName(),vf.getID(), commonConfigs);
+				filterConfig = configurationManager.createDefaultConfigs(
+						vf.getName(), vf.getID(), commonConfigs);
 				configurationManager.addConfiguration(filterConfig, false);
-				PManager.log.print("Default Configs is applied to filter: "+ vf.getName(), this, StatusSeverity.WARNING);
+				PManager.log.print("Default Configs is applied to filter: "
+						+ vf.getName(), this, StatusSeverity.WARNING);
 			}
-			
+
 			applyConfigsToFilter(filterConfig);
 		}
 
 		final SourceFilterConfigs sourceConfigs = new SourceFilterConfigs(
 				"SourceFilter", commonConfigs, refFia);
 		applyConfigsToFilter(sourceConfigs);
-		
+
 		// broadcast filters' data
-		ArrayList<FilterData> filtersData = new ArrayList<FilterData>();
-		for (Iterator<VideoFilter<?, ?>> it=filters.getIterator();it.hasNext();){
-			VideoFilter<?, ?> vf = it.next();
-			if(vf.getFilterData()!=null)
+		final ArrayList<FilterData> filtersData = new ArrayList<FilterData>();
+		for (final Iterator<VideoFilter<?, ?>> it = filters.getIterator(); it
+				.hasNext();) {
+			final VideoFilter<?, ?> vf = it.next();
+			if (vf.getFilterData() != null)
 				filtersData.add((FilterData) vf.getFilterData());
 		}
-		
-		for(FilterData fd:filtersData){
-			for (Iterator<VideoFilter<?, ?>> it=filters.getIterator();it.hasNext();){
-				VideoFilter<?, ?> vf = it.next();
+
+		for (final FilterData fd : filtersData) {
+			for (final Iterator<VideoFilter<?, ?>> it = filters.getIterator(); it
+					.hasNext();) {
+				final VideoFilter<?, ?> vf = it.next();
 				vf.registerDependentData(fd);
 			}
 		}
@@ -361,41 +412,39 @@ private FiltersSetup activeFiltersSetup;
 		PManager.log.print("finished connecting video filters", this,
 				Details.VERBOSE);
 		PManager.log.print("loading filters' GUI..", this, Details.VERBOSE);
-		
+
 		System.out.println("Filters connections: =====");
-		
-/*		for (Iterator<VideoFilter<?, ?>> it=filters.getIterator();it.hasNext();){
-			VideoFilter<?, ?> vf = it.next();
-			ArrayList<VideoFilter<?, ?>> srcFilters = filtersSetup.getFiltersByLinkOut(vf.getLinkIn());
-			if(srcFilters.size()>0)
-				System.out.println(srcFilters.get(0).getName()+"\t\t--->\t\t"+vf.getName());
-		}*/
-		
+
+		/*
+		 * for (Iterator<VideoFilter<?, ?>>
+		 * it=filters.getIterator();it.hasNext();){ VideoFilter<?, ?> vf =
+		 * it.next(); ArrayList<VideoFilter<?, ?>> srcFilters =
+		 * filtersSetup.getFiltersByLinkOut(vf.getLinkIn());
+		 * if(srcFilters.size()>0)
+		 * System.out.println(srcFilters.get(0).getName()
+		 * +"\t\t--->\t\t"+vf.getName()); }
+		 */
+
 		System.out.println("Filters connections end: =====");
-		
+
 		PManager.mainGUI.loadPluggedGUI(getFiltersGUI());
 
 		configurationManager.printConfiguration();
 
-		return validateFiltersConfigurations();
+		return validateFiltersConfigurations() && connectFilters;
 	}
 
-	private VideoFilter<?, ?> createFilter(String filterName, String filterID) {
-		VideoFilter<?, ?> filter = null;
-		for (Iterator<VideoFilter<?, ?>> it=installedFilters.getIterator();it.hasNext();){
-			VideoFilter<?, ?> vf = it.next();
-			
-			if(vf.getID().equals(filterID)){
-				filter = vf.newInstance(filterName);
-				break;
-			}
-		}
-		return filter;
-	}
-
-	public void instantiateFilters(final FrameIntArray refFia,
+	public boolean instantiateFilters(final FrameIntArray refFia,
 			final FiltersSetup setup) {
-		instantiateAndConnectFilters(refFia, setup);
+		return instantiateAndConnectFilters(refFia, setup);
+	}
+
+	public void pauseStream() {
+		stopStreaming();
+		/*
+		 * enableFilter("ScreenDrawer", false); enableFilter("ScreenDrawerSec",
+		 * false);
+		 */
 	}
 
 	/**
@@ -419,25 +468,98 @@ private FiltersSetup activeFiltersSetup;
 		filters.removeFilter(filterName);
 	}
 
+	public void resumeStream() {
+		startStreaming();
+		/*
+		 * enableFilter("ScreenDrawer", true); enableFilter("ScreenDrawerSec",
+		 * true);
+		 */
+	}
+
+	public void startProcessing() {
+
+		for (final String filterName : filtersTriggeredByProcessing) {
+			enableFilter(filterName, true);
+		}
+		/*
+		 * enableFilter("SubtractionFilter", true); enableFilter("RatFinder",
+		 * true); enableFilter("RearingDetector", true);
+		 * enableFilter("AverageFilter", true);
+		 */
+	}
+
+	public void startStreaming() {
+		for (final String filterName : filtersTriggeredByStreaming) {
+			enableFilter(filterName, true);
+		}
+
+		/*
+		 * enableFilter("ScreenDrawer", true); enableFilter("ScreenDrawerSec",
+		 * true);
+		 */
+	}
+
+	public void stopProcessing() {
+
+		for (final String filterName : filtersTriggeredByProcessing) {
+			enableFilter(filterName, false);
+		}
+		/*
+		 * enableFilter("SubtractionFilter", false);
+		 * enableFilter("RearingDetector", false); enableFilter("RatFinder",
+		 * false); enableFilter("Average Filter", false);
+		 */
+	}
+
+	public void stopStreaming() {
+		for (final String filterName : filtersTriggeredByStreaming) {
+			enableFilter(filterName, false);
+		}
+	}
+
 	/**
 	 * Submits/Registers data objects of all filters to the ModuleManager, for
 	 * the modules to receive data from Filters.
 	 */
 	public void submitDataObjects() {
-		for (Iterator<VideoFilter<?, ?>> it=filters.getIterator();it.hasNext();){
-			VideoFilter<?, ?> vf = it.next();
+		for (final Iterator<VideoFilter<?, ?>> it = filters.getIterator(); it
+				.hasNext();) {
+			final VideoFilter<?, ?> vf = it.next();
 			if (vf.getFilterData() != null)
 				ModulesManager.getDefault().addFilterDataObject(
 						vf.getFilterData());
 		}
 	}
 
+	@Override
+	public void updateConfigs(final CommonConfigs commonConfigs) {
+
+		// loop on all filters
+		for (final Iterator<VideoFilter<?, ?>> it = filters.getIterator(); it
+				.hasNext();) {
+			final VideoFilter<?, ?> videoFilter = it.next();
+
+			final FilterConfigs configs = configurationManager
+					.getConfigByName(videoFilter.getName());
+
+			// update common configs
+			configs.getCommonConfigs().merge(commonConfigs);
+
+			// re-apply configs
+			configurationManager.applyConfigs(configs);
+		}
+		// notify FilterSetup
+		activeFiltersSetup.connectFilters(new Point(commonConfigs.getWidth(),
+				commonConfigs.getHeight()));
+	}
+
 	/**
 	 * @return
 	 */
 	private boolean validateFiltersConfigurations() {
-		for (Iterator<VideoFilter<?, ?>> it=filters.getIterator();it.hasNext();){
-			VideoFilter<?, ?> vf = it.next();
+		for (final Iterator<VideoFilter<?, ?>> it = filters.getIterator(); it
+				.hasNext();) {
+			final VideoFilter<?, ?> vf = it.next();
 			if (!vf.getConfigs().validate()) {
 				PManager.log.print(
 						"Filter Configurations failed for: " + vf.getName(),
@@ -446,91 +568,5 @@ private FiltersSetup activeFiltersSetup;
 			}
 		}
 		return true;
-	}
-
-	public void pauseStream() {
-		stopStreaming();
-/*		enableFilter("ScreenDrawer", false);
-		enableFilter("ScreenDrawerSec", false);	*/	
-	}
-
-	public void resumeStream() {
-		startStreaming();
-		/*enableFilter("ScreenDrawer", true);
-		enableFilter("ScreenDrawerSec", true);*/		
-	}
-	
-	private ArrayList<String> filtersTriggeredByProcessing=new ArrayList<String>();
-	private ArrayList<String> filtersTriggeredByStreaming=new ArrayList<String>();
-
-	public void startProcessing() {
-		
-		for(String filterName: filtersTriggeredByProcessing){
-			enableFilter(filterName, true);
-		}
-/*		
-		enableFilter("SubtractionFilter", true);
-		enableFilter("RatFinder", true);
-		enableFilter("RearingDetector", true);
-		enableFilter("AverageFilter", true);*/		
-	}
-
-	public void startStreaming() {
-		for(String filterName: filtersTriggeredByStreaming){
-			enableFilter(filterName, true);
-		}
-		
-/*		enableFilter("ScreenDrawer", true);
-		enableFilter("ScreenDrawerSec", true);	*/	
-	}
-	
-	public void stopStreaming() {
-		for(String filterName: filtersTriggeredByStreaming){
-			enableFilter(filterName, false);
-		}
-	}
-
-	public void stopProcessing() {
-		
-		for(String filterName: filtersTriggeredByProcessing){
-			enableFilter(filterName, false);
-		}
-/*		
-		enableFilter("SubtractionFilter", false);
-		enableFilter("RearingDetector", false);
-		enableFilter("RatFinder", false);
-		enableFilter("Average Filter", false);	*/	
-	}
-
-	public String[] getFiltersIDs() {
-		ArrayList<String> ids = new ArrayList<String>();
-		for(Iterator<VideoFilter<?, ?>> it=installedFilters.getIterator();it.hasNext();){
-			VideoFilter<?, ?> vf = it.next();
-			ids.add(vf.getID());
-		}
-		return ids.toArray(new String[0]);
-	}
-
-	@Override
-	public void updateConfigs(CommonConfigs commonConfigs) {
-		
-		// loop on all filters
-		for(Iterator<VideoFilter<?, ?>> it = filters.getIterator();it.hasNext();){
-			VideoFilter<?, ?> videoFilter=it.next();
-			
-			FilterConfigs configs = configurationManager.getConfigByName(videoFilter.getName());
-			
-			// update common configs
-			configs.getCommonConfigs().merge(commonConfigs);
-			
-			// re-apply configs
-			configurationManager.applyConfigs(configs);
-		}
-		// notify FilterSetup
-		activeFiltersSetup.connectFilters(new Point(commonConfigs.getWidth(), commonConfigs.getHeight()));
-	}
-	
-	public void applyConfigsToFiltersByID(FilterConfigs configs){
-		configurationManager.applyConfigsByID(configs);
 	}
 }

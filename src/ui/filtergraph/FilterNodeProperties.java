@@ -18,6 +18,7 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.List;
 import org.eclipse.swt.widgets.Listener;
+import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
@@ -26,10 +27,9 @@ import filters.FiltersNamesRequirements.FilterTrigger;
 
 /**
  * @author Creative
- * 
  */
 public class FilterNodeProperties {
-	private static FilterNodeProperties self;
+	private static FilterNodeProperties	self;
 
 	public static FilterNodeProperties getDefault() {
 		if (self == null)
@@ -37,14 +37,14 @@ public class FilterNodeProperties {
 		return self;
 	}
 
-	private final Combo combo;
+	private final Combo	combo;
 
-	private final List list;
-	private final Shell shell;
-	private final Text text;
+	private final List	list;
+	private final Shell	shell;
+	private final Text	text;
 
 	public FilterNodeProperties() {
-		shell = new Shell(SWT.CLOSE|SWT.APPLICATION_MODAL);
+		shell = new Shell(SWT.CLOSE | SWT.APPLICATION_MODAL);
 		shell.setSize(284, 309);
 		shell.addListener(SWT.Close, new Listener() {
 
@@ -113,24 +113,51 @@ public class FilterNodeProperties {
 			@Override
 			public void widgetSelected(final SelectionEvent e) {
 
-				final String id = list.getSelection()[0];
-				final String name = text.getText();
-				final String trigger = combo.getText();
+				String id = null;
+				String name = null;
+				String trigger = null;
 
-				final FilterTrigger filterTrigger = FilterTrigger
-						.valueOf(trigger);
-				final Filter filter = new Filter(name, id, filterTrigger);
-				FilterGraph.getDefault().addUpdateNode(filter);
+				try {
+					id = list.getSelection()[0];
+					name = text.getText();
+					trigger = combo.getText();
+				} catch (final Exception e1) {
+					// we will detect invalid values using the validateTextField
+					// method
+				}
+				if (validateTextField("Filter ID", id)
+						&& validateTextField("Filter Name", name)
+						&& validateTextField("Trigger", trigger)) {
 
-				// hide dialog
-				hide();
+					final FilterTrigger filterTrigger = FilterTrigger
+							.valueOf(trigger);
+					final Filter filter = new Filter(name, id, filterTrigger);
+					if (FilterGraph.getDefault().addUpdateNode(filter)) {
+						// hide dialog
+						hide();
+					} else {
+						final MessageBox box = new MessageBox(shell, SWT.ERROR);
+						box.setMessage("Filter with the name \""
+								+ name
+								+ "\" already exists, please select another name");
+						box.setText("Error");
+						box.open();
+					}
+				}
 			}
+
 		});
 		btnOk.setText("OK");
 	}
 
 	private void hide() {
 		shell.setVisible(false);
+	}
+
+	public void loadFilter(final Filter filter) {
+		text.setText(filter.getName());
+		list.setSelection(new String[] { filter.getId() });
+		combo.setText(filter.getTrigger().toString());
 	}
 
 	public void setFilterIDs(final String[] ids) {
@@ -152,9 +179,15 @@ public class FilterNodeProperties {
 		combo.setText(combo.getItem(0));
 	}
 
-	public void loadFilter(Filter filter) {
-		text.setText(filter.getName());
-		list.setSelection(new String[]{filter.getId()});
-		combo.setText(filter.getTrigger().toString());
+	private boolean validateTextField(final String fieldName, final String str) {
+		if ((str != null) && !str.equals(""))
+			return true;
+		else {
+			final MessageBox box = new MessageBox(shell, SWT.ERROR);
+			box.setMessage("Invalid value for: " + fieldName);
+			box.setText("Error");
+			box.open();
+		}
+		return false;
 	}
 }

@@ -29,7 +29,7 @@ import utils.StateListener;
  * @author Creative
  */
 public abstract class VideoFilter<ConfigsType extends FilterConfigs, DataType extends FilterData>
-		implements StateListener,Configurable<ConfigsType> {
+		implements StateListener, Configurable<ConfigsType> {
 	protected ConfigsType	configs;
 	protected DataType		filterData;
 	protected PluggedGUI<?>	gui;
@@ -46,27 +46,10 @@ public abstract class VideoFilter<ConfigsType extends FilterConfigs, DataType ex
 	 * @param linkOut
 	 *            output Link from the filter
 	 */
-	public VideoFilter(final String name, final Link linkIn,
-			final Link linkOut) {
+	public VideoFilter(final String name, final Link linkIn, final Link linkOut) {
 		this.name = name;
 		this.linkIn = linkIn;
 		this.linkOut = linkOut;
-	}
-	
-	public void setLinkIn(Link linkIn){
-		this.linkIn=linkIn;
-	}
-	
-	public void setLinkOut(Link linkOut){
-		this.linkOut = linkOut;
-	}
-	
-	public Link getLinkOut(){
-		return linkOut;
-	}
-	
-	public Link getLinkIn(){
-		return linkIn;
 	}
 
 	/**
@@ -126,20 +109,55 @@ public abstract class VideoFilter<ConfigsType extends FilterConfigs, DataType ex
 		return gui;
 	}
 
+	@Override
+	public String getID() {
+		throw new IllegalAccessError(
+				"Cannot call this method in parent, are you missing a child implementation?");
+	}
+
+	public int getInPortCount() {
+		return 1;
+	}
+
+	public Link getLinkIn() {
+		return linkIn;
+	}
+
+	public Link getLinkOut() {
+		return linkOut;
+	}
+
 	/**
 	 * Gets the name of the filter.
 	 * 
 	 * @return String containing the filter's name
 	 */
+	@Override
 	public String getName() {
 		return name;
 	}
+
+	public int getOutPortCount() {
+		return 1;
+	}
+
+	public abstract VideoFilter<?, ?> newInstance(String filterName);
 
 	/**
 	 * Processes the data from the input link and put the processed data on the
 	 * output link.
 	 */
 	public abstract void process();
+
+	public abstract void registerDependentData(FilterData data);
+
+	public void setLinkIn(final Link linkIn) {
+		this.linkIn = linkIn;
+	}
+
+	public void setLinkOut(final Link linkOut) {
+		this.linkOut = linkOut;
+	}
 
 	/**
 	 * Sets the name of the filter.
@@ -157,20 +175,13 @@ public abstract class VideoFilter<ConfigsType extends FilterConfigs, DataType ex
 	 * @param configs
 	 *            configurations object for the filter
 	 */
+	@Override
 	@SuppressWarnings("unchecked")
 	public void updateConfigs(final FilterConfigs configs) {
-		if(this.configs==null)
-			this.configs=(ConfigsType) configs;
+		if (this.configs == null)
+			this.configs = (ConfigsType) configs;
 		else
 			this.configs.mergeConfigs(configs);
 		configure(getConfigs());
 	}
-
-	public String getID() {
-		throw new IllegalAccessError("Cannot call this method in parent, are you missing a child implementation?");
-	}
-	
-	public abstract void registerDependentData(FilterData data);
-
-	public abstract VideoFilter<?, ?> newInstance(String filterName);
 }

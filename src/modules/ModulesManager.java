@@ -491,7 +491,7 @@ public class ModulesManager implements ConfigsListener {
 		}
 	}
 
-	public void setupModules(final Experiment exp) {
+	public boolean setupModules(final Experiment exp) {
 		// unload old modules
 		for (final Module m : modules)
 			m.unload();
@@ -537,6 +537,8 @@ public class ModulesManager implements ConfigsListener {
 
 		connectModules();
 		loadModulesGUI();
+		
+		return true;
 	}
 
 	@Override

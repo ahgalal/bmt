@@ -96,6 +96,11 @@ public class RearingDetector extends
 	}
 
 	@Override
+	public int getOutPortCount() {
+		return 0;
+	}
+	
+	@Override
 	public void process() {
 		final int[] imageData = linkIn.getData();
 		if (configs.isEnabled())

@@ -5,64 +5,74 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 public class FiltersNamesRequirements implements Serializable {
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 5586878050722171261L;
-	private ArrayList<FilterRequirement> filtersRequirements;
-	
-	public FiltersNamesRequirements() {
-		filtersRequirements=new ArrayList<FilterRequirement>();
-	}
-	
-	public void addFilter(String name,String ID, FilterTrigger trigger){
-		// TODO: check for previous existence
-		filtersRequirements.add(new FilterRequirement(name, ID, trigger));
-	}
-	
-	public Iterator<FilterRequirement> getFilters(){
-		return filtersRequirements.iterator();
-	}
-
-	public void clearFilterNames() {
-		filtersRequirements.clear();		
-	}
-	
-	public static class FilterRequirement implements Serializable{
+	public static class FilterRequirement implements Serializable {
 		/**
 		 * 
 		 */
-		private static final long serialVersionUID = -1799742399913458193L;
-		private String name;
-		private String ID;
-		private FilterTrigger trigger;
-		public void setName(String name) {
-			this.name = name;
-		}
-		public String getName() {
-			return name;
-		}
-		public void setID(String iD) {
-			ID = iD;
-		}
-		public String getID() {
-			return ID;
-		}
-		public void setTrigger(FilterTrigger trigger) {
-			this.trigger = trigger;
-		}
-		public FilterTrigger getTrigger() {
-			return trigger;
-		}
-		public FilterRequirement(String name, String iD, FilterTrigger trigger) {
+		private static final long	serialVersionUID	= -1799742399913458193L;
+		private String				ID;
+		private String				name;
+		private FilterTrigger		trigger;
+
+		public FilterRequirement(final String name, final String iD,
+				final FilterTrigger trigger) {
 			super();
 			this.name = name;
 			ID = iD;
 			this.trigger = trigger;
 		}
+
+		public String getID() {
+			return ID;
+		}
+
+		public String getName() {
+			return name;
+		}
+
+		public FilterTrigger getTrigger() {
+			return trigger;
+		}
+
+		public void setID(final String iD) {
+			ID = iD;
+		}
+
+		public void setName(final String name) {
+			this.name = name;
+		}
+
+		public void setTrigger(final FilterTrigger trigger) {
+			this.trigger = trigger;
+		}
 	}
-	
-	public static enum FilterTrigger{
-		STREAMING,PROCESSING,MANUAL;
+
+	public static enum FilterTrigger {
+		MANUAL, PROCESSING, STREAMING;
+	}
+
+	/**
+	 * 
+	 */
+	private static final long					serialVersionUID	= 5586878050722171261L;
+
+	private final ArrayList<FilterRequirement>	filtersRequirements;
+
+	public FiltersNamesRequirements() {
+		filtersRequirements = new ArrayList<FilterRequirement>();
+	}
+
+	public void addFilter(final String name, final String ID,
+			final FilterTrigger trigger) {
+		// TODO: check for previous existence
+		filtersRequirements.add(new FilterRequirement(name, ID, trigger));
+	}
+
+	public void clearFilterNames() {
+		filtersRequirements.clear();
+	}
+
+	public Iterator<FilterRequirement> getFilters() {
+		return filtersRequirements.iterator();
 	}
 }

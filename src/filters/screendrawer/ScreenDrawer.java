@@ -19,7 +19,6 @@ import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferInt;
 
-import modules.zones.ShapeCollection;
 import sys.utils.Utils;
 import utils.PManager;
 import utils.PManager.ProgramState;
@@ -140,6 +139,11 @@ public class ScreenDrawer extends VideoFilter<ScreenDrawerConfigs, FilterData> {
 	}
 
 	@Override
+	public int getOutPortCount() {
+		return 0;
+	}
+
+	@Override
 	public VideoFilter<?, ?> newInstance(final String filterName) {
 		return new ScreenDrawer(filterName, null, null);
 	}
@@ -173,5 +177,4 @@ public class ScreenDrawer extends VideoFilter<ScreenDrawerConfigs, FilterData> {
 		// TODO Auto-generated method stub
 
 	}
-
 }

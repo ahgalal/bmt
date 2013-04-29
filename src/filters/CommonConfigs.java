@@ -19,19 +19,19 @@ public abstract class CommonConfigs {
 		return width;
 	}
 
+	public void merge(final CommonConfigs other) {
+		if (other.getWidth() != -1)
+			width = other.getWidth();
+		if (other.getHeight() != -1)
+			height = other.getHeight();
+	}
+
 	public void setHeight(final int height) {
 		this.height = height;
 	}
 
 	public void setWidth(final int width) {
 		this.width = width;
-	}
-	
-	public void merge(CommonConfigs other){
-		if(other.getWidth()!=-1)
-			width=other.getWidth();
-		if(other.getHeight()!=-1)
-			height=other.getHeight();
 	}
 
 	public abstract boolean validate();
