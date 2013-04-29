@@ -3,17 +3,25 @@ package filters;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-public class FiltersCollection{
+public class FiltersCollection {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 4727846193802923762L;
-	private ArrayList<VideoFilter<?, ?>> filters;
-	
+	private static final long					serialVersionUID	= 4727846193802923762L;
+	private final ArrayList<VideoFilter<?, ?>>	filters;
+
 	public FiltersCollection() {
-		filters=new ArrayList<VideoFilter<?,?>>();
+		filters = new ArrayList<VideoFilter<?, ?>>();
 	}
-	
+
+	public void add(final VideoFilter<?, ?> filter) {
+		filters.add(filter);
+	}
+
+	public void clear() {
+		filters.clear();
+	}
+
 	/**
 	 * Gets a filter using the filter's name.
 	 * 
@@ -28,23 +36,6 @@ public class FiltersCollection{
 		return null;
 	}
 
-	public void add(VideoFilter<?, ?> filter) {
-		filters.add(filter);
-	}
-
-	public void clear() {
-		filters.clear();
-	}
-
-	public Iterator<VideoFilter<?, ?>> getIterator() {
-		return filters.iterator();
-	}
-	
-	// TODO: are we breaking encapsulation with this methid????
-	public ArrayList<VideoFilter<?, ?>> getFilters(){
-		return filters;
-	}
-	
 	/**
 	 * Gets a filter using the filter's type.
 	 * 
@@ -59,7 +50,16 @@ public class FiltersCollection{
 				return vf;
 		return null;
 	}
-	
+
+	// TODO: are we breaking encapsulation with this methid????
+	public ArrayList<VideoFilter<?, ?>> getFilters() {
+		return filters;
+	}
+
+	public Iterator<VideoFilter<?, ?>> getIterator() {
+		return filters.iterator();
+	}
+
 	/**
 	 * Removes filter from the array.
 	 * 
@@ -72,7 +72,7 @@ public class FiltersCollection{
 		if (tmp != null)
 			filters.remove(tmp);
 	}
-	
+
 	/**
 	 * Removes filter from the array.
 	 * 

@@ -21,25 +21,26 @@ package filters;
  */
 public abstract class Data {
 
-/*	*//**
+	/*	*//**
 	 * Initializes the name of the data object.
 	 * 
 	 * @param name
 	 *            name of the data object
-	 *//*
-	public Data() {
-	}*/
+	 */
+	/*
+	 * public Data() { }
+	 */
 
-/*	*//**
+	/*	*//**
 	 * Gets the name of the data object.
- * @return 
 	 * 
+	 * @return
 	 * @return String containing the name of the data object
-	 *//*
-	public String getName() {
-		return name;
-	}*/
-	
+	 */
+	/*
+	 * public String getName() { return name; }
+	 */
+
 	public abstract String getId();
 
 }

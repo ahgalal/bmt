@@ -25,7 +25,6 @@ import modules.ModulesManager;
 import modules.experiment.Experiment;
 import sys.utils.Utils;
 import utils.PManager;
-import utils.Logger.Details;
 import utils.PManager.ProgramState.GeneralState;
 import utils.PManager.ProgramState.StreamState;
 import utils.StatusManager.StatusSeverity;
@@ -221,10 +220,10 @@ public class VideoManager {
 		return vInput;
 	}
 
-	private void initFilters(final Experiment exp) {
+	private boolean initFilters(final Experiment exp) {
 		if (filterManager != null)
 			filterManager.deInitialize();
-		filterManager.instantiateFilters(fia, exp.getFiltersSetup());
+		return filterManager.instantiateFilters(fia, exp.getFiltersSetup());
 	}
 
 	/**
@@ -330,15 +329,21 @@ public class VideoManager {
 	 * Initializes filters and Modules based on the input experiment type.
 	 * 
 	 * @param exp
+	 * @return 
 	 */
-	public void setupModulesAndFilters(final Experiment exp) {
-		ModulesManager.getDefault().setupModules(exp);
-		initFilters(exp);
+	public boolean setupModulesAndFilters(final Experiment exp) {
+		boolean setupModules=ModulesManager.getDefault().setupModules(exp);
+		boolean initFilters = initFilters(exp);
 		PManager.getDefault().signalProgramStateUpdate();
+		return setupModules && initFilters;
 	}
 
-	public void signalFiltersSetupChange() {
-		ExperimentManager.getDefault().signalFiltersSetupChange();
+	public boolean signalFiltersSetupChange() {
+		/* 
+		 * reload the same experiment, to activate the updated
+		 * filters setup stored in the experiment instance.
+		 */
+		return ExperimentManager.getDefault().signalFiltersSetupChange();
 	}
 
 	/**

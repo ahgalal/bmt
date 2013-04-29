@@ -34,15 +34,6 @@ import filters.VideoFilter;
  */
 public class VideoRecorder extends VideoFilter<RecorderConfigs, FilterData> {
 
-	public static final String ID = "filters.videorecorder";
-	private StreamToAVI		aviSaver;
-	private boolean			isRecording	= false;
-
-	private final PManager	pm;
-
-	private Thread			frameWriterThread;
-	private Object			frameWriterLock;
-
 	private class FrameWriterRunnable implements Runnable {
 
 		@Override
@@ -51,7 +42,7 @@ public class VideoRecorder extends VideoFilter<RecorderConfigs, FilterData> {
 				synchronized (frameWriterLock) {
 					try {
 						frameWriterLock.wait();
-					} catch (InterruptedException e) {
+					} catch (final InterruptedException e) {
 						// do nothing when interrupted
 					}
 				}
@@ -65,7 +56,19 @@ public class VideoRecorder extends VideoFilter<RecorderConfigs, FilterData> {
 
 			}
 		}
-	};
+	}
+
+	public static final String	ID				= "filters.videorecorder";
+	private StreamToAVI			aviSaver;
+
+	private Boolean				frameAvailable	= false;
+
+	private Object				frameWriterLock;
+	private Thread				frameWriterThread;
+
+	private boolean				isRecording		= false;					;
+
+	private final PManager		pm;
 
 	/**
 	 * Initializes the filter.
@@ -83,8 +86,6 @@ public class VideoRecorder extends VideoFilter<RecorderConfigs, FilterData> {
 		gui = new VideoRecorderGUI(this);
 		pm = PManager.getDefault();
 	}
-
-	private Boolean	frameAvailable	= false;
 
 	@Override
 	public boolean configure(final FilterConfigs configs) {
@@ -121,7 +122,7 @@ public class VideoRecorder extends VideoFilter<RecorderConfigs, FilterData> {
 				// stop frame writer thread
 				frameWriterLock = null; // break the while loop
 				frameWriterThread.interrupt(); // wake up from wait
-				
+
 				final Thread thStopRecording = new Thread(new Runnable() {
 					@Override
 					public void run() {
@@ -136,6 +137,21 @@ public class VideoRecorder extends VideoFilter<RecorderConfigs, FilterData> {
 			}
 			return true;
 		}
+	}
+
+	@Override
+	public String getID() {
+		return ID;
+	}
+
+	@Override
+	public int getOutPortCount() {
+		return 0;
+	}
+
+	@Override
+	public VideoFilter<?, ?> newInstance(final String filterName) {
+		return new VideoRecorder(filterName, null, null);
 	}
 
 	/*
@@ -154,6 +170,12 @@ public class VideoRecorder extends VideoFilter<RecorderConfigs, FilterData> {
 		}
 	}
 
+	@Override
+	public void registerDependentData(final FilterData data) {
+		// TODO Auto-generated method stub
+
+	}
+
 	/**
 	 * Saves the current video with the given file name.
 	 * 
@@ -163,18 +185,18 @@ public class VideoRecorder extends VideoFilter<RecorderConfigs, FilterData> {
 	public void saveVideoFile(final String fileName) {
 		final File tmpFile = new File("video.avi");
 		try {
-			File dest = new File(fileName);
+			final File dest = new File(fileName);
 			if (dest.exists())
 				dest.delete();
 			if (!tmpFile.renameTo(dest))
 				throw new Exception();
 		} catch (final Exception e) {
-			String newFileName = fileName + "_" + Math.random();
+			final String newFileName = fileName + "_" + Math.random();
 			PManager.log.print("Couldn't rename video file, saving to: "
 					+ newFileName, this, StatusSeverity.ERROR);
 			try {
 				tmpFile.renameTo(new File(newFileName));
-			} catch (Exception e1) {
+			} catch (final Exception e1) {
 				PManager.log.print("Save Error!", this);
 			}
 		}
@@ -183,21 +205,5 @@ public class VideoRecorder extends VideoFilter<RecorderConfigs, FilterData> {
 	@Override
 	public void updateProgramState(final ProgramState state) {
 
-	}
-	
-	@Override
-	public String getID() {
-		return ID;
-	}
-
-	@Override
-	public VideoFilter<?, ?> newInstance(String filterName) {
-		return new VideoRecorder(filterName, null, null);
-	}
-
-	@Override
-	public void registerDependentData(FilterData data) {
-		// TODO Auto-generated method stub
-		
 	}
 }

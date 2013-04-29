@@ -5,6 +5,8 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+import utils.PManager;
+import utils.StatusManager.StatusSeverity;
 import filters.FiltersNamesRequirements.FilterRequirement;
 
 /**
@@ -14,11 +16,13 @@ public class FiltersSetup implements Serializable {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = -162165122516343763L;
-	private final FiltersConnectionRequirements connectionRequirements;
-	private transient FiltersCollection filters;
-	private final FiltersNamesRequirements filtersRequirements;
-	private transient ArrayList<Link> links;
+	private static final long					serialVersionUID	= -162165122516343763L;
+	private final FiltersConnectionRequirements	connectionRequirements;
+	private Point								dims;
+	private transient FiltersCollection			filters;
+	private final FiltersNamesRequirements		filtersRequirements;
+
+	private transient ArrayList<Link>			links;
 
 	public FiltersSetup(final FiltersNamesRequirements filtersRequirements,
 			final FiltersConnectionRequirements connectionRequirements) {
@@ -26,24 +30,29 @@ public class FiltersSetup implements Serializable {
 		this.connectionRequirements = connectionRequirements;
 		links = new ArrayList<Link>();
 	}
-private Point dims;
+
 	/**
 	 * Connects filters in FilterCollection instance according to specifications
 	 * found in ConnectionRequirements instance.
 	 */
-	public void connectFilters(Point dims) {
-		if(links==null)
-			links=new ArrayList<Link>();
+	public boolean connectFilters(final Point dims) {
+		if (links == null)
+			links = new ArrayList<Link>();
 		else
 			links.clear();
-		this.dims=dims;
-		for (final String[] connection : connectionRequirements
-				.getConnections()) {
-			final String srcFilterName = connection[0];
-			final String dstFilterName = connection[1];
+		this.dims = dims;
 
-			connectFilters(srcFilterName, dstFilterName);
+		if (validateConnections()) {
+			for (final String[] connection : connectionRequirements
+					.getConnections()) {
+				final String srcFilterName = connection[0];
+				final String dstFilterName = connection[1];
+
+				connectFilters(srcFilterName, dstFilterName);
+			}
+			return true;
 		}
+		return false;
 	}
 
 	private void connectFilters(final String filterSrcName,
@@ -55,8 +64,9 @@ private Point dims;
 				.getFilterByName(filterDstName);
 
 		Link lnk;
-		Link srcLinkOut = srcFilter.getLinkOut();
-		if (srcLinkOut != null && dims.x*dims.y ==srcFilter.getLinkOut().getData().length)
+		final Link srcLinkOut = srcFilter.getLinkOut();
+		if ((srcLinkOut != null)
+				&& (dims.x * dims.y == srcFilter.getLinkOut().getData().length))
 			lnk = srcFilter.getLinkOut();
 		else {
 			lnk = new Link(dims);
@@ -79,18 +89,18 @@ private Point dims;
 		for (final Iterator<VideoFilter<?, ?>> it = filters.getIterator(); it
 				.hasNext();) {
 			final VideoFilter<?, ?> filter = it.next();
-			if (filter.getLinkIn() == linkIn && linkIn !=null)
+			if ((filter.getLinkIn() == linkIn) && (linkIn != null))
 				ret.add(filter);
 		}
 		return ret;
 	}
-	
+
 	public ArrayList<VideoFilter<?, ?>> getFiltersByLinkOut(final Link linkOut) {
 		final ArrayList<VideoFilter<?, ?>> ret = new ArrayList<VideoFilter<?, ?>>();
 		for (final Iterator<VideoFilter<?, ?>> it = filters.getIterator(); it
 				.hasNext();) {
 			final VideoFilter<?, ?> filter = it.next();
-			if (filter.getLinkOut() == linkOut && linkOut !=null)
+			if ((filter.getLinkOut() == linkOut) && (linkOut != null))
 				ret.add(filter);
 		}
 		return ret;
@@ -127,7 +137,8 @@ private Point dims;
 				final VideoFilter<?, ?> videoFilter = it2.next();
 
 				if (videoFilter.getName().equals(filterRequirement.getName())
-						&& videoFilter.getID().equals(filterRequirement.getID())) {
+						&& videoFilter.getID()
+								.equals(filterRequirement.getID())) {
 					found = true;
 					break;
 				}
@@ -148,7 +159,43 @@ private Point dims;
 	 * @return
 	 */
 	public boolean validateConnections() {
-		// TODO
-		return false;
+		for (final Iterator<VideoFilter<?, ?>> it = filters.getIterator(); it
+				.hasNext();) {
+			final VideoFilter<?, ?> filter = it.next();
+			final int inPortCount = filter.getInPortCount();
+			final int outPortCount = filter.getOutPortCount();
+
+			int inPortCountActual = 0;
+			int outPortCountActual = 0;
+			for (final String[] connection : connectionRequirements
+					.getConnections()) {
+				final String srcFilterName = connection[0];
+				final String dstFilterName = connection[1];
+
+				// filter is connected on its input port
+				if (dstFilterName.equals(filter.getName()))
+					inPortCountActual++;
+
+				// filter is connected on its output port
+				if (srcFilterName.equals(filter.getName()))
+					outPortCountActual++;
+			}
+
+			if (inPortCount != inPortCountActual) {
+				PManager.log.print("Filter: " + filter.getName()
+						+ " is not properly connected on its input side", this,
+						StatusSeverity.ERROR);
+				return false;
+			}
+
+			if ((outPortCount == 0) && (outPortCountActual > 0)) {
+				PManager.log.print("Filter: " + filter.getName()
+						+ " does not have an output port!", this,
+						StatusSeverity.ERROR);
+				return false;
+			}
+		}
+		return true;
 	}
+
 }
