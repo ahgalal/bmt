@@ -141,25 +141,23 @@ public class FilterGraph {
 		if (editingNode == false) {
 			return addNewNode(filter);
 		} else {
+			
+			// we are editing
 			final List<?> selection = graph.getSelection();
 			if (selection.size() == 1) {
 				final Object selectedItem = selection.get(0);
 				if (selectedItem instanceof GraphNode) {
 					final GraphNode selectedNode = (GraphNode) selectedItem;
 
-					// look for name duplication
-					if (getNode(filter.getName()) == null) {
+					// update node's name
+					selectedNode.setText(filter.getName());
 
-						// update node's name
-						selectedNode.setText(filter.getName());
+					// remove old map entry
+					nodes.remove(getKey(selectedNode, nodes));
 
-						// remove old map entry
-						nodes.remove(getKey(selectedNode, nodes));
-
-						// add new map entry
-						nodes.put(filter, selectedNode);
-					} else
-						return false;
+					// add new map entry
+					nodes.put(filter, selectedNode);
+					return true;
 				}
 			}
 			editingNode = false;
