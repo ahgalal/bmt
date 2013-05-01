@@ -61,10 +61,10 @@ public class VideoRecorderGUI extends PluggedGUI<VideoRecorder> {
 
 	@Override
 	public void deInitialize() {
-		cmpstRecordingCBar.dispose();
-		cmpstRecordingEBar.dispose();
-		xpndtmRecorder.dispose();
-		cItemRecording.dispose();
+		disposeWidget(cmpstRecordingCBar);
+		disposeWidget(cmpstRecordingEBar);
+		disposeWidget(xpndtmRecorder);
+		disposeWidget(cItemRecording);
 	}
 
 	/**

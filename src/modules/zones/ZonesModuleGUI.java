@@ -90,6 +90,6 @@ public class ZonesModuleGUI extends PluggedGUI<ZonesModule> {
 
 	@Override
 	public void deInitialize() {
-		mnutmEditOpenzoneeditor.dispose();		
+		disposeWidget(mnutmEditOpenzoneeditor);
 	}
 }

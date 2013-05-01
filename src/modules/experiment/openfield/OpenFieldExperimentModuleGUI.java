@@ -79,9 +79,10 @@ public class OpenFieldExperimentModuleGUI extends ExperimentModuleGUI {
 
 	@Override
 	public void deInitialize() {
-		cmpstOptions.dispose();
-		xpndtmOptions.dispose();
+		disposeWidget(cmpstOptions);
+		disposeWidget(xpndtmOptions);
 	}
+	
 
 	/*
 	 * (non-Javadoc)

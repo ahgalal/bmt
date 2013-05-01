@@ -73,8 +73,8 @@ public class RearingDetectorGUI extends PluggedGUI<RearingDetector> {
 
 	@Override
 	public void deInitialize() {
-		cmpstRearing.dispose();
-		xpndtmRearing.dispose();
+		disposeWidget(cmpstRearing);
+		disposeWidget(xpndtmRearing);
 	}
 
 	@Override
