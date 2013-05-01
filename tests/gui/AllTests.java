@@ -8,6 +8,7 @@ import gui.integration.ForcedSwimmingIntegration1280x720FrameTest;
 import gui.integration.OpenFieldIntegration1280x720FrameTest;
 import gui.integration.OpenFieldIntegrationManStopStreamWhenPausedTest;
 import gui.integration.OpenFieldIntegrationManStopTrackTest;
+import gui.integration.filtergraph.OpenFieldIntegrationFilterGraphOperationsTest;
 import gui.integration.recorder.OpenFieldIntegrationRecordStreamAutoStopTest;
 import gui.integration.recorder.OpenFieldIntegrationRecordStreamManStopTest;
 import gui.integration.recorder.OpenFieldIntegrationRecordStreamPausedStopTest;
@@ -32,6 +33,9 @@ public class AllTests {
 		// Frame size
 		suite.addTestSuite(OpenFieldIntegration1280x720FrameTest.class);
 		suite.addTestSuite(ForcedSwimmingIntegration1280x720FrameTest.class);
+		
+		// Filters' setup
+		suite.addTestSuite(OpenFieldIntegrationFilterGraphOperationsTest.class);
 		
 		// Zones
 		suite.addTestSuite(OpenFieldIntegrationZonesCreationDeletionTest.class);

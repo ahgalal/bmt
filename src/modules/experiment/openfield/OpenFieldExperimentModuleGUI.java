@@ -32,17 +32,16 @@ import filters.subtractionfilter.SubtractorFilter;
  * @author Creative
  */
 public class OpenFieldExperimentModuleGUI extends ExperimentModuleGUI {
-	private Button		btnSetBackground	= null;
-	private Composite	cmpstOptions;
+	private static final String	SUBTRACTION_FILTER_NAME	= "SubtractionFilter";
+	private Button				btnSetBackground		= null;
+	private Composite			cmpstOptions;
 
-	private ExpandItem	xpndtmOptions;
+	private Point				frameDims;
+
+	private ExpandItem			xpndtmOptions;
 
 	public OpenFieldExperimentModuleGUI(final ExperimentModule owner) {
 		super(owner);
-	}
-	private Point frameDims;
-	public void setFrameDims(Point dims){
-		frameDims=dims;
 	}
 
 	/**
@@ -62,19 +61,38 @@ public class OpenFieldExperimentModuleGUI extends ExperimentModuleGUI {
 	public void btnSetbgAction() {
 		if ((PManager.getDefault().getState().getStream() == StreamState.STREAMING)
 				|| (PManager.getDefault().getState().getStream() == StreamState.PAUSED)) {
-			PManager.getDefault().getDrawZns()
-					.setBackground(((OpenFieldExperimentModule) owner)
-							.updateRGBBackground(),frameDims.x,frameDims.y);
-			((SubtractorFilter) PManager.getDefault().getVideoManager()
-					.getFilterManager().getFilterByName("SubtractionFilter"))
-					.updateBG();
+			final SubtractorFilter subtractorFilter = (SubtractorFilter) PManager
+					.getDefault().getVideoManager().getFilterManager()
+					.getFilterByName(SUBTRACTION_FILTER_NAME);
+			if (subtractorFilter != null)
+				subtractorFilter.updateBG();
+			else {
+				PManager.getDefault()
+						.getStatusMgr()
+						.setStatus(
+								"Subtractor filter: \""
+										+ SUBTRACTION_FILTER_NAME
+										+ "\" is not found, please check Filters' setup",
+								StatusSeverity.ERROR);
+				return;
+			}
+
+			PManager.getDefault()
+					.getDrawZns()
+					.setBackground(
+							((OpenFieldExperimentModule) owner)
+									.updateRGBBackground(),
+							frameDims.x, frameDims.y);
 		} else if (PManager.getDefault().getState().getGeneral() == GeneralState.TRACKING)
-			PManager.getDefault().getStatusMgr().setStatus(
-					"Background can't be taken while tracking.",
-					StatusSeverity.ERROR);
+			PManager.getDefault()
+					.getStatusMgr()
+					.setStatus("Background can't be taken while tracking.",
+							StatusSeverity.ERROR);
 		else
-			PManager.getDefault().getStatusMgr().setStatus(
-					"Please start the camera first.", StatusSeverity.ERROR);
+			PManager.getDefault()
+					.getStatusMgr()
+					.setStatus("Please start the camera first.",
+							StatusSeverity.ERROR);
 	}
 
 	@Override
@@ -82,7 +100,6 @@ public class OpenFieldExperimentModuleGUI extends ExperimentModuleGUI {
 		disposeWidget(cmpstOptions);
 		disposeWidget(xpndtmOptions);
 	}
-	
 
 	/*
 	 * (non-Javadoc)
@@ -111,6 +128,10 @@ public class OpenFieldExperimentModuleGUI extends ExperimentModuleGUI {
 
 		xpndtmOptions.setHeight(xpndtmOptions.getControl().computeSize(
 				SWT.DEFAULT, SWT.DEFAULT).y + 10);
+	}
+
+	public void setFrameDims(final Point dims) {
+		frameDims = dims;
 	}
 
 	@Override
