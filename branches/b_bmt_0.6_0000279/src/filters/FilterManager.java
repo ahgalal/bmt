@@ -369,6 +369,10 @@ public class FilterManager implements ConfigsListener {
 		filtersSetup.setFiltersCollection(filters);
 		boolean connectFilters = filtersSetup.connectFilters(new Point(commonConfigs.getWidth(),
 				commonConfigs.getHeight()));
+				
+		// in case of connection errors
+		if(!connectFilters)
+			return false;
 		
 		// set filter's configurations to the default values
 		for (final Iterator<VideoFilter<?, ?>> it = filters.getIterator(); it
@@ -431,7 +435,7 @@ public class FilterManager implements ConfigsListener {
 
 		configurationManager.printConfiguration();
 
-		return validateFiltersConfigurations() && connectFilters;
+		return validateFiltersConfigurations();
 	}
 
 	public boolean instantiateFilters(final FrameIntArray refFia,

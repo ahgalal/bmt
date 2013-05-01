@@ -207,7 +207,7 @@ public class MovementMeterModuleGUI extends PluggedGUI<MovementMeterModule> {
 
 	@Override
 	public void deInitialize() {
-		cmpstPlotter.dispose();
+		disposeWidget(cmpstPlotter);
 		if (secChartParent != null)
 			secChartParent.dispose();
 	}

@@ -45,6 +45,13 @@ public class FiltersNamesRequirements implements Serializable {
 		public void setTrigger(final FilterTrigger trigger) {
 			this.trigger = trigger;
 		}
+		
+		@Override
+		public Object clone() throws CloneNotSupportedException {
+			// we must use string instances in all arguments, to assure
+			// the new object is fully independent on this instance.
+			return new FilterRequirement(name, ID, FilterTrigger.valueOf(trigger.toString()));
+		}
 	}
 
 	public static enum FilterTrigger {
@@ -64,7 +71,9 @@ public class FiltersNamesRequirements implements Serializable {
 
 	public void addFilter(final String name, final String ID,
 			final FilterTrigger trigger) {
-		// TODO: check for previous existence
+		for(FilterRequirement filterRequirement:filtersRequirements)
+			if(filterRequirement.getName().equals(name))
+				throw new RuntimeException("Filter: "+ name +" already exists");
 		filtersRequirements.add(new FilterRequirement(name, ID, trigger));
 	}
 
@@ -75,4 +84,5 @@ public class FiltersNamesRequirements implements Serializable {
 	public Iterator<FilterRequirement> getFilters() {
 		return filtersRequirements.iterator();
 	}
+
 }

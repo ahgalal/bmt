@@ -6,6 +6,7 @@ import org.eclipse.swt.widgets.ExpandBar;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.swt.widgets.Widget;
 
 import utils.PManager.ProgramState;
 import utils.PManager.ProgramState.GeneralState;
@@ -19,6 +20,11 @@ public abstract class PluggedGUI<OwnerType> implements StateListener {
 
 	public PluggedGUI(final OwnerType owner) {
 		this.owner = owner;
+	}
+	
+	public void disposeWidget(Widget widget){
+		if(widget!=null && !widget.isDisposed())
+			widget.dispose();
 	}
 
 	public abstract void deInitialize();

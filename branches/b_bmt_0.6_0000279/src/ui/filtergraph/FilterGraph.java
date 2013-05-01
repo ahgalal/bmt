@@ -83,21 +83,26 @@ public class FilterGraph {
 		return self;
 	}
 
-	private boolean						addingLink;
-	private Button						btnApply;
-	private Button						btnDelete;
-	private Button						btnNewLink;
-	private Button						btnNewNode;
+	private boolean							addingLink;
+	private Button							btnSave;
+	private Button							btnDelete;
+	private Button							btnNewLink;
+	private Button							btnNewNode;
 
-	private Composite					container;
-	private boolean						editingNode;
-	private FiltersSetup				filtersSetup;
-	private Graph						graph;
-	private Group						grpTools;
+	private Button							btnReset;
+	private Composite						container;
+	private boolean							editingNode;
+	private FiltersSetup					filtersSetup;
+	private Graph							graph;
 
-	private HashMap<Filter, GraphNode>	nodes;
-	private Shell						shell;
-	private GraphNode					srcNode;
+	private Group							grpTools;
+	private HashMap<Filter, GraphNode>		nodes;
+	private ArrayList<String[]>				originalConnectionsReq;
+	private ArrayList<FilterRequirement>	originalFiltersNamesRequirements;
+
+	private Shell							shell;
+
+	private GraphNode						srcNode;
 
 	/**
 	 * @wbp.parser.constructor
@@ -357,17 +362,17 @@ public class FilterGraph {
 		});
 		btnNewLink.setText("Add Link");
 
-		btnApply = new Button(grpTools, SWT.NONE);
-		btnApply.setLocation(10, 353);
-		btnApply.setSize(75, 25);
-		btnApply.addSelectionListener(new SelectionAdapter() {
+		btnSave = new Button(grpTools, SWT.NONE);
+		btnSave.setLocation(10, 321);
+		btnSave.setSize(75, 25);
+		btnSave.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(final SelectionEvent e) {
-				if(saveToFiltersSetup())
+				if (saveToFiltersSetup())
 					shell.close();
 			}
 		});
-		btnApply.setText("Apply");
+		btnSave.setText("Save");
 
 		final Button btnCancel = new Button(grpTools, SWT.NONE);
 		btnCancel.addSelectionListener(new SelectionAdapter() {
@@ -389,6 +394,19 @@ public class FilterGraph {
 		});
 		btnDelete.setBounds(10, 83, 75, 25);
 		btnDelete.setText("Delete");
+
+		btnReset = new Button(grpTools, SWT.NONE);
+		btnReset.addSelectionListener(new SelectionAdapter() {
+
+			@Override
+			public void widgetSelected(final SelectionEvent e) {
+
+				resetToOriginalSetup();
+			}
+
+		});
+		btnReset.setBounds(10, 352, 75, 25);
+		btnReset.setText("Reset");
 
 		layout();
 	}
@@ -427,9 +445,16 @@ public class FilterGraph {
 		nodes.remove(getKey(node, nodes));
 	}
 
+	private void resetToOriginalSetup() {
+		setRequirements(originalConnectionsReq,
+				originalFiltersNamesRequirements);
+		layout();
+	}
+
 	/**
 	 * Saves the current filters' connections into the FiltersSetup instance.
-	 * @return 
+	 * 
+	 * @return
 	 */
 	@SuppressWarnings("unchecked")
 	private boolean saveToFiltersSetup() {
@@ -451,15 +476,15 @@ public class FilterGraph {
 			filtersSetup.getConnectionRequirements().clearConnections();
 
 			// connect filters based on graph
-			List<GraphConnection> connections = (List<GraphConnection>) graph
-					.getConnections();
+			final List<GraphConnection> connections = graph.getConnections();
 			for (final GraphConnection connection : connections) {
 				filtersSetup.getConnectionRequirements().connectFilters(
 						connection.getSource().getText(),
 						connection.getDestination().getText());
 			}
 
-			return PManager.getDefault().getVideoManager().signalFiltersSetupChange();
+			return PManager.getDefault().getVideoManager()
+					.signalFiltersSetupChange();
 		} else {
 			PManager.getDefault()
 					.getStatusMgr()
@@ -477,32 +502,49 @@ public class FilterGraph {
 		final FiltersNamesRequirements filtersNamesRequirements = filtersSetup
 				.getFiltersNamesRequirements();
 
+		final ArrayList<FilterRequirement> filtersNamesRequirementsArray = new ArrayList<FilterRequirement>();
+		for (final Iterator<FilterRequirement> it = filtersNamesRequirements
+				.getFilters(); it.hasNext();) {
+			final FilterRequirement next = it.next();
+			filtersNamesRequirementsArray.add(next);
+		}
+		setRequirements(connectionRequirements.getConnections(),
+				filtersNamesRequirementsArray);
+
+		layout();
+	}
+
+	private void setRequirements(final ArrayList<String[]> connectionsReq,
+			final ArrayList<FilterRequirement> filtersNamesRequirements) {
 		clearGraph();
 
 		nodes = new HashMap<Filter, GraphNode>();
+		originalConnectionsReq = new ArrayList<String[]>();
+		originalFiltersNamesRequirements = new ArrayList<FilterRequirement>();
 
-		for (final Iterator<FilterRequirement> it = filtersNamesRequirements
-				.getFilters(); it.hasNext();) {
-			final FilterRequirement filterRequirement = it.next();
+		for (final FilterRequirement filterRequirement : filtersNamesRequirements) {
 			final String filterName = filterRequirement.getName();
 			final String filterID = filterRequirement.getID();
 			nodes.put(
 					new Filter(filterName, filterID, filterRequirement
 							.getTrigger()), new GraphNode(graph, SWT.NULL,
 							filterName));
+			try {
+				originalFiltersNamesRequirements
+						.add((FilterRequirement) filterRequirement.clone());
+			} catch (final CloneNotSupportedException e) {
+				e.printStackTrace();
+			}
 		}
-
-		final ArrayList<String[]> connectionsReq = connectionRequirements
-				.getConnections();
 
 		for (final String[] pair : connectionsReq) {
 			final String srcName = pair[0];
 			final String dstName = pair[1];
 			new GraphConnection(graph, ZestStyles.CONNECTIONS_DIRECTED,
 					getNode(srcName), getNode(dstName));
-		}
 
-		layout();
+			originalConnectionsReq.add(new String[] { srcName, dstName });
+		}
 	}
 
 	private void showErrorMessage(final String message) {
