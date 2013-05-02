@@ -78,12 +78,12 @@ public class PManager {
 		}
 
 		public void setGeneral(final GeneralState general) {
-			//log.print("General state: " + general, this);
+			// log.print("General state: " + general, this);
 			this.general = general;
 		}
 
 		public void setStream(final StreamState stream) {
-			//log.print("Stream state: " + stream, this);
+			// log.print("Stream state: " + stream, this);
 			this.stream = stream;
 		}
 
@@ -114,13 +114,24 @@ public class PManager {
 		return defaultInstance;
 	}
 
+	public static String getOS() {
+		final String os = System.getProperty("os.name");
+		if (os.contains("Linux"))
+			return "Linux";
+		else if (os.contains("Windows"))
+			return "Windows";
+
+		System.out.print("Unknown OS\n");
+		return null;
+	}
+
 	/**
 	 * @param args
 	 *            Main arguments
 	 */
 	public static void main(final String[] args) {
-		if (mainGUI == null) { // for handling successive tests in a suite 
-		//(to prevent duplicating GUI + Invalid thread access)
+		if (mainGUI == null) { // for handling successive tests in a suite
+			// (to prevent duplicating GUI + Invalid thread access)
 			new PManager();
 			final Display display = Display.getDefault();
 
@@ -134,27 +145,32 @@ public class PManager {
 	 * About Dialog box instance, displays credits of this software.
 	 */
 	private CtrlAbout						about;
-	private final ArrayList<StateListener>	arrStateListsners	= new ArrayList<StateListener>();
+	private boolean							arrStateListenersLock	= false;
+	private final ArrayList<StateListener>	arrStateListsners		= new ArrayList<StateListener>();
+
 	/**
 	 * CamOptions GUI instance, used to change camera options.
 	 */
-	private CtrlCamOptions					camOptions;
+	private final CtrlCamOptions			camOptions;
+	private int								displayExecRequests		= 0;
+
 	/**
 	 * DrawZones GUI instance.
 	 */
-	private CtrlDrawZones					drawZns;
+	private final CtrlDrawZones				drawZns;
 	/**
 	 * Excel engine instance, used to write data to excel sheets.
 	 */
-	
+
 	/**
 	 * Rat form, used to enter next rat number/group.
 	 */
-	private CtrlRatInfoForm					frmRat;
+	private final CtrlRatInfoForm			frmRat;
+
 	/**
 	 * Options window, used to alter filters/modules options.
 	 */
-	private CtrlOptionsWindow				optionsWindow;
+	private final CtrlOptionsWindow			optionsWindow;
 
 	/**
 	 * Program's state, check the documentation of ProgramState enumeration.
@@ -165,7 +181,7 @@ public class PManager {
 	 * Status manager instance, manages the status label at the bottom of the
 	 * MainGUI.
 	 */
-	private StatusManager					statusMgr;
+	private final StatusManager				statusMgr;
 
 	private final VideoManager				vidMgr;
 
@@ -174,14 +190,14 @@ public class PManager {
 	 */
 	public PManager() {
 		state = new ProgramState(StreamState.IDLE, GeneralState.IDLE);
-		
-		defaultInstance = this;
-		this.statusMgr=new StatusManager();
 
-		this.drawZns=new CtrlDrawZones();
-		this.frmRat=new CtrlRatInfoForm();
-		this.camOptions=new CtrlCamOptions();
-		this.optionsWindow=new CtrlOptionsWindow();
+		defaultInstance = this;
+		this.statusMgr = new StatusManager();
+
+		this.drawZns = new CtrlDrawZones();
+		this.frmRat = new CtrlRatInfoForm();
+		this.camOptions = new CtrlCamOptions();
+		this.optionsWindow = new CtrlOptionsWindow();
 		log = new Logger(Details.VERBOSE);
 
 		mainGUI = new CtrlMainGUI();
@@ -207,30 +223,102 @@ public class PManager {
 						oldState.setStream(getState().getStream());
 						log.print("State is: " + getState(), this);
 					}
-					try {
-						Thread.sleep(100);
-					} catch (final InterruptedException e) {
-						e.printStackTrace();
-					}
+					Utils.sleep(100);
 				}
 			}
-		},"StateChangeNotifier");
+		}, "StateChangeNotifier");
 		thStateChangedNotifier.start();
 
 		mainGUI.setActive();
 	}
 
+	private void acquireLockArrStateListeners() {
+		while (arrStateListenersLock) {
+			/*
+			 * we read and dispatch to allow Display.(a)syncExec() calls from
+			 * other threads to be executed in case this method
+			 * "acquireLockArrStateListeners" is called form SWT thread
+			 */
+			Display.getDefault().readAndDispatch();
+		}
+		arrStateListenersLock = true;
+	}
+
 	public void addStateListener(final StateListener sListener) {
-		for(StateListener sl:arrStateListsners)
-			if(sl==sListener){
-				log.print("Tried to add State Listener "+sl+" more than once", this, StatusSeverity.WARNING);
+		for (final StateListener sl : arrStateListsners)
+			if (sl == sListener) {
+				log.print("Tried to add State Listener " + sl
+						+ " more than once", this, StatusSeverity.WARNING);
 				return;
 			}
 		arrStateListsners.add(sListener);
 	}
 
+	public void closeProgram() {
+		if (getState().getGeneral() == GeneralState.TRACKING)
+			stopTracking();
+		if ((getState().getStream() == StreamState.STREAMING)
+				|| (getState().getStream() == StreamState.PAUSED))
+			stopStreaming();
+
+		waitForDisplayExec();
+
+		mainGUI.setUiOpened(false);
+
+		mainGUI.closeWindow();
+		unloadGUI();
+	}
+
+	/**
+	 * It is recommended to use this method instead of Display.asyncExec() to
+	 * assure correct thread termination.
+	 * 
+	 * @param runnable
+	 */
+	public void displayAsyncExec(final Runnable runnable) {
+		displayExecRequests++;
+		Display.getDefault().asyncExec(runnable);
+		displayExecRequests--;
+	}
+
+	/**
+	 * It is recommended to use this method instead of Display.syncExec() to
+	 * assure correct thread termination.
+	 * 
+	 * @param runnable
+	 */
+	public void displaySyncExec(final Runnable runnable) {
+		displayExecRequests++;
+		Display.getDefault().syncExec(runnable);
+		displayExecRequests--;
+	}
+
+	public CtrlAbout getAbout() {
+		return about;
+	}
+
+	public CtrlCamOptions getCamOptions() {
+		return camOptions;
+	}
+
+	public CtrlDrawZones getDrawZns() {
+		return drawZns;
+	}
+
+	public CtrlRatInfoForm getFrmRat() {
+		return frmRat;
+	}
+
+	public CtrlOptionsWindow getOptionsWindow() {
+		return optionsWindow;
+	}
+
 	public ProgramState getState() {
 		return state;
+	}
+
+	public StatusManager getStatusMgr() {
+		return statusMgr;
 	}
 
 	/**
@@ -251,27 +339,16 @@ public class PManager {
 	 *            video file to load (if not using webcam as the streaming
 	 *            source)
 	 */
-	public void initializeVideoManager(
-			final CommonFilterConfigs commonConfigs, final String vidFile) {
+	public void initializeVideoManager(final CommonFilterConfigs commonConfigs,
+			final String vidFile) {
 		vidMgr.initialize(commonConfigs, vidFile);
 	}
 
-	private boolean arrStateListenersLock=false;
 	private void notifyStateListeners() {
 		acquireLockArrStateListeners();
 		for (final StateListener sl : arrStateListsners)
 			sl.updateProgramState(getState());
 		releaseLockArrStateListeners();
-	}
-
-	private void releaseLockArrStateListeners() {
-		arrStateListenersLock=false;
-	}
-
-	private void acquireLockArrStateListeners() {
-		while(arrStateListenersLock)
-			Utils.sleep(30);
-		arrStateListenersLock=true;
 	}
 
 	public void pauseResume() {
@@ -291,6 +368,10 @@ public class PManager {
 			default:
 				break;
 		}
+	}
+
+	private void releaseLockArrStateListeners() {
+		arrStateListenersLock = false;
 	}
 
 	public void removeStateListener(final StateListener sListener) {
@@ -316,12 +397,13 @@ public class PManager {
 	}
 
 	public boolean startTracking() {
-		if (getState().getStream() == StreamState.STREAMING ||
-				getState().getStream() == StreamState.PAUSED) {
+		if ((getState().getStream() == StreamState.STREAMING)
+				|| (getState().getStream() == StreamState.PAUSED)) {
 			ModulesManager.getDefault().initialize();
 			vidMgr.startProcessing();
 			ModulesManager.getDefault().runModules(true);
-			getStatusMgr().setStatus("Tracking is started", StatusSeverity.WARNING);
+			getStatusMgr().setStatus("Tracking is started",
+					StatusSeverity.WARNING);
 			return true;
 		} else {
 			getStatusMgr().setStatus("Please start the camera first.",
@@ -336,20 +418,22 @@ public class PManager {
 	public void stopStreaming() {
 		if ((getState().getStream() == StreamState.STREAMING)
 				|| (getState().getStream() == StreamState.PAUSED)) {
-			if (vidMgr != null){
-				if(getState().getGeneral() != GeneralState.TRACKING) {
+			if (vidMgr != null) {
+				if (getState().getGeneral() != GeneralState.TRACKING) {
 					vidMgr.unloadLibrary();
 					getState().setStream(StreamState.IDLE);
-					getStatusMgr().setStatus("Streaming is stopped!", StatusSeverity.WARNING);
+					getStatusMgr().setStatus("Streaming is stopped!",
+							StatusSeverity.WARNING);
 				} else
-					getStatusMgr().setStatus(
-							"Streaming Cannot be stopped while Tracking is running.",
-							StatusSeverity.ERROR);
-			}else
+					getStatusMgr()
+							.setStatus(
+									"Streaming Cannot be stopped while Tracking is running.",
+									StatusSeverity.ERROR);
+			} else
 				getStatusMgr().setStatus(
 						"incorrect state, unable to unload video library",
 						StatusSeverity.ERROR);
-		}else
+		} else
 			getStatusMgr().setStatus(
 					"incorrect state, was not in streaming/paused state",
 					StatusSeverity.ERROR);
@@ -360,51 +444,37 @@ public class PManager {
 			ModulesManager.getDefault().runModules(false);
 			vidMgr.stopProcessing();
 			getState().setGeneral(GeneralState.IDLE);
-			getStatusMgr().setStatus("Tracking is stopped", StatusSeverity.WARNING);
+			getStatusMgr().setStatus("Tracking is stopped",
+					StatusSeverity.WARNING);
 		} else
 			getStatusMgr().setStatus("Tracking is not running.",
 					StatusSeverity.ERROR);
 	}
 
-	public void unloadGUI() {
+	private void unloadGUI() {
 		getDrawZns().unloadGUI();
 		getFrmRat().unloadGUI();
 		getCamOptions().unloadGUI();
 		getOptionsWindow().unloadGUI();
 	}
 
-	public StatusManager getStatusMgr() {
-		return statusMgr;
-	}
-
-	public CtrlOptionsWindow getOptionsWindow() {
-		return optionsWindow;
-	}
-
-	public CtrlRatInfoForm getFrmRat() {
-		return frmRat;
-	}
-
-	public CtrlDrawZones getDrawZns() {
-		return drawZns;
-	}
-
-	public CtrlCamOptions getCamOptions() {
-		return camOptions;
-	}
-
-	public CtrlAbout getAbout() {
-		return about;
-	}
-	
-	public static String getOS() {
-		final String os = System.getProperty("os.name");
-		if (os.contains("Linux"))
-			return "Linux";
-		else if (os.contains("Windows"))
-			return "Windows";
-
-		System.out.print("Unknown OS\n");
-		return null;
+	/**
+	 * Waits till all Display Exec calls are executed, so that we are sure none
+	 * of the program threads is stuck waiting for the Display Exec while the
+	 * display is disposed (we are exiting the program).
+	 */
+	private void waitForDisplayExec() {
+		boolean confirmNoRequests = false;
+		while ((displayExecRequests > 0) || (confirmNoRequests == false)) {
+			System.out
+					.print("\nnumber of Display reqs: " + displayExecRequests);
+			Display.getDefault().readAndDispatch();
+			if ((confirmNoRequests == false) && (displayExecRequests == 0)) {
+				Utils.sleep(100);
+				confirmNoRequests = true;
+			} else if ((confirmNoRequests == true) && (displayExecRequests > 0)) {
+				confirmNoRequests = false;
+			}
+		}
 	}
 }

@@ -93,6 +93,7 @@ public class OpenFieldExperimentModule extends ExperimentModule {
 		bgSet = true;
 		return bgImageRGB;
 	}
+	@SuppressWarnings("rawtypes")
 	@Override
 	public Module newInstance(String name) {
 		return null; // ExperimentModules are instantiated explicitly

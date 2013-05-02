@@ -107,6 +107,7 @@ public class SessionModule extends
 				ExperimentType.FORCED_SWIMMING };
 	}
 
+	@SuppressWarnings("rawtypes")
 	@Override
 	public Module newInstance(final String name) {
 		return new SessionModule(name, null);

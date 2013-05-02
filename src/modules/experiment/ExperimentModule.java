@@ -23,7 +23,6 @@ import modules.ModuleData;
 import modules.ModulesManager;
 
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
 
@@ -71,7 +70,7 @@ Module<ExperimentModuleGUI, ExperimentModuleConfigs, ExperimentModuleData> {
 				/*configs.exp.setParametersList(ModulesManager.getDefault()
 						.getCodeNames());*/
 			if (checkExperimentParams()==false)
-				Display.getDefault().asyncExec(new Runnable() {
+				PManager.getDefault().displayAsyncExec(new Runnable() {
 
 					@Override
 					public void run() {
@@ -96,7 +95,7 @@ Module<ExperimentModuleGUI, ExperimentModuleConfigs, ExperimentModuleData> {
 			}
 
 		} else
-			Display.getDefault().asyncExec(new Runnable() {
+			PManager.getDefault().displayAsyncExec(new Runnable() {
 				@Override
 				public void run() {
 					final MessageBox mbox = new MessageBox(shell,

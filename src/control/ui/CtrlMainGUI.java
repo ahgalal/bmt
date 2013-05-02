@@ -26,7 +26,6 @@ import modules.ModulesManager;
 import modules.experiment.Constants;
 
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
@@ -50,6 +49,43 @@ import filters.screendrawer.ScreenDrawerConfigs;
  * @author Creative
  */
 public class CtrlMainGUI extends ControllerUI<MainGUI> implements StateListener {
+	private class RunnableStreamProgress implements Runnable {
+		/*
+		 * (non-Javadoc)
+		 * @see java.lang.Runnable#run()
+		 */
+		@Override
+		public void run() {
+			Utils.sleep(1000);
+			final int streamLength = pm.getVideoManager().getStreamLength();
+			PManager.getDefault().displaySyncExec(new Runnable() {
+				@Override
+				public void run() {
+					if (!ui.getShell().isDisposed()) {
+						// update stream length
+						ui.setStreamLength(streamLength);
+					}
+				}
+			});
+			while ((pm.getState().getStream() == StreamState.STREAMING)
+					|| (pm.getState().getStream() == StreamState.PAUSED)) {
+
+				final int streamPosition = pm.getVideoManager()
+						.getStreamPosition();
+				PManager.getDefault().displaySyncExec(new Runnable() {
+					@Override
+					public void run() {
+						if (!ui.getShell().isDisposed()) {
+							// update stream position
+							ui.setStreamProgress(streamPosition);
+						}
+					}
+				});
+				Utils.sleep(1000);
+			}
+		}
+	}
+
 	/**
 	 * Updates the MainGUI with the latest counters' values got from
 	 * StatsController.
@@ -67,7 +103,7 @@ public class CtrlMainGUI extends ControllerUI<MainGUI> implements StateListener 
 			while (pm.getState().getGeneral() == GeneralState.TRACKING) {
 				Utils.sleep(200);
 				if (pm.getState().getStream() == StreamState.STREAMING)
-					Display.getDefault().asyncExec(new Runnable() {
+					PManager.getDefault().displayAsyncExec(new Runnable() {
 
 						@Override
 						public void run() {
@@ -78,42 +114,6 @@ public class CtrlMainGUI extends ControllerUI<MainGUI> implements StateListener 
 					});
 			}
 			thUpdateGui = null;
-		}
-	}
-
-	private class RunnableStreamProgress implements Runnable {
-		/*
-		 * (non-Javadoc)
-		 * @see java.lang.Runnable#run()
-		 */
-		@Override
-		public void run() {
-			Utils.sleep(1000);
-			final int streamLength = pm.getVideoManager().getStreamLength();
-			Display.getDefault().syncExec(new Runnable() {
-				@Override
-				public void run() {
-					if (!ui.getShell().isDisposed()) {
-						// update stream length
-						ui.setStreamLength(streamLength);
-					}
-				}
-			});
-			while (pm.getState().getStream() == StreamState.STREAMING
-					|| pm.getState().getStream() == StreamState.PAUSED) {
-				Utils.sleep(1000);
-				final int streamPosition = pm.getVideoManager()
-						.getStreamPosition();
-				Display.getDefault().syncExec(new Runnable() {
-					@Override
-					public void run() {
-						if (!ui.getShell().isDisposed()) {
-							// update stream position
-							ui.setStreamProgress(streamPosition);
-						}
-					}
-				});
-			}
 		}
 	}
 
@@ -142,10 +142,6 @@ public class CtrlMainGUI extends ControllerUI<MainGUI> implements StateListener 
 		ctrlNewExpWizard = new CtrlNewExperimentWizard();
 	}
 
-	private Thread createUpdateUIThread() {
-		return new Thread(new RunnableUpdateGUI(), "Update GUI");
-	}
-
 	/**
 	 * Clears the GUI data.
 	 */
@@ -157,19 +153,12 @@ public class CtrlMainGUI extends ControllerUI<MainGUI> implements StateListener 
 	 * Stops all Program Activity and closes the GUI window.
 	 */
 	public void closeProgram() {
-		if (pm.getState().getGeneral() == GeneralState.TRACKING)
-			pm.stopTracking();
-		if (pm.getState().getStream() == StreamState.STREAMING)
-			pm.stopStreaming();
-		uiOpened = false;
-		try {
-			Thread.sleep(510);
-		} catch (final InterruptedException e) {
-			e.printStackTrace();
-		}
+		pm.closeProgram();
+		// System.exit(0);
+	}
+
+	public void closeWindow() {
 		ui.closeWindow();
-		pm.unloadGUI();
-		System.exit(0);
 	}
 
 	/**
@@ -185,23 +174,31 @@ public class CtrlMainGUI extends ControllerUI<MainGUI> implements StateListener 
 	 */
 	public void configureMainScreenDrawerFilter(final String name,
 			final CommonFilterConfigs configs) {
-		Point canvasDims=new Point(ui.getAwtVideoMain().getBounds().width, ui.getAwtVideoMain().getBounds().height);
+		final Point canvasDims = new Point(
+				ui.getAwtVideoMain().getBounds().width, ui.getAwtVideoMain()
+						.getBounds().height);
 		pm.getVideoManager()
 				.getFilterManager()
 				.applyConfigsToFilter(
 						new ScreenDrawerConfigs(name, ui.getAwtVideoMain()
-								.getGraphics(), null,canvasDims));
+								.getGraphics(), null, canvasDims));
 
 	}
-	
+
 	public void configureSecScreenDrawerFilter(final String name,
 			final CommonFilterConfigs configs) {
-		Point canvasDims=new Point(ui.getAwtVideoSec().getBounds().width, ui.getAwtVideoSec().getBounds().height);
+		final Point canvasDims = new Point(
+				ui.getAwtVideoSec().getBounds().width, ui.getAwtVideoSec()
+						.getBounds().height);
 		pm.getVideoManager()
-		.getFilterManager()
-		.applyConfigsToFilter(
-				new ScreenDrawerConfigs(name, ui.getAwtVideoSec()
-						.getGraphics(), null,canvasDims));
+				.getFilterManager()
+				.applyConfigsToFilter(
+						new ScreenDrawerConfigs(name, ui.getAwtVideoSec()
+								.getGraphics(), null, canvasDims));
+	}
+
+	private Thread createUpdateUIThread() {
+		return new Thread(new RunnableUpdateGUI(), "Update GUI");
 	}
 
 	/**
@@ -217,7 +214,7 @@ public class CtrlMainGUI extends ControllerUI<MainGUI> implements StateListener 
 	 * @return the uiOpened
 	 */
 	public boolean isUIOpened() {
-		return uiOpened;
+		return isUiOpened();
 	}
 
 	/**
@@ -313,19 +310,18 @@ public class CtrlMainGUI extends ControllerUI<MainGUI> implements StateListener 
 		if (fileName != null) {
 			PManager.mainGUI.clearForm();
 			ExperimentManager.getDefault().unloadExperiment();
-			if(ExperimentManager.getDefault().loadExperiment(
+			if (ExperimentManager.getDefault().loadExperiment(
 					ExperimentManager.readExperimentFromFile(fileName)))
-				
-			PManager.getDefault()
-					.getStatusMgr()
-					.setStatus(
-							"Experiment is Loaded Successfully from file: "
-									+ fileName, StatusSeverity.WARNING);
+
+				PManager.getDefault()
+						.getStatusMgr()
+						.setStatus(
+								"Experiment is Loaded Successfully from file: "
+										+ fileName, StatusSeverity.WARNING);
 			else
 				PManager.getDefault()
-				.getStatusMgr()
-				.setStatus(
-						"Error in exp params!", StatusSeverity.ERROR);
+						.getStatusMgr()
+						.setStatus("Error in exp params!", StatusSeverity.ERROR);
 		}
 	}
 
@@ -345,6 +341,10 @@ public class CtrlMainGUI extends ControllerUI<MainGUI> implements StateListener 
 		ctrlAboutBox.show(true);
 	}
 
+	public void mnutmHelpContentsAction() {
+		HelpManager.getDefault().openHelp();
+	}
+
 	public void pauseResumeAction() {
 		pm.pauseResume();
 	}
@@ -361,7 +361,7 @@ public class CtrlMainGUI extends ControllerUI<MainGUI> implements StateListener 
 	 * Fills the column of displaying parameters in the table.
 	 */
 	private void setTableNamesColumn() {
-		Display.getDefault().asyncExec(new Runnable() {
+		PManager.getDefault().displayAsyncExec(new Runnable() {
 
 			@Override
 			public void run() {
@@ -399,7 +399,7 @@ public class CtrlMainGUI extends ControllerUI<MainGUI> implements StateListener 
 	@Override
 	public void show(final boolean visibility) {
 		ui.show(visibility);
-		uiOpened = true;
+		setUiOpened(true);
 
 		final Thread thUpdateControlsEnable = new Thread(new Runnable() {
 
@@ -431,6 +431,13 @@ public class CtrlMainGUI extends ControllerUI<MainGUI> implements StateListener 
 
 	}
 
+	public void showFiltersSetup() {
+		final FilterGraph filterGraph = FilterGraph.getDefault();
+		filterGraph.setFilterSetup(ExperimentManager.getDefault()
+				.getFilterSetup());
+		filterGraph.openWindow();
+	}
+
 	public void startStreamingAction() {
 		if (ui.getSelectedInputMode().equals("CAM"))
 			mnutmCameraStartAction();
@@ -438,7 +445,7 @@ public class CtrlMainGUI extends ControllerUI<MainGUI> implements StateListener 
 			setVideoFileMode();
 		if (pm.startStreaming()) {
 			if (ui.getSelectedInputMode().equals("VIDEOFILE")) {
-				Thread thStreamProgress = new Thread(
+				final Thread thStreamProgress = new Thread(
 						new RunnableStreamProgress(), "StreamProgress");
 				thStreamProgress.start();
 			}
@@ -465,7 +472,7 @@ public class CtrlMainGUI extends ControllerUI<MainGUI> implements StateListener 
 		final Thread thStartGUIProcedures = new Thread(new Runnable() {
 
 			private void handleNoExperimentModule(final String msg) {
-				Display.getDefault().asyncExec(new Runnable() {
+				PManager.getDefault().displayAsyncExec(new Runnable() {
 					@Override
 					public void run() {
 						final MessageBox mbox = new MessageBox(ui.getShell(),
@@ -523,7 +530,7 @@ public class CtrlMainGUI extends ControllerUI<MainGUI> implements StateListener 
 
 	@Override
 	public void updateProgramState(final ProgramState state) {
-		Display.getDefault().asyncExec(new Runnable() {
+		PManager.getDefault().displayAsyncExec(new Runnable() {
 			@Override
 			public void run() {
 				switch (state.getGeneral()) {
@@ -568,14 +575,12 @@ public class CtrlMainGUI extends ControllerUI<MainGUI> implements StateListener 
 		});
 	}
 
-	public void showFiltersSetup() {
-		FilterGraph filterGraph = FilterGraph.getDefault();
-		filterGraph.setFilterSetup(ExperimentManager.getDefault().getFilterSetup());
-		filterGraph.openWindow();
+	public void setUiOpened(boolean uiOpened) {
+		this.uiOpened = uiOpened;
 	}
 
-	public void mnutmHelpContentsAction() {
-		HelpManager.getDefault().openHelp();
+	private boolean isUiOpened() {
+		return uiOpened;
 	}
 
 }

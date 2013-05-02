@@ -117,6 +117,7 @@ public class RearingModule extends
 		// data.expType=expType;
 	}
 
+	@SuppressWarnings("rawtypes")
 	@Override
 	public Module newInstance(final String name) {
 		return new RearingModule(name, null);

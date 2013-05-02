@@ -244,6 +244,7 @@ public class ZonesModule extends
 		data.getZones().loadZonesFromFile(fileName);
 	}
 
+	@SuppressWarnings("rawtypes")
 	@Override
 	public Module newInstance(final String name) {
 		return new ZonesModule(name, null);

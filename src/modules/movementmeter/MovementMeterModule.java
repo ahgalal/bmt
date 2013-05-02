@@ -153,6 +153,7 @@ public class MovementMeterModule
 			startTimeStamp = System.currentTimeMillis();
 	}
 
+	@SuppressWarnings("rawtypes")
 	@Override
 	public Module newInstance(final String name) {
 		return new MovementMeterModule(name, null);
