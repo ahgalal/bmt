@@ -23,9 +23,6 @@ import java.awt.Point;
 import java.util.ArrayList;
 
 import modules.ModulesManager;
-
-import org.eclipse.swt.widgets.Display;
-
 import ui.FormZoneType;
 import utils.PManager;
 
@@ -163,7 +160,7 @@ public class ShapeController implements GfxPanelNotifiee, ShapeCollection {
 	 */
 	@Override
 	public void shapeAdded(final int shapeNumber) {
-		Display.getDefault().syncExec(new Runnable() {
+		PManager.getDefault().displaySyncExec(new Runnable() {
 
 			@Override
 			public void run() {

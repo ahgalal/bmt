@@ -1,13 +1,13 @@
 package ui;
 
 import org.eclipse.swt.widgets.CoolBar;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.ExpandBar;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Widget;
 
+import utils.PManager;
 import utils.PManager.ProgramState;
 import utils.PManager.ProgramState.GeneralState;
 import utils.StateListener;
@@ -51,7 +51,7 @@ public abstract class PluggedGUI<OwnerType> implements StateListener {
 		final boolean streamStateChanged = (programState == null ? true
 				: (state.getStream() != programState.getStream()));
 		if (generalStateChanged || streamStateChanged)
-			Display.getDefault().syncExec(new Runnable() {
+			PManager.getDefault().displaySyncExec(new Runnable() {
 
 				@Override
 				public void run() {

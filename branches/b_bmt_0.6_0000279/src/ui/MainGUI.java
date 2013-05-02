@@ -42,6 +42,7 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
 
+import utils.PManager;
 import control.ui.ControllerUI;
 import control.ui.CtrlMainGUI;
 
@@ -130,7 +131,7 @@ public class MainGUI extends BaseUI {
 	 *            true/false
 	 */
 	public void btnStartStreamingEnable(final boolean enable) {
-		Display.getDefault().asyncExec(new Runnable() {
+		PManager.getDefault().displayAsyncExec(new Runnable() {
 			@Override
 			public void run() {
 				btnStartStream.setEnabled(enable);
@@ -145,7 +146,7 @@ public class MainGUI extends BaseUI {
 	 *            true/false
 	 */
 	public void btnStartTrackingEnable(final boolean enable) {
-		Display.getDefault().asyncExec(new Runnable() {
+		PManager.getDefault().displayAsyncExec(new Runnable() {
 			@Override
 			public void run() {
 				btnStartTracking.setEnabled(enable);
@@ -179,7 +180,7 @@ public class MainGUI extends BaseUI {
 
 	@Override
 	public void clearForm() {
-		Display.getDefault().asyncExec(new Runnable() {
+		PManager.getDefault().displayAsyncExec(new Runnable() {
 
 			@Override
 			public void run() {

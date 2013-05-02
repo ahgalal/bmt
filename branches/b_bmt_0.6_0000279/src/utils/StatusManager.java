@@ -17,7 +17,6 @@ package utils;
 import org.eclipse.swt.custom.StyleRange;
 import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.graphics.Color;
-import org.eclipse.swt.widgets.Display;
 
 /**
  * Manages the status of an SWT Shell.
@@ -72,7 +71,7 @@ public class StatusManager {
 			else
 				clr = clrBlack;
 
-			Display.getDefault().asyncExec(new Runnable() {
+			PManager.getDefault().displayAsyncExec(new Runnable() {
 				@Override
 				public void run() {
 					int start = txt.getText().length();

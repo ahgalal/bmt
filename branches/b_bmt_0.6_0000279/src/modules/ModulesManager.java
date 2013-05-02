@@ -493,8 +493,7 @@ public class ModulesManager implements ConfigsListener {
 
 	public boolean setupModules(final Experiment exp) {
 		// unload old modules
-		for (final Module m : modules)
-			m.unload();
+		unloadModules();
 
 		// remove old modules
 		modules.clear();
@@ -539,6 +538,10 @@ public class ModulesManager implements ConfigsListener {
 		loadModulesGUI();
 		
 		return true;
+	}
+	public void unloadModules() {
+		for (final Module m : modules)
+			m.unload();
 	}
 
 	@Override

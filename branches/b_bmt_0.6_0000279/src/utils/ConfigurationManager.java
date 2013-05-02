@@ -21,6 +21,7 @@ public class ConfigurationManager<ConfigurationType extends Configuration>  {
 		this.configurables = configurables;
 	}
 	
+	@SuppressWarnings("unchecked")
 	public ConfigurationType addConfiguration(ConfigurationType cfgNew,
 			boolean updateExisting) {
 		ConfigurationType existing = null;
@@ -65,8 +66,9 @@ public class ConfigurationManager<ConfigurationType extends Configuration>  {
 	 * @param cfgs
 	 *            configurations object
 	 */
+	@SuppressWarnings("unchecked")
 	public void applyConfigs(ConfigurationType cfgs) {
-		final Configurable module = getConfigurableByName(cfgs.getName());
+		final Configurable<ConfigurationType> module = getConfigurableByName(cfgs.getName());
 		if (module != null) {
 			try {
 				// try to add the config to the list, or get the existing one
@@ -88,6 +90,7 @@ public class ConfigurationManager<ConfigurationType extends Configuration>  {
 	 * @param cfgs
 	 *            configurations object
 	 */
+	@SuppressWarnings("unchecked")
 	public void applyConfigsByID(ConfigurationType cfgs) {
 		final ArrayList<Configurable> configurables = getConfigurablesByID(cfgs.getID());
 		if (configurables.size()>0) {
@@ -111,6 +114,7 @@ public class ConfigurationManager<ConfigurationType extends Configuration>  {
 		configs.clear();
 	}
 	
+	@SuppressWarnings("unchecked")
 	public ConfigurationType createDefaultConfigs(String name,String moduleId) {
 		for(ConfigurationType config: configs){
 			if(config.getID().equals(moduleId)){

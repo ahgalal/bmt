@@ -9,10 +9,11 @@ public class ModulesCollection {
 	public ModulesCollection() {
 	}
 
-	public void addModule(final Module module) {
+	public void addModule(final Module<?, ?, ?> module) {
 		modules.add(module);
 	}
 
+	@SuppressWarnings("rawtypes")
 	public String[] getModulesNames() {
 		String[] ret = new String[modules.size()];
 		int i=0;
@@ -25,6 +26,7 @@ public class ModulesCollection {
 	
 	// TODO: getModuleByName
 
+	@SuppressWarnings("rawtypes")
 	public void removeModule(Module module) {
 		modules.remove(module);
 	}

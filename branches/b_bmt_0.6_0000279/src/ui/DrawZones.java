@@ -135,7 +135,7 @@ public class DrawZones extends BaseUI {
 	public void addZoneToTable(final String zoneNo, final String zoneCol,
 			final String zoneType) {
 		if (Display.getCurrent() != Display.getDefault())
-			Display.getDefault().asyncExec(new Runnable() {
+			PManager.getDefault().displayAsyncExec(new Runnable() {
 
 				@Override
 				public void run() {
@@ -157,7 +157,7 @@ public class DrawZones extends BaseUI {
 	 */
 	public void clearTable() {
 		if (Display.getCurrent() != Display.getDefault())
-			Display.getDefault().asyncExec(new Runnable() {
+			PManager.getDefault().displayAsyncExec(new Runnable() {
 
 				@Override
 				public void run() {
@@ -231,7 +231,7 @@ public class DrawZones extends BaseUI {
 									} catch (final InterruptedException e) {
 										e.printStackTrace();
 									}
-								Display.getDefault().syncExec(new Runnable() {
+									PManager.getDefault().displaySyncExec(new Runnable() {
 									@Override
 									public void run() {
 
@@ -311,7 +311,7 @@ public class DrawZones extends BaseUI {
 	public void editZoneDataInTable(final int zoneNo, final String zoneCol,
 			final String zoneType) {
 		if (Display.getCurrent() != Display.getDefault())
-			Display.getDefault().asyncExec(new Runnable() {
+			PManager.getDefault().displayAsyncExec(new Runnable() {
 
 				@Override
 				public void run() {
@@ -407,7 +407,7 @@ public class DrawZones extends BaseUI {
 	 */
 	public void selectZoneInTable(final int zoneNumber) {
 		if (Display.getCurrent() != Display.getDefault())
-			Display.getDefault().asyncExec(new Runnable() {
+			PManager.getDefault().displayAsyncExec(new Runnable() {
 
 				@Override
 				public void run() {

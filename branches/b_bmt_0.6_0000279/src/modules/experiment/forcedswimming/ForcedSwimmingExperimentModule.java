@@ -25,6 +25,7 @@ public class ForcedSwimmingExperimentModule extends ExperimentModule {
 		return moduleID;
 	}
 	public final static String			moduleID=Constants.EXPERIMENT_ID+".forcedswimming";
+	@SuppressWarnings("rawtypes")
 	@Override
 	public Module newInstance(String name) {
 		return null; // ExperimentModules are instantiated explicitly

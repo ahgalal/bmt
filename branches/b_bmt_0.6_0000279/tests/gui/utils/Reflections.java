@@ -3,11 +3,12 @@ package gui.utils;
 import java.util.HashMap;
 import java.util.List;
 
+import modules.ExperimentManager;
+import modules.experiment.Experiment;
+
 import org.eclipse.zest.core.widgets.GraphConnection;
 import org.eclipse.zest.core.widgets.GraphNode;
 
-import modules.ExperimentManager;
-import modules.experiment.Experiment;
 import ui.filtergraph.FilterGraph;
 import ui.filtergraph.FilterGraph.Filter;
 import utils.ReflectUtils;
