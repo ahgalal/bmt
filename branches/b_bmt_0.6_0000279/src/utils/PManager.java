@@ -466,8 +466,6 @@ public class PManager {
 	private void waitForDisplayExec() {
 		boolean confirmNoRequests = false;
 		while ((displayExecRequests > 0) || (confirmNoRequests == false)) {
-			System.out
-					.print("\nnumber of Display reqs: " + displayExecRequests);
 			Display.getDefault().readAndDispatch();
 			if ((confirmNoRequests == false) && (displayExecRequests == 0)) {
 				Utils.sleep(100);

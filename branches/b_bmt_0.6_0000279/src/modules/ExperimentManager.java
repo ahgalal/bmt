@@ -52,6 +52,7 @@ public class ExperimentManager {
 		final XStream xstream = new XStream(new DomDriver());
 		try {
 			exp = (Experiment) xstream.fromXML(new FileReader(fileName));
+			exp.setFileName(fileName);
 		} catch (final FileNotFoundException e) {
 			e.printStackTrace();
 		}
