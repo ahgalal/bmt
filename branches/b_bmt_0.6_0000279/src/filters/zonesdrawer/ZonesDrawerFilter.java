@@ -25,7 +25,6 @@ public class ZonesDrawerFilter extends
 
 	public ZonesDrawerFilter(final String name, final Link linkIn, final Link linkOut) {
 		super(name, linkIn, linkOut);
-		//initializeBufferedImage();
 	}
 
 	private void initializeBufferedImage() {

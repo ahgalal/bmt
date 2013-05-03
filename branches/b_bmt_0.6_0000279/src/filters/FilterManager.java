@@ -18,8 +18,6 @@ import java.awt.Point;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-import modules.ModulesManager;
-import modules.zones.ShapeController;
 import ui.PluggedGUI;
 import utils.Logger.Details;
 import utils.PManager;
@@ -313,7 +311,7 @@ public class FilterManager implements ConfigsListener {
 		final MovementMeterFilterConfigs movementFilterConfigs = new MovementMeterFilterConfigs(
 				"MovementMeter", commonConfigs);
 		final ZonesDrawerConfigs zonesDrawerConfigs = new ZonesDrawerConfigs(
-				"ZonesDrawer", commonConfigs, ShapeController.getDefault());
+				"ZonesDrawer", commonConfigs, null);
 
 		configurationManager.reset();
 		configurationManager.addConfiguration(sourceConfigs, false);
@@ -435,7 +433,7 @@ public class FilterManager implements ConfigsListener {
 
 		configurationManager.printConfiguration();
 
-		return validateFiltersConfigurations();
+		return true;//validateFiltersConfigurations();
 	}
 
 	public boolean instantiateFilters(final FrameIntArray refFia,
@@ -525,14 +523,15 @@ public class FilterManager implements ConfigsListener {
 	 * Submits/Registers data objects of all filters to the ModuleManager, for
 	 * the modules to receive data from Filters.
 	 */
-	public void submitDataObjects() {
+	public ArrayList<Data> getDataObjects() {
+		ArrayList<Data> dataObjs=new ArrayList<Data>();
 		for (final Iterator<VideoFilter<?, ?>> it = filters.getIterator(); it
-				.hasNext();) {
+		.hasNext();) {
 			final VideoFilter<?, ?> vf = it.next();
 			if (vf.getFilterData() != null)
-				ModulesManager.getDefault().addFilterDataObject(
-						vf.getFilterData());
+				dataObjs.add(vf.getFilterData());
 		}
+		return dataObjs;
 	}
 
 	@Override
@@ -560,7 +559,7 @@ public class FilterManager implements ConfigsListener {
 	/**
 	 * @return
 	 */
-	private boolean validateFiltersConfigurations() {
+	public boolean validateFiltersConfigurations() {
 		for (final Iterator<VideoFilter<?, ?>> it = filters.getIterator(); it
 				.hasNext();) {
 			final VideoFilter<?, ?> vf = it.next();

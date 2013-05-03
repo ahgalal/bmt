@@ -45,13 +45,15 @@ public class ZonesCollection {
 
 	private final ShapeController	shapeController;
 	private final ArrayList<Zone>	zones;
-
+private ZonesModule zonesModule;
 	/**
 	 * Initializes the Collection.
+	 * @param shapeController2 
 	 */
-	public ZonesCollection() {
+	public ZonesCollection(ZonesModule zonesModule, ShapeController shapeController) {
 		zones = new ArrayList<Zone>();
-		shapeController = ShapeController.getDefault();
+		this.zonesModule=zonesModule;
+		this.shapeController = shapeController;
 	}
 
 	/**
@@ -63,13 +65,9 @@ public class ZonesCollection {
 	 *            new zone's type
 	 */
 	public void addZone(final int zoneNumber, final ZoneType type) {
+		// TODO: add check for previous existance
 		Zone tmp = new Zone(zoneNumber, type);
 		zones.add(tmp);
-		PManager.getDefault().getDrawZns().addZoneToTable(
-				Integer.toString(zoneNumber),
-				Shape.color2String(shapeController.getShapeByNumber(
-						zoneNumber).getColor()),
-				ZoneType.zoneType2String(type));
 		tmp = null;
 	}
 
@@ -96,9 +94,6 @@ public class ZonesCollection {
 	public void editZone(final int zonenumber, final ZoneType zonetype) {
 		final Zone z = getZoneByNumber(zonenumber);
 		z.setZoneType(zonetype);
-		PManager.getDefault().getDrawZns().editZoneDataInTable(zonenumber, Shape
-				.color2String(shapeController.getShapeByNumber(zonenumber)
-						.getColor()), ZoneType.zoneType2String(zonetype));
 	}
 
 	/**
@@ -145,7 +140,6 @@ public class ZonesCollection {
 	{
 		zones.clear();
 		shapeController.clearAllShapes();
-		PManager.getDefault().getDrawZns().clearTable();
 		String data = readFromFile(path);
 		String tmpLine = "";
 		String shapeType = "";
@@ -196,7 +190,7 @@ public class ZonesCollection {
 					tmpShp.setShapeNumber(zoneNumber);
 				}
 				shapeController.addShape(tmpShp);
-				addZone(zoneNumber, ztype);
+				zonesModule.addZone(zoneNumber, ztype);
 			}
 		} catch (Exception e) {
 			PManager.getDefault().getStatusMgr().setStatus("Zones file may be corrupt: "+ path, StatusSeverity.ERROR);

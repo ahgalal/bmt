@@ -39,6 +39,7 @@ import utils.video.input.VidInputter.SourceStatus;
 import utils.video.input.VidInputter.SourceType;
 import utils.video.input.VidSourceConfigs;
 import filters.CommonFilterConfigs;
+import filters.Data;
 import filters.FilterConfigs;
 import filters.FilterManager;
 import filters.VideoFilter;
@@ -157,6 +158,7 @@ public class VideoManager {
 				null);
 		videoProcessorEnabled = true;
 		fia = new FrameIntArray();
+		new ModulesManager();
 		filterManager = new FilterManager(commonConfigs, fia);
 		installedVidLibs = new ArrayList<VidInputter<?>>();
 		
@@ -311,6 +313,7 @@ public class VideoManager {
 	public void pauseStream() {
 		if ((vInput != null) && (vInput.getStatus() == SourceStatus.STREAMING)) {
 			paused = true;
+			ModulesManager.getDefault().pauseModules();
 			vInput.pauseStream();
 			filterManager.pauseStream();
 		}
@@ -322,6 +325,7 @@ public class VideoManager {
 			vInput.resumeStream();
 			thFiltersProcess.interrupt();
 			filterManager.resumeStream();
+			ModulesManager.getDefault().resumeModules();
 		}
 	}
 
@@ -332,10 +336,11 @@ public class VideoManager {
 	 * @return 
 	 */
 	public boolean setupModulesAndFilters(final Experiment exp) {
-		boolean setupModules=ModulesManager.getDefault().setupModules(exp);
+		
 		boolean initFilters = initFilters(exp);
+		boolean setupModules=ModulesManager.getDefault().setupModules(exp);
 		PManager.getDefault().signalProgramStateUpdate();
-		return setupModules && initFilters;
+		return setupModules && initFilters && filterManager.validateFiltersConfigurations();
 	}
 
 	public boolean signalFiltersSetupChange() {
@@ -351,7 +356,9 @@ public class VideoManager {
 	 * filters.
 	 */
 	public void startProcessing() {
+		ModulesManager.getDefault().initialize();
 		filterManager.startProcessing();
+		ModulesManager.getDefault().runModules(true);
 		PManager.getDefault().getState().setGeneral(GeneralState.TRACKING);
 	}
 
@@ -377,7 +384,11 @@ public class VideoManager {
 					"Filters process");
 			thFiltersProcess.start();
 			PManager.getDefault().getState().setStream(StreamState.STREAMING);
-			filterManager.submitDataObjects();
+			
+			// register filters' data to Modules
+			ArrayList<Data> filtersDataObjs=filterManager.getDataObjects();
+			for(Data data:filtersDataObjs)
+				ModulesManager.getDefault().addFilterDataObject(data);
 
 			if (vInput.getType() == SourceType.FILE) {
 				while (vInput.getStatus() != SourceStatus.STREAMING)
@@ -405,6 +416,7 @@ public class VideoManager {
 	 * Stops processing of the video stream.
 	 */
 	public void stopProcessing() {
+		ModulesManager.getDefault().runModules(false);
 		filterManager.stopProcessing();
 	}
 

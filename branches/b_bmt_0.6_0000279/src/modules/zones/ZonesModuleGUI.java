@@ -14,6 +14,8 @@
 
 package modules.zones;
 
+import java.awt.Point;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.CoolBar;
 import org.eclipse.swt.widgets.ExpandBar;
@@ -22,8 +24,9 @@ import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Shell;
 
+import control.ui.CtrlDrawZones;
+
 import ui.PluggedGUI;
-import utils.PManager;
 import utils.PManager.ProgramState;
 
 /**
@@ -39,6 +42,8 @@ public class ZonesModuleGUI extends PluggedGUI<ZonesModule> {
 	/*
 	 * public ZonesModuleGUI() { }
 	 */
+	
+	private CtrlDrawZones drawZones;
 
 	public ZonesModuleGUI(final ZonesModule owner) {
 		super(owner);
@@ -67,29 +72,53 @@ public class ZonesModuleGUI extends PluggedGUI<ZonesModule> {
 						mnutmEditOpenZoneEditorAction();
 					}
 				});
+		drawZones=new CtrlDrawZones(owner);
 	}
 
 	/**
 	 * Handles the "Zone editor" menu item click action.
 	 */
 	public void mnutmEditOpenZoneEditorAction() {
-		PManager.getDefault().getDrawZns().show(true);
+		drawZones.show(true);
 	}
 
 	@Override
 	public void stateStreamChangeHandler(ProgramState state) {
-		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
 	public void stateGeneralChangeHandler(ProgramState state) {
-		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
 	public void deInitialize() {
 		disposeWidget(mnutmEditOpenzoneeditor);
+		drawZones.unloadGUI();
+	}
+
+	public void addZoneToTable(String zoneNumber, String color2String,
+			String zoneType2String) {
+		drawZones.addZoneToTable(zoneNumber, color2String, zoneType2String);
+	}
+
+	public void editZoneDataInTable(int zonenumber, String color2String,
+			String zoneType2String) {
+		drawZones.editZoneDataInTable(zonenumber, color2String, zoneType2String);
+	}
+
+	public void clearTable() {
+		drawZones.clearTable();
+	}
+
+	public void setBackground(int[] updateRGBBackground, int x, int y) {
+		drawZones.setBackground(updateRGBBackground, x, y);
+	}
+
+	public void addMeasurePoint(Point pos) {
+		drawZones.addMeasurePoint(pos);
+	}
+
+	public void selectZoneInTable(int zoneNumber) {
+		drawZones.selectZoneInTable(zoneNumber);
 	}
 }

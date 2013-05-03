@@ -4,9 +4,13 @@
 package modules.experiment.openfield;
 
 import java.awt.Point;
+import java.util.ArrayList;
 
+import modules.Module;
+import modules.ModulesManager;
 import modules.experiment.ExperimentModule;
 import modules.experiment.ExperimentModuleGUI;
+import modules.zones.ZonesModule;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -21,6 +25,7 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Shell;
 
+import ui.box.MsgBox;
 import utils.PManager;
 import utils.PManager.ProgramState;
 import utils.PManager.ProgramState.GeneralState;
@@ -77,12 +82,22 @@ public class OpenFieldExperimentModuleGUI extends ExperimentModuleGUI {
 				return;
 			}
 
-			PManager.getDefault()
-					.getDrawZns()
-					.setBackground(
-							((OpenFieldExperimentModule) owner)
-									.updateRGBBackground(),
-							frameDims.x, frameDims.y);
+			ArrayList<Module<?, ?, ?>> zoneModules = ModulesManager.getDefault().getModulesUnderID(ZonesModule.moduleID);
+			if(zoneModules.size()==0){
+				MsgBox.show(shell, "Cannot find any \"" + ZonesModule.moduleID+ "\" modules loaded, one must be loaded in order to set background", "Error", SWT.ERROR);
+				return;
+			}
+			else if(zoneModules.size()>1){
+				MsgBox.show(shell, "More than one \"" + ZonesModule.moduleID+ "\" modules loaded, only one must be loaded in order to set background", "Error", SWT.ERROR);
+				return;
+			}
+			
+			// update Background
+			((ZonesModule)zoneModules.get(0)).setBackground(
+					((OpenFieldExperimentModule) owner)
+					.updateRGBBackground(),
+			frameDims.x, frameDims.y);
+			
 		} else if (PManager.getDefault().getState().getGeneral() == GeneralState.TRACKING)
 			PManager.getDefault()
 					.getStatusMgr()

@@ -30,7 +30,9 @@ import utils.Logger.Details;
 import utils.PManager;
 import utils.StatusManager.StatusSeverity;
 import filters.Data;
+import filters.FilterManager;
 import filters.ratfinder.RatFinderData;
+import filters.zonesdrawer.ZonesDrawerConfigs;
 import gfx_panel.OvalShape;
 import gfx_panel.RectangleShape;
 import gfx_panel.Shape;
@@ -62,6 +64,7 @@ public class ZonesModule extends
 	private int						updatedZoneNumber;
 
 	private byte[]					zoneMap;
+	private final ZonesCollection	zones;
 
 	/**
 	 * Initializes the module.
@@ -79,19 +82,11 @@ public class ZonesModule extends
 		filtersData = new Data[1];
 		data.setScale(10);
 		path = new ArrayList<Point>();
-		data.setZones(new ZonesCollection());
-		shapeController = ShapeController.getDefault();
+		shapeController = new ShapeController(this);
+		zones = new ZonesCollection(this, shapeController);
 		initialize();
 		gui = new ZonesModuleGUI(this);
 		expType = new ExperimentType[] { ExperimentType.OPEN_FIELD };
-		// data.expType=expType;
-		// TODO: IMPORTANT update the width & height of the zone_mape when the
-		// user changes them.
-		// We can make a GLOBAL_CONFIGs object that is accessible everywhere,
-		// and
-		// modules/filters can REGISTER to it to get NOTIFIED when a value
-		// changes,
-		// so they can run THEIR update routines.
 	}
 
 	/**
@@ -99,18 +94,19 @@ public class ZonesModule extends
 	 */
 	public void addAllZonesToGUI() {
 		int zonenumber;
-		for (final Zone z : data.getZones().getAllZones())
+		for (final Zone z : zones.getAllZones())
 			if (z != null) {
 				zonenumber = z.getZoneNumber();
-				PManager.getDefault()
-						.getDrawZns()
-						.addZoneToTable(
-								Integer.toString(zonenumber),
-								Shape.color2String(shapeController
-										.getShapeByNumber(zonenumber)
-										.getColor()),
-								ZoneType.zoneType2String(z.getZoneType()));
+				gui.addZoneToTable(
+						Integer.toString(zonenumber),
+						Shape.color2String(shapeController.getShapeByNumber(
+								zonenumber).getColor()),
+						ZoneType.zoneType2String(z.getZoneType()));
 			}
+	}
+
+	public void addMeasurePoint(final Point pos) {
+		gui.addMeasurePoint(pos);
 	}
 
 	/**
@@ -132,7 +128,11 @@ public class ZonesModule extends
 	 *            zones' type
 	 */
 	public void addZone(final int zoneNumber, final ZoneType type) {
-		data.getZones().addZone(zoneNumber, type);
+
+		zones.addZone(zoneNumber, type);
+		gui.addZoneToTable(Integer.toString(zoneNumber), Shape
+				.color2String(shapeController.getShapeByNumber(zoneNumber)
+						.getColor()), ZoneType.zoneType2String(type));
 		updateZoneMap();
 	}
 
@@ -158,9 +158,9 @@ public class ZonesModule extends
 	 *            number of the zone to delete
 	 */
 	public void deleteZone(final int zoneNumber) {
-		data.getZones().deleteZone(zoneNumber);
+		zones.deleteZone(zoneNumber);
 		updateZoneMap();
-		PManager.getDefault().getDrawZns().clearTable();
+		gui.clearTable();
 		addAllZonesToGUI();
 	}
 
@@ -173,9 +173,27 @@ public class ZonesModule extends
 		}
 	}
 
+	public void editZone(final int zonenumber, final ZoneType zonetype) {
+		zones.editZone(zonenumber, zonetype);
+		gui.editZoneDataInTable(zonenumber, Shape.color2String(shapeController
+				.getShapeByNumber(zonenumber).getColor()), ZoneType
+				.zoneType2String(zonetype));
+	}
+
+	@Override
+	public void filterConfiguration() {
+		super.filterConfiguration();
+		FilterManager.getDefault().applyConfigsToFilter(
+				new ZonesDrawerConfigs("ZonesDrawer", null, shapeController));
+	}
+
 	@Override
 	public String getID() {
 		return moduleID;
+	}
+
+	public ShapeController getShapeController() {
+		return shapeController;
 	}
 
 	/**
@@ -241,7 +259,8 @@ public class ZonesModule extends
 	 *            file path to load the zones from
 	 */
 	public void loadZonesFromFile(final String fileName) {
-		data.getZones().loadZonesFromFile(fileName);
+		gui.clearTable();
+		zones.loadZonesFromFile(fileName);
 	}
 
 	@SuppressWarnings("rawtypes")
@@ -275,7 +294,6 @@ public class ZonesModule extends
 
 	@Override
 	public void registerModuleDataObject(final ModuleData data) {
-		// TODO Auto-generated method stub
 	}
 
 	/**
@@ -285,7 +303,7 @@ public class ZonesModule extends
 	 *            file path of the file to save the zones to
 	 */
 	public void saveZonesToFile(final String fileName) {
-		data.getZones().saveZonesToFile(fileName);
+		zones.saveZonesToFile(fileName);
 	}
 
 	/**
@@ -295,7 +313,12 @@ public class ZonesModule extends
 	 *            number of the zone to select in the GUI table.
 	 */
 	public void selectZoneInGUI(final int zoneNumber) {
-		PManager.getDefault().getDrawZns().selectZoneInTable(zoneNumber);
+		gui.selectZoneInTable(zoneNumber);
+	}
+
+	public void setBackground(final int[] updateRGBBackground, final int x,
+			final int y) {
+		gui.setBackground(updateRGBBackground, x, y);
 	}
 
 	/**
@@ -324,22 +347,19 @@ public class ZonesModule extends
 	 * Updates "central zone time" counter , if the rat is in a central zone.
 	 */
 	private void updateCentralZoneTime() {
-		if (data.getZones().getNumberOfZones() != -1)
+		if (zones.getNumberOfZones() != -1)
 			if ((data.getCurrentZoneNum() != -1)
-					&& (data.getZones().getZoneByNumber(
-							data.getCurrentZoneNum()) != null))
-				if ((data.getZones().getZoneByNumber(data.getCurrentZoneNum())
+					&& (zones.getZoneByNumber(data.getCurrentZoneNum()) != null))
+				if ((zones.getZoneByNumber(data.getCurrentZoneNum())
 						.getZoneType() == ZoneType.CENTRAL_ZONE)
 						& !data.isCentralFlag()) {
 					centralStartTmp = System.currentTimeMillis();
 					data.setCentralFlag(true);
-				} else if ((data.getZones()
-						.getZoneByNumber(data.getCurrentZoneNum())
+				} else if ((zones.getZoneByNumber(data.getCurrentZoneNum())
 						.getZoneType() == ZoneType.CENTRAL_ZONE)
 						&& data.isCentralFlag())
 					centralZoneTimeTmp = ((System.currentTimeMillis() - centralStartTmp) / 1000L);
-				else if ((data.getZones()
-						.getZoneByNumber(data.getCurrentZoneNum())
+				else if ((zones.getZoneByNumber(data.getCurrentZoneNum())
 						.getZoneType() != ZoneType.CENTRAL_ZONE)
 						&& data.isCentralFlag()) {
 					data.setCentralZoneTime((int) (data.getCentralZoneTime() + centralZoneTimeTmp));
@@ -406,9 +426,8 @@ public class ZonesModule extends
 	private void updateZoneCounters() {
 		data.setCurrentZoneNum(updatedZoneNumber);
 		data.setAllEntrance(data.getAllEntrance() + 1);
-		if (data.getZones().getZoneByNumber(data.getCurrentZoneNum()) != null)
-			if (data.getZones().getZoneByNumber(data.getCurrentZoneNum())
-					.getZoneType() == ZoneType.CENTRAL_ZONE)
+		if (zones.getZoneByNumber(data.getCurrentZoneNum()) != null)
+			if (zones.getZoneByNumber(data.getCurrentZoneNum()).getZoneType() == ZoneType.CENTRAL_ZONE)
 				data.setCentralEntrance(data.getCentralEntrance() + 1);
 	}
 
@@ -420,14 +439,10 @@ public class ZonesModule extends
 	 *            table.
 	 */
 	public void updateZoneDataInGUI(final int zonenumber) {
-		final Zone z = data.getZones().getZoneByNumber(zonenumber);
-		PManager.getDefault()
-				.getDrawZns()
-				.editZoneDataInTable(
-						zonenumber,
-						Shape.color2String(shapeController.getShapeByNumber(
-								zonenumber).getColor()),
-						ZoneType.zoneType2String(z.getZoneType()));
+		final Zone z = zones.getZoneByNumber(zonenumber);
+		gui.editZoneDataInTable(zonenumber, Shape.color2String(shapeController
+				.getShapeByNumber(zonenumber).getColor()), ZoneType
+				.zoneType2String(z.getZoneType()));
 	}
 
 	/**
@@ -444,7 +459,7 @@ public class ZonesModule extends
 		final int height = configs.getCommonConfigs().getHeight();
 		zoneMap = new byte[width * height];
 		initializeZoneMap(-1);
-		for (final Zone zone : data.getZones().getAllZones()) {
+		for (final Zone zone : zones.getAllZones()) {
 			tmpZoneNumber = zone.getZoneNumber();
 			final Shape tmpShp = shapeController
 					.getShapeByNumber(tmpZoneNumber);
@@ -541,7 +556,6 @@ public class ZonesModule extends
 					& (zoneDownLeft != data.getCurrentZoneNum())
 					& (zoneDownRight != data.getCurrentZoneNum())) {
 				updateZoneCounters();
-
 			}
 
 		}

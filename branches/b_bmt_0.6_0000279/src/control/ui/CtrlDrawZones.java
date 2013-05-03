@@ -16,8 +16,6 @@ package control.ui;
 
 import java.awt.Point;
 
-import modules.ModulesManager;
-import modules.zones.ShapeController;
 import modules.zones.ZonesModule;
 
 import org.eclipse.swt.SWT;
@@ -35,22 +33,17 @@ import utils.StatusManager.StatusSeverity;
  */
 public class CtrlDrawZones extends ControllerUI<DrawZones> {
 
-	/**
-	 * ShapeController instance, used to handle the graphical representation of
-	 * zones.
-	 */
-	private final ShapeController	shapeController;
+	private final ZonesModule	zonesModule;
 
 	/**
 	 * Initializes class attributes (DrawZones , PManager and ZoneController)
 	 * then gives the instance of GfxPanel to PManager to share it.
 	 */
-	public CtrlDrawZones() {
-		shapeController = ShapeController.getDefault();
-
+	public CtrlDrawZones(final ZonesModule zonesModule) {
 		ui = new DrawZones();
 		ui.setController(this);
-		shapeController.linkWithGFXPanel(ui.getGFXPanel());
+		this.zonesModule = zonesModule;
+		zonesModule.getShapeController().linkWithGFXPanel(ui.getGFXPanel());
 	}
 
 	/**
@@ -83,8 +76,7 @@ public class CtrlDrawZones extends ControllerUI<DrawZones> {
 	 * Handles the "Hide" button click action.
 	 */
 	public void btnHideAction() {
-		((ZonesModule) ModulesManager.getDefault().getModuleByID(
-				ZonesModule.moduleID)).updateZoneMap();
+		zonesModule.updateZoneMap();
 		show(false);
 	}
 
@@ -98,8 +90,7 @@ public class CtrlDrawZones extends ControllerUI<DrawZones> {
 		final FileDialog fileDialog = new FileDialog(shell, SWT.OPEN);
 		final String fileName = fileDialog.open();
 		if (fileName != null)
-			((ZonesModule) ModulesManager.getDefault().getModuleByID(
-					ZonesModule.moduleID)).loadZonesFromFile(fileName);
+			zonesModule.loadZonesFromFile(fileName);
 	}
 
 	/**
@@ -112,8 +103,7 @@ public class CtrlDrawZones extends ControllerUI<DrawZones> {
 		final FileDialog fileDialog = new FileDialog(shell, SWT.SAVE);
 		final String fileName = fileDialog.open();
 		if (fileName != null)
-			((ZonesModule) ModulesManager.getDefault().getModuleByID(
-					ZonesModule.moduleID)).saveZonesToFile(fileName);
+			zonesModule.saveZonesToFile(fileName);
 	}
 
 	/**
@@ -163,9 +153,7 @@ public class CtrlDrawZones extends ControllerUI<DrawZones> {
 			final Point measurePnt2, final String strRealDistance) {
 		try {
 			final int realDist = Integer.parseInt(strRealDistance);
-			((ZonesModule) ModulesManager.getDefault().getModuleByID(
-					ZonesModule.moduleID)).setScale(measurePnt1, measurePnt2,
-					realDist);
+			zonesModule.setScale(measurePnt1, measurePnt2, realDist);
 		} catch (final NumberFormatException e) {
 			PManager.getDefault()
 					.getStatusMgr()
@@ -192,7 +180,7 @@ public class CtrlDrawZones extends ControllerUI<DrawZones> {
 	 *            true/false
 	 */
 	public void settingScale(final boolean enable) {
-		ShapeController.getDefault().setSettingScale(enable);
+		zonesModule.getShapeController().setSettingScale(enable);
 	}
 
 	/*

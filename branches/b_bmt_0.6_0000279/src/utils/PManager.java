@@ -16,8 +16,6 @@ package utils;
 
 import java.util.ArrayList;
 
-import modules.ModulesManager;
-
 import org.eclipse.swt.widgets.Display;
 
 import sys.utils.Utils;
@@ -28,7 +26,6 @@ import utils.StatusManager.StatusSeverity;
 import utils.video.VideoManager;
 import control.ui.CtrlAbout;
 import control.ui.CtrlCamOptions;
-import control.ui.CtrlDrawZones;
 import control.ui.CtrlMainGUI;
 import control.ui.CtrlOptionsWindow;
 import control.ui.CtrlRatInfoForm;
@@ -155,10 +152,6 @@ public class PManager {
 	private int								displayExecRequests		= 0;
 
 	/**
-	 * DrawZones GUI instance.
-	 */
-	private final CtrlDrawZones				drawZns;
-	/**
 	 * Excel engine instance, used to write data to excel sheets.
 	 */
 
@@ -194,14 +187,13 @@ public class PManager {
 		defaultInstance = this;
 		this.statusMgr = new StatusManager();
 
-		this.drawZns = new CtrlDrawZones();
 		this.frmRat = new CtrlRatInfoForm();
 		this.camOptions = new CtrlCamOptions();
 		this.optionsWindow = new CtrlOptionsWindow();
 		log = new Logger(Details.VERBOSE);
 
 		mainGUI = new CtrlMainGUI();
-		new ModulesManager();
+		
 		addStateListener(mainGUI);
 
 		mainGUI.show(true);
@@ -301,10 +293,6 @@ public class PManager {
 		return camOptions;
 	}
 
-	public CtrlDrawZones getDrawZns() {
-		return drawZns;
-	}
-
 	public CtrlRatInfoForm getFrmRat() {
 		return frmRat;
 	}
@@ -354,13 +342,11 @@ public class PManager {
 	public void pauseResume() {
 		switch (getState().getStream()) {
 			case STREAMING:
-				ModulesManager.getDefault().pauseModules();
 				getVideoManager().pauseStream();
 				getState().setStream(StreamState.PAUSED);
 				getStatusMgr().setStatus("PAUSED", StatusSeverity.WARNING);
 				break;
 			case PAUSED:
-				ModulesManager.getDefault().resumeModules();
 				getVideoManager().resumeStream();
 				getState().setStream(StreamState.STREAMING);
 				getStatusMgr().setStatus("RESUMED", StatusSeverity.WARNING);
@@ -399,9 +385,7 @@ public class PManager {
 	public boolean startTracking() {
 		if ((getState().getStream() == StreamState.STREAMING)
 				|| (getState().getStream() == StreamState.PAUSED)) {
-			ModulesManager.getDefault().initialize();
 			vidMgr.startProcessing();
-			ModulesManager.getDefault().runModules(true);
 			getStatusMgr().setStatus("Tracking is started",
 					StatusSeverity.WARNING);
 			return true;
@@ -441,7 +425,6 @@ public class PManager {
 
 	public void stopTracking() {
 		if (getState().getGeneral() == GeneralState.TRACKING) {
-			ModulesManager.getDefault().runModules(false);
 			vidMgr.stopProcessing();
 			getState().setGeneral(GeneralState.IDLE);
 			getStatusMgr().setStatus("Tracking is stopped",
@@ -452,7 +435,6 @@ public class PManager {
 	}
 
 	private void unloadGUI() {
-		getDrawZns().unloadGUI();
 		getFrmRat().unloadGUI();
 		getCamOptions().unloadGUI();
 		getOptionsWindow().unloadGUI();

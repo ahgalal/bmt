@@ -15,6 +15,8 @@
 package filters;
 
 import utils.Configuration;
+import utils.PManager;
+import utils.StatusManager.StatusSeverity;
 
 /**
  * Configurations of a VideoFilter.
@@ -121,5 +123,12 @@ public abstract class FilterConfigs implements Configuration<FilterConfigs> {
 	 * 
 	 * @return true: success
 	 */
-	public abstract boolean validate();
+	public boolean validate() {
+		if (getCommonConfigs() == null) {
+			PManager.log.print("Configs are not completely configured!", this,
+					StatusSeverity.ERROR);
+			return false;
+		}
+		return true;
+	}
 }
