@@ -1,7 +1,7 @@
 package gui.integration.filtergraph;
 
 import filters.movementmeter.MovementMeter;
-import gui.executionunit.FilterGraphExecutionUnitGroup;
+import gui.executionunit.FilterGraphExecUnitGroup;
 import gui.integration.OpenFieldIntegrationTest;
 import sys.utils.Utils;
 
@@ -17,30 +17,30 @@ public class OpenFieldIntegrationFilterGraphOperationsTest extends
 	protected void afterExperimentLoad() throws Exception {
 
 		// Open filter graph window
-		FilterGraphExecutionUnitGroup.openFilterGraph();
+		FilterGraphExecUnitGroup.openFilterGraph();
 
 		// Delete ZoneDrawer filter
-		FilterGraphExecutionUnitGroup.deleteFilter("AverageFilter");
+		FilterGraphExecUnitGroup.deleteFilter("AverageFilter");
 		
-		FilterGraphExecutionUnitGroup
+		FilterGraphExecUnitGroup
 		.connectFilters("SubtractionFilter", "RatFinder");
 		
 		// Add MovementFilter between SoruceFilter and ScreenDrawer
-		FilterGraphExecutionUnitGroup.addFilter("Movement", MovementMeter.ID,
+		FilterGraphExecUnitGroup.addFilter("Movement", MovementMeter.ID,
 				"STREAMING");
 		
-		FilterGraphExecutionUnitGroup.deleteConnection("SourceFilter", "ZonesDrawer");
+		FilterGraphExecUnitGroup.deleteConnection("SourceFilter", "ZonesDrawer");
 		
-		FilterGraphExecutionUnitGroup
+		FilterGraphExecUnitGroup
 				.connectFilters("SourceFilter", "Movement");
-		FilterGraphExecutionUnitGroup
+		FilterGraphExecUnitGroup
 		.connectFilters("Movement", "ZonesDrawer");
 
 		// Rename AverageFilter to AverageFilterRenamed
-		FilterGraphExecutionUnitGroup.editFilter("RearingDetector",
+		FilterGraphExecUnitGroup.editFilter("RearingDetector",
 				"RearingDetectorRenamed", null, null);
 
-		FilterGraphExecutionUnitGroup.save();
+		FilterGraphExecUnitGroup.save();
 		Utils.sleep(500);
 
 		super.afterExperimentLoad();

@@ -23,8 +23,10 @@ import org.eclipse.swt.widgets.ExpandBar;
 import org.eclipse.swt.widgets.ExpandItem;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Menu;
+import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Shell;
 
+import ui.ExternalStrings;
 import ui.box.MsgBox;
 import utils.PManager;
 import utils.PManager.ProgramState;
@@ -43,6 +45,7 @@ public class OpenFieldExperimentModuleGUI extends ExperimentModuleGUI {
 
 	private Point				frameDims;
 
+	private MenuItem			mnutmEditOptions;
 	private ExpandItem			xpndtmOptions;
 
 	public OpenFieldExperimentModuleGUI(final ExperimentModule owner) {
@@ -82,22 +85,31 @@ public class OpenFieldExperimentModuleGUI extends ExperimentModuleGUI {
 				return;
 			}
 
-			ArrayList<Module<?, ?, ?>> zoneModules = ModulesManager.getDefault().getModulesUnderID(ZonesModule.moduleID);
-			if(zoneModules.size()==0){
-				MsgBox.show(shell, "Cannot find any \"" + ZonesModule.moduleID+ "\" modules loaded, one must be loaded in order to set background", "Error", SWT.ERROR);
+			final ArrayList<Module<?, ?, ?>> zoneModules = ModulesManager
+					.getDefault().getModulesUnderID(ZonesModule.moduleID);
+			if (zoneModules.size() == 0) {
+				MsgBox.show(
+						shell,
+						"Cannot find any \""
+								+ ZonesModule.moduleID
+								+ "\" modules loaded, one must be loaded in order to set background",
+						"Error", SWT.ERROR);
+				return;
+			} else if (zoneModules.size() > 1) {
+				MsgBox.show(
+						shell,
+						"More than one \""
+								+ ZonesModule.moduleID
+								+ "\" modules loaded, only one must be loaded in order to set background",
+						"Error", SWT.ERROR);
 				return;
 			}
-			else if(zoneModules.size()>1){
-				MsgBox.show(shell, "More than one \"" + ZonesModule.moduleID+ "\" modules loaded, only one must be loaded in order to set background", "Error", SWT.ERROR);
-				return;
-			}
-			
+
 			// update Background
-			((ZonesModule)zoneModules.get(0)).setBackground(
-					((OpenFieldExperimentModule) owner)
-					.updateRGBBackground(),
-			frameDims.x, frameDims.y);
-			
+			((ZonesModule) zoneModules.get(0)).setBackground(
+					((OpenFieldExperimentModule) owner).updateRGBBackground(),
+					frameDims.x, frameDims.y);
+
 		} else if (PManager.getDefault().getState().getGeneral() == GeneralState.TRACKING)
 			PManager.getDefault()
 					.getStatusMgr()
@@ -114,6 +126,7 @@ public class OpenFieldExperimentModuleGUI extends ExperimentModuleGUI {
 	public void deInitialize() {
 		disposeWidget(cmpstOptions);
 		disposeWidget(xpndtmOptions);
+		disposeWidget(mnutmEditOptions);
 	}
 
 	/*
@@ -143,6 +156,22 @@ public class OpenFieldExperimentModuleGUI extends ExperimentModuleGUI {
 
 		xpndtmOptions.setHeight(xpndtmOptions.getControl().computeSize(
 				SWT.DEFAULT, SWT.DEFAULT).y + 10);
+
+		Menu mnuEdit = null;
+		for (final MenuItem miOut : menuBar.getItems())
+			if (miOut.getText().equals("Edit"))
+				mnuEdit = miOut.getMenu();
+		mnutmEditOptions = new MenuItem(mnuEdit, SWT.PUSH);
+		mnutmEditOptions.setText(ExternalStrings.get("MainGUI.Menu.Options"));
+
+		mnutmEditOptions.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(final SelectionEvent e) {
+				// TODO: this will be changed when using the extensible
+				// configuration dialog mechanism
+				PManager.mainGUI.mnutmEditOptionsAction();
+			}
+		});
 	}
 
 	public void setFrameDims(final Point dims) {

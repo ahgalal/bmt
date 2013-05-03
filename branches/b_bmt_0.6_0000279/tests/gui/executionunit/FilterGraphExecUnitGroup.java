@@ -24,7 +24,7 @@ import com.windowtester.runtime.swt.locator.ListItemLocator;
 import com.windowtester.runtime.swt.locator.MenuItemLocator;
 import com.windowtester.runtime.swt.locator.SWTWidgetLocator;
 
-public class FilterGraphExecutionUnitGroup extends ExecutionUnitGroup {
+public class FilterGraphExecUnitGroup extends ExecutionUnitGroup {
 
 	private static GraphConnection	connection	= null;
 
@@ -156,7 +156,7 @@ public class FilterGraphExecutionUnitGroup extends ExecutionUnitGroup {
 			ui.click(xyLocator);
 	}
 
-	public FilterGraphExecutionUnitGroup(final IUIContext ui) {
+	public FilterGraphExecUnitGroup(final IUIContext ui) {
 		super(ui);
 	}
 

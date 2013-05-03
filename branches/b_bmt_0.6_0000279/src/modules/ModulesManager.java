@@ -340,6 +340,13 @@ public class ModulesManager implements ConfigsListener {
 				return mo;
 		return null;
 	}
+	
+	public Module getModuleByName(final String name) {
+		for (final Module mo : modules)
+			if (mo.getName().equals(name))
+				return mo;
+		return null;
+	}
 
 	public PluggedGUI[] getModulesGUI() {
 		int validGUIsNumber = 0;
