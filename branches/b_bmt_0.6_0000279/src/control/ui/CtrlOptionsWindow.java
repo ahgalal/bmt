@@ -15,7 +15,6 @@
 package control.ui;
 
 import modules.ModulesManager;
-import modules.zones.ZonesModule;
 import modules.zones.ZonesModuleConfigs;
 import ui.OptionsWindow;
 import utils.PManager;
@@ -99,7 +98,7 @@ public class CtrlOptionsWindow extends ControllerUI<OptionsWindow> {
 
 			pm.getVideoManager().updateFiltersConfigs(filtersConfigs);
 			final ZonesModuleConfigs zonesConfigs = new ZonesModuleConfigs(
-					ZonesModule.moduleID, hyst, -1, -1);
+					"ZonesModule", hyst, -1, -1);
 
 			ModulesManager.getDefault().applyConfigsToModule(zonesConfigs);
 
