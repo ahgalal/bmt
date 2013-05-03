@@ -35,7 +35,7 @@ public class OpenFieldIntegrationManStopTrackTest extends
 	}
 	
 	@Override
-	protected void preSleep1() throws WidgetSearchException {
+	protected void preSleep1() throws Exception {
 		super.preSleep1();
 		
 		// start recording

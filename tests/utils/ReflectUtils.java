@@ -27,11 +27,24 @@ public class ReflectUtils {
 		return null;
 	}
 
+	
+	// TODO: complete implementation
+	public static Object getFieldByPath(final Object obj, final String fldPath) {
+		String[] instanceNames = fldPath.split("\\");
+		Object tmpObj=null;
+		for(String instanceName:instanceNames){
+			if(tmpObj==null)
+				tmpObj=getField(obj, instanceName);
+			else
+				tmpObj=getField(tmpObj, instanceName);
+		}
+		return tmpObj;
+	}
 	public static Object getField(final Object obj, final String fldName) {
 		Field fldData;
 		Object data = null;
 		try {
-			fldData = obj.getClass().getDeclaredField(fldName);
+			fldData = getDeclaredField(obj.getClass(), fldName);
 			fldData.setAccessible(true);
 			data = fldData.get(obj);
 
@@ -46,6 +59,20 @@ public class ReflectUtils {
 		}
 		return data;
 
+	}
+
+	private static Field getDeclaredField(Class<?> cls, final String fldName)
+			throws NoSuchFieldException {
+		Field field = null;
+		try {
+			field= cls.getDeclaredField(fldName);
+		} catch (NoSuchFieldException e) {
+			if(!cls.getName().equals("Object")){
+				// try getting the field declaration from superclass
+				field = getDeclaredField(cls.getSuperclass(), fldName);
+			}
+		}
+		return field;
 	}
 
 	public static void setField(final Object obj, final String fldName,

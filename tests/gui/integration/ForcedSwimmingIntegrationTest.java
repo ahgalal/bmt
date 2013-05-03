@@ -10,8 +10,6 @@ import sys.utils.EnvVar;
 import sys.utils.Files;
 import utils.PManager;
 
-import com.windowtester.runtime.WidgetSearchException;
-
 /**
  * Tests the integration of Forced Swimming Experiment, that all filters/modules
  * work as expected.
@@ -29,7 +27,7 @@ public class ForcedSwimmingIntegrationTest extends
 	protected int	swimmingTimeMin	= 20;
 
 	@Override
-	protected void afterStartTracking() throws WidgetSearchException {
+	protected void afterStartTracking() throws Exception {
 		// resume tracking
 		VideoExecUnitGroup.pauseResumeStream();
 		

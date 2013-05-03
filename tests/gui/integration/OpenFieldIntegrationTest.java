@@ -68,7 +68,7 @@ public class OpenFieldIntegrationTest extends ExperimentIntegrationTestBase {
 	}
 	
 	@Override
-	protected void afterStartTracking() throws WidgetSearchException {
+	protected void afterStartTracking() throws Exception {
 		/************* resume streaming ********/
 		VideoExecUnitGroup.pauseResumeStream();
 		
