@@ -64,7 +64,7 @@ public class AverageFilter extends
 	@Override
 	public void process() {
 		if (configs.isEnabled()) {
-			 final long t1 = System.currentTimeMillis();
+			// final long t1 = System.currentTimeMillis();
 			final int[] dataIn = linkIn.getData();
 			int effectivePixelsNumber=0;
 			final int maskArea = MASK_WIDTH * MASK_HEIGHT;
@@ -107,8 +107,8 @@ public class AverageFilter extends
 			}
 
 			linkOut.setData(dataOut);
-			 final long t2 = System.currentTimeMillis();
-			 System.out.println(t2 - t1);
+			// final long t2 = System.currentTimeMillis();
+			// System.out.println(t2 - t1);
 		}
 	}
 

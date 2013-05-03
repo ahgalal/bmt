@@ -537,6 +537,9 @@ public class ModulesManager implements ConfigsListener {
 		connectModules();
 		loadModulesGUI();
 		
+		for (final Module m : modules)
+			m.filterConfiguration();
+		
 		return true;
 	}
 	public void unloadModules() {

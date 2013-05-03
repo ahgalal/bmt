@@ -76,16 +76,6 @@ public class ScreenDrawerConfigs extends FilterConfigs {
 			setCanvasDims(tmpScnDrwrCfgs.getCanvasDims());
 	}
 
-	@Override
-	public boolean validate() {
-		if (getCommonConfigs() == null) {
-			PManager.log.print("Configs are not completely configured!", this,
-					StatusSeverity.ERROR);
-			return false;
-		}
-		return true;
-	}
-
 	public void setRefGfxMainScreen(Graphics refGfxMainScreen) {
 		this.refGfxScreen = refGfxMainScreen;
 	}

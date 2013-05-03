@@ -45,6 +45,9 @@ public abstract class Module<GUIType extends PluggedGUI, ConfigsType extends Mod
 	protected Cargo guiCargo;
 	protected Data[] modulesData;
 	private final String name;
+	
+	public void filterConfiguration(){
+	}
 
 	/**
 	 * Initializes the module.

@@ -14,8 +14,6 @@
 
 package filters.source;
 
-import utils.PManager;
-import utils.StatusManager.StatusSeverity;
 import utils.video.FrameIntArray;
 import filters.CommonFilterConfigs;
 import filters.FilterConfigs;
@@ -55,12 +53,7 @@ public class SourceFilterConfigs extends FilterConfigs {
 
 	@Override
 	public boolean validate() {
-		if ((getCommonConfigs() == null) || (getFrameIntArray() == null)) {
-			PManager.log.print("Configs are not completely configured!", this,
-					StatusSeverity.ERROR);
-			return false;
-		}
-		return true;
+		return super.validate() && (getFrameIntArray() != null);
 	}
 
 	public void setFrameIntArray(FrameIntArray fia) {

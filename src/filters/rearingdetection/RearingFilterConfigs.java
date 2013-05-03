@@ -94,16 +94,6 @@ public class RearingFilterConfigs extends FilterConfigs {
 	}
 
 	@Override
-	public boolean validate() {
-		if (getCommonConfigs() == null) {
-			PManager.log.print("Configs are not completely configured!", this,
-					StatusSeverity.ERROR);
-			return false;
-		}
-		return true;
-	}
-	
-	@Override
 	public String toString() {
 		return super.toString()+", rearing thresh: "+ getRearingThresh();
 	}

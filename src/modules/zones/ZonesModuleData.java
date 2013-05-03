@@ -32,8 +32,6 @@ public class ZonesModuleData extends ModuleData {
 	private float				scale;
 	private long				totalDistance;
 
-	private ZonesCollection		zones;
-
 	public int getAllEntrance() {
 		return allEntrance;
 	}
@@ -61,10 +59,6 @@ public class ZonesModuleData extends ModuleData {
 
 	public long getTotalDistance() {
 		return totalDistance;
-	}
-
-	public ZonesCollection getZones() {
-		return zones;
 	}
 
 	public boolean isCentralFlag() {
@@ -97,9 +91,5 @@ public class ZonesModuleData extends ModuleData {
 
 	public void setTotalDistance(final long totalDistance) {
 		this.totalDistance = totalDistance;
-	}
-
-	public void setZones(final ZonesCollection zones) {
-		this.zones = zones;
 	}
 }

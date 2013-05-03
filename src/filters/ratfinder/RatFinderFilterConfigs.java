@@ -39,21 +39,6 @@ public class RatFinderFilterConfigs extends FilterConfigs {
 		super(filterName,RatFinder.ID, commonConfigs);
 	}
 
-	/**
-	 * Checks that All configurations are set. (for testing purposes only)
-	 * 
-	 * @return true: success
-	 */
-	@Override
-	public boolean validate() {
-		if (getCommonConfigs() == null) {
-			PManager.log.print("Configs are not completely configured!", this,
-					StatusSeverity.ERROR);
-			return false;
-		}
-		return true;
-	}
-
 	@Override
 	public FilterConfigs newInstance(String filterName,
 			CommonFilterConfigs commonConfigs) {

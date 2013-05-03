@@ -14,8 +14,6 @@
 
 package filters.subtractionfilter;
 
-import utils.PManager;
-import utils.StatusManager.StatusSeverity;
 import filters.CommonFilterConfigs;
 import filters.FilterConfigs;
 
@@ -59,12 +57,7 @@ public class SubtractionConfigs extends FilterConfigs {
 
 	@Override
 	public boolean validate() {
-		if ((getCommonConfigs() == null) || (getThreshold() <= 0)) {
-			PManager.log.print("Configs are not completely configured!", this,
-					StatusSeverity.ERROR);
-			return false;
-		}
-		return true;
+		return super.validate() && !(getThreshold() <= 0);
 	}
 	
 	@Override

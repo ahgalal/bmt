@@ -3,8 +3,6 @@
  */
 package filters.avg;
 
-import utils.PManager;
-import utils.StatusManager.StatusSeverity;
 import filters.CommonFilterConfigs;
 import filters.FilterConfigs;
 
@@ -16,19 +14,6 @@ public class AverageFilterConfigs extends FilterConfigs {
 
 	public AverageFilterConfigs(String name, CommonFilterConfigs commonConfigs) {
 		super(name,AverageFilter.ID, commonConfigs);
-	}
-
-	/* (non-Javadoc)
-	 * @see filters.FilterConfigs#validate()
-	 */
-	@Override
-	public boolean validate() {
-		if (getCommonConfigs() == null) {
-			PManager.log.print("Configs are not completely configured!", this,
-					StatusSeverity.ERROR);
-			return false;
-		}
-		return true;
 	}
 
 	@Override

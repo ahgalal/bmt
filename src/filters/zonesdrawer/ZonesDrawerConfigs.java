@@ -4,9 +4,6 @@
 package filters.zonesdrawer;
 
 import modules.zones.ShapeCollection;
-import modules.zones.ShapeController;
-import utils.PManager;
-import utils.StatusManager.StatusSeverity;
 import filters.CommonFilterConfigs;
 import filters.FilterConfigs;
 
@@ -53,7 +50,7 @@ public class ZonesDrawerConfigs extends FilterConfigs {
 	public FilterConfigs newInstance(final String filterName,
 			final CommonFilterConfigs commonConfigs) {
 		return new ZonesDrawerConfigs(filterName, commonConfigs,
-				ShapeController.getDefault());
+				null);
 	}
 
 	public void setShapeController(final ShapeCollection shapeController) {
@@ -66,12 +63,7 @@ public class ZonesDrawerConfigs extends FilterConfigs {
 	 */
 	@Override
 	public boolean validate() {
-		if ((getCommonConfigs() == null) || (getShapeController() == null)) {
-			PManager.log.print("Configs are not completely configured!", this,
-					StatusSeverity.ERROR);
-			return false;
-		}
-		return true;
+		return super.validate() && getShapeController() != null;
 	}
 
 }
