@@ -12,6 +12,7 @@
 	<mapID target="features" url="pages/features/features.html" />
 	<mapID target="features.excel" url="pages/features/excel/excel.html" />
 	<mapID target="features.record" url="pages/features/record/record.html" />
+	<mapID target="features.filtergraph" url="pages/features/filtergraph/filtergraph.html" />
 	
 	
 	<mapID target="video_mgmt" url="pages/video_mgmt.html" />

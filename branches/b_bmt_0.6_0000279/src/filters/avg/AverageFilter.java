@@ -41,7 +41,7 @@ public class AverageFilter extends
 		width = configs.getCommonConfigs().getWidth();
 		height = configs.getCommonConfigs().getHeight();
 		
-		effectivePixels=new Point[width*height/2];
+		effectivePixels=new Point[width*height];
 		for(int i=0;i<effectivePixels.length;i++)
 			effectivePixels[i]=new Point();
 		return configure;

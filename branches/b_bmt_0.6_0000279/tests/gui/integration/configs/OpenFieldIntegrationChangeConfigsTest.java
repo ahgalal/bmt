@@ -144,7 +144,8 @@ public class OpenFieldIntegrationChangeConfigsTest extends
 
 			// Stop streaming
 			VideoExecUnitGroup.stopStream();
-
+			
+			ratNumber++;
 			pass++;
 			fullScenario();
 		} else if (pass == 2) {
@@ -155,6 +156,12 @@ public class OpenFieldIntegrationChangeConfigsTest extends
 			System.out
 					.println("Checking config params after Start Tracking of the reloaded experiment");
 			checkConfigValues();
+			
+			// Stop tracking
+			ExperimentExecUnitGroup.stopTracking();
+
+			// Stop streaming
+			VideoExecUnitGroup.stopStream();
 		}
 	}
 

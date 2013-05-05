@@ -110,6 +110,7 @@ public class FilterGraph {
 	private FilterGraph() {
 		shell = new Shell();
 		shell.setSize(640, 480);
+		shell.setText("Filter Graph");
 
 		shell.addListener(SWT.Close, new Listener() {
 

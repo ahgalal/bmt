@@ -3,6 +3,7 @@
  */
 package help;
 
+import java.awt.Dimension;
 import java.net.URL;
 
 import javax.help.CSH;
@@ -11,6 +12,9 @@ import javax.help.HelpSet;
 import javax.swing.JButton;
 import javax.swing.LookAndFeel;
 import javax.swing.UIManager;
+
+import org.eclipse.swt.graphics.Rectangle;
+import org.eclipse.swt.widgets.Display;
 
 import com.sun.java.swing.plaf.windows.WindowsLookAndFeel;
 
@@ -39,6 +43,10 @@ public class HelpManager {
 			final URL hsURL = HelpSet.findHelpSet(cl, helpHS);
 			hs = new HelpSet(null, hsURL);
 			hb = hs.createHelpBroker();
+			Rectangle bounds = Display.getDefault().getPrimaryMonitor().getBounds();
+			int width = (int) (bounds.width*0.9);
+			int height = (int) (bounds.height*0.8);
+			hb.setSize(new Dimension(width, height));
 			displayHelpFromSource = new CSH.DisplayHelpFromSource( hb );
 			button.addActionListener(displayHelpFromSource);	
 			LookAndFeel lookAndFeel = new WindowsLookAndFeel();
