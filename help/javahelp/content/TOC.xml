@@ -53,6 +53,7 @@
 		<tocitem text="Features" target="features">
 			<tocitem text="Record Experiment" target="features.record" />
 			<tocitem text="Export to Excel" target="features.excel" />
+			<tocitem text="Filter Graph" target="features.filtergraph" />
 		</tocitem>
 		
 		<tocitem text="Video Management" target="video_mgmt"/>

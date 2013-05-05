@@ -95,7 +95,11 @@ public class VideoManager {
 					for (final Iterator<VideoFilter<?, ?>> it = filterManager
 							.getFilters(); it.hasNext();) {
 						final VideoFilter<?, ?> vf = it.next();
-						vf.process();
+						try {
+							vf.process();
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
 					}
 				final long t2 = System.currentTimeMillis();
 
