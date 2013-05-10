@@ -5,10 +5,10 @@ package gui.executionunit;
 
 import org.eclipse.swt.widgets.Combo;
 
-import sys.utils.Utils;
 import utils.DialogBoxUtils;
 import utils.PManager;
 import utils.ReflectUtils;
+import sys.utils.Utils;
 import utils.video.FrameIntArray;
 import utils.video.input.VidInputter.SourceType;
 

@@ -7,7 +7,7 @@ import modules.experiment.ExperimentType;
 
 import org.eclipse.swt.widgets.Display;
 
-import sys.utils.Utils;
+import sys.utils.Arrays;
 import ui.MainGUI;
 import utils.DialogBoxUtils;
 import utils.PManager;
@@ -170,7 +170,32 @@ public class ExperimentExecUnitGroup extends ExecutionUnitGroup {
 		Experiment loadedFromFile = ExperimentManager.readExperimentFromFile(saved.getFileName());
 		
 		// compare the two experiments
-		assert(Utils.compareExperiments(saved, loadedFromFile)):"Experiments do not match!";
+		assert(compareExperiments(saved, loadedFromFile)):"Experiments do not match!";
 		PManager.log.print("Experiment creation check ... OK", ExperimentExecUnitGroup.class);
+	}
+	
+	public static boolean compareExperiments(Experiment exp1,Experiment exp2){
+		if(exp1.getType()!=exp2.getType())
+			return false;
+		if(exp1.getDate().equals(exp2.getDate())==false)
+			return false;
+		if(exp1.getExpParametersList().length!=exp2.getExpParametersList().length)
+			return false;
+		for(String str1:exp1.getExpParametersList())
+			if(Arrays.equalsOneOf(str1, exp2.getExpParametersList())==false)
+				return false;
+		
+		// TODO: check actual group data, not just number of groups
+		// TODO: check filters setup and modules setup
+		if(exp1.getGroups().size()!=exp2.getGroups().size())
+			return false;
+		if(exp1.getName().equals(exp2.getName())==false)
+			return false;
+		if(exp1.getNotes().equals(exp2.getNotes())==false)
+			return false;
+		if(exp1.getUser().equals(exp2.getUser())==false)
+			return false;
+		
+		return true;
 	}
 }

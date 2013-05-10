@@ -11,8 +11,8 @@ import org.eclipse.zest.core.widgets.GraphConnection;
 import org.eclipse.zest.core.widgets.GraphItem;
 import org.eclipse.zest.core.widgets.GraphNode;
 
-import sys.utils.Utils;
 import ui.filtergraph.FilterGraph.Filter;
+import sys.utils.Utils;
 
 import com.windowtester.runtime.IUIContext;
 import com.windowtester.runtime.WidgetSearchException;
