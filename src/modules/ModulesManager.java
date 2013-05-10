@@ -15,7 +15,9 @@
 package modules;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 
+import modules.ModulesNamesRequirements.ModuleRequirement;
 import modules.experiment.Experiment;
 import modules.experiment.ExperimentModule;
 import modules.movementmeter.MovementMeterModule;
@@ -31,10 +33,13 @@ import org.eclipse.swt.widgets.Shell;
 
 import sys.utils.Utils;
 import ui.PluggedGUI;
+import utils.ConfigurationManager;
 import utils.Logger.Details;
 import utils.PManager;
 import utils.PManager.ProgramState.StreamState;
 import utils.StatusManager.StatusSeverity;
+import utils.video.ConfigsListener;
+import filters.CommonConfigs;
 import filters.Data;
 
 @SuppressWarnings("rawtypes")
@@ -43,10 +48,8 @@ import filters.Data;
  * 
  * @author Creative
  */
-public class ModulesManager {
-	
-	private boolean doneProcessing=false;
-	
+public class ModulesManager implements ConfigsListener {
+
 	/**
 	 * Runnable for running Modules.
 	 * 
@@ -56,26 +59,25 @@ public class ModulesManager {
 		@Override
 		public void run() {
 			while (runModules) {
-				doneProcessing=false;
+				doneProcessing = false;
 				Utils.sleep(33);
 				for (final Module mo : modules)
 					mo.process();
-				
+
 				synchronized (this) {
 					while (paused) {
 						try {
 							this.wait();
-						} catch (InterruptedException e) {
+						} catch (final InterruptedException e) {
 						}
-					}	
+					}
 				}
 			}
-			doneProcessing=true;
+			doneProcessing = true;
 		}
 	}
 
-	private static ModulesManager	me;
-
+	private static ModulesManager me;
 	/**
 	 * Get the singleton instance.
 	 * 
@@ -85,26 +87,30 @@ public class ModulesManager {
 		return me;
 	}
 
-	private final ArrayList<Cargo>	fileCargos	= new ArrayList<Cargo>();
-	private String[]				fileDataArray;
+	private final ConfigurationManager<ModuleConfigs> configurationManager;
 
-	private String[]				fileNamesArray;
+	private boolean doneProcessing = false;
+	private final ArrayList<Cargo> fileCargos = new ArrayList<Cargo>();
 
-	private final ArrayList<Data>	filtersData;
-	private final ArrayList<Cargo>	guiCargos	= new ArrayList<Cargo>();
-	private String[]				guiDataArray;
+	private String[] fileDataArray;
 
-	private String[]				guiNamesArray;
-	private int						height;
+	private String[] fileNamesArray;
+	private final ArrayList<Data> filtersData;
+	private final ArrayList<Cargo> guiCargos = new ArrayList<Cargo>();
 
-	private final ArrayList<Module>	modules;
-	private final ArrayList<ModuleData>	modulesData;
-	private boolean					runModules;
-	private RunnableModulesThread	runnableModules;
+	private String[] guiDataArray;
+	private String[] guiNamesArray;
 
-	private Thread					thModules;
+	private final ModulesCollection installedModules;
+	private final ArrayList<Module> modules;
+	private final ArrayList<ModuleData> modulesData;
+	private boolean paused;
 
-	private int						width;
+	private boolean runModules;
+
+	private RunnableModulesThread runnableModules;
+
+	private Thread thModules;
 
 	/**
 	 * Initializes modules.
@@ -114,8 +120,17 @@ public class ModulesManager {
 		filtersData = new ArrayList<Data>();
 		modulesData = new ArrayList<ModuleData>();
 		modules = new ArrayList<Module>();
-	}
+		
+		configurationManager = new ConfigurationManager<ModuleConfigs>(modules);
 
+		installedModules = new ModulesCollection();
+		installedModules.addModule(new RearingModule(null, null));
+		installedModules.addModule(new MovementMeterModule(null, null));
+		installedModules.addModule(new SessionModule(null, null));
+		installedModules.addModule(new ZonesModule(null, null));
+
+		initializeConfigs();
+	}
 	/**
 	 * Passes incoming data object to all modules, only modules interested in
 	 * that data object, will accept it.
@@ -139,6 +154,18 @@ public class ModulesManager {
 			}
 		}
 		return ret;
+	}
+
+	/**
+	 * Applies a configuration object to a module, using the name of the module
+	 * specified in the configuration object.</br>Also adds the module
+	 * configuration to the list if it doesn't exist.
+	 * 
+	 * @param cfgs
+	 *            configurations object
+	 */
+	public void applyConfigsToModule(final ModuleConfigs cfgs) {
+		configurationManager.applyConfigs(cfgs);
 	}
 
 	/**
@@ -207,8 +234,6 @@ public class ModulesManager {
 
 		int i = 0;
 		for (final Cargo cargo : guiCargos) {
-			if (cargo == null)
-				System.out.println();
 			final String[] tmpCargoNames = cargo.getTags();
 			for (int j = 0; j < tmpCargoNames.length; j++) {
 				guiNamesArray[i] = tmpCargoNames[j];
@@ -226,13 +251,27 @@ public class ModulesManager {
 		}
 	}
 
+	private Module createModule(final String name, final String ID) {
+		Module module = null;
+		for (final Iterator<Module<?, ?, ?>> it = installedModules.getModules(); it
+				.hasNext();) {
+			final Module tmpModule = it.next();
+
+			if (tmpModule.getID().equals(ID)) {
+				module = tmpModule.newInstance(name);
+				break;
+			}
+		}
+		return module;
+	}
+
 	/**
 	 * Gets list of parameters (columns names) to be sent to file writer.
 	 * 
 	 * @return String array containing parameters (columns names) to be sent to
 	 *         file writer
 	 */
-	public String[] getCodeNames() {
+	public String[] getExperimentParams() {
 		constructCargoArray();
 		return fileNamesArray;
 	}
@@ -269,6 +308,7 @@ public class ModulesManager {
 		int i = 0;
 		for (final Cargo cargo : guiCargos) {
 			final String[] tmpCargoData = cargo.getData();
+			
 			for (int j = 0; j < tmpCargoData.length; j++) {
 				guiDataArray[i] = tmpCargoData[j];
 				i++;
@@ -301,12 +341,11 @@ public class ModulesManager {
 		return null;
 	}
 	
-	public ArrayList<Module<?, ?, ?>> getModulesUnderID(final String id){
-		ArrayList<Module<?, ?, ?>> ret=new ArrayList<Module<?, ?, ?>>();
+	public Module getModuleByName(final String name) {
 		for (final Module mo : modules)
-			if (mo.getID().startsWith(id))
-				ret.add(mo);
-		return ret;
+			if (mo.getName().equals(name))
+				return mo;
+		return null;
 	}
 
 	public PluggedGUI[] getModulesGUI() {
@@ -336,6 +375,14 @@ public class ModulesManager {
 		return tmpArr;
 	}
 
+	public ArrayList<Module<?, ?, ?>> getModulesUnderID(final String id) {
+		final ArrayList<Module<?, ?, ?>> ret = new ArrayList<Module<?, ?, ?>>();
+		for (final Module mo : modules)
+			if (mo.getID().startsWith(id))
+				ret.add(mo);
+		return ret;
+	}
+
 	/**
 	 * Gets the number of Experiment parameters to be stored in file.
 	 * 
@@ -344,8 +391,9 @@ public class ModulesManager {
 	 */
 	public int getNumberOfFileParameters() {
 		constructCargoArray();
-		for(String fileCargoTag:fileNamesArray){
-			PManager.log.print("File Tag: "+ fileCargoTag, this, Details.NOTES);
+		for (final String fileCargoTag : fileNamesArray) {
+			PManager.log
+					.print("File Tag: " + fileCargoTag, this, Details.NOTES);
 		}
 		return fileNamesArray.length;
 	}
@@ -363,59 +411,22 @@ public class ModulesManager {
 		runnableModules = new RunnableModulesThread();
 	}
 
-	/**
-     * 
-     */
+	public void initializeConfigs() {
 
-	private void instantiateModules(final String[] moduleNames) {
-		PManager.log.print("instantiating Modules", this, Details.VERBOSE);
-		// ////////////////////////////////
-		// Rearing Module
-		if (isWithinArray(RearingModule.moduleID, moduleNames)) {
-			final RearingModuleConfigs rearingConfigs = new RearingModuleConfigs(
-					RearingModule.moduleID);
-			final RearingModule rearingModule = new RearingModule(
-					rearingConfigs);
-			modules.add(rearingModule);
-		}
-		// ////////////////////////////////
-		// Zones Module
-		if (isWithinArray(ZonesModule.moduleID, moduleNames)) {
-			
-			final ZonesModuleConfigs zonesConfigs = new ZonesModuleConfigs(
-					ZonesModule.moduleID, ZonesModule.DEFAULT_HYSTRISES_VALUE,
-					width, height);
-			final ZonesModule zonesModule = new ZonesModule(
-					zonesConfigs);
-			modules.add(zonesModule);
-		}
-		// ////////////////////////////////
-		// Session Module
-		if (isWithinArray(SessionModule.moduleID, moduleNames)) {
-			final SessionModuleConfigs sessionConfigs = new SessionModuleConfigs(
-					SessionModule.moduleID);
-			final SessionModule sessionModule = new SessionModule(
-					 sessionConfigs);
-			modules.add(sessionModule);
-		}
-		// ////////////////////////////////
-		// MovementMeter Module
-		if (isWithinArray(MovementMeterModule.moduleID, moduleNames)) {
-			final MovementMeterModuleConfigs movementModuleConfigs = new MovementMeterModuleConfigs(
-					MovementMeterModule.moduleID);
-			final MovementMeterModule movementMeterModule = new MovementMeterModule(
-					movementModuleConfigs);
-			modules.add(movementMeterModule);
-		}
-		PManager.log.print("finished instantiating Modules", this,
-				Details.VERBOSE);
-	}
+		final ModuleConfigs rearingConfigs = new RearingModuleConfigs(
+				"rearingConfigs");
+		final ModuleConfigs movementConfigs = new MovementMeterModuleConfigs(
+				"movementConfigs");
+		final ModuleConfigs sessionConfigs = new SessionModuleConfigs(
+				"sessionConfigs");
+		final ModuleConfigs zoneConfigs = new ZonesModuleConfigs("zoneConfigs",
+				ZonesModule.DEFAULT_HYSTRISES_VALUE, 0, 0);
 
-	private boolean isWithinArray(final String name, final String[] array) {
-		for (final String str : array)
-			if (str.equals(name))
-				return true;
-		return false;
+		configurationManager.reset();
+		configurationManager.addConfiguration(rearingConfigs, false);
+		configurationManager.addConfiguration(movementConfigs, false);
+		configurationManager.addConfiguration(sessionConfigs, false);
+		configurationManager.addConfiguration(zoneConfigs, false);
 	}
 
 	/**
@@ -424,6 +435,12 @@ public class ModulesManager {
 	private void loadModulesGUI() {
 		PManager.log.print("loading Modules GUI..", this, Details.VERBOSE);
 		PManager.mainGUI.loadPluggedGUI(getModulesGUI());
+	}
+
+	public void pauseModules() {
+		for (final Module mod : modules)
+			mod.pause();
+		paused = true;
 	}
 
 	/**
@@ -439,6 +456,14 @@ public class ModulesManager {
 			mo.deRegisterDataObject(data);
 	}
 
+	public void resumeModules() {
+		paused = false;
+		if (thModules != null)
+			thModules.interrupt();
+		for (final Module mod : modules)
+			mod.resume();
+	}
+
 	/**
 	 * Starts/Stops running all modules.
 	 * 
@@ -448,23 +473,23 @@ public class ModulesManager {
 	public void runModules(final boolean run) {
 		if (run & !runModules) {
 			runModules = true;
-			thModules = new Thread(runnableModules,"Modules process");
+			thModules = new Thread(runnableModules, "Modules process");
 			thModules.start();
 		} else if (!run & runModules) {
 			runModules = false;
-			
+
 			// if paused, we need to resume to unlock the paused thread
-			if(PManager.getDefault().getState().getStream()==StreamState.PAUSED)
+			if (PManager.getDefault().getState().getStream() == StreamState.PAUSED)
 				resumeModules();
-			
+
 			try {
 				Thread.sleep(33);
 			} catch (final InterruptedException e) {
 				e.printStackTrace();
 			}
 			thModules = null;
-			
-			while(doneProcessing==false)
+
+			while (doneProcessing == false)
 				Utils.sleep(50);
 
 			for (final Module mo : modules)
@@ -472,86 +497,90 @@ public class ModulesManager {
 			ExperimentManager.getDefault().saveRatInfo();
 		}
 	}
-	private boolean paused;
-	public void pauseModules(){
-		for(Module mod:modules)
-			mod.pause();
-		paused=true;
-	}
 
-	public void resumeModules(){
-		paused=false;
-		if(thModules!=null)
-			thModules.interrupt();
-		for(Module mod:modules)
-			mod.resume();
-	}
-
-	/**
-	 * Sets the width and height of the module manager, to be used by any module
-	 * later.
-	 * 
-	 * @param width
-	 *            webcam image's width
-	 * @param height
-	 *            webcam image's height
-	 */
-	public void setModulesWidthandHeight(final int width, final int height) {
-		this.width = width;
-		this.height = height;
-
-		updateModuleConfigs(new ModuleConfigs[] { new ZonesModuleConfigs(
-				ZonesModule.moduleID, -1, width, height) });
-	}
-
-	public void setupModules(final Experiment exp) {
+	public boolean setupModules(final Experiment exp) {
 		// unload old modules
-		for(Module m:modules)
-			m.unload();
-		
+		unloadModules();
+
 		// remove old modules
 		modules.clear();
 		modulesData.clear();
-		
+
+		final ModulesSetup modulesSetup = exp.getModulesSetup();
+		for (final Iterator<ModuleRequirement> it = modulesSetup
+				.getModulesRequirements().getModuleRequirements(); it.hasNext();) {
+			final ModuleRequirement moduleRequirement = it.next();
+
+			Module module = createModule(moduleRequirement.getName(),
+					moduleRequirement.getID());
+			if(module==null)
+				throw new RuntimeException("Could not find the required module: " + moduleRequirement.getName()+" : " + moduleRequirement.getID());
+			modules.add(module);
+		}
+
+		// set modules' configurations to the default values
+		for (final Module module : modules) {
+			ModuleConfigs moduleConfig = configurationManager
+					.getConfigByName(module.getName());
+			if (moduleConfig == null) {
+				// apply default configs to the module and display a warning
+				moduleConfig = configurationManager.createDefaultConfigs(
+						module.getName(), module.getID());
+				configurationManager.addConfiguration(moduleConfig, false);
+				PManager.log.print("Default Configs is applied to module: "
+						+ module.getName(), this, StatusSeverity.WARNING);
+			}
+
+			configurationManager.applyConfigs(moduleConfig);
+		}
+
 		// ////////////////////////////////
 		// Experiment Module
 		final ExperimentModule expModule = ExperimentManager.getDefault()
 				.instantiateExperimentModule();
 		modules.add(expModule);
-		
-		final ModulesSet openFieldModulesSetup = new ModulesSet(new String[] {
-				RearingModule.moduleID,ZonesModule.moduleID, SessionModule.moduleID });
+		configurationManager.addConfiguration(ExperimentManager.getDefault().getExperimentConfigs(), true);
 
-		final ModulesSet forcedSwimmingModulesSetup = new ModulesSet(
-				new String[] { SessionModule.moduleID, MovementMeterModule.moduleID });
-
-		switch (exp.type) {
-			case FORCED_SWIMMING:
-				instantiateModules(forcedSwimmingModulesSetup.getModulesNames());
-				break;
-			case OPEN_FIELD:
-				instantiateModules(openFieldModulesSetup.getModulesNames());
-				break;
-		}
-		// setWidthandHeight(640, 480);
 		connectModules();
 		loadModulesGUI();
+		
+		for (final Module m : modules)
+			m.filterConfiguration();
+		
+		return true;
+	}
+	public void unloadModules() {
+		for (final Module m : modules)
+			m.unload();
 	}
 
-	/**
-	 * Updates the configurations of the modules.
-	 * 
-	 * @param configs
-	 *            array of ModuleConfigs, containing configurations objects for
-	 *            the modules. each module will be configured according to its
-	 *            configurations object in the array.
-	 */
-	public void updateModuleConfigs(final ModuleConfigs[] configs) {
-		for (int i = 0; i < configs.length; i++) {
-			final Module tmp = getModuleByID(configs[i].getModuleID());
-			if (tmp != null)
-				tmp.updateConfigs(configs[i]);
+	@Override
+	public void updateConfigs(CommonConfigs commonConfigs) {
+		
+		// loop on modules
+		for(Iterator<Module> it = modules.iterator();it.hasNext();){
+			Module module=it.next();
+			
+			ModuleConfigs configs = configurationManager.getConfigByName(module.getName());
+			
+			// update common configs
+			configs.getCommonConfigs().merge(commonConfigs);
+			
+			// re-apply configs
+			configurationManager.applyConfigs(configs);
 		}
+		
+		
+		
+/*		// loop on all configurations available
+		for(Iterator<ModuleConfigs> it=configurationManager.getConfigurations();it.hasNext();){
+			ModuleConfigs config = it.next();
+			// update common configs
+			config.commonConfigs.merge(commonConfigs);
+			
+			// re-apply configs
+			configurationManager.applyConfigs(config);
+		}*/
 	}
 
 }

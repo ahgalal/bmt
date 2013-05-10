@@ -14,21 +14,23 @@
 
 package modules.experiment;
 
+import java.util.Iterator;
+
 import modules.Cargo;
 import modules.ExperimentManager;
 import modules.Module;
-import modules.ModuleConfigs;
 import modules.ModuleData;
 import modules.ModulesManager;
 
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
 
+import sys.utils.Arrays;
 import sys.utils.Utils;
 import utils.Logger.Details;
 import utils.PManager;
+import utils.StatusManager.StatusSeverity;
 import filters.Data;
 
 /**
@@ -47,9 +49,9 @@ Module<ExperimentModuleGUI, ExperimentModuleConfigs, ExperimentModuleData> {
 	private boolean	ratFrmShown	= false;
 	
 
-	public ExperimentModule(
+	public ExperimentModule(String name,
 			final ExperimentModuleConfigs config) {
-		super(config);
+		super(name, config);
 		initialize();
 	}
 	protected void addDefaultModuleDataParams() {
@@ -65,11 +67,11 @@ Module<ExperimentModuleGUI, ExperimentModuleConfigs, ExperimentModuleData> {
 			// if we had an empty experiment (no parameters), we assign the
 			// set of parameters from the module manager to the exp.
 			if (ExperimentManager.getDefault().getNumberOfExpParams() == 0)
-				configs.exp.setParametersList(ModulesManager.getDefault()
-						.getCodeNames());
-			if (ExperimentManager.getDefault().getNumberOfExpParams() != ModulesManager
-					.getDefault().getNumberOfFileParameters())
-				Display.getDefault().asyncExec(new Runnable() {
+				throw new RuntimeException("No params for this experiment");
+				/*configs.exp.setParametersList(ModulesManager.getDefault()
+						.getCodeNames());*/
+			if (checkExperimentParams()==false)
+				PManager.getDefault().displayAsyncExec(new Runnable() {
 
 					@Override
 					public void run() {
@@ -94,7 +96,7 @@ Module<ExperimentModuleGUI, ExperimentModuleConfigs, ExperimentModuleData> {
 			}
 
 		} else
-			Display.getDefault().asyncExec(new Runnable() {
+			PManager.getDefault().displayAsyncExec(new Runnable() {
 				@Override
 				public void run() {
 					final MessageBox mbox = new MessageBox(shell,
@@ -117,6 +119,31 @@ Module<ExperimentModuleGUI, ExperimentModuleConfigs, ExperimentModuleData> {
 			if (forceReady)
 				return true;
 			return waitForRatFrm();
+	}
+	/**
+	 * Checks that the params required by the loaded experiment are exactly the same as those offered by Active Modules.
+	 * @return
+	 */
+	public static boolean checkExperimentParams() {
+		String[] modulesExperimentParams = ModulesManager.getDefault().getExperimentParams();
+		Iterator<String> it = ExperimentManager.getDefault().getExperimentParams();
+		
+		int iteratorSize = 0;
+		for(;it.hasNext();){
+			String tmpParam = it.next();
+			
+			if(Arrays.equalsOneOf(tmpParam, modulesExperimentParams)==false){
+				PManager.log.print("Experiment Param does not match: " + tmpParam, ExperimentModule.class, StatusSeverity.ERROR);
+				return false;
+			}
+			iteratorSize++;
+		}
+		
+		if(iteratorSize !=modulesExperimentParams.length){
+			PManager.log.print("Experiment Param count does not match" , ExperimentModule.class, StatusSeverity.ERROR);
+			return false;
+		}
+		return true;
 	}
 
 	@Override
@@ -164,10 +191,6 @@ Module<ExperimentModuleGUI, ExperimentModuleConfigs, ExperimentModuleData> {
 	}
 
 	@Override
-	public void updateConfigs(final ModuleConfigs config) {
-	}
-
-	@Override
 	public void updateFileCargoData() {
 		fileCargo.setDataByTag(Constants.FILE_RAT_NUMBER,
 				Integer.toString(configs.getCurrRatNumber()));
@@ -181,7 +204,7 @@ Module<ExperimentModuleGUI, ExperimentModuleConfigs, ExperimentModuleData> {
 		guiCargo.setDataByTag(Constants.GUI_GROUP_NAME,
 				configs.getCurrGrpName());
 		guiCargo.setDataByTag(Constants.GUI_EXP_TYPE,
-				configs.exp.type.toString());
+				configs.exp.getType().toString());
 		guiCargo.setDataByTag(Constants.GUI_RAT_NUMBER,
 				Integer.toString(configs.getCurrRatNumber()));
 	}

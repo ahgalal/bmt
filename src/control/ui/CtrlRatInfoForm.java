@@ -17,7 +17,6 @@ package control.ui;
 import modules.ExperimentManager;
 
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.MessageBox;
 
 import ui.RatInfoForm;
@@ -139,7 +138,7 @@ public class CtrlRatInfoForm extends ControllerUI<RatInfoForm> {
 		params[0] = "";
 		for (int i = 0; i < grps.length; i++)
 			params[i + 1] = grps[i];
-		Display.getDefault().syncExec(new Runnable() {
+		PManager.getDefault().displaySyncExec(new Runnable() {
 
 			@Override
 			public void run() {

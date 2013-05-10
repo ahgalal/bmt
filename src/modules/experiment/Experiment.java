@@ -17,34 +17,53 @@ package modules.experiment;
 import java.io.Serializable;
 import java.util.ArrayList;
 
+import modules.ModulesSetup;
+import filters.FiltersSetup;
+
 /**
  * Handles all the experiments info.
  * 
  * @author ShaQ
  */
-public class Experiment implements Exp2GUI, Serializable {
-
+public abstract class Experiment implements Exp2GUI, Serializable {
 	/**
      * 
      */
-	private static final long							serialVersionUID	= -786827888276630828L;
+	private static final long serialVersionUID = -786827888276630828L;
+	private String date;
+	private String fileName;
 
-	private String										date;
-	private String										fileName;
-	private final ArrayList<modules.experiment.Group>	groups;
-	private String										name;
-	private String										notes;
-	private String[]									params;
+	protected FiltersSetup filtersSetup;
+	protected ModulesSetup modulesSetup;
 
-	public ExperimentType								type;
-	private String										user;
+	private final ArrayList<Group> groups;
+
+	private String name;
+	private String notes;
+
+	private String[] params;
+	private ExperimentType type;
+	private String user;
 
 	/**
 	 * Initializes the experiment.
 	 */
 	public Experiment() {
 		groups = new ArrayList<Group>();
-		// params = new String[0];
+
+		initializeFiltersSetup();
+		initializeModulesSetup();
+		initializeParams();
+		final String[] generalParams = new String[] {
+				Constants.FILE_RAT_NUMBER, Constants.FILE_GROUP_NAME };
+
+		final ArrayList<String> allParams = new ArrayList<String>();
+		for (final String param : generalParams)
+			allParams.add(param);
+		for (final String param : params)
+			allParams.add(param);
+
+		setParametersList(allParams.toArray(new String[0]));
 	}
 
 	/**
@@ -82,7 +101,7 @@ public class Experiment implements Exp2GUI, Serializable {
 					+ System.getProperty("line.separator")
 					+ Constants.H_EXP_NAME + getName()
 					+ System.getProperty("line.separator")
-					+ Constants.H_EXP_TYPES + type
+					+ Constants.H_EXP_TYPES + getType()
 					+ System.getProperty("line.separator")
 					+ Constants.H_EXP_USER + getUser()
 					+ System.getProperty("line.separator")
@@ -103,6 +122,7 @@ public class Experiment implements Exp2GUI, Serializable {
 
 	/*
 	 * (non-Javadoc)
+	 * 
 	 * @see model.business.Exp2GUI#getDate()
 	 */
 	@Override
@@ -116,10 +136,23 @@ public class Experiment implements Exp2GUI, Serializable {
 	 * @return array of strings containing experiment's parameters
 	 */
 	public String[] getExpParametersList() {
-		/*if(params!=null)
-		for(String param:params)
-			PManager.log.print("Experimant param: "+ param, this, Details.NOTES);*/
+		/*
+		 * if(params!=null) for(String param:params)
+		 * PManager.log.print("Experimant param: "+ param, this, Details.NOTES);
+		 */
 		return params;
+	}
+
+	public String getFileName() {
+		return fileName;
+	}
+
+	public FiltersSetup getFiltersSetup() {
+		return filtersSetup;
+	}
+	
+	public ModulesSetup getModulesSetup() {
+		return modulesSetup;
 	}
 
 	/**
@@ -162,6 +195,7 @@ public class Experiment implements Exp2GUI, Serializable {
 
 	/*
 	 * (non-Javadoc)
+	 * 
 	 * @see model.business.Exp2GUI#getName()
 	 */
 	@Override
@@ -178,6 +212,7 @@ public class Experiment implements Exp2GUI, Serializable {
 
 	/*
 	 * (non-Javadoc)
+	 * 
 	 * @see model.business.Exp2GUI#getNotes()
 	 */
 	@Override
@@ -185,13 +220,28 @@ public class Experiment implements Exp2GUI, Serializable {
 		return notes;
 	}
 
+	@Override
+	public ExperimentType getType() {
+		return type;
+	}
+
 	/*
 	 * (non-Javadoc)
+	 * 
 	 * @see model.business.Exp2GUI#getUser()
 	 */
 	@Override
 	public String getUser() {
 		return user;
+	}
+
+	protected abstract void initializeFiltersSetup();
+	protected abstract void initializeModulesSetup();
+
+	protected abstract void initializeParams();
+
+	private void setDate(final String date) {
+		this.date = date;
 	}
 
 	/**
@@ -209,12 +259,16 @@ public class Experiment implements Exp2GUI, Serializable {
 	 */
 	public void setExperimentInfo(final String name, final String user,
 			final String date2, final String notes, final String type) {
-		this.name = name;
-		this.user = user;
-		this.date = date2;
-		this.notes = notes;
-		this.type = ExperimentType.enumOf(type);
-		System.out.println(this.type);
+		this.setName(name);
+		this.setUser(user);
+		this.setDate(date2);
+		this.setNotes(notes);
+		this.setType(ExperimentType.enumOf(type));
+		System.out.println(this.getType());
+	}
+
+	public void setFileName(final String fileName) {
+		this.fileName = fileName;
 	}
 
 	/**
@@ -227,6 +281,10 @@ public class Experiment implements Exp2GUI, Serializable {
 		this.name = name;
 	}
 
+	private void setNotes(final String notes) {
+		this.notes = notes;
+	}
+
 	/**
 	 * Sets the parameters collected in the experiment.
 	 * 
@@ -235,6 +293,10 @@ public class Experiment implements Exp2GUI, Serializable {
 	 */
 	public void setParametersList(final String[] expParameters) {
 		params = expParameters;
+	}
+
+	public void setType(final ExperimentType type) {
+		this.type = type;
 	}
 
 	/**
@@ -246,18 +308,4 @@ public class Experiment implements Exp2GUI, Serializable {
 	public void setUser(final String user) {
 		this.user = user;
 	}
-
-	@Override
-	public String getType() {
-		return type.toString();
-	}
-
-	public void setFileName(String fileName) {
-		this.fileName = fileName;
-	}
-
-	public String getFileName() {
-		return fileName;
-	}
-
 }

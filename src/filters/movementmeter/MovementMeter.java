@@ -6,6 +6,7 @@ package filters.movementmeter;
 import utils.PManager.ProgramState;
 import utils.video.ImageManipulator;
 import filters.FilterConfigs;
+import filters.FilterData;
 import filters.Link;
 import filters.VideoFilter;
 
@@ -14,6 +15,7 @@ import filters.VideoFilter;
  */
 public class MovementMeter extends
 		VideoFilter<FilterConfigs, MovementMeterData> {
+	public static final String ID = "filters.mevementmeter";
 	private int[]	greyData, prevGreyData;
 	private int[]	outputData, prevOutputData;
 	private int		summation;
@@ -150,6 +152,22 @@ public class MovementMeter extends
 	public void updateProgramState(final ProgramState state) {
 		// TODO Auto-generated method stub
 
+	}
+	
+	@Override
+	public String getID() {
+		return ID;
+	}
+
+	@Override
+	public VideoFilter<?, ?> newInstance(String filterName) {
+		return new MovementMeter(filterName, null, null);
+	}
+
+	@Override
+	public void registerDependentData(FilterData data) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

@@ -14,10 +14,6 @@
 
 package filters.rearingdetection;
 
-import java.awt.Point;
-
-import utils.PManager;
-import utils.StatusManager.StatusSeverity;
 import filters.CommonFilterConfigs;
 import filters.FilterConfigs;
 
@@ -56,10 +52,7 @@ public class RearingFilterConfigs extends FilterConfigs {
 	 */
 	private int		rearingThresh;
 
-	/**
-	 * reference to the current object's position.
-	 */
-	private Point	centerPoint;
+
 
 	/**
 	 * Initializes the configurations.
@@ -79,17 +72,16 @@ public class RearingFilterConfigs extends FilterConfigs {
 	 */
 	public RearingFilterConfigs(final String filterName,
 			final int rearingThresh, final int marginX, final int marginY,
-			final Point centerPoint,
 			final CommonFilterConfigs commonConfigs) {
-		super(filterName, commonConfigs);
+		super(filterName,RearingDetector.ID, commonConfigs);
 		this.setRearingThresh(rearingThresh);
 		this.setMarginX(marginX);
 		this.setMarginY(marginY);
-		this.setCenterPoint(centerPoint);
 	}
 
 	@Override
 	public void mergeConfigs(final FilterConfigs configs) {
+		super.mergeConfigs(configs);
 		final RearingFilterConfigs tmpRearingConfigs = (RearingFilterConfigs) configs;
 		if (tmpRearingConfigs.getMarginX() != -1)
 			this.setMarginX(tmpRearingConfigs.getMarginX());
@@ -97,22 +89,8 @@ public class RearingFilterConfigs extends FilterConfigs {
 			this.setMarginY(tmpRearingConfigs.getMarginY());
 		if (tmpRearingConfigs.getRearingThresh() != -1)
 			this.setRearingThresh(tmpRearingConfigs.getRearingThresh());
-		if (tmpRearingConfigs.getCenterPoint() != null)
-			this.setCenterPoint(tmpRearingConfigs.getCenterPoint());
-		if (tmpRearingConfigs.getCommonConfigs() != null)
-			this.setCommonConfigs(tmpRearingConfigs.getCommonConfigs());
 	}
 
-	@Override
-	public boolean validate() {
-		if (getCommonConfigs() == null) {
-			PManager.log.print("Configs are not completely configured!", this,
-					StatusSeverity.ERROR);
-			return false;
-		}
-		return true;
-	}
-	
 	@Override
 	public String toString() {
 		return super.toString()+", rearing thresh: "+ getRearingThresh();
@@ -142,12 +120,9 @@ public class RearingFilterConfigs extends FilterConfigs {
 		return rearingThresh;
 	}
 
-	public void setCenterPoint(Point centerPoint) {
-		this.centerPoint = centerPoint;
+	@Override
+	public FilterConfigs newInstance(String filterName,
+			CommonFilterConfigs commonConfigs) {
+		return new RearingFilterConfigs(filterName, 1000, 200, 200, commonConfigs);
 	}
-
-	public Point getCenterPoint() {
-		return centerPoint;
-	}
-
 }

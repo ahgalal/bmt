@@ -22,9 +22,9 @@ import modules.ModuleConfigs;
  * @author Creative
  */
 public class ExperimentModuleConfigs extends ModuleConfigs {
-	private String		currGrpName;
-	private int			currRatNumber;
-	public Experiment	exp;
+	private String currGrpName;
+	private int currRatNumber;
+	public Experiment exp;
 
 	/**
 	 * Initializations for the configurations.
@@ -32,9 +32,11 @@ public class ExperimentModuleConfigs extends ModuleConfigs {
 	 * @param moduleName
 	 *            name of the module instance
 	 */
-	public ExperimentModuleConfigs(final String moduleName, final Experiment exp) {
+	public ExperimentModuleConfigs(final String moduleName,
+			final Experiment exp, final String moduleID) {
 		super(moduleName);
 		this.exp = exp;
+		this.moduleID = moduleID;
 	}
 
 	public String getCurrGrpName() {
@@ -46,9 +48,21 @@ public class ExperimentModuleConfigs extends ModuleConfigs {
 	}
 
 	@Override
-	protected void mergeConfigs(final ModuleConfigs config) {
+	protected void initializeModuleID() {
+		// we don't know the moduleID, as this Config class is used for multiple
+		// ExperimentModules (OF and FS)---> no specific moduleID
+	}
+
+	@Override
+	public void mergeConfigs(final ModuleConfigs config) {
 		// TODO Auto-generated method stub
 
+	}
+
+	@Override
+	public ModuleConfigs newInstance(final String moduleName) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 	public void setCurrGrpName(final String currGrpName) {

@@ -14,8 +14,6 @@
 
 package filters.recorder;
 
-import utils.PManager;
-import utils.StatusManager.StatusSeverity;
 import filters.CommonFilterConfigs;
 import filters.FilterConfigs;
 
@@ -36,23 +34,13 @@ public class RecorderConfigs extends FilterConfigs {
 	 */
 	public RecorderConfigs(final String filterName,
 			final CommonFilterConfigs commonConfigs) {
-		super(filterName, commonConfigs);
+		super(filterName,VideoRecorder.ID, commonConfigs);
 	}
 
 	@Override
-	public void mergeConfigs(final FilterConfigs configs) {
-		if (configs.getCommonConfigs() != null)
-			this.setCommonConfigs(configs.getCommonConfigs());
-	}
-
-	@Override
-	public boolean validate() {
-		if (getCommonConfigs() == null) {
-			PManager.log.print("Configs are not completely configured!", this,
-					StatusSeverity.ERROR);
-			return false;
-		}
-		return true;
+	public FilterConfigs newInstance(String filterName,
+			CommonFilterConfigs commonConfigs) {
+		return new RecorderConfigs(filterName, commonConfigs);
 	}
 
 }

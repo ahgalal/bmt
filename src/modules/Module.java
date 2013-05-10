@@ -21,6 +21,7 @@ import modules.experiment.ExperimentType;
 import org.eclipse.swt.widgets.Shell;
 
 import ui.PluggedGUI;
+import utils.Configurable;
 import utils.PManager;
 import filters.Data;
 
@@ -30,18 +31,23 @@ import filters.Data;
  * @author Creative
  */
 @SuppressWarnings("rawtypes")
-public abstract class Module<GUIType extends PluggedGUI, ConfigsType extends ModuleConfigs, DataType extends ModuleData> // implements
+public abstract class Module<GUIType extends PluggedGUI, ConfigsType extends ModuleConfigs, DataType extends ModuleData>
+		implements Configurable<ConfigsType>
 // StateListener
 {
-	protected ConfigsType		configs;
-	protected DataType			data;
-	protected ExperimentType[]	expType;
-	protected Cargo				fileCargo;
+	protected ConfigsType configs;
+	protected DataType data;
+	protected ExperimentType[] expType;
+	protected Cargo fileCargo;
 
-	protected Data[]			filtersData;
-	protected GUIType			gui;
-	protected Cargo				guiCargo;
-	protected Data[]			modulesData;
+	protected Data[] filtersData;
+	protected GUIType gui;
+	protected Cargo guiCargo;
+	protected Data[] modulesData;
+	private final String name;
+	
+	public void filterConfiguration(){
+	}
 
 	/**
 	 * Initializes the module.
@@ -51,40 +57,13 @@ public abstract class Module<GUIType extends PluggedGUI, ConfigsType extends Mod
 	 * @param config
 	 *            initial configurations of the module
 	 */
-	public Module(final ConfigsType config) {
+	public Module(final String name, final ConfigsType config) {
 		this.configs = config;
+		this.name = name;
 	}
-	
+
 	public boolean allowTracking() {
 		return true;
-	}
-	
-	public void pause(){
-		// empty, overridden when needed
-	}
-	
-	public void resume(){
-		// empty, overridden when needed
-	}
-	
-	/**
-	 * Unloads module from memory, including GUI controls.
-	 */
-	public void unload(){
-		// unload data
-		modulesData=null;
-		filtersData=null;
-		guiCargo=null;
-		fileCargo=null;
-		data=null;
-		configs=null;
-		
-		// unload GUI
-		if(gui!=null){
-			PManager.getDefault().removeStateListener(gui);
-			PManager.log.print("Unloading GUI: "+ gui.getClass(), this);
-			gui.deInitialize();
-		}
 	}
 
 	/**
@@ -122,7 +101,7 @@ public abstract class Module<GUIType extends PluggedGUI, ConfigsType extends Mod
 	public PluggedGUI getGUI() {
 		return gui;
 	}
-	
+
 	/**
 	 * Gets the data cargo to be sent to GUI.
 	 * 
@@ -132,6 +111,9 @@ public abstract class Module<GUIType extends PluggedGUI, ConfigsType extends Mod
 		return guiCargo;
 	}
 
+	@Override
+	public abstract String getID();
+
 	/**
 	 * Gets the Module data.
 	 * 
@@ -139,6 +121,11 @@ public abstract class Module<GUIType extends PluggedGUI, ConfigsType extends Mod
 	 */
 	public ModuleData getModuleData() {
 		return data;
+	}
+
+	@Override
+	public String getName() {
+		return name;
 	}
 
 	public ExperimentType[] getSupportedExperiments() {
@@ -164,6 +151,12 @@ public abstract class Module<GUIType extends PluggedGUI, ConfigsType extends Mod
 			hash.put(s, "");
 	}
 
+	public abstract Module newInstance(String name);
+
+	public void pause() {
+		// empty, overridden when needed
+	}
+
 	/**
 	 * Process , do all the work the module should do at each time interval.
 	 */
@@ -184,13 +177,41 @@ public abstract class Module<GUIType extends PluggedGUI, ConfigsType extends Mod
 	 */
 	public abstract void registerModuleDataObject(ModuleData data);
 
+	public void resume() {
+		// empty, overridden when needed
+	}
+
+	/**
+	 * Unloads module from memory, including GUI controls.
+	 */
+	public void unload() {
+		// unload data
+		modulesData = null;
+		filtersData = null;
+		guiCargo = null;
+		fileCargo = null;
+		data = null;
+		configs = null;
+
+		// unload GUI
+		if (gui != null) {
+			PManager.getDefault().removeStateListener(gui);
+			PManager.log.print("Unloading GUI: " + gui.getClass(), this);
+			gui.deInitialize();
+		}
+	}
+
 	/**
 	 * Updates the configurations of the module.
 	 * 
 	 * @param config
 	 *            configurations object containing new values
 	 */
-	public abstract void updateConfigs(ModuleConfigs config);
+	public void updateConfigs(ConfigsType config){
+		if (this.configs == null)
+			this.configs = config;
+		this.configs.mergeConfigs(config);
+	}
 
 	/**
 	 * Updates the cargo data to be sent to file writer.
@@ -201,6 +222,4 @@ public abstract class Module<GUIType extends PluggedGUI, ConfigsType extends Mod
 	 * Updates the cargo data to be sent to GUI.
 	 */
 	public abstract void updateGUICargoData();
-
-	public abstract String getID();
 }

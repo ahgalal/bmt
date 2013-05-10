@@ -1,15 +1,40 @@
 package utils;
 
+import java.awt.AWTException;
+import java.awt.Robot;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 
 public class KeyboardUtils {
-	public static void pressKey(final int key) {
+	public static void pressKeySWT(final int key) {
 		final Event e = new Event();
 		e.type = SWT.KeyDown;
 		e.keyCode = key;
 		Display.getDefault().post(e);
+	}
+	
+	public static void pressKeyAWT(final int key) throws AWTException {
+		Robot robot = new Robot();
+		robot.keyPress(key);
+		robot.keyRelease(key);
+	}
+	
+	public static void mousePressAWT(int x,int y,int button) throws AWTException{
+		Robot robot = new Robot();
+		robot.mouseMove(x, y);
+		robot.mousePress(button);
+	}
+	
+	public static void mouseReleaseAWT(int button) throws AWTException{
+		Robot robot = new Robot();
+		robot.mouseRelease(button);
+	}
+	
+	public static void mouseMoveAWT(int x,int y) throws AWTException{
+		Robot robot = new Robot();
+		robot.mouseMove(x, y);
 	}
 
 	public static void typeText(final String text, final boolean pressEnter) {

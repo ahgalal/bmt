@@ -13,9 +13,9 @@
     </description>
 
 	<property environment="env" />
-	<property name="bmt_version" value="0.5" />
-	<property name="libs_version" value="0.5" />
-	<property name="bin_libs_version" value="0.5" />
+	<property name="bmt_version" value="0.6" />
+	<property name="libs_version" value="0.6" />
+	<property name="bin_libs_version" value="0.6" />
 	<property name="jarfile.name" value="BMT_v${bmt_version}.jar" />
 	<property name="exefile.name" value="BMT_v${bmt_version}.exe" />
 
@@ -27,7 +27,8 @@
 	<property name="libs_dir.name" value="libs" />
 	<property name="libs_dir" value="${release_dir}/${libs_dir.name}" />
 	<property name="launch4j.dir" value="${env.tools}/launch4j-3.0.2-win32/launch4j" />
-	<property name="dir.bin" value="bin" />
+	<property name="dir.bin.src" value="bin/src" />
+	<property name="dir.bin.test" value="bin/tests" />
 	<property name="dir.src" value="src" />
 	<property name="dir.tests" value="tests" />
 
@@ -36,9 +37,13 @@
 	<!-- ================================= 
           target: buildall              
          ================================= -->
-	<target name="buildall" depends="clean,prepare,copy_libs,copy_bin_libs,build_jar">
-
-
+	<target name="buildall" depends="
+		clean,
+		prepare,
+		compile,
+		copy_libs,
+		copy_bin_libs,
+		build_jar">
 	</target>
 
 	<!-- ================================= 
@@ -48,8 +53,8 @@
 		buildall,
 		copy_license,
 		create_runners,
+		create_help,
 		zip_all">
-
 	</target>
 
 	<!-- - - - - - - - - - - - - - - - - - 
@@ -123,7 +128,7 @@
 				<attribute name="Main-Class" value="utils.PManager" />
 				<attribute name="Class-Path" value=". ${jar.classpath}" />
 			</manifest>
-			<fileset dir="${dir.bin}" />
+			<fileset dir="${dir.bin.src}" />
 			<fileset dir="." includes="images/**" />
 		</jar>
 
@@ -132,17 +137,18 @@
 
 
 	<import file="test/base/build.xml" />
-	
+	<import file="help/BuildHelp.xml" />
+	<property name="tests.jarfile" value="${release_dir}/tests.jar"/>
+	<property name="binloctmp.tests" value="${dir.bin.test}" />
 	<target name="compile_tests" depends="init">
-		<property name="binloctmp.tests" value="${dir.bin}" />
-
 		<echo message="${java.runtime.version}" />
 
-		<antcall target="compile"/>
+		<delete dir="${binloctmp.tests}" />
+		<mkdir dir="${binloctmp.tests}" />
 		
 		<javac destdir="${binloctmp.tests}" debug="on" source="1.6" target="1.6">
 			<src path="${dir.tests}" />
-			<classpath>
+			<classpath id="tests.classpath">
 				<path refid="classpath.main" />
 				<path refid="classpath.windowtester" />
 				<path location="." />
@@ -155,10 +161,36 @@
 				<include name="**/*.properties"/>
 			</fileset>
 		</copy>
+
 	</target>
 
+	<!-- ================================= 
+          target: tests.build_jar              
+         ================================= -->
+    <target name="tests.build_jar" depends="compile_tests">
+		<manifestclasspath property="tests.jar.classpath" jarfile="${tests.jarfile}">
+			<classpath>
+				<fileset dir="${libs_dir}">
+					<include name="**/*.jar" />
+					<exclude name="*swt*.jar" />
+				</fileset>
+			</classpath>
+		</manifestclasspath>
+
+
+		<delete file="${tests.jarfile}" />
+		<jar destfile="${tests.jarfile}">
+			<manifest>
+				<!--attribute name="Main-Class" value="utils.PManager" /-->
+				<attribute name="Class-Path" value=". ${tests.jar.classpath}" />
+			</manifest>
+			<fileset dir="${binloctmp.tests}" />
+		</jar>
+    </target>
+
+
 	<target name="compile" depends="init">
-		<property name="binloctmp" value="${dir.bin}" />
+		<property name="binloctmp" value="${dir.bin.src}" />
 
 		<echo message="${java.runtime.version}" />
 
@@ -210,11 +242,11 @@
 	<!-- - - - - - - - - - - - - - - - - - 
           target: zip_all                      
          - - - - - - - - - - - - - - - - - -->
-	<target name="zip_all" depends="zip_libs,zip_bin_libs,zip_pkg,zip_src">
+	<target name="zip_all" depends="zip_pkg,zip_src">
 	</target>
 
 	<!-- - - - - - - - - - - - - - - - - - 
-          target: zip_libs                      
+          target: zip_libs (unused!)                     
          - - - - - - - - - - - - - - - - - -->
 	<target name="zip_libs">
 		<mkdir dir="${uploads_dir}" />
@@ -222,7 +254,7 @@
 	</target>
 
 	<!-- - - - - - - - - - - - - - - - - - 
-          target: zip_bin_libs                      
+          target: zip_bin_libs (unused!)                     
          - - - - - - - - - - - - - - - - - -->
 	<target name="zip_bin_libs">
 		<mkdir dir="${uploads_dir}" />
@@ -257,7 +289,7 @@
 	</target>
 
 	<!-- - - - - - - - - - - - - - - - - - 
-          target: zip_src_all                      
+          target: zip_src_all (unused!)                     
          - - - - - - - - - - - - - - - - - -->
 	<target name="zip_src_all">
 		<zip destfile="${uploads_dir}/src_all.zip">
@@ -272,7 +304,7 @@
 	</target>
 
 	<path id="classpath.main">
-		<pathelement path="${dir.bin}" />
+		<pathelement path="${dir.bin.src}" />
 		<path refid="classpath.swt" />
 		<path refid="classpath.junit" />
 		<fileset dir="libs">
@@ -286,8 +318,8 @@
 	<target name="create_runners">
 		<property name="swt.jar.linux" value="org.eclipse.swt.gtk.linux.x86_3.6.2.v3659b.jar" />
 		<property name="swt.jar.win" value="org.eclipse.swt.win32.win32.x86_3.6.2.v3659c.jar" />
-		<echo file="${release_dir}/run.bat" message="set PATH=%PATH%;%CD%${line.separator}java -classpath ${libs_dir.name}\${swt.jar.win};libs\*;BMT_v${bmt_version}.jar utils.PManager${line.separator}pause" />
-		<echo file="${release_dir}/run.sh" message="export LD_LIBRARY_PATH=.:$LD_LIBRARY_PATH${line.separator}java -classpath ${libs_dir.name}/${swt.jar.linux}:libs/*:BMT_v${bmt_version}.jar utils.PManager" />
+		<echo file="${release_dir}/run.bat" message="set PATH=%PATH%;%CD%${line.separator}java -classpath ${libs_dir.name}\${swt.jar.win};libs\*;BMT_v${bmt_version}.jar;help\* utils.PManager${line.separator}pause" />
+		<echo file="${release_dir}/run.sh" message="export LD_LIBRARY_PATH=.:$LD_LIBRARY_PATH${line.separator}java -classpath ${libs_dir.name}/${swt.jar.linux}:libs/*:BMT_v${bmt_version}.jar:help\* utils.PManager" />
 	</target>
 
 	<!-- ================================= 
@@ -295,6 +327,14 @@
          ================================= -->
 	<target name="copy_license">
 		<copy tofile="${release_dir}/license.txt" file="deploy/license/license.txt" />
+	</target>
+
+	<!-- ================================= 
+          target: create_help              
+         ================================= -->
+	<target name="create_help">
+		<antcall target="build_help_jar"/>
+		<copy todir="${release_dir}/help" file="help/help.jar"/>
 	</target>
 
 

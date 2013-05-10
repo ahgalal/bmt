@@ -31,7 +31,7 @@ public class OpenFieldIntegrationTest extends ExperimentIntegrationTestBase {
 	protected int		centralTimeMin		= 1;
 	protected String	scale				= "60";
 
-	protected int		totalDistanceMax	= 350;
+	protected int		totalDistanceMax	= 370;
 	protected int		totalDistanceMin	= 240; // TODO: tighten value
 	protected String	zonesFile;
 
@@ -68,7 +68,7 @@ public class OpenFieldIntegrationTest extends ExperimentIntegrationTestBase {
 	}
 	
 	@Override
-	protected void afterStartTracking() throws WidgetSearchException {
+	protected void afterStartTracking() throws Exception {
 		/************* resume streaming ********/
 		VideoExecUnitGroup.pauseResumeStream();
 		
@@ -149,7 +149,7 @@ public class OpenFieldIntegrationTest extends ExperimentIntegrationTestBase {
 				.getEnvVariableValue("BMT_WS")
 				+ "/BMT/ants/test/resources/zones_test.bmt");
 
-		sessionTimeMin = 18; // TODO: tighten
+		sessionTimeMin = 17; // TODO: tighten
 		sessionTimeMax = 24;
 		sleepTime1 = 24;
 		sleepTime2 = 0;

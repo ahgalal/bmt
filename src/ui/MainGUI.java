@@ -42,6 +42,7 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
 
+import utils.PManager;
 import control.ui.ControllerUI;
 import control.ui.CtrlMainGUI;
 
@@ -130,7 +131,7 @@ public class MainGUI extends BaseUI {
 	 *            true/false
 	 */
 	public void btnStartStreamingEnable(final boolean enable) {
-		Display.getDefault().asyncExec(new Runnable() {
+		PManager.getDefault().displayAsyncExec(new Runnable() {
 			@Override
 			public void run() {
 				btnStartStream.setEnabled(enable);
@@ -145,7 +146,7 @@ public class MainGUI extends BaseUI {
 	 *            true/false
 	 */
 	public void btnStartTrackingEnable(final boolean enable) {
-		Display.getDefault().asyncExec(new Runnable() {
+		PManager.getDefault().displayAsyncExec(new Runnable() {
 			@Override
 			public void run() {
 				btnStartTracking.setEnabled(enable);
@@ -179,7 +180,7 @@ public class MainGUI extends BaseUI {
 
 	@Override
 	public void clearForm() {
-		Display.getDefault().asyncExec(new Runnable() {
+		PManager.getDefault().displayAsyncExec(new Runnable() {
 
 			@Override
 			public void run() {
@@ -525,14 +526,22 @@ public class MainGUI extends BaseUI {
 		mnuEditItem.setMenu(mnuEdit);
 		mnuEditItem.setEnabled(false);
 
-		final MenuItem mnutmEditOptions = new MenuItem(mnuEdit, SWT.PUSH);
-		mnutmEditOptions.setText(ExternalStrings.get("MainGUI.Menu.Options")); //$NON-NLS-1$
-		mnutmEditOptions.addSelectionListener(new SelectionAdapter() {
+
+		
+		MenuItem mntmAdvanced_1 = new MenuItem(mnuEdit, SWT.CASCADE);
+		mntmAdvanced_1.setText("Advanced");
+		
+		Menu menu_1 = new Menu(mntmAdvanced_1);
+		mntmAdvanced_1.setMenu(menu_1);
+		
+		MenuItem mntmFiltersSetup = new MenuItem(menu_1, SWT.NONE);
+		mntmFiltersSetup.addSelectionListener(new SelectionAdapter() {
 			@Override
-			public void widgetSelected(final SelectionEvent e) {
-				controller.mnutmEditOptionsAction();
+			public void widgetSelected(SelectionEvent e) {
+				controller.showFiltersSetup();
 			}
 		});
+		mntmFiltersSetup.setText("Filters setup ..");
 
 		sShell.addShellListener(new org.eclipse.swt.events.ShellAdapter() {
 			@Override
@@ -618,6 +627,15 @@ public class MainGUI extends BaseUI {
 		mnuHelpItem.setText(ExternalStrings.get("MainGUI.Menu.Help")); //$NON-NLS-1$
 		mnuHelp = new Menu(mnuHelpItem);
 		mnuHelpItem.setMenu(mnuHelp);
+		
+		MenuItem mntmContents = new MenuItem(mnuHelp, SWT.NONE);
+		mntmContents.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				controller.mnutmHelpContentsAction();
+			}
+		});
+		mntmContents.setText("Contents ..");
 		final MenuItem mnutmHelpAbout = new MenuItem(mnuHelp, SWT.PUSH);
 		mnutmHelpAbout.setText(ExternalStrings.get("MainGUI.Menu.About")); //$NON-NLS-1$
 		mnutmHelpAbout.setEnabled(true);

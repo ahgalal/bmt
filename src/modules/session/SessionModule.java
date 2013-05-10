@@ -16,7 +16,6 @@ package modules.session;
 
 import modules.Cargo;
 import modules.Module;
-import modules.ModuleConfigs;
 import modules.ModuleData;
 import modules.experiment.Constants;
 import modules.experiment.ExperimentType;
@@ -34,9 +33,11 @@ import filters.Data;
  * @author Creative
  */
 public class SessionModule extends
-Module<PluggedGUI<?>, SessionModuleConfigs, SessionModuleData> {
-	private final String[]	expParams	= new String[] { Constants.FILE_SESSION_TIME };
-	private boolean	paused;
+		Module<PluggedGUI<?>, SessionModuleConfigs, SessionModuleData> {
+	public final static String moduleID = Constants.MODULE_ID + ".session";
+	private final String[] expParams = new String[] { Constants.FILE_SESSION_TIME };
+
+	private boolean paused;
 
 	/**
 	 * Initializations of the module.
@@ -46,8 +47,8 @@ Module<PluggedGUI<?>, SessionModuleConfigs, SessionModuleData> {
 	 * @param config
 	 *            SessionModuleConfigs object to configure the module
 	 */
-	public SessionModule(final SessionModuleConfigs config) {
-		super(config);
+	public SessionModule(final String name, final SessionModuleConfigs config) {
+		super(name, config);
 		data = new SessionModuleData();
 		initialize();
 	}
@@ -68,22 +69,16 @@ Module<PluggedGUI<?>, SessionModuleConfigs, SessionModuleData> {
 
 	}
 
-	@Override
-	public void pause() {
-		paused=true;
-	}
-
-	@Override
-	public void resume() {
-		startSession();
-		paused=false;
-	}
-
 	/**
 	 * stops session timer.
 	 */
 	private void endSession() {
 		stopSessionTimer();
+	}
+
+	@Override
+	public String getID() {
+		return moduleID;
 	}
 
 	/**
@@ -92,7 +87,7 @@ Module<PluggedGUI<?>, SessionModuleConfigs, SessionModuleData> {
 	 * @return session's elapsed time till now
 	 */
 	private long getSessionTimeTillNow() {
-		return data.getAccumulatedSessionTime()/(1000);
+		return data.getAccumulatedSessionTime() / (1000);
 	}
 
 	@Override
@@ -101,14 +96,26 @@ Module<PluggedGUI<?>, SessionModuleConfigs, SessionModuleData> {
 		data.setSessionStartTime(0);
 		data.setSessionEndTime(0);
 		data.setAccumulatedSessionTime(0);
-		
+
 		guiCargo = new Cargo(new String[] { Constants.GUI_SESSION_TIME });
 
 		fileCargo = new Cargo(expParams);
 
-		for(String param:expParams)
+		for (final String param : expParams)
 			data.addParameter(param);
-		expType = new ExperimentType[] { ExperimentType.OPEN_FIELD,ExperimentType.FORCED_SWIMMING };
+		expType = new ExperimentType[] { ExperimentType.OPEN_FIELD,
+				ExperimentType.FORCED_SWIMMING };
+	}
+
+	@SuppressWarnings("rawtypes")
+	@Override
+	public Module newInstance(final String name) {
+		return new SessionModule(name, null);
+	}
+
+	@Override
+	public void pause() {
+		paused = true;
 	}
 
 	@Override
@@ -117,12 +124,13 @@ Module<PluggedGUI<?>, SessionModuleConfigs, SessionModuleData> {
 			startSession();
 			data.setSessionRunning(true);
 		}
-		
-		if(paused==false){
+
+		if (paused == false) {
 			data.setSessionEndTime(System.currentTimeMillis());
 			data.setAccumulatedSessionTime((int) (data
-					.getAccumulatedSessionTime() + (data.getSessionEndTime() - data.getSessionStartTime())));
-			if(data.getSessionStartTime()==0)
+					.getAccumulatedSessionTime() + (data.getSessionEndTime() - data
+					.getSessionStartTime())));
+			if (data.getSessionStartTime() == 0)
 				data.setAccumulatedSessionTime(0);
 			data.setSessionStartTime(System.currentTimeMillis());
 		}
@@ -136,6 +144,12 @@ Module<PluggedGUI<?>, SessionModuleConfigs, SessionModuleData> {
 	@Override
 	public void registerModuleDataObject(final ModuleData data) {
 		// TODO Auto-generated method stub
+	}
+
+	@Override
+	public void resume() {
+		startSession();
+		paused = false;
 	}
 
 	/**
@@ -161,11 +175,6 @@ Module<PluggedGUI<?>, SessionModuleConfigs, SessionModuleData> {
 	}
 
 	@Override
-	public void updateConfigs(final ModuleConfigs config) {
-		configs.mergeConfigs(config);
-	}
-
-	@Override
 	public void updateFileCargoData() {
 		fileCargo.setDataByTag(Constants.FILE_SESSION_TIME,
 				Float.toString(getSessionTimeTillNow()));
@@ -174,13 +183,7 @@ Module<PluggedGUI<?>, SessionModuleConfigs, SessionModuleData> {
 	@Override
 	public void updateGUICargoData() {
 		guiCargo.setDataByTag(Constants.GUI_SESSION_TIME,
-				Float.toString(getSessionTimeTillNow()));
-	}
-	public final static String			moduleID=Constants.MODULE_ID+".session";
-
-	@Override
-	public String getID() {
-		return moduleID;
+				Float.toString(getSessionTimeTillNow()) + " s");
 	}
 
 }

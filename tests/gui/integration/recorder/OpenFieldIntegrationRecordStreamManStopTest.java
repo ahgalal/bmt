@@ -3,14 +3,15 @@
  */
 package gui.integration.recorder;
 
-import java.io.File;
-
 import gui.executionunit.VideoExecUnitGroup;
 import gui.integration.OpenFieldIntegrationTest;
+
+import java.io.File;
+
 import sys.utils.Files;
 import utils.DialogBoxUtils;
 import utils.PManager;
-import sys.utils.Utils;
+import utils.BMTUtils;
 
 import com.windowtester.runtime.WidgetSearchException;
 
@@ -22,7 +23,7 @@ import com.windowtester.runtime.WidgetSearchException;
  */
 public class OpenFieldIntegrationRecordStreamManStopTest extends
 		OpenFieldIntegrationTest {
-	protected final String	recordedVideoFile	= Files.convertPathToPlatformPath(Utils
+	protected final String	recordedVideoFile	= Files.convertPathToPlatformPath(BMTUtils
 														.getResourcesDirPath()
 														+ "tmpRecorder.avi");
 
@@ -48,7 +49,7 @@ public class OpenFieldIntegrationRecordStreamManStopTest extends
 		super.setUp();
 		sleepTime1 = 3; // after 3 seconds, start recording
 		sleepTime2 = 7; // after 7 seconds, stop recording
-		sleepTime3 = 10; // remaining of 25, to complete the experiment
+		sleepTime3 = 12; // remaining of 22, to complete the experiment
 	}
 	
 	@Override

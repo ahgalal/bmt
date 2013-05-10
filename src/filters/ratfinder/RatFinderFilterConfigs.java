@@ -14,8 +14,6 @@
 
 package filters.ratfinder;
 
-import utils.PManager;
-import utils.StatusManager.StatusSeverity;
 import filters.CommonFilterConfigs;
 import filters.FilterConfigs;
 
@@ -36,29 +34,13 @@ public class RatFinderFilterConfigs extends FilterConfigs {
 	 */
 	public RatFinderFilterConfigs(final String filterName,
 			final CommonFilterConfigs commonConfigs) {
-		super(filterName, commonConfigs);
+		super(filterName,RatFinder.ID, commonConfigs);
 	}
 
 	@Override
-	public void mergeConfigs(final FilterConfigs configs) {
-		final RatFinderFilterConfigs tmpRatfinerConfigs = (RatFinderFilterConfigs) configs;
-		if (tmpRatfinerConfigs.getCommonConfigs() != null)
-			setCommonConfigs(tmpRatfinerConfigs.getCommonConfigs());
-	}
-
-	/**
-	 * Checks that All configurations are set. (for testing purposes only)
-	 * 
-	 * @return true: success
-	 */
-	@Override
-	public boolean validate() {
-		if (getCommonConfigs() == null) {
-			PManager.log.print("Configs are not completely configured!", this,
-					StatusSeverity.ERROR);
-			return false;
-		}
-		return true;
+	public FilterConfigs newInstance(String filterName,
+			CommonFilterConfigs commonConfigs) {
+		return new RatFinderFilterConfigs(filterName, commonConfigs);
 	}
 
 }

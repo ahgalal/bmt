@@ -1,13 +1,14 @@
 package gui.integration;
 
+import gui.executionunit.ExperimentExecUnitGroup;
+import gui.executionunit.VideoExecUnitGroup;
+
 import java.io.File;
 
 import sys.utils.Files;
+import utils.BMTUtils;
 import utils.DialogBoxUtils;
 import utils.PManager;
-import sys.utils.Utils;
-import gui.executionunit.ExperimentExecUnitGroup;
-import gui.executionunit.VideoExecUnitGroup;
 
 import com.windowtester.runtime.WidgetSearchException;
 
@@ -21,7 +22,7 @@ import com.windowtester.runtime.WidgetSearchException;
 public class OpenFieldIntegrationManStopTrackTest extends
 		OpenFieldIntegrationTest {
 
-	protected final String	recordedVideoFile	= Files.convertPathToPlatformPath(Utils
+	protected final String	recordedVideoFile	= Files.convertPathToPlatformPath(BMTUtils
 			.getResourcesDirPath()
 			+ "tmpRecorder.avi");
 	
@@ -34,7 +35,7 @@ public class OpenFieldIntegrationManStopTrackTest extends
 	}
 	
 	@Override
-	protected void preSleep1() throws WidgetSearchException {
+	protected void preSleep1() throws Exception {
 		super.preSleep1();
 		
 		// start recording
@@ -64,8 +65,9 @@ public class OpenFieldIntegrationManStopTrackTest extends
 	@Override
 	public void setUp() {
 		super.setUp();
-		sleepTime1 = 10;
-		sleepTime2 = 5;
+		sleepTime1 = 10; // record for 10 secs
+		sleepTime2 = 5; // then stop tracking and wait 5 secs
+		sleepTime3 = 5; // rest of stream
 		sessionTimeMin = 10;
 		sessionTimeMax = 11;
 		centralTimeMin = 0;centralEntranceMax = 1;

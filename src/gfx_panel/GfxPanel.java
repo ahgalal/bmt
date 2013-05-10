@@ -258,6 +258,7 @@ public class GfxPanel {
 					final int newShapeNumber = addShape(shpBeingDrawn);
 					notifyShapeAdded(newShapeNumber);
 					shpBeingDrawn = null;
+					refreshDrawingArea();
 				}
 				/**
 				 * the next code is for resizing or moving
@@ -433,10 +434,9 @@ public class GfxPanel {
 		final int[] takenNumbers = new int[shapes.size()];
 		for (int y = 0; y < shapes.size(); y++)
 			takenNumbers[y] = shapes.get(y).getShapeNumber();
-
-		iterateI: for (int i = 0; i < 1000; i++) // we can handle up to 1000 of
-		// shapes
-		{
+		
+		// we can handle up to 1000 of shapes
+		iterateI: for (int i = 0; i < 1000; i++){
 			for (final int a : takenNumbers)
 				if (a == i) // this i is rejected .. go to next i
 					continue iterateI;
@@ -736,6 +736,10 @@ public class GfxPanel {
 	public void registerForNotifications(final GfxPanelNotifiee notifiee) {
 		arrNotifiee.add(notifiee);
 	}
+	
+	public BufferedImage getBGImage(){
+		return bgBuffImg;
+	}
 
 	/**
 	 * Resizes the shape.
@@ -790,8 +794,19 @@ public class GfxPanel {
 	 * @param bgData
 	 *            new background image
 	 */
-	public void setBackground(final int[] bgData) {
-		System.arraycopy(bgData, 0, bg, 0, bgData.length);
+	public void setBackground(final int[] bgData,int width,int height) {
+		
+		// create a BufferedImage for the input background data
+		BufferedImage originalBG =new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+		// get the integer array of the created BufferedImage
+		int[] originalBGData= ((DataBufferInt) originalBG.getRaster().getDataBuffer())
+		.getData();
+		
+		// copy the input background data to the created BufferedImage
+		System.arraycopy(bgData, 0, originalBGData, 0, bgData.length);
+		
+		// scale the new background data and draw it on the BG of GfxPanel
+		getBGImage().getGraphics().drawImage(originalBG, 0, 0, this.width, this.height, 0, 0,originalBG.getWidth(), originalBG.getHeight() , null);
 	}
 
 	/**

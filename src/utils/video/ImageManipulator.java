@@ -14,6 +14,7 @@
 
 package utils.video;
 
+import java.awt.Point;
 import java.awt.image.BufferedImage;
 import java.io.File;
 
@@ -29,6 +30,46 @@ public class ImageManipulator {
 
 	private static int[]			subResult;
 
+	public static Point[] getLinePoints(Point pt1, Point pt2) {
+		int deltaY = pt1.y-pt2.y;
+		int deltaX=pt1.x-pt2.x;;
+				
+		// get line equation
+		float slope = deltaY/(float)deltaX;
+		float c = pt1.y - slope*pt1.x;
+		
+
+		int numPts = Math.abs(deltaY) > Math.abs(deltaX) ? Math.abs(deltaY) : Math.abs(deltaX);
+		Point[] pts = new Point[Math.abs(numPts)+1];
+		int i = 0;
+		if (Math.abs(deltaY) > Math.abs(deltaX)) {
+			int yInitial = pt1.y > pt2.y ? pt1.y : pt2.y;
+			int yFinal = pt1.y > pt2.y ? pt2.y : pt1.y;
+			for (int y = yInitial; y >= yFinal; y--) {
+				int x =-1;
+				if(deltaX!=0)
+					x=(int) ((y - c) / slope);
+				else
+					x=pt1.x;
+				pts[i] = new Point(x, y);
+				i++;
+			}
+		} else {
+			int xInitial = pt1.x > pt2.x ? pt1.x : pt2.x;
+			int xFinal = pt1.x > pt2.x ? pt2.x : pt1.x;
+			for (int x = xInitial; x >= xFinal; x--) {
+				int y = -1;
+				if(deltaY!=0)
+					y=(int) (slope * x + c);
+				else
+					y=pt1.y;
+				pts[i] = new Point(x, y);
+				i++;
+			}
+		}
+		return pts;
+	}
+	
 	public static int addRGBInt(final int img1, final int img2) {
 		byte r1, r2, g1, g2, b1, b2;
 		r1 = (byte) (img1 & 0x00FF0000);

@@ -14,12 +14,16 @@
 
 package filters;
 
+import utils.Configuration;
+import utils.PManager;
+import utils.StatusManager.StatusSeverity;
+
 /**
  * Configurations of a VideoFilter.
  * 
  * @author Creative
  */
-public abstract class FilterConfigs {
+public abstract class FilterConfigs implements Configuration<FilterConfigs> {
 	/**
 	 * Needed by all filters, contains properties like: image width,height ..
 	 * etc.
@@ -29,7 +33,8 @@ public abstract class FilterConfigs {
 	 * is the filter enable.
 	 */
 	private boolean				enabled;
-	private final String		name;
+	private final String		filterId;
+	private String				name;
 
 	/**
 	 * Initializes configurations.
@@ -39,11 +44,22 @@ public abstract class FilterConfigs {
 	 * @param commonConfigs
 	 *            CommonFilterConfigs object, needed by almost all filters
 	 */
-	public FilterConfigs(final String name,
+	public FilterConfigs(final String name, final String filterId,
 			final CommonFilterConfigs commonConfigs) {
-		if(commonConfigs!=null)
+		if (commonConfigs != null)
 			this.setCommonConfigs(commonConfigs);
 		this.name = name;
+		this.filterId = filterId;
+	}
+
+	@Override
+	public CommonFilterConfigs getCommonConfigs() {
+		return commonConfigs;
+	}
+
+	@Override
+	public String getID() {
+		return filterId;
 	}
 
 	/**
@@ -51,8 +67,13 @@ public abstract class FilterConfigs {
 	 * 
 	 * @return String containing the filter's name
 	 */
-	public String getConfigurablename() {
+	@Override
+	public String getName() {
 		return name;
+	}
+
+	public boolean isEnabled() {
+		return enabled;
 	}
 
 	/**
@@ -64,33 +85,50 @@ public abstract class FilterConfigs {
 	 * @param configs
 	 *            incoming configurations object
 	 */
-	public abstract void mergeConfigs(FilterConfigs configs);
+	@Override
+	public void mergeConfigs(final FilterConfigs configs) {
+		if (configs.getCommonConfigs() != null)
+			setCommonConfigs(configs.getCommonConfigs());
+	}
+
+	@Override
+	public FilterConfigs newInstance(final String name) {
+		throw new RuntimeException(
+				"Illegal method call, should have called the overload");
+	}
+
+	public abstract FilterConfigs newInstance(String filterName,
+			CommonFilterConfigs commonConfigs);
+
+	public void setCommonConfigs(final CommonFilterConfigs commonConfigs) {
+		this.commonConfigs = commonConfigs;
+	}
+
+	public void setEnabled(final boolean enabled) {
+		this.enabled = enabled;
+	}
+
+	@Override
+	public void setName(final String name) {
+		this.name = name;
+	}
+
+	@Override
+	public String toString() {
+		return "name: " + getName();
+	}
 
 	/**
 	 * Checks that All configurations are set. (for testing purposes only)
 	 * 
 	 * @return true: success
 	 */
-	public abstract boolean validate();
-	
-	@Override
-	public String toString() {
-		return "name: "+getConfigurablename();
-	}
-
-	public void setEnabled(boolean enabled) {
-		this.enabled = enabled;
-	}
-
-	public boolean isEnabled() {
-		return enabled;
-	}
-
-	public void setCommonConfigs(CommonFilterConfigs commonConfigs) {
-		this.commonConfigs = commonConfigs;
-	}
-
-	public CommonFilterConfigs getCommonConfigs() {
-		return commonConfigs;
+	public boolean validate() {
+		if (getCommonConfigs() == null) {
+			PManager.log.print("Configs are not completely configured!", this,
+					StatusSeverity.ERROR);
+			return false;
+		}
+		return true;
 	}
 }

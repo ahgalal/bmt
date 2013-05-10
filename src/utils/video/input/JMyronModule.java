@@ -14,6 +14,8 @@
 
 package utils.video.input;
 
+import java.awt.Point;
+
 import sys.utils.Utils;
 import utils.video.FrameIntArray;
 import JMyron.JMyron;
@@ -120,5 +122,21 @@ public class JMyronModule extends VidInputter<VidSourceConfigs> {
 	@Override
 	public SourceType getType() {
 		return SourceType.CAM;
+	}
+
+	@Override
+	public VidSourceConfigs newConfigurationInstance() {
+		return new VidSourceConfigs();
+	}
+
+	@Override
+	public VidInputter<VidSourceConfigs> newInstance() {
+		return new JMyronModule();
+	}
+	
+	@Override
+	public Point getFrameSize() {
+		// we get dimensions from  configuration instance, not from hardware
+		return new Point(configs.getWidth(), configs.getHeight());
 	}
 }

@@ -15,14 +15,17 @@
 package ui;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.ModifyEvent;
+import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.graphics.Point;
-import org.eclipse.swt.graphics.Rectangle;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Scale;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
+import utils.PManager;
 import control.ui.ControllerUI;
 import control.ui.CtrlOptionsWindow;
 
@@ -38,45 +41,77 @@ public class OptionsWindow extends BaseUI {
 	private Label				lblHysteresis		= null;
 	private Label				lblRearingThresh	= null;
 	private Label				lblThreshold		= null;
-	private Scale				sclSubThresh		= null;
-	private Shell				sShell				= null; // @jve:decl-index=0:visual-constraint="13,18"
+	private Shell sShell_1;
 	private Text				txtHysteresis		= null;
 	private Text				txtRearingThresh	= null;
+	private Text txtSubtractionThreshold;
 
 	/**
 	 * Creates GUI components, and links this Shell with the parent Shell.
 	 */
 	public OptionsWindow() {
 		createSShell();
-		super.sShell = sShell;
+		super.sShell = sShell_1;
 	}
 
 	@Override
 	public void clearForm() {
 		txtHysteresis.setText("0");
 		txtRearingThresh.setText("0");
-		sclSubThresh.setSelection(0);
+		txtSubtractionThreshold.setText("0");
 	}
 
 	/**
 	 * This method initializes sShell.
 	 */
 	private void createSShell() {
-		sShell = new Shell(SWT.APPLICATION_MODAL | SWT.ON_TOP | SWT.TITLE);
-		sShell.setText("OptionsWindow");
-		sShell.setLayout(null);
-		sShell.setSize(new Point(263, 208));
-		lblHysteresis = new Label(sShell, SWT.NONE);
+		sShell_1 = new Shell(SWT.APPLICATION_MODAL | SWT.ON_TOP | SWT.TITLE);
+		sShell_1.setText("OptionsWindow");
+		sShell_1.setSize(new Point(247, 165));
+		sShell_1.setLayout(new GridLayout(3, false));
+		lblHysteresis = new Label(sShell_1, SWT.NONE);
 		lblHysteresis.setText("Zone Hysteresis");
-		lblHysteresis.setBounds(new Rectangle(10, 18, 86, 15));
-		lblThreshold = new Label(sShell, SWT.NONE);
-		lblThreshold.setBounds(new Rectangle(10, 79, 124, 15));
-		lblThreshold.setText("Subtraction Threshold");
-		txtHysteresis = new Text(sShell, SWT.BORDER);
-		txtHysteresis.setBounds(new Rectangle(173, 13, 76, 21));
+		txtHysteresis = new Text(sShell_1, SWT.BORDER);
+		txtHysteresis.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
 		txtHysteresis.setText("20");
-		btnOk = new Button(sShell, SWT.NONE);
-		btnOk.setBounds(new Rectangle(50, 143, 95, 24));
+		new Label(sShell_1, SWT.NONE);
+		lblRearingThresh = new Label(sShell_1, SWT.NONE);
+		lblRearingThresh.setText("Rearing Threshold");
+		txtRearingThresh = new Text(sShell_1, SWT.BORDER);
+		txtRearingThresh.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
+		txtRearingThresh.setText("200");
+		new Label(sShell_1, SWT.NONE);
+		lblThreshold = new Label(sShell_1, SWT.NONE);
+		lblThreshold.setText("Subtraction Threshold");
+		GridData gd_sclSubThresh = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
+		gd_sclSubThresh.widthHint = 42;
+
+		
+		txtSubtractionThreshold = new Text(sShell_1, SWT.BORDER);
+		txtSubtractionThreshold.setText("40");
+		txtSubtractionThreshold.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		txtSubtractionThreshold.addModifyListener(new ModifyListener() {
+
+			@Override
+			public void modifyText(ModifyEvent arg0) {
+				if(PManager.mainGUI!=null){
+					controller.setVars(new String[] { "-1", "-1",
+							String.valueOf(txtSubtractionThreshold.getText()),
+							String.valueOf(chkAutoRearing.getSelection()) });
+					controller.updateOptions(true);
+				}
+			}
+		});
+		new Label(sShell_1, SWT.NONE);
+		chkAutoRearing = new Button(sShell_1, SWT.CHECK);
+		chkAutoRearing.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 2, 1));
+		chkAutoRearing.setSelection(true);
+		chkAutoRearing.setText("enable auto Rearing Detector");
+		new Label(sShell_1, SWT.NONE);
+		btnOk = new Button(sShell_1, SWT.NONE);
+		GridData gd_btnOk = new GridData(SWT.CENTER, SWT.CENTER, false, false, 1, 1);
+		gd_btnOk.widthHint = 95;
+		btnOk.setLayoutData(gd_btnOk);
 		btnOk.setText("OK");
 		btnOk.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
 			@Override
@@ -84,39 +119,16 @@ public class OptionsWindow extends BaseUI {
 					final org.eclipse.swt.events.SelectionEvent e) {
 				controller.setVars(new String[] { txtHysteresis.getText(),
 						txtRearingThresh.getText(),
-						String.valueOf(sclSubThresh.getSelection()),
+						String.valueOf(txtSubtractionThreshold.getText()),
 						String.valueOf(chkAutoRearing.getSelection()) });
 				controller.btnOkAction();
 			}
 		});
-		btnCancel = new Button(sShell, SWT.NONE);
-		btnCancel.setBounds(new Rectangle(156, 143, 95, 24));
+		btnCancel = new Button(sShell_1, SWT.NONE);
+		GridData gd_btnCancel = new GridData(SWT.CENTER, SWT.CENTER, false, false, 1, 1);
+		gd_btnCancel.widthHint = 99;
+		btnCancel.setLayoutData(gd_btnCancel);
 		btnCancel.setText("Cancel");
-		lblRearingThresh = new Label(sShell, SWT.NONE);
-		lblRearingThresh.setBounds(new Rectangle(10, 44, 123, 19));
-		lblRearingThresh.setText("Rearing Threshold");
-		txtRearingThresh = new Text(sShell, SWT.BORDER);
-		txtRearingThresh.setText("200");
-		txtRearingThresh.setSize(new Point(76, 21));
-		txtRearingThresh.setLocation(new Point(173, 42));
-		sclSubThresh = new Scale(sShell, SWT.NONE);
-		sclSubThresh.setBounds(new Rectangle(139, 67, 116, 35));
-		sclSubThresh.setMaximum(255);
-		chkAutoRearing = new Button(sShell, SWT.CHECK);
-		chkAutoRearing.setSelection(true);
-		chkAutoRearing.setBounds(new Rectangle(12, 107, 216, 20));
-		chkAutoRearing.setText("enable auto Rearing Detector");
-		sclSubThresh
-				.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
-					@Override
-					public void widgetSelected(
-							final org.eclipse.swt.events.SelectionEvent e) {
-						controller.setVars(new String[] { "-1", "-1",
-								String.valueOf(sclSubThresh.getSelection()),
-								String.valueOf(chkAutoRearing.getSelection()) });
-						controller.updateOptions(true);
-					}
-				});
 		btnCancel
 				.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
 					@Override
@@ -130,7 +142,7 @@ public class OptionsWindow extends BaseUI {
 	@Override
 	public void loadData(final String[] strArray) {
 		txtHysteresis.setText(strArray[0]);
-		sclSubThresh.setSelection(Integer.parseInt(strArray[1]));
+		txtSubtractionThreshold.setText(strArray[1]);
 	}
 
 	@SuppressWarnings("rawtypes")

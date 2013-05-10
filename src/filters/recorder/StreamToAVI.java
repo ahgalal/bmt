@@ -118,7 +118,6 @@ public class StreamToAVI {
 						deltaSamples=30;
 					else
 						deltaSamples=accumulativeRecordTime/noFrames;
-					System.out.println("setting deltaSamples to avg: "+ deltaSamples);
 				}
 				accumulativeRecordTime += deltaSamples;
 				noFrames++;

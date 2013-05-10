@@ -14,9 +14,7 @@
 
 package control.ui;
 
-import modules.ModuleConfigs;
 import modules.ModulesManager;
-import modules.zones.ZonesModule;
 import modules.zones.ZonesModuleConfigs;
 import ui.OptionsWindow;
 import utils.PManager;
@@ -92,7 +90,7 @@ public class CtrlOptionsWindow extends ControllerUI<OptionsWindow> {
 					// margin option in
 					// GUI
 					-1, // TODO: add set margin option in GUI
-					null, null);
+					null);
 
 			final FilterConfigs[] filtersConfigs = new FilterConfigs[2];
 			filtersConfigs[0] = subtractionConfigs;
@@ -100,10 +98,9 @@ public class CtrlOptionsWindow extends ControllerUI<OptionsWindow> {
 
 			pm.getVideoManager().updateFiltersConfigs(filtersConfigs);
 			final ZonesModuleConfigs zonesConfigs = new ZonesModuleConfigs(
-					ZonesModule.moduleID, hyst, -1, -1);
+					"ZonesModule", hyst, -1, -1);
 
-			ModulesManager.getDefault().updateModuleConfigs(
-					new ModuleConfigs[] { zonesConfigs });
+			ModulesManager.getDefault().applyConfigsToModule(zonesConfigs);
 
 			pm.getVideoManager().getFilterManager()
 					.enableFilter(RearingDetector.class, enableAutoRearing);

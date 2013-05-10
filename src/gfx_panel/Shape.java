@@ -16,6 +16,8 @@ package gfx_panel;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.font.TextAttribute;
+import java.text.AttributedString;
 import java.util.ArrayList;
 
 import org.eclipse.swt.graphics.RGB;
@@ -75,6 +77,29 @@ public abstract class Shape {
 				+ Integer.toString(color.blue);
 	}
 
+	private AttributedString attributedString;
+	private int attributedStringSize;
+	private String attributedStringText;
+	protected AttributedString getAttributedString(int size, String string) {
+		if(attributedString!=null){
+			if(attributedStringSize==size && attributedStringText.equals(string))
+				return attributedString;
+			else{
+				return createNewAttributedString(size,string);
+			}
+		}
+		return createNewAttributedString(size,string);
+	}
+
+	private AttributedString createNewAttributedString(int size, String string) {
+		attributedString = new AttributedString(string);
+		attributedString.addAttribute(TextAttribute.SIZE, (int)(size));
+		attributedStringSize=size;
+		attributedStringText = string;
+		return attributedString;
+	}
+
+	
 	/**
 	 * Mapes Color names to color objects.
 	 * 
@@ -184,6 +209,9 @@ public abstract class Shape {
 	 *            Graphics object to draw the shape on
 	 */
 	public abstract void draw(Graphics g);
+
+	public void draw(final Graphics gfx, final double xScale, final double yScale) {
+	}
 
 	/**
 	 * Gets the surface area of the shape.
