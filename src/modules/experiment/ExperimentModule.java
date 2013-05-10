@@ -26,6 +26,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
 
+import sys.utils.Arrays;
 import sys.utils.Utils;
 import utils.Logger.Details;
 import utils.PManager;
@@ -131,7 +132,7 @@ Module<ExperimentModuleGUI, ExperimentModuleConfigs, ExperimentModuleData> {
 		for(;it.hasNext();){
 			String tmpParam = it.next();
 			
-			if(Utils.equalsOneOf(tmpParam, modulesExperimentParams)==false){
+			if(Arrays.equalsOneOf(tmpParam, modulesExperimentParams)==false){
 				PManager.log.print("Experiment Param does not match: " + tmpParam, ExperimentModule.class, StatusSeverity.ERROR);
 				return false;
 			}

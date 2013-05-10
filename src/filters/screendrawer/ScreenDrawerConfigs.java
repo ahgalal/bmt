@@ -17,8 +17,6 @@ package filters.screendrawer;
 import java.awt.Graphics;
 import java.awt.Point;
 
-import utils.PManager;
-import utils.StatusManager.StatusSeverity;
 import filters.CommonFilterConfigs;
 import filters.FilterConfigs;
 
