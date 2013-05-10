@@ -21,15 +21,45 @@
 	<!-- ================================= 
           target: Test GUI              
          ================================= -->
-	<target name="BMTTestGUI">
+	<target name="BMTTestGUI" depends="init">
 		<copy todir="." overwrite="true" flatten="true">
 			<fileset dir="libs" id="dlls">
 				<include name="**/*.dll" />
 			</fileset>
 		</copy>
 
-		<antcall target="testGUI" />
+		<mkdir dir="${reportsDir}" />
+		
+		<path id="classpath.tests.run">
+			<pathelement path="${src.jar}" />
+			<pathelement path="${tests.jar}" />
+			<path refid="classpath.swt" />
+			<path refid="classpath.junit" />
+			<fileset refid="fileset.mainlibs" />
+			<path refid="classpath.windowtester" />
+		</path>
+		
+		<property name="myclasspath" refid="classpath.tests.run" />
+		<echo message="Classpath = ${myclasspath}" />
+		
+		<junit dir="${basedir}" printsummary="yes" haltonfailure="no" failureproperty="yes" showoutput="yes">
+			<classpath refid="classpath.tests.run"/>
+			<assertions>
+				<enable />
+			</assertions>
+			<formatter type="xml" />
+			
+			<test fork="yes" name="gui.AllTests" todir="${reportsDir}" errorproperty="yes" failureproperty="yes"></test>
 
-		<delete dir="." includes="*.dll" />
+		</junit>
+
+		<!-- check regression results -->
+		<checkregression logsdirpath="${basedir}/${reportsDir}" />
+
+		<!--delete dir="." includes="*.dll" /-->
+	</target>
+	
+	<target name="test_deployment">
+		<antcall target="BMTTestGUI"/>
 	</target>
 </project>
