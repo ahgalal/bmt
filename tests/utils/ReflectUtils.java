@@ -47,7 +47,6 @@ public class ReflectUtils {
 			fldData = getDeclaredField(obj.getClass(), fldName);
 			fldData.setAccessible(true);
 			data = fldData.get(obj);
-
 		} catch (final SecurityException e) {
 			e.printStackTrace();
 		} catch (final NoSuchFieldException e) {
