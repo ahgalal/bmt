@@ -6,7 +6,7 @@ import gui.executionunit.VideoExecUnitGroup;
 import java.io.File;
 
 import sys.utils.Files;
-import sys.utils.Utils;
+import utils.BMTUtils;
 import utils.DialogBoxUtils;
 import utils.PManager;
 
@@ -22,7 +22,7 @@ import com.windowtester.runtime.WidgetSearchException;
 public class OpenFieldIntegrationManStopTrackTest extends
 		OpenFieldIntegrationTest {
 
-	protected final String	recordedVideoFile	= Files.convertPathToPlatformPath(Utils
+	protected final String	recordedVideoFile	= Files.convertPathToPlatformPath(BMTUtils
 			.getResourcesDirPath()
 			+ "tmpRecorder.avi");
 	

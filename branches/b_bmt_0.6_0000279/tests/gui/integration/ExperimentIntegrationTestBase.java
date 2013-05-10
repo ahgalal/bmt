@@ -16,8 +16,8 @@ import modules.experiment.Rat;
 
 import org.apache.tools.ant.util.FileUtils;
 
-import sys.utils.Utils;
 import utils.PManager;
+import sys.utils.Utils;
 
 import com.windowtester.runtime.WidgetSearchException;
 
@@ -182,6 +182,7 @@ public class ExperimentIntegrationTestBase extends UITest {
 	}
 
 	public void testIntegration() throws Exception{
+		setName(this.getClass().getSimpleName());
 		try {
 			fullScenario();
 		} catch (final CancellationException e) {
