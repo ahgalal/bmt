@@ -6,9 +6,9 @@ package gui.executionunit;
 import java.awt.Point;
 import java.awt.event.KeyEvent;
 
-import sys.utils.Utils;
 import utils.DialogBoxUtils;
 import utils.KeyboardUtils;
+import sys.utils.Utils;
 
 import com.windowtester.runtime.IUIContext;
 import com.windowtester.runtime.WaitTimedOutException;
