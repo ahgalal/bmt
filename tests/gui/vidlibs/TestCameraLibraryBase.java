@@ -4,6 +4,7 @@ import gui.executionunit.ExperimentExecUnitGroup;
 import gui.executionunit.VideoExecUnitGroup;
 import gui.utils.UITest;
 import sys.utils.Utils;
+import utils.BMTUtils;
 import utils.video.FrameIntArray;
 import utils.video.input.VidInputter.SourceType;
 
@@ -17,7 +18,7 @@ import utils.video.input.VidInputter.SourceType;
 public class TestCameraLibraryBase extends UITest {
 
 	protected String		vidLibName		= null;
-	private final String	TEST_EXP_FILE	= Utils.getResourcesDirPath()
+	private final String	TEST_EXP_FILE	= BMTUtils.getResourcesDirPath()
 													+ "TestOpenField.bmt";
 
 	public void testCameraLibrary() throws Exception {
