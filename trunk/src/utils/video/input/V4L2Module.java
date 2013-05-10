@@ -14,6 +14,7 @@
 
 package utils.video.input;
 
+import java.awt.Point;
 import java.util.List;
 
 import sys.utils.Utils;
@@ -135,4 +136,18 @@ public class V4L2Module extends VidInputter<VidSourceConfigs> implements
 		return SourceType.CAM;
 	}
 
+	@Override
+	public VidSourceConfigs newConfigurationInstance() {
+		return new VidSourceConfigs();
+	}
+
+	@Override
+	public VidInputter<VidSourceConfigs> newInstance() {
+		return new V4L2Module();
+	}
+	@Override
+	public Point getFrameSize() {
+		// we get dimensions from  configuration instance, not from hardware
+		return new Point(configs.getWidth(), configs.getHeight());
+	}
 }

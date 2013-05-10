@@ -1,7 +1,5 @@
 package gui.integration;
 
-import com.windowtester.runtime.WidgetSearchException;
-
 import gui.executionunit.VideoExecUnitGroup;
 import gui.utils.Reflections;
 import modules.experiment.Constants;
@@ -29,7 +27,7 @@ public class ForcedSwimmingIntegrationTest extends
 	protected int	swimmingTimeMin	= 20;
 
 	@Override
-	protected void afterStartTracking() throws WidgetSearchException {
+	protected void afterStartTracking() throws Exception {
 		// resume tracking
 		VideoExecUnitGroup.pauseResumeStream();
 		

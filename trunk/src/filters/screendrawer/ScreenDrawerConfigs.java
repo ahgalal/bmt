@@ -15,10 +15,8 @@
 package filters.screendrawer;
 
 import java.awt.Graphics;
+import java.awt.Point;
 
-import modules.zones.ShapeCollection;
-import utils.PManager;
-import utils.StatusManager.StatusSeverity;
 import filters.CommonFilterConfigs;
 import filters.FilterConfigs;
 
@@ -29,30 +27,19 @@ import filters.FilterConfigs;
  */
 public class ScreenDrawerConfigs extends FilterConfigs {
 	/**
-	 * enable drawing of the secondary stream.
-	 */
-	private boolean			enableSecScreen;
-
-	/**
 	 * refGfxMainScreen reference to a Graphics object that the filter will
 	 * draw on the main data stream. refGfxSecScreen reference to a Graphics
 	 * object that the filter will draw on the secondary data stream.
 	 */
-	private Graphics			refGfxMainScreen;
-
-	private Graphics	refGfxSecScreen;
-	/**
-	 * instance of a ShapeCollection that will draw its shapes on the main
-	 * stream.
-	 */
-	private ShapeCollection	shapeController;
+	private Graphics			refGfxScreen;
+	private Point canvasDims;
 
 	/**
 	 * Initializes the configurations.
 	 * 
 	 * @param filterName
 	 *            name of the filter this configurations will be applied to
-	 * @param refGfxMainScreen
+	 * @param refGfxScreen
 	 *            reference to a Graphics object that the filter will draw on
 	 *            the main data stream
 	 * @param refGfxSecScreen
@@ -65,73 +52,48 @@ public class ScreenDrawerConfigs extends FilterConfigs {
 	 * @param shpController
 	 *            instance of ShapeController that will draw its shapes on the
 	 *            main stream
+	 * @param canvasDims 
 	 */
 	public ScreenDrawerConfigs(final String filterName,
-			final Graphics refGfxMainScreen, final Graphics refGfxSecScreen,
+			final Graphics refGfxScreen,
 			final CommonFilterConfigs commonConfigs,
-			final boolean enableSecScreen,
-			final ShapeCollection shpController) {
-		super(filterName, commonConfigs);
-		this.setRefGfxMainScreen(refGfxMainScreen);
-		this.setRefGfxSecScreen(refGfxSecScreen);
-		this.setEnableSecScreen(enableSecScreen);
-		this.setShapeController(shpController);
+			Point canvasDims) {
+		super(filterName,ScreenDrawer.ID, commonConfigs);
+		this.setRefGfxMainScreen(refGfxScreen);
+		
+		this.setCanvasDims(canvasDims);
 	}
 
 	@Override
 	public void mergeConfigs(final FilterConfigs configs) {
+		super.mergeConfigs(configs);
 		final ScreenDrawerConfigs tmpScnDrwrCfgs = (ScreenDrawerConfigs) configs;
-		if (tmpScnDrwrCfgs.getCommonConfigs() != null)
-			setCommonConfigs(tmpScnDrwrCfgs.getCommonConfigs());
-		if (tmpScnDrwrCfgs.getRefGfxMainScreen() != null)
-			setRefGfxMainScreen(tmpScnDrwrCfgs.getRefGfxMainScreen());
-		if (tmpScnDrwrCfgs.getRefGfxSecScreen() != null)
-			setRefGfxSecScreen(tmpScnDrwrCfgs.getRefGfxSecScreen());
-		this.setEnableSecScreen(tmpScnDrwrCfgs.isEnableSecScreen());
-		if (tmpScnDrwrCfgs.getShapeController() != null)
-			setShapeController(tmpScnDrwrCfgs.getShapeController());
-	}
-
-	@Override
-	public boolean validate() {
-		if ((getCommonConfigs() == null) || (getShapeController() == null)) {
-			PManager.log.print("Configs are not completely configured!", this,
-					StatusSeverity.ERROR);
-			return false;
-		}
-		return true;
-	}
-
-	public void setEnableSecScreen(boolean enableSecScreen) {
-		this.enableSecScreen = enableSecScreen;
-	}
-
-	public boolean isEnableSecScreen() {
-		return enableSecScreen;
+		if (tmpScnDrwrCfgs.getRefGfxScreen() != null)
+			setRefGfxMainScreen(tmpScnDrwrCfgs.getRefGfxScreen());
+		if(tmpScnDrwrCfgs.getCanvasDims()!=null)
+			setCanvasDims(tmpScnDrwrCfgs.getCanvasDims());
 	}
 
 	public void setRefGfxMainScreen(Graphics refGfxMainScreen) {
-		this.refGfxMainScreen = refGfxMainScreen;
+		this.refGfxScreen = refGfxMainScreen;
 	}
 
-	public Graphics getRefGfxMainScreen() {
-		return refGfxMainScreen;
+	public Graphics getRefGfxScreen() {
+		return refGfxScreen;
 	}
 
-	public void setRefGfxSecScreen(Graphics refGfxSecScreen) {
-		this.refGfxSecScreen = refGfxSecScreen;
+	public void setCanvasDims(Point canvasDims) {
+		this.canvasDims = canvasDims;
 	}
 
-	public Graphics getRefGfxSecScreen() {
-		return refGfxSecScreen;
+	public Point getCanvasDims() {
+		return canvasDims;
 	}
 
-	public void setShapeController(ShapeCollection shapeController) {
-		this.shapeController = shapeController;
-	}
-
-	public ShapeCollection getShapeController() {
-		return shapeController;
+	@Override
+	public FilterConfigs newInstance(String filterName,
+			CommonFilterConfigs commonConfigs) {
+		return new ScreenDrawerConfigs(filterName, null, commonConfigs, null);
 	}
 
 }

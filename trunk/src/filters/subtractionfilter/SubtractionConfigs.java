@@ -14,8 +14,6 @@
 
 package filters.subtractionfilter;
 
-import utils.PManager;
-import utils.StatusManager.StatusSeverity;
 import filters.CommonFilterConfigs;
 import filters.FilterConfigs;
 
@@ -45,27 +43,21 @@ public class SubtractionConfigs extends FilterConfigs {
 	 */
 	public SubtractionConfigs(final String filterName, final int threshold,
 			final CommonFilterConfigs commonConfigs) {
-		super(filterName, commonConfigs);
+		super(filterName,SubtractorFilter.ID, commonConfigs);
 		this.setThreshold(threshold);
 	}
 
 	@Override
 	public void mergeConfigs(final FilterConfigs configs) {
+		super.mergeConfigs(configs);
 		final SubtractionConfigs tmpSubtractionConfigs = (SubtractionConfigs) configs;
-		if (tmpSubtractionConfigs.getCommonConfigs() != null)
-			this.setCommonConfigs(tmpSubtractionConfigs.getCommonConfigs());
 		if (tmpSubtractionConfigs.getThreshold() != -1)
 			this.setThreshold(tmpSubtractionConfigs.getThreshold());
 	}
 
 	@Override
 	public boolean validate() {
-		if ((getCommonConfigs() == null) || (getThreshold() <= 0)) {
-			PManager.log.print("Configs are not completely configured!", this,
-					StatusSeverity.ERROR);
-			return false;
-		}
-		return true;
+		return super.validate() && !(getThreshold() <= 0);
 	}
 	
 	@Override
@@ -79,5 +71,11 @@ public class SubtractionConfigs extends FilterConfigs {
 
 	public int getThreshold() {
 		return threshold;
+	}
+
+	@Override
+	public FilterConfigs newInstance(String filterName,
+			CommonFilterConfigs commonConfigs) {
+		return new SubtractionConfigs(filterName, defaultThreshold, commonConfigs);
 	}
 }

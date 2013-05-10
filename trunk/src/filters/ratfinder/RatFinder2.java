@@ -135,7 +135,7 @@ public class RatFinder2 extends RatFinder {
 	 * @see utils.video.filters.RatFinder.RatFinder#drawMarkerOnImg(int[])
 	 */
 	@Override
-	protected void drawMarkerOnImg(final int[] binaryImage) {
+	protected void drawMarkerOnImg() {
 		// TODO Auto-generated method stub
 		// super.drawMarkerOnImg(binaryImage);
 	}

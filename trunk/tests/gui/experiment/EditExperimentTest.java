@@ -11,10 +11,10 @@ import modules.experiment.Experiment;
 
 import org.junit.After;
 
-import sys.utils.Utils;
+import utils.BMTUtils;
 
 /**
- * Tests editing experiments of types "Open Field" and "Forced Swimming",
+ * Tests editing experiments of types "Open Field" and "Forced Swimming -TODO-",
  * by saving the experiment info to file, then loads the file and compares the
  * saved info with the edited experiment.
  * @author Creative
@@ -22,8 +22,8 @@ import sys.utils.Utils;
  */
 public class EditExperimentTest extends UITest {
 
-	private final String TEST_EXP_FILE=Utils.getResourcesDirPath()+"TestOpenField.bmt";
-	private final String TEST_EXP_EDIT_FILE=Utils.getResourcesDirPath()+"TestOpenField_edit.bmt";
+	private final String TEST_EXP_FILE=BMTUtils.getResourcesDirPath()+"TestOpenField.bmt";
+	private final String TEST_EXP_EDIT_FILE=BMTUtils.getResourcesDirPath()+"TestOpenField_edit.bmt";
 	
 	/**
 	 * Main test method.
@@ -32,7 +32,7 @@ public class EditExperimentTest extends UITest {
 		ExperimentExecUnitGroup.loadExperiment(TEST_EXP_FILE);
 		Experiment original = Reflections.getLoadedExperiment();
 		ExperimentExecUnitGroup.editExperiment(TEST_EXP_EDIT_FILE);
-		Experiment loadedFromFile = ExperimentManager.readExperimentFromFile(original.getFileName());
+		Experiment loadedFromFile = ExperimentManager.readExperimentFromFile(TEST_EXP_EDIT_FILE);
 		
 		assert(loadedFromFile.getDate().equals(original.getDate()));
 		assert(loadedFromFile.getGroups().size()==2);

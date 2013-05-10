@@ -1,0 +1,116 @@
+<html xmlns:v="urn:schemas-microsoft-com:vml"
+xmlns:o="urn:schemas-microsoft-com:office:office"
+xmlns:w="urn:schemas-microsoft-com:office:word"
+xmlns:m="http://schemas.microsoft.com/office/2004/12/omml"
+xmlns="http://www.w3.org/TR/REC-html40">
+
+<head>
+<meta http-equiv=Content-Type content="text/html; charset=windows-1256">
+<link href="../../css.css" rel="stylesheet" type="text/css">
+<link href="*" rel="stylesheet" type="text/css" />
+<link href="css.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body lang=EN-US link=blue vlink=purple >
+
+<div >
+
+  <p class="page_title">Filter Graph</p>
+  
+  <p class="header1">Definition</p>
+  <blockquote>
+    <p class="paragraph">Filter Graph can be used to:</p>
+    <ul>
+      <li class="bullet_list">Add/Remove image filters</li>
+      <li class="bullet_list">Change filters' connections with each other</li>
+    </ul>
+  </blockquote>
+  <p class="header1">Example</p>
+  <blockquote>
+    <p class="paragraph">The following snapshot is the default filters' layout for Open Field Test experiment:</p>
+    <p class="header1"><img src="images/filter_graph.jpg" alt="" width="640" height="480" /></p>
+  </blockquote>
+   <p class="header1">Opening Filter Graph</p>
+   <blockquote>
+     <p class="paragraph">Select menu item: Edit-&gt; Advanced -&gt; Filters setup ..</p>
+     <p class="paragraph"><img src="images/open_filter_graph.jpg" alt="" width="319" height="93" /></p>
+   </blockquote>
+   <p class="header1">Adding filter</p>
+   <blockquote>
+     <p class="paragraph">Filters can be added to the graph through the following steps:</p>
+     <ol>
+       <li class="numbered_list">Click button: Add Node<br />
+       <img src="images/add_node.jpg" alt="" width="93" height="134" class="header1" /></li>
+       <li class="numbered_list">Enter a new unique filter name, select filter ID, and type of filter trigger, as shown in the following snapshot:<br /><img src="images/filter_properties.jpg" alt="" width="284" height="309" class="header1" /></li>
+     </ol>
+     
+       <p><span class="paragraph">Notes:</span></p>
+       <ul>
+         <li class="bullet_list">New filter name shall be unique</li>
+         <li class="bullet_list">List of filters displays all installed filters</li>
+         <li class="bullet_list">Trigger values: MANUAL (filter is activated manually), STREAMING (activated when video is streaming) and PROCESSING (filter is activated when track starts).</li>
+       </ul>
+   </blockquote>
+   <p class="header1">Connecting filters</p>
+   <blockquote>
+     <p class="paragraph">To connect a source filter to a destination filter:</p>
+     <ol>
+       <li class="numbered_list">Click button: Add Link<br />
+       <img src="images/add_link.jpg" alt="" width="93" height="134" class="header1" /></li>
+       <li class="numbered_list">Click on the source filter, then click on the destination filter<br />
+         Result: 
+       A new arrow will be drawn to represent the new connection create</li>
+     </ol>
+     <p class="paragraph">Notes:</p>
+     <ul>
+       <li class="bullet_list">Filters' connections are saved in the experiment's file automatically</li>
+       <li class="bullet_list">Each filter can only have one input port at maximum</li>
+       <li class="bullet_list">Each filter can only have one output port at maximum</li>
+       <li class="bullet_list">A source filter's output can be connected to multiple destination filters' input ports (i.e. single souce, multiple destinations)</li>
+       <li class="bullet_list">Some filters may not produce output data and will cause errors if their output port is connected (example: ScreenDrawer filter)</li>
+       <li class="bullet_list">Some filters may not accept input data and will cause errors if their input port is connected (example: SourceFilter filter)</li>
+       <li class="bullet_list">Filter Graph is till in the experimental phase, be careful with connecting incompatible filters (based on rules stated in the point above)</li>
+     </ul>
+   </blockquote>
+   <p class="header1">Deleting filter/connection</p>
+   <blockquote>
+     <p class="paragraph">Filters and connections can be deleted by:</p>
+     <ol>
+       <li class="numbered_list">Select the filter/connection to be deleted</li>
+       <li class="numbered_list">Click button: Delete<br />
+       <img src="images/delete.jpg" alt="" width="93" height="134" class="numbered_list" /></li>
+     </ol>
+   </blockquote>
+   <p class="header1">Saving filter graph</p>
+   <blockquote>
+     <p class="paragraph">Filters' connections are saved to the experiment file.</p>
+     <p class="paragraph">To save Filter's connections:</p>
+     <ul>
+       <li class="bullet_list">Click button: Save, as shown in the following snapshot:<br />
+       <img src="images/save.jpg" alt="" width="87" height="107" class="paragraph" /></li>
+     </ul>
+   </blockquote>
+   <p class="header1">Resetting filter graph</p>
+   <blockquote>
+     <p class="paragraph">Filter graph can be reset to the state when it was opened.</p>
+     <p class="paragraph">To Reset filter graph:</p>
+     <ul>
+       <li class="bullet_list">Click button: Reset, as shown in the following snapshot:<br />
+       <img src="images/reset.jpg" alt="" width="87" height="107" class="paragraph" /></li>
+     </ul>
+   </blockquote>
+  <p><span class="header1">Cancelling filter graph</span></p>
+  <blockquote>
+    <p class="paragraph">Filter graph can be cancelled, and in this case the window is closed and no modifications are saved.</p>
+    <p class="paragraph">To cancel Filter graph:</p>
+    <ul>
+      <li class="bullet_list">Click button: Cancel, as shown in the following snapshot:<br />
+        <img src="images/cancel.jpg" alt="" width="87" height="107" class="paragraph" /></li>
+    </ul>
+  </blockquote>
+  </div>
+
+
+</body>
+
+</html>

@@ -16,6 +16,7 @@ package filters.source;
 
 import utils.PManager.ProgramState;
 import filters.FilterConfigs;
+import filters.FilterData;
 import filters.Link;
 import filters.VideoFilter;
 
@@ -27,6 +28,8 @@ import filters.VideoFilter;
  */
 public class SourceFilter extends
 		VideoFilter<SourceFilterConfigs, SourceFilterData> {
+	public static final String ID = "filters.source";
+
 	/**
 	 * Initializes the filter.
 	 * 
@@ -41,7 +44,10 @@ public class SourceFilter extends
 		super(name, linkIn, linkOut);
 		filterData = new SourceFilterData();
 	}
-
+	@Override
+	public int getInPortCount() {
+		return 0;
+	}
 	@Override
 	public boolean configure(final FilterConfigs configs) {
 		this.configs = (SourceFilterConfigs) configs;
@@ -59,6 +65,22 @@ public class SourceFilter extends
 	public void updateProgramState(final ProgramState state) {
 		// TODO Auto-generated method stub
 
+	}
+	
+	@Override
+	public String getID() {
+		return ID;
+	}
+
+	@Override
+	public VideoFilter<?, ?> newInstance(String filterName) {
+		return new SourceFilter(filterName, null, null);
+	}
+
+	@Override
+	public void registerDependentData(FilterData data) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

@@ -34,8 +34,18 @@ public class SessionModuleConfigs extends ModuleConfigs {
 	}
 
 	@Override
-	protected void mergeConfigs(final ModuleConfigs config) {
+	protected void initializeModuleID() {
+		moduleID = SessionModule.moduleID;
+	}
+
+	@Override
+	public void mergeConfigs(final ModuleConfigs config) {
 		// Nothing! :D
+	}
+
+	@Override
+	public ModuleConfigs newInstance(final String moduleName) {
+		return new SessionModuleConfigs(moduleName);
 	}
 
 }

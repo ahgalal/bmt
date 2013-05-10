@@ -47,12 +47,12 @@ public class ZonesModuleConfigs extends ModuleConfigs {
 			final int width, final int height) {
 		super(moduleName);
 		setHystValue(hystVal);
-		this.setWidth(width);
-		this.setHeight(height);
+		this.getCommonConfigs().setWidth(width);
+		this.getCommonConfigs().setHeight(height);
 	}
 
 	@Override
-	protected void mergeConfigs(final ModuleConfigs configs) {
+	public void mergeConfigs(final ModuleConfigs configs) {
 		super.mergeConfigs(configs);
 		final ZonesModuleConfigs tmpZonConfigs = (ZonesModuleConfigs) configs;
 		if (tmpZonConfigs.getHystValue() != -1)
@@ -65,5 +65,15 @@ public class ZonesModuleConfigs extends ModuleConfigs {
 
 	public int getHystValue() {
 		return hystValue;
+	}
+
+	@Override
+	protected void initializeModuleID() {
+		moduleID = ZonesModule.moduleID;
+	}
+
+	@Override
+	public ModuleConfigs newInstance(String moduleName) {
+		return new ZonesModuleConfigs(moduleName, ZonesModule.DEFAULT_HYSTRISES_VALUE, 0, 0);
 	}
 }

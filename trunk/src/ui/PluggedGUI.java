@@ -1,12 +1,13 @@
 package ui;
 
 import org.eclipse.swt.widgets.CoolBar;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.ExpandBar;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.swt.widgets.Widget;
 
+import utils.PManager;
 import utils.PManager.ProgramState;
 import utils.PManager.ProgramState.GeneralState;
 import utils.StateListener;
@@ -19,6 +20,11 @@ public abstract class PluggedGUI<OwnerType> implements StateListener {
 
 	public PluggedGUI(final OwnerType owner) {
 		this.owner = owner;
+	}
+	
+	public void disposeWidget(Widget widget){
+		if(widget!=null && !widget.isDisposed())
+			widget.dispose();
 	}
 
 	public abstract void deInitialize();
@@ -45,7 +51,7 @@ public abstract class PluggedGUI<OwnerType> implements StateListener {
 		final boolean streamStateChanged = (programState == null ? true
 				: (state.getStream() != programState.getStream()));
 		if (generalStateChanged || streamStateChanged)
-			Display.getDefault().syncExec(new Runnable() {
+			PManager.getDefault().displaySyncExec(new Runnable() {
 
 				@Override
 				public void run() {
@@ -62,11 +68,17 @@ public abstract class PluggedGUI<OwnerType> implements StateListener {
 					else if(programState.getGeneral()==GeneralState.IDLE &&
 							state.getGeneral()==GeneralState.TRACKING)
 						trackingStartedHandler();
+					//stateUpdated=true;
 				}
 
 
 
 			});
+		
+/*		// wait till state is updated (use this mechanism instead of using Display.syncExec())
+		while(!stateUpdated)
+			Utils.sleep(20);
+		stateUpdated=false;*/
 		programState.setStream(state.getStream());
 		programState.setGeneral(state.getGeneral());
 	}

@@ -22,25 +22,22 @@ import utils.StatusManager.StatusSeverity;
  * 
  * @author Creative
  */
-public class CommonFilterConfigs {
+public class CommonFilterConfigs extends CommonConfigs {
 
-	/**
-	 * Check the documentation of the constructor.
-	 */
-	private String	vidLibrary;
+	private int		camIndex;
 
 	private String	format;
 
 	/**
 	 * Check the documentation of the constructor.
 	 */
-	private int		width;
 
-	private int	height;
+	private int		frameRate;
 
-	private int	frameRate;
-
-	private int	camIndex;
+	/**
+	 * Check the documentation of the constructor.
+	 */
+	private String	vidLibrary;
 
 	/**
 	 * Initializations.
@@ -70,12 +67,45 @@ public class CommonFilterConfigs {
 		this.setFormat(format);
 	}
 
+	public int getCamIndex() {
+		return camIndex;
+	}
+
+	public String getFormat() {
+		return format;
+	}
+
+	public int getFrameRate() {
+		return frameRate;
+	}
+
+	public String getVidLibrary() {
+		return vidLibrary;
+	}
+
+	public void setCamIndex(final int camIndex) {
+		this.camIndex = camIndex;
+	}
+
+	public void setFormat(final String format) {
+		this.format = format;
+	}
+
+	public void setFrameRate(final int frameRate) {
+		this.frameRate = frameRate;
+	}
+
+	public void setVidLibrary(final String vidLibrary) {
+		this.vidLibrary = vidLibrary;
+	}
+
 	/**
 	 * Checks that All common configurations are set. (for testing purposes
 	 * only)
 	 * 
 	 * @return true: success
 	 */
+	@Override
 	public boolean validate() {
 		if ((getWidth() <= 0) || (getHeight() <= 0) || (getFrameRate() <= 0)
 				|| (getCamIndex() < 0) || (getVidLibrary() == null)
@@ -86,54 +116,6 @@ public class CommonFilterConfigs {
 			return false;
 		}
 		return true;
-	}
-
-	public void setFormat(String format) {
-		this.format = format;
-	}
-
-	public String getFormat() {
-		return format;
-	}
-
-	public void setVidLibrary(String vidLibrary) {
-		this.vidLibrary = vidLibrary;
-	}
-
-	public String getVidLibrary() {
-		return vidLibrary;
-	}
-
-	public void setWidth(int width) {
-		this.width = width;
-	}
-
-	public int getWidth() {
-		return width;
-	}
-
-	public void setHeight(int height) {
-		this.height = height;
-	}
-
-	public int getHeight() {
-		return height;
-	}
-
-	public void setFrameRate(int frameRate) {
-		this.frameRate = frameRate;
-	}
-
-	public int getFrameRate() {
-		return frameRate;
-	}
-
-	public void setCamIndex(int camIndex) {
-		this.camIndex = camIndex;
-	}
-
-	public int getCamIndex() {
-		return camIndex;
 	}
 
 }

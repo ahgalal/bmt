@@ -46,7 +46,7 @@ public class ExperimentIntegrationTestBase extends UITest {
 		ExperimentExecUnitGroup.startTracking(Integer.toString(ratNumber));
 	}
 
-	protected void afterStartTracking() throws WidgetSearchException {
+	protected void afterStartTracking() throws Exception {
 		/************* sleep ********/
 		sleepings();
 
@@ -148,7 +148,7 @@ public class ExperimentIntegrationTestBase extends UITest {
 	protected void preLoadVideoFile() throws WidgetSearchException {
 	}
 
-	protected void preSleep1() throws WidgetSearchException {
+	protected void preSleep1() throws WidgetSearchException, Exception {
 	}
 
 	protected void preSleep2() throws WidgetSearchException {
@@ -166,7 +166,7 @@ public class ExperimentIntegrationTestBase extends UITest {
 	protected void preStartTracking() throws Exception {
 	}
 
-	protected void sleepings() throws WidgetSearchException {
+	protected void sleepings() throws Exception {
 		preSleep1();
 		Utils.sleep(sleepTime1 * 1000);
 		preSleep2();
@@ -182,6 +182,7 @@ public class ExperimentIntegrationTestBase extends UITest {
 	}
 
 	public void testIntegration() throws Exception{
+		setName(this.getClass().getSimpleName());
 		try {
 			fullScenario();
 		} catch (final CancellationException e) {

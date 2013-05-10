@@ -16,7 +16,6 @@ package modules.rearing;
 
 import modules.Cargo;
 import modules.Module;
-import modules.ModuleConfigs;
 import modules.ModuleData;
 import modules.experiment.Constants;
 import modules.experiment.ExperimentType;
@@ -35,9 +34,11 @@ import filters.rearingdetection.RearingFilterData;
  */
 public class RearingModule extends
 		Module<RearingModuleGUI, RearingModuleConfigs, RearingModuleData> {
-	private boolean				rearing;
-	private RearingFilterData	rearingFilterData;
-	private String[]	expParams=new String[] { Constants.FILE_REARING_COUNTER };
+	public final static String moduleID = Constants.MODULE_ID + ".rearing";
+	private final String[] expParams = new String[] { Constants.FILE_REARING_COUNTER };
+	private boolean rearing;
+
+	private RearingFilterData rearingFilterData;
 
 	/**
 	 * Initializes the module.
@@ -47,8 +48,8 @@ public class RearingModule extends
 	 * @param configs
 	 *            RearingModuleConfigs to configure the module
 	 */
-	public RearingModule(final RearingModuleConfigs configs) {
-		super(configs);
+	public RearingModule(final String name, final RearingModuleConfigs configs) {
+		super(name, configs);
 		data = new RearingModuleData();
 		filtersData = new Data[1];
 		initialize();
@@ -82,6 +83,11 @@ public class RearingModule extends
 		this.filtersData[0] = null;
 	}
 
+	@Override
+	public String getID() {
+		return moduleID;
+	}
+
 	/**
 	 * Gets the number of rearings the rat has made in this experiment.
 	 * 
@@ -105,10 +111,16 @@ public class RearingModule extends
 		guiCargo = new Cargo(new String[] { Constants.GUI_REARING_COUNTER });
 		data.setRearingCtr(0);
 		fileCargo = new Cargo(expParams);
-		for(String str:expParams)
+		for (final String str : expParams)
 			data.addParameter(str);
-		expType = new ExperimentType[]{ExperimentType.OPEN_FIELD};
-		//data.expType=expType;
+		expType = new ExperimentType[] { ExperimentType.OPEN_FIELD };
+		// data.expType=expType;
+	}
+
+	@SuppressWarnings("rawtypes")
+	@Override
+	public Module newInstance(final String name) {
+		return new RearingModule(name, null);
 	}
 
 	@Override
@@ -132,11 +144,6 @@ public class RearingModule extends
 	}
 
 	@Override
-	public void updateConfigs(final ModuleConfigs config) {
-		configs.mergeConfigs(config);
-	}
-
-	@Override
 	public void updateFileCargoData() {
 		fileCargo.setDataByTag(Constants.FILE_REARING_COUNTER,
 				Integer.toString(data.getRearingCtr()));
@@ -146,11 +153,5 @@ public class RearingModule extends
 	public void updateGUICargoData() {
 		guiCargo.setDataByTag(Constants.GUI_REARING_COUNTER,
 				Integer.toString(data.getRearingCtr()));
-	}
-	public final static String			moduleID=Constants.MODULE_ID+".rearing";
-
-	@Override
-	public String getID() {
-		return moduleID;
 	}
 }

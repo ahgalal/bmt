@@ -19,6 +19,7 @@ package gfx_panel;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.text.AttributedString;
 
 import org.eclipse.swt.graphics.RGB;
 
@@ -68,11 +69,25 @@ public class OvalShape extends Shape {
 	 */
 	@Override
 	public void draw(final Graphics g) {
-		g.setColor(new Color(rgbColor.red, rgbColor.green, rgbColor.blue));
-		g.drawOval(x, y, diameterX, diameterY);
-		g.drawString(""+getShapeNumber(), x+diameterX/2-5, y+diameterY/2+5);
+		draw(g, 1, 1);
 	}
+	
+	@Override
+	public void draw(Graphics gfx, double xScale, double yScale) {
+		gfx.setColor(new Color(rgbColor.red, rgbColor.green, rgbColor.blue));
 
+		int xFinal = (int)(x*xScale);
+		int yFinal = (int)(y*yScale);
+		int diameterXFinal = (int)(diameterX*xScale);
+		int diameterYFinal = (int) (diameterY*yScale);
+		if(xScale!=1 || yScale!=1)
+			gfx.drawOval(xFinal, yFinal, diameterXFinal+2, diameterYFinal+2);
+		gfx.drawOval(xFinal, yFinal, diameterXFinal, diameterYFinal);
+		
+		AttributedString attributedString = getAttributedString((int) (12*xScale),Integer.toString(getShapeNumber()));
+		gfx.drawString(attributedString.getIterator(), xFinal+diameterXFinal/2-5, yFinal+diameterYFinal/2+5);
+	}
+	
 	/*
 	 * (non-Javadoc)
 	 * @see gfx_panel.Shape#getArea()

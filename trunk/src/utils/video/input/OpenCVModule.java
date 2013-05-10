@@ -15,6 +15,9 @@
 package utils.video.input;
 
 import hypermedia.video.OpenCV;
+
+import java.awt.Point;
+
 import sys.utils.Utils;
 import utils.PManager;
 import utils.video.FrameIntArray;
@@ -115,4 +118,18 @@ public class OpenCVModule extends VidInputter<OpenCVConfigs> {
 		return SourceType.CAM;
 	}
 
+	@Override
+	public OpenCVConfigs newConfigurationInstance() {
+		return new OpenCVConfigs();
+	}
+
+	@Override
+	public VidInputter<OpenCVConfigs> newInstance() {
+		return new OpenCVModule();
+	}
+	@Override
+	public Point getFrameSize() {
+		// we get dimensions from  configuration instance, not from hardware
+		return new Point(configs.getWidth(), configs.getHeight());
+	}
 }

@@ -1,8 +1,13 @@
 package gui.executionunit;
 
+import gui.utils.Reflections;
+import modules.ExperimentManager;
+import modules.experiment.Experiment;
+import modules.experiment.ExperimentType;
+
 import org.eclipse.swt.widgets.Display;
 
-import modules.experiment.ExperimentType;
+import sys.utils.Arrays;
 import ui.MainGUI;
 import utils.DialogBoxUtils;
 import utils.PManager;
@@ -39,7 +44,7 @@ public class ExperimentExecUnitGroup extends ExecutionUnitGroup {
 		});
 	}
 	public static void setBackground() throws WidgetSearchException{
-		ui.click(new ButtonLocator("Set Background"));
+		ui.click(new ButtonLocator("Snap Background"));
 	}
 	
 	public static void startTracking(String ratNumber) throws WidgetSearchException{
@@ -155,5 +160,42 @@ public class ExperimentExecUnitGroup extends ExecutionUnitGroup {
 		
 		ui.click(new MenuItemLocator("Experiment/Export to Excel"));
 		DialogBoxUtils.fillDialog(file, ui);
+	}
+	
+	public static void checkExperimentCreated(){
+		// get the stored experiment object using reflection
+		Experiment saved = Reflections.getLoadedExperiment();
+		
+		// load the experiment saved in the file
+		Experiment loadedFromFile = ExperimentManager.readExperimentFromFile(saved.getFileName());
+		
+		// compare the two experiments
+		assert(compareExperiments(saved, loadedFromFile)):"Experiments do not match!";
+		PManager.log.print("Experiment creation check ... OK", ExperimentExecUnitGroup.class);
+	}
+	
+	public static boolean compareExperiments(Experiment exp1,Experiment exp2){
+		if(exp1.getType()!=exp2.getType())
+			return false;
+		if(exp1.getDate().equals(exp2.getDate())==false)
+			return false;
+		if(exp1.getExpParametersList().length!=exp2.getExpParametersList().length)
+			return false;
+		for(String str1:exp1.getExpParametersList())
+			if(Arrays.equalsOneOf(str1, exp2.getExpParametersList())==false)
+				return false;
+		
+		// TODO: check actual group data, not just number of groups
+		// TODO: check filters setup and modules setup
+		if(exp1.getGroups().size()!=exp2.getGroups().size())
+			return false;
+		if(exp1.getName().equals(exp2.getName())==false)
+			return false;
+		if(exp1.getNotes().equals(exp2.getNotes())==false)
+			return false;
+		if(exp1.getUser().equals(exp2.getUser())==false)
+			return false;
+		
+		return true;
 	}
 }

@@ -22,10 +22,6 @@ import java.awt.Graphics;
 import java.awt.Point;
 import java.util.ArrayList;
 
-import modules.ModulesManager;
-
-import org.eclipse.swt.widgets.Display;
-
 import ui.FormZoneType;
 import utils.PManager;
 
@@ -35,29 +31,16 @@ import utils.PManager;
  * @author Creative
  */
 public class ShapeController implements GfxPanelNotifiee, ShapeCollection {
-	private static ShapeController	defaultController;
-
-	/**
-	 * Gets the singleton instance.
-	 * 
-	 * @return singleton instance
-	 */
-	public static ShapeController getDefault() {
-		if (defaultController == null)
-			defaultController = new ShapeController();
-		return defaultController;
-	}
 
 	private GfxPanel			gfxPanel;
-	private final PManager		pm;
 	private boolean				settingScale;
 	private ArrayList<Shape>	shapes;
-
+	private ZonesModule zonesModule;
 	/**
 	 * just initialize the PManager instance.
 	 */
-	public ShapeController() {
-		pm = PManager.getDefault();
+	public ShapeController(ZonesModule zonesModule) {
+		this.zonesModule=zonesModule;
 	}
 
 	/**
@@ -89,10 +72,10 @@ public class ShapeController implements GfxPanelNotifiee, ShapeCollection {
 	 * @see control.ShapeCollection#drawaAllShapes(java.awt.Graphics)
 	 */
 	@Override
-	public void drawAllShapes(final Graphics gfx) {
+	public void drawAllShapes(final Graphics gfx,double xScale,double yScale) {
 		int i = 0;
 		for (i = 0; i < this.getNumberOfShapes(); i++)
-			this.shapes.get(i).draw(gfx);
+			this.shapes.get(i).draw(gfx,xScale,yScale);
 	}
 
 	/**
@@ -144,7 +127,7 @@ public class ShapeController implements GfxPanelNotifiee, ShapeCollection {
 	@Override
 	public void mouseClicked(final Point pos) {
 		if (settingScale)
-			pm.getDrawZns().addMeasurePoint(pos);
+			zonesModule.addMeasurePoint(pos);
 	}
 
 	/**
@@ -163,7 +146,7 @@ public class ShapeController implements GfxPanelNotifiee, ShapeCollection {
 	 */
 	@Override
 	public void shapeAdded(final int shapeNumber) {
-		Display.getDefault().syncExec(new Runnable() {
+		PManager.getDefault().displaySyncExec(new Runnable() {
 
 			@Override
 			public void run() {
@@ -179,8 +162,7 @@ public class ShapeController implements GfxPanelNotifiee, ShapeCollection {
 	 */
 	@Override
 	public void shapeDeleted(final int shapeNumber) {
-		((ZonesModule) ModulesManager.getDefault().getModuleByID(
-				ZonesModule.moduleID)).deleteZone(shapeNumber);
+		zonesModule.deleteZone(shapeNumber);
 
 	}
 
@@ -190,8 +172,7 @@ public class ShapeController implements GfxPanelNotifiee, ShapeCollection {
 	 */
 	@Override
 	public void shapeModified(final int shapeNumber) {
-		((ZonesModule) ModulesManager.getDefault().getModuleByID(
-				ZonesModule.moduleID)).updateZoneDataInGUI(shapeNumber);
+		zonesModule.updateZoneDataInGUI(shapeNumber);
 	}
 
 	/*
@@ -200,8 +181,12 @@ public class ShapeController implements GfxPanelNotifiee, ShapeCollection {
 	 */
 	@Override
 	public void shapeSelected(final int shapeNumber) {
-		((ZonesModule) ModulesManager.getDefault().getModuleByID(
-				ZonesModule.moduleID)).selectZoneInGUI(shapeNumber);
+		zonesModule.selectZoneInGUI(shapeNumber);
+	}
+
+	@Override
+	public void drawAllShapes(Graphics gfx) {
+		drawAllShapes(gfx, 1, 1);
 	}
 
 }

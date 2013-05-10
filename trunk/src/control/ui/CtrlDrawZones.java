@@ -16,8 +16,6 @@ package control.ui;
 
 import java.awt.Point;
 
-import modules.ModulesManager;
-import modules.zones.ShapeController;
 import modules.zones.ZonesModule;
 
 import org.eclipse.swt.SWT;
@@ -26,6 +24,7 @@ import org.eclipse.swt.widgets.Shell;
 
 import ui.DrawZones;
 import utils.PManager;
+import utils.StatusManager.StatusSeverity;
 
 /**
  * Controller of the DrawZones GUI window.
@@ -34,15 +33,17 @@ import utils.PManager;
  */
 public class CtrlDrawZones extends ControllerUI<DrawZones> {
 
+	private final ZonesModule	zonesModule;
+
 	/**
 	 * Initializes class attributes (DrawZones , PManager and ZoneController)
 	 * then gives the instance of GfxPanel to PManager to share it.
 	 */
-	public CtrlDrawZones() {
-		pm = PManager.getDefault();
+	public CtrlDrawZones(final ZonesModule zonesModule) {
 		ui = new DrawZones();
 		ui.setController(this);
-		pm.linkGFXPanelWithShapeCtrlr(ui.getGFXPanel());
+		this.zonesModule = zonesModule;
+		zonesModule.getShapeController().linkWithGFXPanel(ui.getGFXPanel());
 	}
 
 	/**
@@ -75,8 +76,7 @@ public class CtrlDrawZones extends ControllerUI<DrawZones> {
 	 * Handles the "Hide" button click action.
 	 */
 	public void btnHideAction() {
-		((ZonesModule) ModulesManager.getDefault().getModuleByID(
-				ZonesModule.moduleID)).updateZoneMap();
+		zonesModule.updateZoneMap();
 		show(false);
 	}
 
@@ -90,8 +90,7 @@ public class CtrlDrawZones extends ControllerUI<DrawZones> {
 		final FileDialog fileDialog = new FileDialog(shell, SWT.OPEN);
 		final String fileName = fileDialog.open();
 		if (fileName != null)
-			((ZonesModule) ModulesManager.getDefault().getModuleByID(
-					ZonesModule.moduleID)).loadZonesFromFile(fileName);
+			zonesModule.loadZonesFromFile(fileName);
 	}
 
 	/**
@@ -104,8 +103,7 @@ public class CtrlDrawZones extends ControllerUI<DrawZones> {
 		final FileDialog fileDialog = new FileDialog(shell, SWT.SAVE);
 		final String fileName = fileDialog.open();
 		if (fileName != null)
-			((ZonesModule) ModulesManager.getDefault().getModuleByID(
-					ZonesModule.moduleID)).saveZonesToFile(fileName);
+			zonesModule.saveZonesToFile(fileName);
 	}
 
 	/**
@@ -142,7 +140,7 @@ public class CtrlDrawZones extends ControllerUI<DrawZones> {
 
 	/**
 	 * Sends measure points selected by the user along with the real distance
-	 * between the two points in reality to the StatsController.
+	 * between the two points in reality to the ZonesModule.
 	 * 
 	 * @param measurePnt1
 	 *            First point that the user selected
@@ -151,11 +149,17 @@ public class CtrlDrawZones extends ControllerUI<DrawZones> {
 	 * @param strRealDistance
 	 *            Real distance between the two points
 	 */
-	public void sendScaletoStatsCtrlr(final Point measurePnt1,
+	public void sendScaletoZonesModule(final Point measurePnt1,
 			final Point measurePnt2, final String strRealDistance) {
-		((ZonesModule) ModulesManager.getDefault().getModuleByID(
-				ZonesModule.moduleID)).setScale(measurePnt1, measurePnt2,
-				Integer.parseInt(strRealDistance));
+		try {
+			final int realDist = Integer.parseInt(strRealDistance);
+			zonesModule.setScale(measurePnt1, measurePnt2, realDist);
+		} catch (final NumberFormatException e) {
+			PManager.getDefault()
+					.getStatusMgr()
+					.setStatus("Invalid distance, please try again.",
+							StatusSeverity.ERROR);
+		}
 	}
 
 	/**
@@ -164,8 +168,8 @@ public class CtrlDrawZones extends ControllerUI<DrawZones> {
 	 * @param img
 	 *            new Background image
 	 */
-	public void setBackground(final int[] img) {
-		ui.getGFXPanel().setBackground(img);
+	public void setBackground(final int[] img, final int width, final int height) {
+		ui.getGFXPanel().setBackground(img, width, height);
 	}
 
 	/**
@@ -176,7 +180,7 @@ public class CtrlDrawZones extends ControllerUI<DrawZones> {
 	 *            true/false
 	 */
 	public void settingScale(final boolean enable) {
-		ShapeController.getDefault().setSettingScale(enable);
+		zonesModule.getShapeController().setSettingScale(enable);
 	}
 
 	/*

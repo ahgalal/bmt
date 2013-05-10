@@ -14,8 +14,6 @@
 
 package filters.source;
 
-import utils.PManager;
-import utils.StatusManager.StatusSeverity;
 import utils.video.FrameIntArray;
 import filters.CommonFilterConfigs;
 import filters.FilterConfigs;
@@ -41,27 +39,21 @@ public class SourceFilterConfigs extends FilterConfigs {
 	 */
 	public SourceFilterConfigs(final String name,
 			final CommonFilterConfigs commonConfigs, final FrameIntArray fia) {
-		super(name, commonConfigs);
+		super(name,SourceFilter.ID, commonConfigs);
 		this.setFrameIntArray(fia);
 	}
 
 	@Override
 	public void mergeConfigs(final FilterConfigs configs) {
+		super.mergeConfigs(configs);
 		final SourceFilterConfigs tmpSrcfilterConfigs = (SourceFilterConfigs) configs;
-		if (tmpSrcfilterConfigs.getCommonConfigs() != null)
-			setCommonConfigs(tmpSrcfilterConfigs.getCommonConfigs());
 		if (tmpSrcfilterConfigs.getFrameIntArray() != null)
 			this.setFrameIntArray(tmpSrcfilterConfigs.getFrameIntArray());
 	}
 
 	@Override
 	public boolean validate() {
-		if ((getCommonConfigs() == null) || (getFrameIntArray() == null)) {
-			PManager.log.print("Configs are not completely configured!", this,
-					StatusSeverity.ERROR);
-			return false;
-		}
-		return true;
+		return super.validate() && (getFrameIntArray() != null);
 	}
 
 	public void setFrameIntArray(FrameIntArray fia) {
@@ -70,6 +62,12 @@ public class SourceFilterConfigs extends FilterConfigs {
 
 	public FrameIntArray getFrameIntArray() {
 		return fia;
+	}
+
+	@Override
+	public FilterConfigs newInstance(String filterName,
+			CommonFilterConfigs commonConfigs) {
+		return new SourceFilterConfigs(filterName, commonConfigs, null);
 	}
 
 }

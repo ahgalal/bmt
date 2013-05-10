@@ -10,10 +10,10 @@ public enum ExperimentType {
 		else
 			return null;
 	}
-
+	
 	private String	name;
 
-	private ExperimentType(final String name) {
+	ExperimentType(final String name) {
 		this.name = name;
 	}
 

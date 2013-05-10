@@ -83,8 +83,8 @@ public class RearingModuleGUI extends PluggedGUI<RearingModule> {
 
 	@Override
 	public void deInitialize() {
-		cmpstManualRearing.dispose();
-		xpndtmManualRearing.dispose();
+		disposeWidget(cmpstManualRearing);
+		disposeWidget(xpndtmManualRearing);
 	}
 
 	@Override

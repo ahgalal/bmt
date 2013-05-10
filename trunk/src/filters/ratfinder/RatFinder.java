@@ -15,10 +15,16 @@
 package filters.ratfinder;
 
 import java.awt.Color;
+import java.awt.Graphics;
 import java.awt.Point;
+import java.awt.image.BufferedImage;
+import java.awt.image.DataBufferInt;
+import java.util.Iterator;
+import java.util.concurrent.ArrayBlockingQueue;
 
 import utils.PManager.ProgramState;
 import filters.FilterConfigs;
+import filters.FilterData;
 import filters.Link;
 import filters.VideoFilter;
 import filters.ratfinder.markers.CrossMarker;
@@ -32,22 +38,30 @@ import filters.ratfinder.markers.RectangularMarker;
  */
 public class RatFinder extends
 		VideoFilter<RatFinderFilterConfigs, RatFinderData> {
-	protected final Point	centerPoint;
+	private static final int			CENTROID_HISTORY_SIZE			= 3;
+	public static final String			ID								= "filters.ratfinder";
+	private static final int			PATH_QUEUE_LENGTH				= 100;
+	private static final int			SMALLEST_WHITE_AREA				= 10;
+	protected final Point				centerPoint;
+	private final Point[]				centroidHistory					= new Point[CENTROID_HISTORY_SIZE];
 
-	private final Point[]	centroidHistory							= new Point[2];
-	private int				framesRemainingToEnableCentroidHistory	= 10;
+	private int							framesRemainingReliableCentroid	= 10;
+	private int							height;
 
-	private int				height;
-	private int[]			horiSum;
+	private int[]						horiSum;
+	protected Marker					marker, marker2;
 
-	protected Marker		marker, marker2;
-	protected int[]			outData;
-	private final int		searchSideLength						= 600;
+	protected int[]						outData;
+	private Graphics					outputGraphics;
+	private BufferedImage				outputImage;
 
-	private int				tmpMax;
+	protected ArrayBlockingQueue<Point>	pathQueue;
 
-	private int[]			vertSum;
-	private int				width;
+	private int							searchSideLength				= 600;
+	private int							tmpMax;
+	private int[]						vertSum;
+
+	private int							width;
 
 	/**
 	 * Initializes the filter.
@@ -69,37 +83,36 @@ public class RatFinder extends
 	public boolean configure(final FilterConfigs configs) {
 		this.configs = (RatFinderFilterConfigs) configs;
 
-		marker = new CrossMarker(50, 50, 5, Color.RED, configs
-				.getCommonConfigs().getWidth(), configs.getCommonConfigs()
-				.getHeight());
+		width = configs.getCommonConfigs().getWidth();
+		height = configs.getCommonConfigs().getHeight();
 
-		marker2 = new RectangularMarker(configs.getCommonConfigs().getWidth(),
-				configs.getCommonConfigs().getHeight(), searchSideLength,
+		outputImage = new BufferedImage(width, height,
+				BufferedImage.TYPE_INT_RGB);
+		outData = ((DataBufferInt) outputImage.getRaster().getDataBuffer())
+				.getData();
+		outputGraphics = outputImage.getGraphics();
+
+		this.linkOut.setData(outData);
+		specialConfiguration(configs);
+		searchSideLength = width / 4;
+
+		marker = new CrossMarker(50, 50, 5, Color.RED, width, height);
+
+		marker2 = new RectangularMarker(width, height, searchSideLength,
 				searchSideLength, Color.RED);
 
 		for (int i = 0; i < centroidHistory.length; i++)
 			centroidHistory[i] = new Point(-1, -1);
-		framesRemainingToEnableCentroidHistory = 10;
+		framesRemainingReliableCentroid = 10;
+		pathQueue = new ArrayBlockingQueue<Point>(PATH_QUEUE_LENGTH);
 
-		// super's stuff:
-		outData = new int[configs.getCommonConfigs().getWidth()
-				* configs.getCommonConfigs().getHeight()];
-		this.linkOut.setData(outData);
-		specialConfiguration(configs);
-		width = configs.getCommonConfigs().getWidth();
-		height = configs.getCommonConfigs().getHeight();
 		return super.configure(configs);
 	}
 
 	/**
 	 * Draws a cross at the center of the moving object.
-	 * 
-	 * @param binaryImage
-	 *            image to draw the cross on
 	 */
-	protected void drawMarkerOnImg(final int[] binaryImage) {
-		System.arraycopy(binaryImage, 0, outData, 0, binaryImage.length);
-
+	protected void drawMarkerOnImg() {
 		try {
 			marker.draw(outData, centerPoint.x, centerPoint.y);
 			marker2.draw(outData, centerPoint.x - searchSideLength / 2,
@@ -110,11 +123,58 @@ public class RatFinder extends
 		}
 	}
 
+	private void drawPathOnImg() {
+		if (framesRemainingReliableCentroid == 0) {
+			// update path queue
+			if (pathQueue.size() < PATH_QUEUE_LENGTH) {
+				pathQueue.add(new Point(centerPoint.x, centerPoint.y));
+			} else {
+				final Point head = pathQueue.poll();
+				head.x = centerPoint.x;
+				head.y = centerPoint.y;
+				pathQueue.add(head); // added to tail
+			}
+
+			final Point prevPt = new Point(-1, -1);
+			// draw path on image
+			for (final Iterator<Point> it = pathQueue.iterator(); it.hasNext();) {
+				final Point pt = it.next();
+
+				if (prevPt.x != -1) {
+
+					outputGraphics.setColor(Color.RED);
+					try {
+						outputGraphics.drawLine(pt.x - 1, pt.y - 1,
+								prevPt.x - 1, prevPt.y - 1);
+						outputGraphics.drawLine(pt.x, pt.y, prevPt.x, prevPt.y);
+						outputGraphics.drawLine(pt.x + 1, pt.y + 1,
+								prevPt.x + 1, prevPt.y + 1);
+					} catch (final Exception e) {
+						System.err
+								.println("Error in path drawing, index out of range");
+						e.printStackTrace();
+					}
+
+				} else {
+					outputGraphics.drawLine(pt.x, pt.y, pt.x, pt.y);
+				}
+
+				prevPt.x = pt.x;
+				prevPt.y = pt.y;
+			}
+		}
+	}
+
+	@Override
+	public String getID() {
+		return ID;
+	}
+
 	private void lowPassFilterCentroidPosition() {
 
 		// history remains disabled till ex:10 frames elapse, this is to ensure
 		// the reliability of the centroid position (after ex:10 frames)
-		if (framesRemainingToEnableCentroidHistory == 0) {
+		if (framesRemainingReliableCentroid == 0) {
 			if (centroidHistory[0].x == -1) { // history is not initialized yet
 				for (int i = 0; i < centroidHistory.length - 1; i++) {
 					centroidHistory[i].x = centerPoint.x;
@@ -137,12 +197,16 @@ public class RatFinder extends
 					centroidHistory[i].x = centroidHistory[i + 1].x;
 					centroidHistory[i].y = centroidHistory[i + 1].y;
 				}
-
 				centroidHistory[centroidHistory.length - 1].x = centerPoint.x;
 				centroidHistory[centroidHistory.length - 1].y = centerPoint.y;
 			}
 		} else
-			framesRemainingToEnableCentroidHistory--;
+			framesRemainingReliableCentroid--;
+	}
+
+	@Override
+	public VideoFilter<?, ?> newInstance(final String filterName) {
+		return new RatFinder(filterName, null, null);
 	}
 
 	/*
@@ -152,12 +216,21 @@ public class RatFinder extends
 	@Override
 	public void process() {
 		if (configs.isEnabled()) {
-			//final long t1 = System.currentTimeMillis();
-			updateCentroid(linkIn.getData());
-			drawMarkerOnImg(linkIn.getData());
-			//final long t2 = System.currentTimeMillis();
+			// final long t1 = System.currentTimeMillis();
+			final int[] data = linkIn.getData();
+			updateCentroid(data);
+			System.arraycopy(data, 0, outData, 0, data.length);
+			// final long t1 = System.currentTimeMillis();
+			drawMarkerOnImg();
+			// final long t2 = System.currentTimeMillis();
+			drawPathOnImg();
 			// System.out.println(t2-t1);
 		}
+	}
+
+	@Override
+	public void registerDependentData(final FilterData data) {
+
 	}
 
 	protected void specialConfiguration(final FilterConfigs configs) {
@@ -172,8 +245,8 @@ public class RatFinder extends
 	 *            input image
 	 */
 	protected void updateCentroid(final int[] binaryImage) {
-		final int smallestWhiteAreaSize = 10;
-		tmpMax = smallestWhiteAreaSize;
+
+		tmpMax = SMALLEST_WHITE_AREA;
 
 		int y1, y2;
 
@@ -181,8 +254,8 @@ public class RatFinder extends
 			y1 = 0;
 			y2 = height;
 		} else {
-			y1 = (centerPoint.y - searchSideLength) < 0 ? 0
-					: centerPoint.y - 40;
+			y1 = (centerPoint.y - searchSideLength) < 0 ? 0 : centerPoint.y
+					- searchSideLength;
 			y2 = (centerPoint.y + searchSideLength) > height ? height
 					: centerPoint.y + searchSideLength;
 		}
@@ -197,15 +270,15 @@ public class RatFinder extends
 			}
 		}
 
-		tmpMax = smallestWhiteAreaSize;
+		tmpMax = SMALLEST_WHITE_AREA;
 
 		int x1, x2;
 		if (centerPoint.x == 0) {
 			x1 = 0;
 			x2 = width;
 		} else {
-			x1 = (centerPoint.x - searchSideLength) < 0 ? 0
-					: centerPoint.x - 40;
+			x1 = (centerPoint.x - searchSideLength) < 0 ? 0 : centerPoint.x
+					- searchSideLength;
 			x2 = (centerPoint.x + searchSideLength) > width ? width
 					: centerPoint.x + searchSideLength;
 		}
@@ -229,5 +302,4 @@ public class RatFinder extends
 		// TODO Auto-generated method stub
 
 	}
-
 }
