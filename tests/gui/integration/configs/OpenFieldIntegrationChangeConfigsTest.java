@@ -12,8 +12,8 @@ import gui.executionunit.VideoExecUnitGroup;
 import gui.integration.OpenFieldIntegrationTest;
 import modules.Module;
 import modules.ModulesManager;
-import sys.utils.Utils;
 import utils.ReflectUtils;
+import sys.utils.Utils;
 
 import com.windowtester.runtime.WidgetSearchException;
 
