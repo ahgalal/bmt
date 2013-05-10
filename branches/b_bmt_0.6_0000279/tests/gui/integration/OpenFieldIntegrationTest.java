@@ -10,8 +10,8 @@ import modules.experiment.Group;
 import modules.experiment.Rat;
 import sys.utils.EnvVar;
 import sys.utils.Files;
-import sys.utils.Utils;
 import utils.PManager;
+import sys.utils.Utils;
 
 import com.windowtester.runtime.WidgetSearchException;
 
