@@ -24,10 +24,9 @@ import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Shell;
 
-import control.ui.CtrlDrawZones;
-
 import ui.PluggedGUI;
 import utils.PManager.ProgramState;
+import control.ui.CtrlDrawZones;
 
 /**
  * GUI class for the ZonesModule.

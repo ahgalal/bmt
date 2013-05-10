@@ -14,8 +14,6 @@
 
 package filters.ratfinder;
 
-import utils.PManager;
-import utils.StatusManager.StatusSeverity;
 import filters.CommonFilterConfigs;
 import filters.FilterConfigs;
 

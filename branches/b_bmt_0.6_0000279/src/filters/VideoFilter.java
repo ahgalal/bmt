@@ -176,10 +176,9 @@ public abstract class VideoFilter<ConfigsType extends FilterConfigs, DataType ex
 	 *            configurations object for the filter
 	 */
 	@Override
-	@SuppressWarnings("unchecked")
-	public void updateConfigs(final FilterConfigs configs) {
+	public void updateConfigs(final ConfigsType configs) {
 		if (this.configs == null)
-			this.configs = (ConfigsType) configs;
+			this.configs = configs;
 		else
 			this.configs.mergeConfigs(configs);
 		configure(getConfigs());
