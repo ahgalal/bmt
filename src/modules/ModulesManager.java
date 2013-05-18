@@ -36,6 +36,7 @@ import ui.PluggedGUI;
 import utils.ConfigurationManager;
 import utils.Logger.Details;
 import utils.PManager;
+import utils.PManager.ProgramState.GeneralState;
 import utils.PManager.ProgramState.StreamState;
 import utils.StatusManager.StatusSeverity;
 import utils.video.ConfigsListener;
@@ -438,9 +439,11 @@ public class ModulesManager implements ConfigsListener {
 	}
 
 	public void pauseModules() {
-		for (final Module mod : modules)
-			mod.pause();
-		paused = true;
+		if(PManager.getDefault().getState().getGeneral()==GeneralState.TRACKING){
+			for (final Module mod : modules)
+				mod.pause();
+			paused = true;
+		}
 	}
 
 	/**
@@ -457,11 +460,13 @@ public class ModulesManager implements ConfigsListener {
 	}
 
 	public void resumeModules() {
-		paused = false;
-		if (thModules != null)
-			thModules.interrupt();
-		for (final Module mod : modules)
-			mod.resume();
+		if(PManager.getDefault().getState().getGeneral()==GeneralState.TRACKING){
+			paused = false;
+			if (thModules != null)
+				thModules.interrupt();
+			for (final Module mod : modules)
+				mod.resume();
+		}
 	}
 
 	/**
