@@ -13,6 +13,7 @@ import org.eclipse.swt.widgets.Shell;
 
 import utils.Logger.Details;
 import utils.PManager;
+import utils.PManager.ProgramState.StreamState;
 import filters.Data;
 import filters.movementmeter.MovementMeterData;
 
@@ -37,7 +38,7 @@ public class MovementMeterModule
 	private MovementMeterData			movementMeterFilterData;
 	private final int					noEnergyLevels			= 2;
 	private final int[]					oldValues				= new int[OLD_VAL_COUNT];
-	private int							pauseTime				= 0;
+	private long						pauseTime				= 0;
 
 	private long						pauseTimeStamp;
 
@@ -149,8 +150,15 @@ public class MovementMeterModule
 	}
 
 	private void initializeStartTimestamp() {
-		if (startTimeStamp == 0)
+		if (startTimeStamp == 0) {
 			startTimeStamp = System.currentTimeMillis();
+			// handling the case when tracking is started when stream is paused,
+			// we need to set the pause timestamp to be the same as start time
+			// stamp, because tracking is paused at the same instant it is
+			// started.
+			if (PManager.getDefault().getState().getStream() == StreamState.PAUSED)
+				pauseTimeStamp = startTimeStamp;
+		}
 	}
 
 	@SuppressWarnings("rawtypes")
@@ -161,7 +169,6 @@ public class MovementMeterModule
 
 	@Override
 	public void pause() {
-		initializeStartTimestamp();
 		pauseTimeStamp = System.currentTimeMillis();
 		super.pause();
 	}
@@ -253,11 +260,13 @@ public class MovementMeterModule
 
 	@Override
 	public void resume() {
-		final long resumeTimeStamp = System.currentTimeMillis();
-		pauseTime += resumeTimeStamp - pauseTimeStamp;
-		super.resume();
+		if (pauseTimeStamp > 0) { // we were paused before, so we must calculate
+									// pause time
+			final long resumeTimeStamp = System.currentTimeMillis();
+			pauseTime += resumeTimeStamp - pauseTimeStamp;
 
-		System.out.println("total pause time: " + pauseTime);
+		}
+		super.resume();
 	}
 
 	private void sectorizeEnergy() {
@@ -356,9 +365,14 @@ public class MovementMeterModule
 			final int newData = energyDataSmooth
 					.get(energyDataSmooth.size() - 1);
 
-			final double timeDelta =  (System.currentTimeMillis()
-					- startTimeStamp - pauseTime)/(double)1000;
+			final double timeDelta = (System.currentTimeMillis()
+					- startTimeStamp - pauseTime)
+					/ (double) 1000;
 			gui.addPoint(timeDelta, newData);
+
+/*			System.out.println("startTimeStamp: " + startTimeStamp);
+			System.out.println("pauseTimeStamp:" + pauseTimeStamp);
+			System.out.println("total pause time: " + pauseTime);*/
 
 			gui.setEnergyLevels(energyLevels);
 		}
