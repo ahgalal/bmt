@@ -1,5 +1,5 @@
 export BASE_DIR=$BMT_WS/BMT/output/release
-mkdir $BASE_DIR/ants/test
+mkdir -p $BASE_DIR/ants/test
 cp -rf $BMT_WS/BMT/ants/test $BASE_DIR/ants/test
 ant BMTTestGUI -f $BASE_DIR/ants/test/regressGUI.xml \
 -Declipse.home=$ECLIPSE_HOME \
