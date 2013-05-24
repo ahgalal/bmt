@@ -89,7 +89,7 @@ public class GStreamerModule extends VidInputter<VidSourceConfigs> {
 			final VidSourceConfigs configs) {
 		this.configs = configs;
 		actualFrameSize = null; // setting it to null, to be explicitly
-								// initialized in the sink call back method
+								// initialized in the sink callback method
 								// below
 		Gst.init("GSMovie", new String[0]);
 		playBin = new PlayBin("PlayerBin");
@@ -109,6 +109,7 @@ public class GStreamerModule extends VidInputter<VidSourceConfigs> {
 
 					actualFrameSize.x = width;
 					actualFrameSize.y = height;
+					System.out.println("setting framesize");
 					fia.setFrameData(ImageManipulator
 							.bgrIntArray2rgbIntArray(buf.array())); // ImageManipulator.byteBGR2IntRGB(buf.getBytes());
 					updateStatus();
@@ -149,6 +150,8 @@ public class GStreamerModule extends VidInputter<VidSourceConfigs> {
 	public boolean startStream() {
 
 		playBin.play();
+		while(getStatus()!=SourceStatus.STREAMING)
+			Utils.sleep(20);
 		return true;
 	}
 
