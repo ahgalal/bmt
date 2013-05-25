@@ -109,7 +109,6 @@ public class GStreamerModule extends VidInputter<VidSourceConfigs> {
 
 					actualFrameSize.x = width;
 					actualFrameSize.y = height;
-					System.out.println("setting framesize");
 					fia.setFrameData(ImageManipulator
 							.bgrIntArray2rgbIntArray(buf.array())); // ImageManipulator.byteBGR2IntRGB(buf.getBytes());
 					updateStatus();
