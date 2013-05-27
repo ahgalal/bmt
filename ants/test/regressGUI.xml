@@ -42,14 +42,14 @@
 		<property name="myclasspath" refid="classpath.tests.run" />
 		<echo message="Classpath = ${myclasspath}" />
 		
-		<junit dir="${basedir}" printsummary="yes" haltonfailure="no" failureproperty="yes" showoutput="yes">
+		<junit fork="true" dir="${basedir}" printsummary="yes" haltonfailure="no" failureproperty="yes" showoutput="yes">
 			<classpath refid="classpath.tests.run"/>
 			<assertions>
 				<enable />
 			</assertions>
 			<formatter type="xml" />
-			
-			<test fork="yes" name="gui.AllTests" todir="${reportsDir}" errorproperty="yes" failureproperty="yes"></test>
+			<jvmarg value="-Xmx1500m"/>
+			<test name="gui.AllTests" todir="${reportsDir}" errorproperty="yes" failureproperty="yes"></test>
 
 		</junit>
 
