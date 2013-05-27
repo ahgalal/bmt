@@ -183,6 +183,7 @@ public class ExperimentIntegrationTestBase extends UITest {
 
 	public void testIntegration() throws Exception{
 		setName(this.getClass().getSimpleName());
+		System.out.println("========= Testcase: "+ getName()+" =========");
 		try {
 			fullScenario();
 		} catch (final CancellationException e) {

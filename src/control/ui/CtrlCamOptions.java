@@ -93,6 +93,6 @@ public class CtrlCamOptions extends ControllerUI<CamOptions> {
 			pm.stopStreaming();
 		final CommonFilterConfigs commonConfigs = new CommonFilterConfigs(
 				width, height, frameRate, camNum, library, format);
-		pm.initializeVideoManager(commonConfigs, null);
+		pm.updateCommonConfigs(commonConfigs);
 	}
 }

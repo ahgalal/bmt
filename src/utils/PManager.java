@@ -457,4 +457,8 @@ public class PManager {
 			}
 		}
 	}
+
+	public void updateCommonConfigs(CommonFilterConfigs commonConfigs) {
+		vidMgr.updateCommonConfigs(commonConfigs);
+	}
 }

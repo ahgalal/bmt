@@ -62,7 +62,7 @@ public class GStreamerModule extends VidInputter<VidSourceConfigs> {
 			if (((playBin.getState() == State.PLAYING) || (playBin.getState() == State.PAUSED))
 					&& (dataSink.getDuration().longValue() <= dataSink
 							.getPosition().longValue()))
-				status = SourceStatus.ERROR;
+				status = SourceStatus.END_OF_STREAM;
 		}
 		return status;
 	}
@@ -89,7 +89,7 @@ public class GStreamerModule extends VidInputter<VidSourceConfigs> {
 			final VidSourceConfigs configs) {
 		this.configs = configs;
 		actualFrameSize = null; // setting it to null, to be explicitly
-								// initialized in the sink call back method
+								// initialized in the sink callback method
 								// below
 		Gst.init("GSMovie", new String[0]);
 		playBin = new PlayBin("PlayerBin");
@@ -149,6 +149,8 @@ public class GStreamerModule extends VidInputter<VidSourceConfigs> {
 	public boolean startStream() {
 
 		playBin.play();
+		while(getStatus()!=SourceStatus.STREAMING)
+			Utils.sleep(20);
 		return true;
 	}
 

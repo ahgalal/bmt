@@ -431,7 +431,7 @@ public class FilterManager implements ConfigsListener {
 
 		PManager.mainGUI.loadPluggedGUI(getFiltersGUI());
 
-		configurationManager.printConfiguration();
+		//configurationManager.printConfiguration();
 
 		return true;//validateFiltersConfigurations();
 	}
