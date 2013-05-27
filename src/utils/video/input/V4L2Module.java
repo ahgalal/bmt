@@ -72,28 +72,38 @@ public class V4L2Module extends VidInputter<VidSourceConfigs> implements
 			try {
 				vdevice = new VideoDevice("/dev/video" + configs.getCamIndex());
 			} catch (final V4L4JException e1) {
-				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
-		try {
-			final List<ImageFormat> formats = vdevice.getDeviceInfo()
+			if(vfg==null){
+				try {
+					final List<ImageFormat> formats = vdevice.getDeviceInfo()
 					.getFormatList().getRGBEncodableFormats();
-			vfg = vdevice.getRGBFrameGrabber(configs.getWidth(), configs.getHeight(), 0,
-					0, formats.get(0));
-			vfg.setCaptureCallback(this);
-			vfg.setFrameInterval(1, 30);
-		} catch (final V4L4JException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
-		if (vfg != null)
-			return true;
-		else {
-			PManager.log.print("Error initializing the Webcam!", this,
-					StatusSeverity.ERROR);
-			return false;
-		}
+					ImageFormat format = null;
+					for(ImageFormat tmpFormat:formats){
+						if(tmpFormat.getName().contains("MJPEG")){
+							format=tmpFormat;
+							break;
+						}
+					}
+					if(format==null){
+						System.err.println("Could not find MJPEG format!");
+						return false;
+					}
+					vfg = vdevice.getRGBFrameGrabber(configs.getWidth(), configs.getHeight(), 0,
+							0, format);
+					vfg.setCaptureCallback(this);
+					vfg.setFrameInterval(1, 30);
+				} catch (final V4L4JException e) {
+					e.printStackTrace();
+				}
+			}
+			if (vfg != null)
+				return true;
+			else {
+				PManager.log.print("Error initializing the Webcam!", this,
+						StatusSeverity.ERROR);
+				return false;
+			}
 
 	}
 
@@ -129,6 +139,7 @@ public class V4L2Module extends VidInputter<VidSourceConfigs> implements
 		Utils.sleep(15);
 		vfg.stopCapture();
 		vdevice.releaseFrameGrabber();
+		vfg=null;
 	}
 	
 	@Override

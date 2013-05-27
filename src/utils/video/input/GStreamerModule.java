@@ -62,7 +62,7 @@ public class GStreamerModule extends VidInputter<VidSourceConfigs> {
 			if (((playBin.getState() == State.PLAYING) || (playBin.getState() == State.PAUSED))
 					&& (dataSink.getDuration().longValue() <= dataSink
 							.getPosition().longValue()))
-				status = SourceStatus.ERROR;
+				status = SourceStatus.END_OF_STREAM;
 		}
 		return status;
 	}
