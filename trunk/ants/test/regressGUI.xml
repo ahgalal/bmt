@@ -48,7 +48,7 @@
 				<enable />
 			</assertions>
 			<formatter type="xml" />
-			<jvmarg value="-Xmx1500m"/>
+			<jvmarg value="-Xmx256m"/>
 			<test name="gui.AllTests" todir="${reportsDir}" errorproperty="yes" failureproperty="yes"></test>
 
 		</junit>
