@@ -17,10 +17,13 @@ public class UITest extends UITestCaseSWT {
 			
 			@Override
 			public void run() {
-				((Shell)getUI().getActiveWindow()).setLocation(0, 0);
+				Shell shell = (Shell)getUI().getActiveWindow();
+				if(shell!=null)
+					shell.setLocation(0, 0);
+				else
+					System.err.println("Couldnot find main shell!");
 			}
 		});
-		
 	}
 	
 	public UITest() {

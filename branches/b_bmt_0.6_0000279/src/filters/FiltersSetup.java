@@ -76,8 +76,8 @@ public class FiltersSetup implements Serializable {
 		dstFilter.setLinkIn(lnk);
 
 		links.add(lnk);
-		System.out.println("link added, from: " + filterSrcName + " to: "
-				+ dstFilter.getName());
+/*		System.out.println("link added, from: " + filterSrcName + " to: "
+				+ dstFilter.getName());*/
 	}
 
 	public FiltersConnectionRequirements getConnectionRequirements() {

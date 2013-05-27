@@ -53,16 +53,19 @@ public class AllTests {
 		suite.addTestSuite(OpenFieldIntegrationRecordStreamManStopTest.class);
 		suite.addTestSuite(OpenFieldIntegrationRecordStreamPausedStopTest.class);
 
-		// Configuration persistance (must be the last testcase, as it alters
+		// Configuration persistence (must be the last testcase, as it alters
 		// config. values and will affect successive tests if any)
 		suite.addTestSuite(OpenFieldIntegrationChangeConfigsTest.class);
 		
 		// Video Libs
-		suite.addTestSuite(AGCamLibTest.class);
-		suite.addTestSuite(JMyronLibTest.class);
+		
 
 		if (PManager.getOS().contains("inux"))
 			suite.addTestSuite(V4L2CamLibTest.class);
+		else{
+			suite.addTestSuite(AGCamLibTest.class);
+			suite.addTestSuite(JMyronLibTest.class);
+		}
 		//$JUnit-END$
 		return suite;
 	}
