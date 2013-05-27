@@ -18,55 +18,83 @@ import gui.vidlibs.AGCamLibTest;
 import gui.vidlibs.JMyronLibTest;
 import gui.vidlibs.V4L2CamLibTest;
 import junit.framework.Test;
+import junit.framework.TestCase;
 import junit.framework.TestSuite;
+import sys.utils.Arrays;
+import sys.utils.EnvVar;
 import utils.PManager;
 
 public class AllTests {
+	private static String[]		disabledTestsArray;
+	private static TestSuite	suite;
+
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	private static void addTest(final Object test) {
+		String name = "";
+		if (test instanceof TestSuite) {
+			name = ((TestSuite) test).getName();
+			if (!Arrays.equalsOneOf(name, disabledTestsArray)) {
+				suite.addTest((Test) test);
+				return;
+			}
+		} else if (test instanceof Class) {
+			name = ((Class) test).getName();
+			if (!Arrays.equalsOneOf(name, disabledTestsArray)) {
+				suite.addTestSuite((Class<? extends TestCase>) test);
+				return;
+			}
+		}
+		System.out.println("Test: " + name + " is DISABLED");
+	}
 
 	public static Test suite() {
-		final TestSuite suite = new TestSuite(AllTests.class.getName());
+		suite = new TestSuite(AllTests.class.getName());
 		// $JUnit-BEGIN$
+
+		final String disabledTests = EnvVar
+				.getEnvVariableValue("DISABLED_TESTS");
+		disabledTestsArray = disabledTests.split(",");
+
 		// Experiment creation
-		suite.addTest(CreateExperimentSuiteTest.suite());
-		suite.addTestSuite(ExportExperimentToExcelTest.class);
-		suite.addTestSuite(EditExperimentTest.class);
+		addTest(CreateExperimentSuiteTest.suite());
+		addTest(ExportExperimentToExcelTest.class);
+		addTest(EditExperimentTest.class);
 
 		// Frame size
-		suite.addTestSuite(OpenFieldIntegration1280x720FrameTest.class);
-		suite.addTestSuite(ForcedSwimmingIntegration1280x720FrameTest.class);
+		addTest(OpenFieldIntegration1280x720FrameTest.class);
+		addTest(ForcedSwimmingIntegration1280x720FrameTest.class);
 
 		// Filters' setup
-		suite.addTestSuite(OpenFieldIntegrationFilterGraphOperationsTest.class);
+		addTest(OpenFieldIntegrationFilterGraphOperationsTest.class);
 
 		// Zones
-		suite.addTestSuite(OpenFieldIntegrationZonesCreationDeletionTest.class);
+		addTest(OpenFieldIntegrationZonesCreationDeletionTest.class);
 
 		// Experiment loading
-		suite.addTest(DiffExperimentsRunGUITest.suite());
+		addTest(DiffExperimentsRunGUITest.suite());
 
 		// Stop Tracking handling
-		suite.addTestSuite(OpenFieldIntegrationManStopStreamWhenPausedTest.class);
-		suite.addTestSuite(OpenFieldIntegrationManStopTrackTest.class);
+		addTest(OpenFieldIntegrationManStopStreamWhenPausedTest.class);
+		addTest(OpenFieldIntegrationManStopTrackTest.class);
 
 		// Recorder
-		suite.addTestSuite(OpenFieldIntegrationRecordStreamAutoStopTest.class);
-		suite.addTestSuite(OpenFieldIntegrationRecordStreamManStopTest.class);
-		suite.addTestSuite(OpenFieldIntegrationRecordStreamPausedStopTest.class);
+		addTest(OpenFieldIntegrationRecordStreamAutoStopTest.class);
+		addTest(OpenFieldIntegrationRecordStreamManStopTest.class);
+		addTest(OpenFieldIntegrationRecordStreamPausedStopTest.class);
 
 		// Configuration persistence (must be the last testcase, as it alters
 		// config. values and will affect successive tests if any)
-		suite.addTestSuite(OpenFieldIntegrationChangeConfigsTest.class);
-		
+		addTest(OpenFieldIntegrationChangeConfigsTest.class);
+
 		// Video Libs
-		
 
 		if (PManager.getOS().contains("inux"))
-			suite.addTestSuite(V4L2CamLibTest.class);
-		else{
-			suite.addTestSuite(AGCamLibTest.class);
-			suite.addTestSuite(JMyronLibTest.class);
+			addTest(V4L2CamLibTest.class);
+		else {
+			addTest(AGCamLibTest.class);
+			addTest(JMyronLibTest.class);
 		}
-		//$JUnit-END$
+		// $JUnit-END$
 		return suite;
 	}
 }
