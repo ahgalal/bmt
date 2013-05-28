@@ -119,7 +119,7 @@ public class MovementMeterModule
 		expParams = new String[noEnergyLevels];
 		energyBins = new ArrayList<Integer>();
 		energyLevels = new int[noEnergyLevels];
-		energyLevelsRatio = new double[] { 1, 0.3 };
+		energyLevelsRatio = new double[] { 1, 0.2 };
 
 		for (int i = 0; i < noEnergyLevels; i++) {
 			expParams[i] = "eLevel_" + i;
