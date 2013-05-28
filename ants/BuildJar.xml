@@ -69,6 +69,8 @@
 	<fileset id="libs" dir="libs">
 		<include name="**/*.jar" />
 		<include name="**/*.txt" />
+		<include name="**/*.html" />
+		<include name="**/*.htm" />
 	</fileset>
 	<fileset id="jface_libs" dir="${eclipse.home}\plugins">
 		<include name="org.eclipse.core.commands_3.6.0.I20100512-1500.jar" />
