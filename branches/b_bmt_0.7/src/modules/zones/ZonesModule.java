@@ -65,6 +65,8 @@ public class ZonesModule extends
 
 	private byte[]					zoneMap;
 	private final ZonesCollection	zones;
+/*	private ButterworthFilter 		butterworthXPositionFilter;
+	private ButterworthFilter 		butterworthYPositionFilter;*/
 
 	/**
 	 * Initializes the module.
@@ -226,6 +228,10 @@ public class ZonesModule extends
 		data.setCentralEntrance(0);
 		centralZoneTimeTmp = 0;
 		data.setTotalDistance(0);
+		/*		double[] numCeoffs = new double[] { 0.0055, 0.0111, 0.0055 };
+		double[] denCeoffs = new double[] { 1.0000, -1.7786, 0.8008 };
+		butterworthXPositionFilter = new ButterworthFilter(numCeoffs, denCeoffs);
+		butterworthYPositionFilter = new ButterworthFilter(numCeoffs, denCeoffs);*/
 
 		path.clear();
 
@@ -405,6 +411,15 @@ public class ZonesModule extends
 	 */
 	private void updateTotalDistance() {
 		if (oldPosition != null) {
+			
+/*			int filteredXPos = (int) butterworthXPositionFilter.processSample(currentPosition.x);
+			int filteredYPos = (int) butterworthYPositionFilter.processSample(currentPosition.y);
+			
+			*/
+			//System.out.println(currentPosition.x + "\t" + currentPosition.y);
+			
+			//System.out.println(filteredXPos + "\t" + filteredYPos);
+			
 			final int distanceX = (currentPosition.x - oldPosition.x)
 					* DEFAULT_CANVAS_WIDTH
 					/ configs.getCommonConfigs().getWidth();
