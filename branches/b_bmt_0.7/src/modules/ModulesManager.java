@@ -415,12 +415,12 @@ public class ModulesManager implements ConfigsListener {
 	public void initializeConfigs() {
 
 		final ModuleConfigs rearingConfigs = new RearingModuleConfigs(
-				"rearingConfigs");
+				"RearingModule");
 		final ModuleConfigs movementConfigs = new MovementMeterModuleConfigs(
-				"movementConfigs");
+				"MovementMeterModule");
 		final ModuleConfigs sessionConfigs = new SessionModuleConfigs(
-				"sessionConfigs");
-		final ModuleConfigs zoneConfigs = new ZonesModuleConfigs("zoneConfigs",
+				"SessionModule");
+		final ModuleConfigs zoneConfigs = new ZonesModuleConfigs("ZonesModule",
 				ZonesModule.DEFAULT_HYSTRISES_VALUE, 0, 0);
 
 		configurationManager.reset();
@@ -523,7 +523,7 @@ public class ModulesManager implements ConfigsListener {
 			modules.add(module);
 		}
 
-		// set modules' configurations to the default values
+		// set modules' configurations to the saved values in cfg mgr
 		for (final Module module : modules) {
 			ModuleConfigs moduleConfig = configurationManager
 					.getConfigByName(module.getName());

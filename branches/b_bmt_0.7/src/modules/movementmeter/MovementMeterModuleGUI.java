@@ -2,14 +2,19 @@ package modules.movementmeter;
 
 import java.util.ArrayList;
 
+import modules.ModulesManager;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseListener;
 import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.Rectangle;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.CoolBar;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.ExpandBar;
+import org.eclipse.swt.widgets.ExpandItem;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Shell;
@@ -21,6 +26,8 @@ import org.swtchart.internal.series.LineSeries;
 
 import ui.GraphShell;
 import ui.PluggedGUI;
+import ui.box.InputBox;
+import ui.box.MsgBox;
 import utils.PManager.ProgramState;
 
 public class MovementMeterModuleGUI extends PluggedGUI<MovementMeterModule> {
@@ -208,13 +215,51 @@ public class MovementMeterModuleGUI extends PluggedGUI<MovementMeterModule> {
 	@Override
 	public void deInitialize() {
 		disposeWidget(cmpstPlotter);
+		disposeWidget(cmpstFloatingLevelThreshold);
+		disposeWidget(xpndtmFloatingLevelThreshold);
 		if (secChartParent != null)
 			secChartParent.dispose();
 	}
+	private Composite	cmpstFloatingLevelThreshold;
 
+	private ExpandItem	xpndtmFloatingLevelThreshold;
 	@Override
 	public void initialize(final Shell shell, final ExpandBar expandBar,
 			final Menu menuBar, final CoolBar coolBar, final Group grpGraphs) {
+		
+		xpndtmFloatingLevelThreshold = new ExpandItem(expandBar, SWT.NONE);
+		xpndtmFloatingLevelThreshold.setExpanded(true);
+		xpndtmFloatingLevelThreshold.setText("Floating Level");
+
+		cmpstFloatingLevelThreshold = new Composite(expandBar, SWT.NONE);
+		xpndtmFloatingLevelThreshold.setControl(cmpstFloatingLevelThreshold);
+
+		Button btnSetFloatingLevelThreshold = new Button(cmpstFloatingLevelThreshold, SWT.NONE);
+		btnSetFloatingLevelThreshold.setBounds(new Rectangle(10, 10, 109, 25));
+		btnSetFloatingLevelThreshold.setText("Set floating level");
+		btnSetFloatingLevelThreshold
+		.addSelectionListener(new org.eclipse.swt.events.SelectionAdapter() {
+			@Override
+			public void widgetSelected(
+					final org.eclipse.swt.events.SelectionEvent e) {
+				InputBox inputBox=new InputBox(shell, "Floating Threshold", "Please enter the new Floating level threshold (i.e. any value between 0.0 and 1.0)", true);
+				String value = inputBox.show();
+				if(value!=null && !value.equals("")){
+					try {
+						double dblVal = Double.parseDouble(value);
+						MovementMeterModuleConfigs cfgs = new MovementMeterModuleConfigs("MovementMeterModule");
+						cfgs.setEnergyLevelsRatio(new double[]{-1,dblVal});
+						ModulesManager.getDefault().applyConfigsToModule(cfgs);
+
+					} catch (NumberFormatException exception) {
+						MsgBox.show(shell, "Invalid value, please enter a number between 0.0 and 1.0", "Error", SWT.ERROR);
+					}
+				}
+			}
+		});
+		xpndtmFloatingLevelThreshold.setHeight(xpndtmFloatingLevelThreshold.getControl()
+				.computeSize(SWT.DEFAULT, SWT.DEFAULT).y + 10);
+
 		cmpstPlotter = new Composite(grpGraphs, SWT.NONE);
 		cmpstPlotter.setBounds(10, 20, 232, 135);
 		levelCurves = new ArrayList<Curve>();
