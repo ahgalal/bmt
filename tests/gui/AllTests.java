@@ -53,7 +53,10 @@ public class AllTests {
 
 		final String disabledTests = EnvVar
 				.getEnvVariableValue("DISABLED_TESTS");
-		disabledTestsArray = disabledTests.split(",");
+		if(disabledTests!=null)
+			disabledTestsArray = disabledTests.split(",");
+		else
+			disabledTestsArray =new String[0];
 
 		// Experiment creation
 		addTest(CreateExperimentSuiteTest.suite());

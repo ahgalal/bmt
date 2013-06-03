@@ -30,7 +30,7 @@ public class MovementMeterModule
 	ArrayList<Integer>					energyDataRaw			= new ArrayList<Integer>();
 	private final ArrayList<Integer>	energyDataSmooth;
 	private int[]						energyLevels;
-	private double[]					energyLevelsRatio;
+	
 	private String[]					expParams;
 	private boolean						ignoredFramesNormalized;
 	private int							maxEnergy;
@@ -119,7 +119,6 @@ public class MovementMeterModule
 		expParams = new String[noEnergyLevels];
 		energyBins = new ArrayList<Integer>();
 		energyLevels = new int[noEnergyLevels];
-		energyLevelsRatio = new double[] { 1, 0.3 };
 
 		for (int i = 0; i < noEnergyLevels; i++) {
 			expParams[i] = "eLevel_" + i;
@@ -233,6 +232,7 @@ public class MovementMeterModule
 
 			if (newVal < getMinEnergy())
 				setMinEnergy(newVal);
+			//System.out.println("newVal: "+newVal + " MinEnergy: " + getMinEnergy());
 			energyDataSmooth.add(newVal);
 			energyDataRaw.add(newVal);
 		}
@@ -336,7 +336,7 @@ public class MovementMeterModule
 		final int energySwing = getMaxEnergy() - getMinEnergy();
 
 		for (int i = 0; i < energyLevels.length; i++) {
-			energyLevels[i] = (int) (energyLevelsRatio[i] * energySwing);
+			energyLevels[i] = (int) (configs.getEnergyLevelsRatio()[i] * energySwing + getMinEnergy());
 		}
 			
 	}
@@ -349,8 +349,8 @@ public class MovementMeterModule
 				.getAccumulatedSessionTime();
 		System.out.println(accumulatedSessionTime);
 		for (int i = 0; i < noEnergyLevels; i++) {
-			final double time = accumulatedSessionTime * energyBins.get(i)
-					/ (double) (energyDataSmooth.size() * 1000);
+			final double time = (accumulatedSessionTime/(double)1000) * (energyBins.get(i)
+					/ (double) energyDataSmooth.size());
 			fileCargo.setDataByTag(expParams[i], formatTime(time));
 		}
 	}

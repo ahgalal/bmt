@@ -38,11 +38,6 @@ public class RearingModuleConfigs extends ModuleConfigs {
 	}
 
 	@Override
-	public void mergeConfigs(final ModuleConfigs config) {
-
-	}
-
-	@Override
 	public ModuleConfigs newInstance(final String moduleName) {
 		return new RearingModuleConfigs(moduleName);
 	}

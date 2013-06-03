@@ -39,11 +39,6 @@ public class SessionModuleConfigs extends ModuleConfigs {
 	}
 
 	@Override
-	public void mergeConfigs(final ModuleConfigs config) {
-		// Nothing! :D
-	}
-
-	@Override
 	public ModuleConfigs newInstance(final String moduleName) {
 		return new SessionModuleConfigs(moduleName);
 	}

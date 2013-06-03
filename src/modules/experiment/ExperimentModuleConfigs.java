@@ -54,12 +54,6 @@ public class ExperimentModuleConfigs extends ModuleConfigs {
 	}
 
 	@Override
-	public void mergeConfigs(final ModuleConfigs config) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
 	public ModuleConfigs newInstance(final String moduleName) {
 		// TODO Auto-generated method stub
 		return null;
