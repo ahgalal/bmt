@@ -3,8 +3,6 @@
  */
 package modules.experiment.openfield;
 
-import java.awt.Point;
-
 import modules.Module;
 import modules.experiment.Constants;
 import modules.experiment.ExperimentModule;
@@ -13,38 +11,33 @@ import modules.experiment.ExperimentModuleData;
 
 import org.eclipse.swt.widgets.Shell;
 
-import sys.utils.Utils;
 import filters.Data;
-import filters.source.SourceFilterData;
-
 
 /**
  * @author Creative
  */
 public class OpenFieldExperimentModule extends ExperimentModule {
-	private int[]				bgImageRGB;
+	public final static String	moduleID	= Constants.EXPERIMENT_ID
+													+ ".openfield";
 	private boolean				bgSet;
-	private SourceFilterData	rgbData;
-	public OpenFieldExperimentModule(String name,
+
+	public OpenFieldExperimentModule(final String name,
 			final ExperimentModuleConfigs config) {
 		super(name, config);
 		gui = new OpenFieldExperimentModuleGUI(this);
-		
+
 		data = new ExperimentModuleData();
 		addDefaultModuleDataParams();
 	}
-	public final static String			moduleID=Constants.EXPERIMENT_ID+".openfield";
+
 	@Override
 	public boolean allowTracking() {
-		if (bgSet)
+		if (isBgSet())
 			return true;
 		else
 			return false;
 	}
-	@Override
-	public String getID() {
-		return moduleID;
-	}
+
 	@Override
 	public boolean amIReady(final Shell shell) {
 		if (bgSet)
@@ -54,13 +47,10 @@ public class OpenFieldExperimentModule extends ExperimentModule {
 	}
 
 	@Override
-	public void updateConfigs(ExperimentModuleConfigs config) {
-		super.updateConfigs(config);
-		
-		// update GUI with the common configs
-		((OpenFieldExperimentModuleGUI)gui).setFrameDims(new Point(config.getCommonConfigs().getWidth(),config.getCommonConfigs().getHeight()));
+	public String getID() {
+		return moduleID;
 	}
-	
+
 	/**
 	 * Checks if the Background (Subtraction filter) has been set.
 	 * 
@@ -70,10 +60,14 @@ public class OpenFieldExperimentModule extends ExperimentModule {
 		return bgSet;
 	}
 
+	@SuppressWarnings("rawtypes")
+	@Override
+	public Module newInstance(final String name) {
+		return null; // ExperimentModules are instantiated explicitly
+	}
+
 	@Override
 	public void registerFilterDataObject(final Data data) {
-		if (data instanceof SourceFilterData)
-			rgbData = (SourceFilterData) data;
 
 	}
 
@@ -83,20 +77,8 @@ public class OpenFieldExperimentModule extends ExperimentModule {
 	 * 
 	 * @return integer array representing the RGB background image
 	 */
-	public int[] updateRGBBackground() {
-		bgImageRGB = rgbData.getData();
-		if(bgImageRGB==null){
-			Utils.sleep(100);
-			bgImageRGB = rgbData.getData();
-		}
-			
+	public void setBG() {
 		bgSet = true;
-		return bgImageRGB;
-	}
-	@SuppressWarnings("rawtypes")
-	@Override
-	public Module newInstance(String name) {
-		return null; // ExperimentModules are instantiated explicitly
 	}
 
 }

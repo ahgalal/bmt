@@ -1,5 +1,6 @@
 package modules.movementmeter;
 
+import java.awt.Point;
 import java.util.ArrayList;
 
 import modules.Cargo;
@@ -16,6 +17,7 @@ import utils.PManager;
 import utils.PManager.ProgramState.StreamState;
 import filters.Data;
 import filters.movementmeter.MovementMeterData;
+import filters.ratfinder.RatFinderData;
 
 public class MovementMeterModule
 		extends
@@ -42,7 +44,7 @@ public class MovementMeterModule
 
 	private long						pauseTimeStamp;
 
-	private int							sectorizeFlag;
+	private long							freeRunningCounter;
 
 	private SessionModuleData			sessionModuleData;
 
@@ -51,7 +53,7 @@ public class MovementMeterModule
 	public MovementMeterModule(final String name,
 			final MovementMeterModuleConfigs config) {
 		super(name, config);
-		filtersData = new Data[1];
+		filtersData = new Data[2];
 		energyDataSmooth = new ArrayList<Integer>();
 		gui = new MovementMeterModuleGUI(this, noEnergyLevels);
 		data = new MovementMeterModuleData();
@@ -119,6 +121,7 @@ public class MovementMeterModule
 		expParams = new String[noEnergyLevels];
 		energyBins = new ArrayList<Integer>();
 		energyLevels = new int[noEnergyLevels];
+		locationVectors=new ArrayList<LocationVector>();
 
 		for (int i = 0; i < noEnergyLevels; i++) {
 			expParams[i] = "eLevel_" + i;
@@ -141,7 +144,7 @@ public class MovementMeterModule
 		maxEnergy = 0;
 		minEnergy = 100000000;
 		ignoredFramesNormalized = false;
-		sectorizeFlag=0;
+		freeRunningCounter=0;
 
 		pauseTime = 0;
 		pauseTimeStamp = 0;
@@ -171,6 +174,8 @@ public class MovementMeterModule
 		pauseTimeStamp = System.currentTimeMillis();
 		super.pause();
 	}
+	
+	private ArrayList<LocationVector> locationVectors;
 
 	@Override
 	public void process() {
@@ -237,18 +242,34 @@ public class MovementMeterModule
 			energyDataRaw.add(newVal);
 		}
 
-		sectorizeFlag++;
-		if (sectorizeFlag % 30 == 0) {
+		freeRunningCounter++;
+		
+/*		if (freeRunningCounter % 5 == 0) {
+			// first vector
+			if(locationVectors.size()==0){
+				locationVectors.add(new LocationVector(new Point(currentPosition),null));
+			}else{ // other vectors (2nd, 3rd, ...)
+				LocationVector prevVector=locationVectors.get(locationVectors.size()-1);
+				prevVector.setEnd(new Point(currentPosition));
+				locationVectors.add(new LocationVector(new Point(currentPosition),null));
+			}
+		}*/
+		
+		if (freeRunningCounter % 30 == 0) {
 			sectorizeEnergy();
 			updateGUISectors();
 		}
 	}
-
+	private Point					currentPosition;
 	@Override
 	public void registerFilterDataObject(final Data data) {
 		if (data instanceof MovementMeterData) {
 			movementMeterFilterData = (MovementMeterData) data;
 			this.filtersData[0] = movementMeterFilterData;
+		}
+		if (data instanceof RatFinderData) {
+			this.filtersData[1] = (RatFinderData) data;
+			currentPosition = ((RatFinderData) data).getCenterPoint();
 		}
 	}
 

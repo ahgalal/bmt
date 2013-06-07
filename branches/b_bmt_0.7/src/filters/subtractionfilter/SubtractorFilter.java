@@ -14,6 +14,8 @@
 
 package filters.subtractionfilter;
 
+import java.awt.Point;
+
 import utils.PManager;
 import utils.PManager.ProgramState;
 import utils.StatusManager.StatusSeverity;
@@ -32,7 +34,7 @@ import filters.VideoFilter;
  */
 public class SubtractorFilter extends
 		VideoFilter<SubtractionConfigs, FilterData> {
-	public static final String ID = "filters.subtractor";
+	public static final String	ID	= "filters.subtractor";
 
 	private final FrameIntArray	bgImageGray;
 
@@ -52,6 +54,7 @@ public class SubtractorFilter extends
 			final Link linkOut) {
 		super(name, linkIn, linkOut);
 		bgImageGray = new FrameIntArray();
+		gui = new SubtractorFilterGUI(this);
 	}
 
 	@Override
@@ -60,7 +63,22 @@ public class SubtractorFilter extends
 		localData = new int[configs.getCommonConfigs().getWidth()
 				* configs.getCommonConfigs().getHeight()];
 
+		// update GUI with the common configs
+		((SubtractorFilterGUI) gui).setFrameDims(new Point(configs
+				.getCommonConfigs().getWidth(), configs.getCommonConfigs()
+				.getHeight()));
+
 		return super.configure(configs);
+	}
+
+	@Override
+	public String getID() {
+		return ID;
+	}
+
+	@Override
+	public VideoFilter<?, ?> newInstance(final String filterName) {
+		return new SubtractorFilter(filterName, null, null);
 	}
 
 	/*
@@ -70,15 +88,20 @@ public class SubtractorFilter extends
 	@Override
 	public void process() {
 		int tmp;
-		final int threshMask = configs.getThreshold()/* | configs.getThreshold() << 8
-				| configs.getThreshold() << 16*/;
+		final int threshMask = configs.getThreshold()/*
+													 * | configs.getThreshold()
+													 * << 8 |
+													 * configs.getThreshold() <<
+													 * 16
+													 */;
 		if (configs.isEnabled())
 			if (linkIn.getData().length == bgImageGray.getFrameData().length) {
-				localData = ImageManipulator.rgbIntArray2GrayIntArray(linkIn
-						.getData(),localData);
+				localData = ImageManipulator.rgbIntArray2GrayIntArray(
+						linkIn.getData(), localData);
 				tmp = 0;
 				for (int i = 0; i < localData.length; i++) {
-					tmp = (0x000000FF & localData[i]) - (0x000000FF & bgImageGray.getFrameData()[i]);
+					tmp = (0x000000FF & localData[i])
+							- (0x000000FF & bgImageGray.getFrameData()[i]);
 
 					if (tmp < 0)
 						tmp *= -1;
@@ -90,6 +113,12 @@ public class SubtractorFilter extends
 				}
 				linkOut.setData(localData);
 			}
+	}
+
+	@Override
+	public void registerDependentData(final FilterData data) {
+		// TODO Auto-generated method stub
+
 	}
 
 	/**
@@ -129,33 +158,21 @@ public class SubtractorFilter extends
 	/**
 	 * Updates the background image of the filter.
 	 */
-	public void updateBG() {
-		if (linkIn.getData() != null)
-			bgImageGray.setFrameData(ImageManipulator
-					.rgbIntArray2GrayIntArray(linkIn.getData(), new int[linkIn.getData().length]));
-		else
+	public int[] updateBG() {
+		if (linkIn.getData() != null) {
+			final int[] bg = ImageManipulator.rgbIntArray2GrayIntArray(
+					linkIn.getData(), new int[linkIn.getData().length]);
+			bgImageGray.setFrameData(bg);
+			return linkIn.getData();
+		} else
 			PManager.log.print("Error updating BG, data is null", this,
 					StatusSeverity.ERROR);
+		return null;
 	}
 
 	@Override
 	public void updateProgramState(final ProgramState state) {
 		// TODO Auto-generated method stub
 
-	}
-	@Override
-	public String getID() {
-		return ID;
-	}
-
-	@Override
-	public VideoFilter<?, ?> newInstance(String filterName) {
-		return new SubtractorFilter(filterName, null, null);
-	}
-
-	@Override
-	public void registerDependentData(FilterData data) {
-		// TODO Auto-generated method stub
-		
 	}
 }
