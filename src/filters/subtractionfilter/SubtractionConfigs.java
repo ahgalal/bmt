@@ -14,6 +14,8 @@
 
 package filters.subtractionfilter;
 
+import java.util.ArrayList;
+
 import filters.CommonFilterConfigs;
 import filters.FilterConfigs;
 
@@ -25,6 +27,7 @@ import filters.FilterConfigs;
 public class SubtractionConfigs extends FilterConfigs {
 
 	public static int defaultThreshold=20;
+	private ArrayList<BackgroundSetListener> BGListeners;
 	/**
 	 * subtraction threshold, pixel value> threshold will be white, while pixel
 	 * value < threshold will be black in the output image.
