@@ -69,6 +69,8 @@
 	<fileset id="libs" dir="libs">
 		<include name="**/*.jar" />
 		<include name="**/*.txt" />
+		<include name="**/*.html" />
+		<include name="**/*.htm" />
 	</fileset>
 	<fileset id="jface_libs" dir="${eclipse.home}\plugins">
 		<include name="org.eclipse.core.commands_3.6.0.I20100512-1500.jar" />
@@ -145,7 +147,7 @@
 
 		<delete dir="${binloctmp.tests}" />
 		<mkdir dir="${binloctmp.tests}" />
-		
+
 		<javac destdir="${binloctmp.tests}" debug="on" source="1.6" target="1.6">
 			<src path="${dir.tests}" />
 			<classpath id="tests.classpath">
@@ -158,12 +160,12 @@
 		<!-- copy *.properties files to bin dir -->
 		<copy flatten="false" todir="${binloctmp.tests}">
 			<fileset dir="${dir.tests}">
-				<include name="**/*.properties"/>
+				<include name="**/*.properties" />
 			</fileset>
 		</copy>
 
 	</target>
-
+	
 	<!-- ================================= 
           target: tests.build_jar              
          ================================= -->
@@ -197,7 +199,7 @@
 		<delete dir="${binloctmp}" />
 		<mkdir dir="${binloctmp}" />
 
-		<javac destdir="${binloctmp}" debug="on" source="1.6" target="1.6">
+		<javac destdir="${binloctmp}" debug="on" source="1.6" target="1.6" >
 			<src path="${dir.src}" />
 			<classpath>
 				<path refid="classpath.main" />

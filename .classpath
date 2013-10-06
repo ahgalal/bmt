@@ -45,12 +45,12 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="con" path="com.windowtester.eclipse.ui.runtimeClasspathContainer"/>
-	<classpathentry exported="true" kind="var" path="ECLIPSE_HOME/plugins/org.eclipse.jface_3.6.2.M20110210-1200.jar" sourcepath="/ECLIPSE_HOME/plugins/org.eclipse.jface.source_3.6.2.M20110210-1200.jar"/>
-	<classpathentry exported="true" kind="var" path="ECLIPSE_HOME/plugins/org.eclipse.ui.workbench_3.6.2.M20110210-1200.jar"/>
-	<classpathentry exported="true" kind="var" path="ECLIPSE_HOME/plugins/org.eclipse.core.commands_3.6.0.I20100512-1500.jar"/>
-	<classpathentry exported="true" kind="var" path="ECLIPSE_HOME/plugins/org.eclipse.ui.forms_3.5.2.r36_v20100702.jar"/>
+	<classpathentry kind="var" path="ECLIPSE_HOME/plugins/org.eclipse.jface_3.7.0.v20110928-1505.jar" sourcepath="/ECLIPSE_HOME/plugins/org.eclipse.jface.source_3.6.2.M20110210-1200.jar"/>
+	<classpathentry kind="var" path="ECLIPSE_HOME/plugins/org.eclipse.ui.workbench_3.7.1.v20120104-1859.jar"/>
+	<classpathentry kind="var" path="ECLIPSE_HOME/plugins/org.eclipse.core.commands_3.6.0.I20110111-0800.jar"/>
+	<classpathentry kind="var" path="ECLIPSE_HOME/plugins/org.eclipse.ui.forms_3.5.101.v20111011-1919.jar"/>
 	<classpathentry kind="lib" path="dev_libs/test-utils/test-utils.jar"/>
-	<classpathentry kind="var" path="ECLIPSE_HOME/plugins/org.apache.ant_1.7.1.v20100518-1145/lib/ant.jar"/>
+	<classpathentry kind="var" path="ECLIPSE_HOME/plugins/org.apache.ant_1.8.2.v20120109-1030/lib/ant.jar"/>
 	<classpathentry kind="lib" path="libs/gstreamer/gstreamer-java.jar"/>
 	<classpathentry kind="var" path="ECLIPSE_HOME/plugins/com.windowtester.swt.runtime.win32.win32.x86_6.0.0.r36x201009131510/wt-win32-win32-x86.jar"/>
 	<classpathentry kind="lib" path="libs/LibAVI/LibAVI.jar"/>
