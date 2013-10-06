@@ -79,7 +79,7 @@ public class MovementMeterModule
 		return String.format("%.1f", time);
 	}
 
-	//@formatter:off	
+	// @formatter:off
 	/**
 	 *              A
 	 *              |                    ___ 
@@ -119,7 +119,7 @@ public class MovementMeterModule
 		expParams = new String[noEnergyLevels];
 		energyBins = new ArrayList<Integer>();
 		energyLevels = new int[noEnergyLevels];
-		energyLevelsRatio = new double[] { 1, 0.3 };
+		energyLevelsRatio = new double[] { 1, 0.2 };
 
 		for (int i = 0; i < noEnergyLevels; i++) {
 			expParams[i] = "eLevel_" + i;
@@ -142,7 +142,7 @@ public class MovementMeterModule
 		maxEnergy = 0;
 		minEnergy = 100000000;
 		ignoredFramesNormalized = false;
-		sectorizeFlag=0;
+		sectorizeFlag = 0;
 
 		pauseTime = 0;
 		pauseTimeStamp = 0;
@@ -338,7 +338,7 @@ public class MovementMeterModule
 		for (int i = 0; i < energyLevels.length; i++) {
 			energyLevels[i] = (int) (energyLevelsRatio[i] * energySwing);
 		}
-			
+
 	}
 
 	@Override
@@ -385,7 +385,7 @@ public class MovementMeterModule
 			final double time = accumulatedSessionTime * energyBins.get(i)
 					/ (double) energyDataSmooth.size();
 			guiCargo.setDataByTag(expParams[i], formatTime(time) + " s");
-}
+		}
 	}
 
 }

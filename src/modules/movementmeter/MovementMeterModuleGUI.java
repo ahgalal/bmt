@@ -50,7 +50,7 @@ public class MovementMeterModuleGUI extends PluggedGUI<MovementMeterModule> {
 			this.mainChart = mainChart;
 			this.secChart = secChart;
 			data = new ArrayList<Double>();
-			this.level=isLevel;
+			this.level = isLevel;
 		}
 
 		public void addPoint(final int y) {
@@ -67,7 +67,7 @@ public class MovementMeterModuleGUI extends PluggedGUI<MovementMeterModule> {
 			}
 			updatePlotterDataFlag++;
 		}
-		
+
 		public void clear() {
 			data.clear();
 			times.clear();
@@ -122,7 +122,7 @@ public class MovementMeterModuleGUI extends PluggedGUI<MovementMeterModule> {
 
 			if (secChartParent.getShell().isVisible()) {
 				updateChart(secLineSeries, secChart, tmpData, tmpTimes);
-	}
+			}
 		}
 	}
 
@@ -160,7 +160,7 @@ public class MovementMeterModuleGUI extends PluggedGUI<MovementMeterModule> {
 	private Chart				secChart;
 
 	private GraphShell			secChartParent;
-	
+
 	public MovementMeterModuleGUI(final MovementMeterModule owner,
 			final int numLevels) {
 		super(owner);
@@ -236,7 +236,7 @@ public class MovementMeterModuleGUI extends PluggedGUI<MovementMeterModule> {
 			public void mouseDoubleClick(final MouseEvent arg0) {
 				secChartParent.getShell().setVisible(true);
 				secChartParent.getShell().setActive();
-				
+
 				energyCurve.redraw();
 				for (final Curve curve : levelCurves)
 					curve.redraw();
@@ -252,7 +252,7 @@ public class MovementMeterModuleGUI extends PluggedGUI<MovementMeterModule> {
 		});
 
 		energyCurve = new Curve(mainChart, secChart, mainLineSeries,
-				secLineSeries,false);
+				secLineSeries, false);
 
 		mainGraph = new Graph();
 		mainGraph.addCurve(energyCurve);
@@ -270,7 +270,7 @@ public class MovementMeterModuleGUI extends PluggedGUI<MovementMeterModule> {
 					mainLevelSeries1, secLevelSeries1, true);
 			levelCurves.add(curve);
 			mainGraph.addCurve(curve);
-	}
+		}
 	}
 
 	public void setEnergyLevels(final int levels[]) {
