@@ -1,0 +1,1 @@
+OpenCV is an open source computer vision library originally developed by Intel. It is free for commercial and research use under a BSD license.
