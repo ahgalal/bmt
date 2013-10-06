@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- ====================================================================== 
+     Jul 3, 2011 11:22:07 PM                                                        
+
+     BMT    
+     Behavioral Monitoring Tool
+                   
+     Creative                                                                
+     ====================================================================== -->
+<project name="BMT_help" default="build_help_jar" basedir="../../">
+	<description>
+            Builds BMT help jar file.
+    </description>
+
+	<property name="helpjarfile" value="help/help.jar" />
+	<property name="dquotes" value='"'/>
+	<property name="WINWORD_PATH" value="C:\Program Files\Microsoft Office\Office12"/>
+	<property name="WINWORD" location="${WINWORD_PATH}/WINWORD.EXE"/>
+	<!-- ================================= 
+          target: rtfToHtml              
+         ================================= -->
+    <target name="rtfToHtml">
+    	
+    	<exec executable="${WINWORD}"   >
+    	<arg value="/msaveashtml"/>
+    	<arg value="/q"/>
+    	<arg value="/t"/>
+    	<arg value='"E:\Documents\eclipse\Java\BMT_0.6\BMT\help\javahelp\content\pages\experiments\of\of.rtf"'/>
+    	</exec>
+        
+    </target>
+
+
+	<!-- - - - - - - - - - - - - - - - - - 
+          target: build_jar                      
+         - - - - - - - - - - - - - - - - - -->
+	<target name="build_help_jar">
+		<delete file="${helpjarfile}" />
+		<jar destfile="${helpjarfile}">
+			<fileset dir="help/javahelp/content" includes="*/**"  excludes="*.rtf"/>
+		</jar>
+	</target>
+
+
+</project>

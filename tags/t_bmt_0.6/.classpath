@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" output="bin/src" path="src"/>
+	<classpathentry kind="src" output="bin/tests" path="tests"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="lib" path="libs/POI/commons-logging-1.1.jar"/>
+	<classpathentry kind="lib" path="libs/POI/dom4j-1.6.1.jar"/>
+	<classpathentry kind="lib" path="libs/POI/log4j-1.2.13.jar"/>
+	<classpathentry kind="lib" path="libs/POI/poi-3.7-20101029.jar"/>
+	<classpathentry kind="lib" path="libs/POI/poi-ooxml-3.7-20101029.jar"/>
+	<classpathentry kind="lib" path="libs/POI/poi-ooxml-schemas-3.7-20101029.jar"/>
+	<classpathentry kind="lib" path="libs/POI/poi-scratchpad-3.7-20101029.jar"/>
+	<classpathentry kind="lib" path="libs/POI/xmlbeans-2.3.0.jar"/>
+	<classpathentry kind="lib" path="libs/OpenCV/OpenCV.jar">
+		<attributes>
+			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="BMT/libs/OpenCV"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="libs/JMyron/JMyron.jar">
+		<attributes>
+			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="BMT/libs/JMyron"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="libs/JAGCamLib/JAGCamLib.jar">
+		<attributes>
+			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="BMT/libs/JAGCamLib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="libs/V4L2/v4l4j.jar">
+		<attributes>
+			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="BMT/libs/V4L2"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="libs/Utils/Utils.jar"/>
+	<classpathentry kind="lib" path="libs/gstreamer/jna.jar"/>
+	<classpathentry kind="lib" path="libs/SWT/org.eclipse.swt.win32.win32.x86_3.6.2.v3659c.jar"/>
+	<classpathentry kind="lib" path="libs/swtchart/org.swtchart_0.8.0.v20120301.jar"/>
+	<classpathentry kind="lib" path="libs/xstream/xstream-1.4.4.jar"/>
+	<classpathentry kind="lib" path="help/help.jar"/>
+	<classpathentry kind="lib" path="libs/javahelp/jh.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
+	<classpathentry kind="lib" path="libs/JAGVidLib/AGVidLib.jar">
+		<attributes>
+			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="BMT/libs/JAGVidLib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="con" path="com.windowtester.eclipse.ui.runtimeClasspathContainer"/>
+	<classpathentry kind="var" path="ECLIPSE_HOME/plugins/org.eclipse.jface_3.7.0.v20110928-1505.jar" sourcepath="/ECLIPSE_HOME/plugins/org.eclipse.jface.source_3.6.2.M20110210-1200.jar"/>
+	<classpathentry kind="var" path="ECLIPSE_HOME/plugins/org.eclipse.ui.workbench_3.7.1.v20120104-1859.jar"/>
+	<classpathentry kind="var" path="ECLIPSE_HOME/plugins/org.eclipse.core.commands_3.6.0.I20110111-0800.jar"/>
+	<classpathentry kind="var" path="ECLIPSE_HOME/plugins/org.eclipse.ui.forms_3.5.101.v20111011-1919.jar"/>
+	<classpathentry kind="lib" path="dev_libs/test-utils/test-utils.jar"/>
+	<classpathentry kind="var" path="ECLIPSE_HOME/plugins/org.apache.ant_1.8.2.v20120109-1030/lib/ant.jar"/>
+	<classpathentry kind="lib" path="libs/gstreamer/gstreamer-java.jar"/>
+	<classpathentry kind="var" path="ECLIPSE_HOME/plugins/com.windowtester.swt.runtime.win32.win32.x86_6.0.0.r36x201009131510/wt-win32-win32-x86.jar"/>
+	<classpathentry kind="lib" path="libs/LibAVI/LibAVI.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/3.8.1"/>
+	<classpathentry kind="lib" path="libs/zest/org.eclipse.draw2d_3.6.2.v20110128-0100.jar"/>
+	<classpathentry kind="lib" path="libs/zest/org.eclipse.zest.core_1.2.0.v20101209-2020.jar"/>
+	<classpathentry kind="lib" path="libs/zest/org.eclipse.zest.layouts_1.1.0.v20101209-2020.jar"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>
