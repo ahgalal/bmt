@@ -104,7 +104,7 @@ public class SessionModule extends
 		for (final String param : expParams)
 			data.addParameter(param);
 		expType = new ExperimentType[] { ExperimentType.OPEN_FIELD,
-				ExperimentType.FORCED_SWIMMING };
+				ExperimentType.FORCED_SWIMMING ,ExperimentType.PARKINSON};
 	}
 
 	@SuppressWarnings("rawtypes")

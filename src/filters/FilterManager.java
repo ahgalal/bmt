@@ -27,6 +27,8 @@ import utils.video.FrameIntArray;
 import filters.FiltersNamesRequirements.FilterRequirement;
 import filters.avg.AverageFilter;
 import filters.avg.AverageFilterConfigs;
+import filters.headangle.HeadAngleConfigs;
+import filters.headangle.HeadAngleFilter;
 import filters.movementmeter.MovementMeter;
 import filters.movementmeter.MovementMeterFilterConfigs;
 import filters.ratfinder.RatFinder;
@@ -92,6 +94,7 @@ public class FilterManager implements ConfigsListener {
 		installedFilters.add(new SubtractorFilter("", null, null));
 		installedFilters.add(new VideoRecorder("", null, null));
 		installedFilters.add(new ZonesDrawerFilter("", null, null));
+		installedFilters.add(new HeadAngleFilter("", null, null));
 
 		configurationManager = new FiltersConfigurationManager(
 				filters.getFilters());
@@ -312,6 +315,8 @@ public class FilterManager implements ConfigsListener {
 				"MovementMeter", commonConfigs);
 		final ZonesDrawerConfigs zonesDrawerConfigs = new ZonesDrawerConfigs(
 				"ZonesDrawer", commonConfigs, null);
+		
+		final HeadAngleConfigs headAngleConfigs = new HeadAngleConfigs("HeadAngle", HeadAngleFilter.ID, commonConfigs);
 
 		configurationManager.reset();
 		configurationManager.addConfiguration(sourceConfigs, false);
@@ -324,6 +329,7 @@ public class FilterManager implements ConfigsListener {
 		configurationManager.addConfiguration(avgFilterConfigs, false);
 		configurationManager.addConfiguration(movementFilterConfigs, false);
 		configurationManager.addConfiguration(zonesDrawerConfigs, false);
+		configurationManager.addConfiguration(headAngleConfigs, false);
 	}
 
 	/**
@@ -349,6 +355,8 @@ public class FilterManager implements ConfigsListener {
 			final String filterID = entry.getID();
 
 			final VideoFilter<?, ?> filter = createFilter(filterName, filterID);
+			if(filter==null)
+				throw new RuntimeException("Filter: " + filterName + " could not be instantiated");
 			filters.add(filter);
 
 			switch (entry.getTrigger()) {
@@ -382,6 +390,9 @@ public class FilterManager implements ConfigsListener {
 				// apply default configs to the filter and display a warning
 				filterConfig = configurationManager.createDefaultConfigs(
 						vf.getName(), vf.getID(), commonConfigs);
+				if(filterConfig==null)
+					throw new RuntimeException("Couldn't instantiate filter configuration for: " + vf.getName());
+				
 				configurationManager.addConfiguration(filterConfig, false);
 				PManager.log.print("Default Configs is applied to filter: "
 						+ vf.getName(), this, StatusSeverity.WARNING);

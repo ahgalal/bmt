@@ -13,14 +13,17 @@ import modules.experiment.Exp2GUI;
 import modules.experiment.Experiment;
 import modules.experiment.ExperimentModule;
 import modules.experiment.ExperimentModuleConfigs;
+import modules.experiment.ExperimentType;
 import modules.experiment.ForcedSwimmingExperiment;
 import modules.experiment.Group;
 import modules.experiment.Grp2GUI;
 import modules.experiment.OpenFieldExperiment;
+import modules.experiment.ParkinsonExperiment;
 import modules.experiment.Rat;
 import modules.experiment.TextEngine;
 import modules.experiment.forcedswimming.ForcedSwimmingExperimentModule;
 import modules.experiment.openfield.OpenFieldExperimentModule;
+import modules.experiment.parkinson.ParkinsonExperimentModule;
 import utils.PManager;
 import utils.StatusManager.StatusSeverity;
 
@@ -192,8 +195,14 @@ public class ExperimentManager {
 			experimentModule = new ForcedSwimmingExperimentModule("experiment",
 					experimentConfigs);
 			break;
-		default:
+		case PARKINSON:
+			experimentConfigs = new ExperimentModuleConfigs("experiment",
+					exp, ParkinsonExperimentModule.moduleID);
+			experimentModule = new ParkinsonExperimentModule("experiment",
+					experimentConfigs);
 			break;
+		default:
+			throw new RuntimeException("Unsupported experiment type");
 		}
 
 		return experimentModule;
@@ -358,10 +367,12 @@ public class ExperimentManager {
 		 * in case of creating new experiment, isExpLoaded() will return false
 		 */
 		if (isExpLoaded() == false) {
-			if (type.equals("Open Field")) {
+			if (type.equals(ExperimentType.OPEN_FIELD.toString())) {
 				exp = new OpenFieldExperiment();
-			} else if (type.equals("Forced Swimming")) {
+			} else if (type.equals(ExperimentType.FORCED_SWIMMING.toString())) {
 				exp = new ForcedSwimmingExperiment();
+			} else if (type.equals(ExperimentType.PARKINSON.toString())) {
+				exp = new ParkinsonExperiment();
 			} else {
 				throw new RuntimeException("Unknown Experiment type");
 			}
