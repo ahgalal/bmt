@@ -17,6 +17,7 @@ package control.ui;
 import help.HelpManager;
 
 import java.awt.Point;
+import java.awt.event.MouseListener;
 import java.io.File;
 import java.util.ArrayList;
 
@@ -26,6 +27,8 @@ import modules.ModulesManager;
 import modules.experiment.Constants;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Cursor;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
@@ -40,6 +43,7 @@ import utils.PManager.ProgramState.GeneralState;
 import utils.PManager.ProgramState.StreamState;
 import utils.StateListener;
 import utils.StatusManager.StatusSeverity;
+import utils.video.ImageManipulator.RGB;
 import filters.CommonFilterConfigs;
 import filters.screendrawer.ScreenDrawerConfigs;
 
@@ -142,6 +146,10 @@ public class CtrlMainGUI extends ControllerUI<MainGUI> implements StateListener 
 		ctrlNewExpWizard = new CtrlNewExperimentWizard();
 	}
 
+	public void addMouseListenerOnMainFrame(final MouseListener listener) {
+		ui.addMouseListenerOnMainFrame(listener);
+	}
+
 	/**
 	 * Clears the GUI data.
 	 */
@@ -208,6 +216,10 @@ public class CtrlMainGUI extends ControllerUI<MainGUI> implements StateListener 
 	 */
 	public boolean isShellDisposed() {
 		return uiShell.isDisposed();
+	}
+
+	private boolean isUiOpened() {
+		return uiOpened;
 	}
 
 	/**
@@ -291,7 +303,9 @@ public class CtrlMainGUI extends ControllerUI<MainGUI> implements StateListener 
 	 */
 	public void mnutmExperimentExportToExcelAction() {
 		final FileDialog fileDialog = new FileDialog(ui.getShell(), SWT.SAVE);
-		fileDialog.setFilterExtensions(new String[] { "*.xlsx" });
+		fileDialog.setFilterExtensions(new String[] {
+			"*.xlsx"
+		});
 		final String fileName = fileDialog.open();
 		if (fileName != null)
 			ExperimentManager.getDefault().writeToExcelFile(fileName);
@@ -349,6 +363,10 @@ public class CtrlMainGUI extends ControllerUI<MainGUI> implements StateListener 
 		pm.pauseResume();
 	}
 
+	public void removeMouseListenerOnMainFrame(final MouseListener listener) {
+		ui.removeMouseListenerOnMainFrame(listener);
+	}
+
 	public void setActive() {
 		ui.setActive();
 	}
@@ -369,6 +387,10 @@ public class CtrlMainGUI extends ControllerUI<MainGUI> implements StateListener 
 						null);
 			}
 		});
+	}
+
+	public void setUiOpened(final boolean uiOpened) {
+		this.uiOpened = uiOpened;
 	}
 
 	@Override
@@ -575,12 +597,16 @@ public class CtrlMainGUI extends ControllerUI<MainGUI> implements StateListener 
 		});
 	}
 
-	public void setUiOpened(boolean uiOpened) {
-		this.uiOpened = uiOpened;
+	public RGB getMainScreenPixelRGB(Point point) {
+		return ui.getMainScreenPixelRGB(point);
 	}
 
-	private boolean isUiOpened() {
-		return uiOpened;
+	public void setCursor(int cursorType) {
+		ui.getShell().setCursor(new Cursor(Display.getDefault(), cursorType));
+	}
+
+	public void setMainScreenCursor(int cursor) {
+		ui.getAwtVideoMain().setCursor(java.awt.Cursor.getPredefinedCursor(cursor));
 	}
 
 }

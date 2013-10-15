@@ -7,7 +7,9 @@ import java.awt.Point;
 
 import utils.PManager.ProgramState;
 import utils.video.ImageManipulator;
-import utils.video.ImageManipulator.CentroidFinder;
+import utils.video.ImageManipulator.Blob;
+import utils.video.ImageManipulator.BlobFinder;
+import utils.video.ImageManipulator.RGB;
 import filters.CommonFilterConfigs;
 import filters.FilterConfigs;
 import filters.FilterData;
@@ -22,54 +24,60 @@ public class HeadAngleFilter extends
 	public static final String	ID	= "filters.headangle";
 	private int[]				blankImageData;
 
-	private Point				bodyPosition1;
-	private Point				bodyPosition2;
-	protected CentroidFinder	centroidFinder;
+	protected BlobFinder		blobFinder;
+	private Blob[]				blobs;
+	private Blob				bodyPosition1;
 
-	private Point				earPosition1;
-
-	private Point				earPosition2;
-
+	private Blob				bodyPosition2;
+	private RGB[]				colors;
+	private Blob				earPosition1;
+	private Blob				earPosition2;
 	private int[]				outputImageData;
-
+	private RGB[]				thresholds;
 	private int[]				tmpProcessedData;
 
 	public HeadAngleFilter(final String name, final Link linkIn,
 			final Link linkOut) {
 		super(name, linkIn, linkOut);
 		filterData = new HeadAngleData();
-		centroidFinder = new CentroidFinder();
+		blobFinder = new BlobFinder();
+		gui=new HeadAngleGUI(this);
 	}
 
 	@Override
 	public boolean configure(final FilterConfigs configs) {
 		final CommonFilterConfigs commonConfigs = configs.getCommonConfigs();
-		tmpProcessedData = new int[commonConfigs.getWidth()
-				* commonConfigs.getHeight()];
-		centroidFinder.initialize(commonConfigs.getWidth(),
-				commonConfigs.getHeight());
-		outputImageData = new int[commonConfigs.getWidth()
-				* commonConfigs.getHeight()];
+		final int height = commonConfigs.getHeight();
+		final int width = commonConfigs.getWidth();
+		tmpProcessedData = new int[width * height];
+		blobFinder.initialize(width, height);
+		outputImageData = new int[width * height];
 
-		blankImageData = new int[commonConfigs.getWidth()
-				* commonConfigs.getHeight()];
-		
-		bodyPosition1 = new Point();
-		bodyPosition2 = new Point();
-		earPosition1 = new Point();
-		earPosition2 = new Point();
+		blankImageData = new int[width * height];
+
+		bodyPosition1 = new Blob();
+		bodyPosition2 = new Blob();
+		earPosition1 = new Blob();
+		earPosition2 = new Blob();
+
+		colors = new RGB[] {
+				new RGB(246, 0, 0),
+				new RGB(0, 247, 6),
+				new RGB(0, 209, 247),
+				new RGB(239, 247, 0)
+		};
+
+		thresholds = new RGB[] {
+				new RGB(20, 20, 20),
+				new RGB(20, 20, 20),
+				new RGB(20, 20, 20),
+				new RGB(20, 20, 20)
+		};
+		blobs = new Blob[] {
+				bodyPosition1, bodyPosition2, earPosition1, earPosition2
+		};
+
 		return super.configure(configs);
-	}
-
-	private Point getBlobCentroid(final int[] origImg, Point centroid,
-			final int r, final int rThreshold, final int g,
-			final int gThreshold, final int b, final int bThreshold) {
-		ImageManipulator.filterImageRGB(origImg, tmpProcessedData, r,
-				rThreshold, g, gThreshold, b, bThreshold);
-		if (centroid == null)
-			centroid = new Point();
-		centroidFinder.updateCentroid(tmpProcessedData, centroid);
-		return centroid;
 	}
 
 	@Override
@@ -95,30 +103,62 @@ public class HeadAngleFilter extends
 		if (getConfigs().isEnabled()) {
 			final int[] origImg = getLinkIn().getData();
 			final long t1 = System.currentTimeMillis();
+
 			System.arraycopy(blankImageData, 0, outputImageData, 0,
-					origImg.length);
+					blankImageData.length);
+			System.arraycopy(blankImageData, 0, tmpProcessedData, 0,
+					blankImageData.length);
 			// find body points
-			// body point 1
-			getBlobCentroid(origImg, bodyPosition1, 246, 20, 0, 20, 0, 20);
 
+			blobFinder.updateBlobsCentroids(origImg, tmpProcessedData, colors,
+					blobs, thresholds);
+
+			// // body point 1
+			// long tCentroid1 = System.currentTimeMillis();
+			// RGB thresholds2 = new RGB(5, 20, 20);
+			// RGB rgb = new RGB(246, 0, 0);
+			// getBlobCentroid(origImg, bodyPosition1, rgb,
+			// thresholds2);
+			//
+			// long tCentroid2 = System.currentTimeMillis();
+			// System.out.println(tCentroid2-tCentroid1);
+
+			// long tBlobs1 = System.currentTimeMillis();
+			// Collection<utils.video.ImageManipulator.Blob> blobs =
+			// ImageManipulator.getBlobs(tmpProcessedData);
+			// long tBlobs2 = System.currentTimeMillis();
 			/*
-			 * final CrossMarker marker = new CrossMarker(50, 50, 5, Color.RED,
-			 * 640, 480); marker.draw(tmpProcessedData, color1Position.x,
-			 * color1Position.y);
+			 * System.out.println("blob count: " + blobs.size() + " time: " +
+			 * (tBlobs2 - tBlobs1));
 			 */
+			// System.out.println((tBlobs2 - tBlobs1));
+			// utils.video.ImageManipulator.Blob[] blobsArr = blobs
+			// .toArray(new utils.video.ImageManipulator.Blob[0]);
 
-			// body point 2
-			getBlobCentroid(origImg, bodyPosition2, 0, 20, 247, 20, 6, 20);
+			// final CrossMarker marker = new CrossMarker(50, 50, 5, Color.RED,
+			// 640, 480);
+			// Point centroid = blobsArr[0].getCentroid();
+			// marker.draw(outputImageData, centroid.x,
+			// centroid.y);
 
-			// find ear points
-			// ear point 1
-			getBlobCentroid(origImg, earPosition1, 0, 20, 209, 20, 247, 20);
-
-			// ear point 2
-			getBlobCentroid(origImg, earPosition2, 239, 20, 247, 20, 0, 20);
+			// // body point 2
+			// rgb.setRGB(0, 247, 6);
+			// thresholds2.setRGB(20, 20, 20);
+			// getBlobCentroid(origImg, bodyPosition2, rgb,thresholds2);
+			//
+			// // find ear points
+			// // ear point 1
+			// rgb.setRGB(0, 209, 247);
+			// thresholds2.setRGB(20, 20, 20);
+			// getBlobCentroid(origImg, bodyPosition2, rgb,thresholds2);
+			//
+			// // ear point 2
+			// rgb.setRGB(239, 247, 0);
+			// thresholds2.setRGB(20, 20, 20);
+			// getBlobCentroid(origImg, bodyPosition2, rgb,thresholds2);
 
 			final Point[] earLinePoints = ImageManipulator.getLinePoints(
-					earPosition1, earPosition2);
+					earPosition1.getCentroid(), earPosition2.getCentroid());
 			for (final Point pt : earLinePoints) {
 				outputImageData[pt.x + (pt.y * 640)] = 0x00FF0000;
 				outputImageData[pt.x + 1 + (pt.y * 640)] = 0x00FF0000;
@@ -126,7 +166,7 @@ public class HeadAngleFilter extends
 			}
 
 			final Point[] bodyLinePoints = ImageManipulator.getLinePoints(
-					bodyPosition1, bodyPosition2);
+					bodyPosition1.getCentroid(), bodyPosition2.getCentroid());
 			for (final Point pt : bodyLinePoints) {
 				outputImageData[pt.x + (pt.y * 640)] = 0x00FF0000;
 				outputImageData[pt.x + 1 + (pt.y * 640)] = 0x00FF0000;
@@ -148,13 +188,6 @@ public class HeadAngleFilter extends
 	public void registerDependentData(final FilterData data) {
 		// TODO Auto-generated method stub
 
-	}
-
-	private int rgbToInt(final int r, final int g, final int b) {
-		final String rHex = Integer.toHexString(r);
-		final String gHex = Integer.toHexString(g);
-		final String bHex = Integer.toHexString(b);
-		return Integer.decode("0x" + rHex + gHex + bHex);
 	}
 
 	/*
