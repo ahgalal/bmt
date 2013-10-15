@@ -14,7 +14,12 @@
 
 package ui;
 
+import java.awt.AWTException;
+import java.awt.Color;
 import java.awt.Frame;
+import java.awt.Robot;
+import java.awt.event.MouseListener;
+import java.awt.image.BufferedImage;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.awt.SWT_AWT;
@@ -43,6 +48,8 @@ import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
 
 import utils.PManager;
+import utils.video.ImageManipulator;
+import utils.video.ImageManipulator.RGB;
 import control.ui.ControllerUI;
 import control.ui.CtrlMainGUI;
 
@@ -442,6 +449,14 @@ public class MainGUI extends BaseUI {
 		getAwtVideoMain().setSize(cmpstMain.getSize().x,
 				cmpstMain.getSize().y);
 	}
+	
+	public void addMouseListenerOnMainFrame(MouseListener listener){
+		awtVideoMain.addMouseListener(listener);
+	}
+	
+	public void removeMouseListenerOnMainFrame(MouseListener listener){
+		awtVideoMain.removeMouseListener(listener);
+	}
 
 	/**
 	 * Creates the Secondary screen's AWT frame.
@@ -765,5 +780,22 @@ public class MainGUI extends BaseUI {
 	
 	public void setStreamLength(int totalLength) {
 		sclStreamPosition.setMaximum(totalLength);
+	}
+
+	public RGB getMainScreenPixelRGB(java.awt.Point point) {
+		
+		Robot robot = null;
+		try {
+			robot = new Robot();
+		} catch (AWTException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		int x = awtVideoMain.getLocationOnScreen().x + point.x;
+		int y= awtVideoMain.getLocationOnScreen().y + point.y;
+		Color pixelColor = robot.getPixelColor(x, y);
+		int[] rgb = new int[]{pixelColor.getRed(),pixelColor.getGreen(),pixelColor.getBlue()};
+		
+		return new RGB(rgb[0], rgb[1], rgb[2]);
 	}
 }

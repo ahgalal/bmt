@@ -17,6 +17,8 @@ package utils.video;
 import java.awt.Point;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.util.Collection;
+import java.util.HashMap;
 
 import javax.imageio.ImageIO;
 
@@ -27,6 +29,122 @@ import javax.imageio.ImageIO;
  * @author Creative
  */
 public class ImageManipulator {
+
+	public static class Blob {
+		private Point	centroid	= new Point();
+		private int		maxX		= -1;
+		private int		maxY		= -1;
+		private int		minX		= 10000;
+		private int		minY		= 10000;
+
+		// private final ArrayList<Point> points = new ArrayList<Point>();
+
+		public void addPoint(final Point p) {
+			// points.add(p);
+			if (p.x < minX)
+				minX = p.x;
+			else if (p.x > maxX)
+				maxX = p.x;
+			if (p.y < minY)
+				minY = p.y;
+			else if (p.y > maxY)
+				maxY = p.y;
+		}
+
+		public Point getCentroid() {
+			centroid.x = (maxX + minX) / 2;
+			centroid.y = (maxY + minY) / 2;
+
+			return centroid;
+		}
+
+		/*
+		 * public ArrayList<Point> getPoints() { return points; }
+		 */
+
+		public void setCentroid(final Point centroid) {
+			this.centroid = centroid;
+		}
+	}
+
+	public static class BlobFinder {
+		public static Collection<Blob> getBlobs(final int[] image) {
+			final HashMap<Integer, Blob> blobs = new HashMap<Integer, Blob>();
+			final int[] labels = new int[image.length];
+			int labelCounter = 1;
+
+			for (int i = 0; i < image.length; i++) {
+				final int pixel = image[i];
+				final int xPixel = i % 640;
+				final int yPixel = i / 640;
+				if (pixel == 0x00FFFFFF) { // pixel is foreground
+					// check neighboring pixels' label
+					y_loop:
+					for (int yTmp = yPixel - 1; yTmp <= (yPixel + 1); yTmp++) {
+						for (int xTmp = xPixel - 1; xTmp <= (xPixel + 1); xTmp++) {
+							final int label = labels[xTmp + (yTmp * 640)];
+							if (label > 0) {
+								labels[i] = label;
+								break y_loop;
+							}
+						}
+					}
+					Blob blob = null;
+					if (labels[i] == 0) { // if label is not set yet for the
+											// current
+											// foreground pixel, set it
+						labels[i] = labelCounter;
+						blob = blobs.get(labelCounter);
+						if (blob == null) {
+							blob = new Blob();
+							blobs.put(labelCounter, blob);
+						}
+						labelCounter++;
+					} else {
+						blob = blobs.get(labels[i]);
+					}
+					blob.addPoint(new Point(xPixel, yPixel));
+				}
+			}
+
+			return blobs.values();
+		}
+
+		private final CentroidFinder	centroidFinder;
+
+		public BlobFinder() {
+			centroidFinder = new CentroidFinder();
+		}
+
+		public void initialize(final int width, final int height) {
+			centroidFinder.initialize(width, height);
+		}
+
+		public void updateBlobsCentroids(final int[] image,
+				final int[] filteredImage, final RGB[] colors,
+				final Blob[] blobs, final RGB[] thresholds) {
+			for (int i = 0; i < image.length; i++) {
+				final int pixel = image[i];
+				final int[] pixelRGB = ImageManipulator.intToRGB(pixel);
+
+				for (int iColor = 0; iColor < colors.length; iColor++) {
+					if ((Math.abs(pixelRGB[0] - colors[iColor].getR()) < thresholds[iColor]
+							.getR())
+							&& (Math.abs(pixelRGB[1] - colors[iColor].getG()) < thresholds[iColor]
+									.getG())
+							&& (Math.abs(pixelRGB[2] - colors[iColor].getB()) < thresholds[iColor]
+									.getB())) {
+						filteredImage[i] = iColor + 1;
+					}
+				}
+			}
+
+			for (int iColor = 0; iColor < colors.length; iColor++) {
+				centroidFinder.updateCentroid(filteredImage, blobs[iColor].getCentroid(),
+						iColor + 1);
+			}
+		}
+	}
 
 	public static class CentroidFinder {
 		private static final int	CENTROID_HISTORY_SIZE	= 3;
@@ -93,6 +211,11 @@ public class ImageManipulator {
 				framesRemainingReliableCentroid--;
 		}
 
+		public void updateCentroid(final int[] tmpProcessedData,
+				final Point centroid) {
+			updateCentroid(tmpProcessedData, centroid, -1);
+		}
+
 		/**
 		 * Updates the center point (ie: finds the location of the moving
 		 * object).
@@ -101,7 +224,7 @@ public class ImageManipulator {
 		 *            input image
 		 */
 		public void updateCentroid(final int[] binaryImage,
-				final Point centerPoint) {
+				final Point centerPoint, final int label) {
 
 			tmpMax = SMALLEST_WHITE_AREA;
 
@@ -120,7 +243,11 @@ public class ImageManipulator {
 			for (int y = y1; y < y2; y++) { // Horizontal Sum
 				horiSum[y] = 0;
 				for (int x = 0; x < width; x++)
-					horiSum[y] += binaryImage[(y * width) + x] & 0xff;
+					if (label != -1) {
+						if (binaryImage[(y * width) + x] == label)
+							horiSum[y] += 1;
+					} else
+						horiSum[y] += binaryImage[(y * width) + x] & 0xFF;
 				if (horiSum[y] > tmpMax) {
 					centerPoint.y = y;
 					tmpMax = horiSum[y];
@@ -143,7 +270,12 @@ public class ImageManipulator {
 			for (int x = x1; x < x2; x++) { // Vertical Sum
 				vertSum[x] = 0;
 				for (int y = 0; y < height; y++)
-					vertSum[x] += binaryImage[(y * width) + x] & 0xff;
+					if (label != -1) {
+						if (binaryImage[(y * width) + x] == label)
+							vertSum[x] += 1;
+					} else
+						vertSum[x] += binaryImage[(y * width) + x] & 0xFF;
+
 				if (vertSum[x] > tmpMax) {
 					centerPoint.x = x;
 					tmpMax = vertSum[x];
@@ -152,6 +284,47 @@ public class ImageManipulator {
 
 			// low pass filter on position
 			lowPassFilterCentroidPosition(centerPoint);
+		}
+	}
+
+	public static class RGB {
+
+		private int	r, g, b;
+
+		public RGB(final int r, final int g, final int b) {
+			this.r = r;
+			this.g = g;
+			this.b = b;
+		}
+
+		public int getB() {
+			return b;
+		}
+
+		public int getG() {
+			return g;
+		}
+
+		public int getR() {
+			return r;
+		}
+
+		public void setB(final int b) {
+			this.b = b;
+		}
+
+		public void setG(final int g) {
+			this.g = g;
+		}
+
+		public void setR(final int r) {
+			this.r = r;
+		}
+
+		public void setRGB(final int r, final int g, final int b) {
+			this.r = r;
+			this.g = g;
+			this.b = b;
 		}
 	}
 
