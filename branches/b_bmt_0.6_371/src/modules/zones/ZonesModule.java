@@ -30,7 +30,9 @@ import utils.Logger.Details;
 import utils.PManager;
 import utils.StatusManager.StatusSeverity;
 import filters.Data;
+import filters.FilterData;
 import filters.FilterManager;
+import filters.headangle.HeadAngleData;
 import filters.ratfinder.RatFinderData;
 import filters.zonesdrawer.ZonesDrawerConfigs;
 import gfx_panel.OvalShape;
@@ -58,7 +60,7 @@ public class ZonesModule extends
 	private final Point				oldPosition;
 	private final ArrayList<Point>	path;										// This
 
-	private RatFinderData			ratFinderData;
+	private FilterData				ratFinderData;
 
 	private final ShapeController	shapeController;
 	private int						updatedZoneNumber;
@@ -86,7 +88,8 @@ public class ZonesModule extends
 		zones = new ZonesCollection(this, shapeController);
 		initialize();
 		gui = new ZonesModuleGUI(this);
-		expType = new ExperimentType[] { ExperimentType.OPEN_FIELD };
+		expType = new ExperimentType[] { ExperimentType.OPEN_FIELD,
+				ExperimentType.PARKINSON };
 	}
 
 	/**
@@ -206,8 +209,8 @@ public class ZonesModule extends
 	 * @return zone's number located at the pixel of x,y
 	 */
 	private int getZone(final int x, final int y) {
-		if (x + y * configs.getCommonConfigs().getWidth() < zoneMap.length)
-			return zoneMap[x + y * configs.getCommonConfigs().getWidth()];
+		if ((x + (y * configs.getCommonConfigs().getWidth())) < zoneMap.length)
+			return zoneMap[x + (y * configs.getCommonConfigs().getWidth())];
 		return -1;
 	}
 
@@ -285,11 +288,17 @@ public class ZonesModule extends
 
 	@Override
 	public void registerFilterDataObject(final Data data) {
+		// if (data instanceof RatFinderData) {
 		if (data instanceof RatFinderData) {
 			ratFinderData = (RatFinderData) data;
-			this.filtersData[0] = ratFinderData;
-			currentPosition = ratFinderData.getCenterPoint();
+			currentPosition = ((RatFinderData) ratFinderData).getCenterPoint();
+		} else if (data instanceof HeadAngleData) {
+			ratFinderData = (HeadAngleData) data;
+			currentPosition = ((HeadAngleData) ratFinderData).getCenterPoint();
 		}
+
+		this.filtersData[0] = ratFinderData;
+
 	}
 
 	@Override
@@ -405,17 +414,15 @@ public class ZonesModule extends
 	 */
 	private void updateTotalDistance() {
 		if (oldPosition != null) {
-			final int distanceX = (currentPosition.x - oldPosition.x)
-					* DEFAULT_CANVAS_WIDTH
+			final int distanceX = ((currentPosition.x - oldPosition.x) * DEFAULT_CANVAS_WIDTH)
 					/ configs.getCommonConfigs().getWidth();
-			final int distanceY = (currentPosition.y - oldPosition.y)
-					* DEFAULT_CANVAS_HEIGHT
+			final int distanceY = ((currentPosition.y - oldPosition.y) * DEFAULT_CANVAS_HEIGHT)
 					/ configs.getCommonConfigs().getHeight();
 
 			final double distance = Math.sqrt(Math.pow(distanceX, 2)
 					+ Math.pow(distanceY, 2));
-			final long totalDistance = (long) (data.getTotalDistance() + distance
-					/ data.getScale());
+			final long totalDistance = (long) (data.getTotalDistance() + (distance / data
+					.getScale()));
 			data.setTotalDistance(totalDistance);
 		}
 	}
@@ -466,25 +473,25 @@ public class ZonesModule extends
 
 			if (tmpShp instanceof RectangleShape) {
 				tmpRect = (RectangleShape) tmpShp;
-				final int zoneStartX = tmpRect.getX() * width
+				final int zoneStartX = (tmpRect.getX() * width)
 						/ DEFAULT_CANVAS_WIDTH;
-				final int zoneEndX = zoneStartX + tmpRect.getWidth() * width
-						/ DEFAULT_CANVAS_WIDTH;
-				final int zoneStartY = tmpRect.getY() * height
+				final int zoneEndX = zoneStartX
+						+ ((tmpRect.getWidth() * width) / DEFAULT_CANVAS_WIDTH);
+				final int zoneStartY = (tmpRect.getY() * height)
 						/ DEFAULT_CANVAS_HEIGHT;
-				final int zoneEndY = zoneStartY + tmpRect.getHeight() * height
-						/ DEFAULT_CANVAS_HEIGHT;
+				final int zoneEndY = zoneStartY
+						+ ((tmpRect.getHeight() * height) / DEFAULT_CANVAS_HEIGHT);
 				for (int x = zoneStartX; x < zoneEndX; x++)
 					if ((x > -1) & (x < width)) {
 						for (int y = zoneStartY; y < zoneEndY; y++)
 							if ((y > -1) & (y < height))
-								zoneMap[x + y * width] = (byte) tmpZoneNumber;
+								zoneMap[x + (y * width)] = (byte) tmpZoneNumber;
 					}
 			} else if (tmpShp instanceof OvalShape) {
 				tmpOval = (OvalShape) tmpShp;
-				final int radiusX = tmpOval.getWidth() * width
+				final int radiusX = (tmpOval.getWidth() * width)
 						/ DEFAULT_CANVAS_WIDTH / 2;
-				final int radiusY = tmpOval.getHeight() * height
+				final int radiusY = (tmpOval.getHeight() * height)
 						/ DEFAULT_CANVAS_HEIGHT / 2;
 
 				final int centerX = tmpOval.getX() + radiusX;
@@ -492,12 +499,11 @@ public class ZonesModule extends
 
 				float xRelToCenter, yRelToCenter;
 
-				for (int x = tmpOval.getX(); x < tmpOval.getX() + radiusX * 2; x++)
+				for (int x = tmpOval.getX(); x < (tmpOval.getX() + (radiusX * 2)); x++)
 
 					if ((x > -1) & (x < width)) {
 						xRelToCenter = x - centerX;
-						for (int y = tmpOval.getY(); y < tmpOval.getY()
-								+ radiusY * 2; y++)
+						for (int y = tmpOval.getY(); y < (tmpOval.getY() + (radiusY * 2)); y++)
 							if ((y > -1) & (y < height)) {
 								yRelToCenter = y - centerY;
 								/**@formatter:off
@@ -507,11 +513,8 @@ public class ZonesModule extends
 								 *     rx*rx     ry*ry
 								 */
 								//@formatter:on
-								if ((xRelToCenter * xRelToCenter)
-										/ (radiusX * radiusX)
-										+ (yRelToCenter * yRelToCenter)
-										/ (radiusY * radiusY) < 1)
-									zoneMap[x + y * width] = (byte) tmpZoneNumber;
+								if ((((xRelToCenter * xRelToCenter) / (radiusX * radiusX)) + ((yRelToCenter * yRelToCenter) / (radiusY * radiusY))) < 1)
+									zoneMap[x + (y * width)] = (byte) tmpZoneNumber;
 							}
 					}
 			}
@@ -534,17 +537,18 @@ public class ZonesModule extends
 				& (updatedZoneNumber != -1)) {
 			int zoneUpLeft = 0, zoneUpRight = 0, zoneDownLeft = 0, zoneDownRight = 0;
 			try {
-				zoneUpLeft = getZone(currentPosition.x - configs.getHystValue()
-						/ 2, currentPosition.y + configs.getHystValue() / 2);
+				zoneUpLeft = getZone(
+						currentPosition.x - (configs.getHystValue() / 2),
+						currentPosition.y + (configs.getHystValue() / 2));
 				zoneUpRight = getZone(
-						currentPosition.x + configs.getHystValue() / 2,
-						currentPosition.y + configs.getHystValue() / 2);
+						currentPosition.x + (configs.getHystValue() / 2),
+						currentPosition.y + (configs.getHystValue() / 2));
 				zoneDownLeft = getZone(
-						currentPosition.x - configs.getHystValue() / 2,
-						currentPosition.y - configs.getHystValue() / 2);
+						currentPosition.x - (configs.getHystValue() / 2),
+						currentPosition.y - (configs.getHystValue() / 2));
 				zoneDownRight = getZone(
-						currentPosition.x + configs.getHystValue() / 2,
-						currentPosition.y - configs.getHystValue() / 2);
+						currentPosition.x + (configs.getHystValue() / 2),
+						currentPosition.y - (configs.getHystValue() / 2));
 
 			} catch (final Exception e) {
 				PManager.log.print("Error fel index .. zoneHysteresis!", this,

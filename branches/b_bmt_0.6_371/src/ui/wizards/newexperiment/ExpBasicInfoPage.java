@@ -2,6 +2,8 @@ package ui.wizards.newexperiment;
 
 import java.util.Calendar;
 
+import modules.experiment.ExperimentType;
+
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.FormAttachment;
@@ -77,7 +79,9 @@ public class ExpBasicInfoPage extends WizardPage {
 		cmboType = new Combo(grpInfo1, SWT.READ_ONLY);
 		cmboType.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, true, false,
 				1, 1));
-		cmboType.setItems(new String[] { "Open Field", "Forced Swimming" });
+		cmboType.setItems(new String[] { ExperimentType.OPEN_FIELD.toString(),
+				ExperimentType.FORCED_SWIMMING.toString(),
+				ExperimentType.PARKINSON.toString()});
 		cmboType.setText("Open Field");
 		lblUsername = new Label(grpInfo1, SWT.NONE);
 		lblUsername.setText("User:");

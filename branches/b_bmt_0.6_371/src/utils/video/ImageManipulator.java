@@ -28,48 +28,135 @@ import javax.imageio.ImageIO;
  */
 public class ImageManipulator {
 
-	private static int[]			subResult;
+	public static class CentroidFinder {
+		private static final int	CENTROID_HISTORY_SIZE	= 3;
+		private static final int	SMALLEST_WHITE_AREA		= 10;
+		private final Point[]		centroidHistory			= new Point[CENTROID_HISTORY_SIZE];
+		private int					framesRemainingReliableCentroid;
+		private int					height;
+		private int[]				horiSum;
+		private int					searchSideLength		= 600;
+		private int					tmpMax;
+		private int[]				vertSum;
+		private int					width;
 
-	public static Point[] getLinePoints(Point pt1, Point pt2) {
-		int deltaY = pt1.y-pt2.y;
-		int deltaX=pt1.x-pt2.x;;
-				
-		// get line equation
-		float slope = deltaY/(float)deltaX;
-		float c = pt1.y - slope*pt1.x;
-		
+		public void initialize(final int width, final int height) {
+			this.width = width;
+			this.height = height;
+			horiSum = new int[height];
+			vertSum = new int[width];
 
-		int numPts = Math.abs(deltaY) > Math.abs(deltaX) ? Math.abs(deltaY) : Math.abs(deltaX);
-		Point[] pts = new Point[Math.abs(numPts)+1];
-		int i = 0;
-		if (Math.abs(deltaY) > Math.abs(deltaX)) {
-			int yInitial = pt1.y > pt2.y ? pt1.y : pt2.y;
-			int yFinal = pt1.y > pt2.y ? pt2.y : pt1.y;
-			for (int y = yInitial; y >= yFinal; y--) {
-				int x =-1;
-				if(deltaX!=0)
-					x=(int) ((y - c) / slope);
-				else
-					x=pt1.x;
-				pts[i] = new Point(x, y);
-				i++;
-			}
-		} else {
-			int xInitial = pt1.x > pt2.x ? pt1.x : pt2.x;
-			int xFinal = pt1.x > pt2.x ? pt2.x : pt1.x;
-			for (int x = xInitial; x >= xFinal; x--) {
-				int y = -1;
-				if(deltaY!=0)
-					y=(int) (slope * x + c);
-				else
-					y=pt1.y;
-				pts[i] = new Point(x, y);
-				i++;
-			}
+			for (int i = 0; i < centroidHistory.length; i++)
+				centroidHistory[i] = new Point(-1, -1);
+			searchSideLength = width / 4;
+			framesRemainingReliableCentroid = 10;
+
 		}
-		return pts;
+
+		public boolean isStableCentroid() {
+			return framesRemainingReliableCentroid == 0;
+		}
+
+		private void lowPassFilterCentroidPosition(final Point centerPoint) {
+
+			// history remains disabled till ex:10 frames elapse, this is to
+			// ensure
+			// the reliability of the centroid position (after ex:10 frames)
+			if (framesRemainingReliableCentroid == 0) {
+				if (centroidHistory[0].x == -1) { // history is not initialized
+													// yet
+					for (int i = 0; i < (centroidHistory.length - 1); i++) {
+						centroidHistory[i].x = centerPoint.x;
+						centroidHistory[i].y = centerPoint.y;
+					}
+				} else {
+					int sumX = 0, sumY = 0;
+					for (final Point p : centroidHistory) {
+						sumX += p.x;
+						sumY += p.y;
+					}
+					final int factor = 5;
+					centerPoint.x = ((centerPoint.x * factor) + sumX)
+							/ (centroidHistory.length + factor);
+					centerPoint.y = ((centerPoint.y * factor) + sumY)
+							/ (centroidHistory.length + factor);
+
+					// update history
+					for (int i = 0; i < (centroidHistory.length - 1); i++) {
+						centroidHistory[i].x = centroidHistory[i + 1].x;
+						centroidHistory[i].y = centroidHistory[i + 1].y;
+					}
+					centroidHistory[centroidHistory.length - 1].x = centerPoint.x;
+					centroidHistory[centroidHistory.length - 1].y = centerPoint.y;
+				}
+			} else
+				framesRemainingReliableCentroid--;
+		}
+
+		/**
+		 * Updates the center point (ie: finds the location of the moving
+		 * object).
+		 * 
+		 * @param binaryImage
+		 *            input image
+		 */
+		public void updateCentroid(final int[] binaryImage,
+				final Point centerPoint) {
+
+			tmpMax = SMALLEST_WHITE_AREA;
+
+			int y1, y2;
+
+			if (centerPoint.y == 0) {
+				y1 = 0;
+				y2 = height;
+			} else {
+				y1 = (centerPoint.y - searchSideLength) < 0 ? 0 : centerPoint.y
+						- searchSideLength;
+				y2 = (centerPoint.y + searchSideLength) > height ? height
+						: centerPoint.y + searchSideLength;
+			}
+
+			for (int y = y1; y < y2; y++) { // Horizontal Sum
+				horiSum[y] = 0;
+				for (int x = 0; x < width; x++)
+					horiSum[y] += binaryImage[(y * width) + x] & 0xff;
+				if (horiSum[y] > tmpMax) {
+					centerPoint.y = y;
+					tmpMax = horiSum[y];
+				}
+			}
+
+			tmpMax = SMALLEST_WHITE_AREA;
+
+			int x1, x2;
+			if (centerPoint.x == 0) {
+				x1 = 0;
+				x2 = width;
+			} else {
+				x1 = (centerPoint.x - searchSideLength) < 0 ? 0 : centerPoint.x
+						- searchSideLength;
+				x2 = (centerPoint.x + searchSideLength) > width ? width
+						: centerPoint.x + searchSideLength;
+			}
+
+			for (int x = x1; x < x2; x++) { // Vertical Sum
+				vertSum[x] = 0;
+				for (int y = 0; y < height; y++)
+					vertSum[x] += binaryImage[(y * width) + x] & 0xff;
+				if (vertSum[x] > tmpMax) {
+					centerPoint.x = x;
+					tmpMax = vertSum[x];
+				}
+			}
+
+			// low pass filter on position
+			lowPassFilterCentroidPosition(centerPoint);
+		}
 	}
-	
+
+	private static int[]	subResult;
+
 	public static int addRGBInt(final int img1, final int img2) {
 		byte r1, r2, g1, g2, b1, b2;
 		r1 = (byte) (img1 & 0x00FF0000);
@@ -79,9 +166,26 @@ public class ImageManipulator {
 		b1 = (byte) (img1 & 0x000000FF);
 		b2 = (byte) (img2 & 0x000000FF);
 
-		final int res = (r1 + r2 > 0xFF ? 0xFF : r1 + r2) << 16
-				| (g1 + g2 > 0xFF ? 0xFF : g1 + g2) << 8
-				| (b1 + b2 > 0xFF ? 0xFF : b1 + b2);
+		final int res = (((r1 + r2) > 0xFF ? 0xFF : r1 + r2) << 16)
+				| (((g1 + g2) > 0xFF ? 0xFF : g1 + g2) << 8)
+				| ((b1 + b2) > 0xFF ? 0xFF : b1 + b2);
+		return res;
+	}
+
+	public static int[] bgrIntArray2rgbIntArray(final int[] in) {
+		int r, g, b;
+		final int[] res = new int[in.length];
+		for (int i = 0; i < in.length; i++) {
+			/*
+			 * r = in[i] & (0x000000FF); g = (in[i] & (0x0000FF00)) >> 8; b =
+			 * (in[i] & (0x00FF0000)) >> 16; res[i] = (int) (0.2989 * r + 0.5870
+			 * * g + 0.1140 * b);
+			 */
+			r = ((in[i] & (0x000000FF)));
+			g = (((in[i] & (0x0000FF00)) >> 8));
+			b = (((in[i] & (0x00FF0000)) >> 16));
+			res[i] = b | (g << 8) | (r << 16);
+		}
 		return res;
 	}
 
@@ -100,63 +204,6 @@ public class ImageManipulator {
 			g = byteArr[i + 1] & 255;
 			b = byteArr[i] & 255;
 			iarr[i / 3] = r | (g << 8) | (b << 16);
-		}
-		return iarr;
-	}
-	
-	/**
-	 * Converts a int[] RGB buffer to int[] RGB image.</br>
-	 * i.e. [BRGB | GBRG | RGBR] to [ 0RGB | 0RGB | 0RGB | 0RGB].
-	 * 
-	 * @param buf
-	 *            input int[] RGB buffer
-	 * @param iarr
-	 *            the output int[] RGB array
-	 * @return integer array RGB image
-	 */
-	public static int[] intRGBBuf2IntRGB(final int[] buf,int[] iarr) {
-		float factor = 1.3333333f;
-		int bytes[]=new int[12];
-		for (int i = 0; i < buf.length; i += 3) {
-			bytes[0] = ((buf[i] & 0xFF000000) >> 24)& 0x000000FF;
-			bytes[1] = (buf[i] & 0x00FF0000) >> 16;
-			bytes[2] = (buf[i] & 0x0000FF00) >> 8;
-			bytes[3] = buf[i] & 0x000000FF;
-			
-			bytes[4] = ((buf[i+1] & 0xFF000000) >> 24)& 0x000000FF;
-			bytes[5] = (buf[i+1] & 0x00FF0000) >> 16;
-			bytes[6] = (buf[i+1] & 0x0000FF00) >> 8;
-			bytes[7] = buf[i+1] & 0x000000FF;
-		
-			bytes[8] = ((buf[i+2] & 0xFF000000) >> 24)& 0x000000FF;
-			bytes[9] = (buf[i+2] & 0x00FF0000) >> 16;
-			bytes[10] = (buf[i+2] & 0x0000FF00) >> 8;
-			bytes[11] = buf[i+2] & 0x000000FF;
-
-			int dstIndex=Math.round(i*factor);
-			int r;
-			int g;
-			int b;
-
-			b=bytes[0];
-			r=bytes[1];
-			g=bytes[2];
-			iarr[dstIndex] = b | (g << 8) | (r << 16);
-			
-			b=bytes[3];
-			g=bytes[4];
-			r=bytes[6];
-			iarr[dstIndex+1] = b | (g << 8) | (r << 16);
-			
-			b=bytes[5];
-			g=bytes[7];
-			r=bytes[8];
-			iarr[dstIndex+2] = b | (g << 8) | (r << 16);
-			
-			g=bytes[9];
-			b=bytes[10];
-			r=bytes[11];
-			iarr[dstIndex+3] = b | (g << 8) | (r << 16);
 		}
 		return iarr;
 	}
@@ -186,9 +233,24 @@ public class ImageManipulator {
 		g1 = (byte) (img1 & 0x0000FF00);
 		b1 = (byte) (img1 & 0x000000FF);
 
-		final int res = (r1 / number) << 16 | (g1 / number) << 8
+		final int res = ((r1 / number) << 16) | ((g1 / number) << 8)
 				| (b1 / number);
 		return res;
+	}
+
+	public static void filterImageRGB(final int[] origImg,
+			final int[] filteredImage, final int r, final int rThreshold,
+			final int g, final int gThreshold, final int b, final int bThreshold) {
+		for (int i = 0; i < origImg.length; i++) {
+			final int pixel = origImg[i];
+			if ((Math.abs(ImageManipulator.intToRGB(pixel)[0] - r) < rThreshold)
+					&& (Math.abs(ImageManipulator.intToRGB(pixel)[1] - g) < gThreshold)
+					&& (Math.abs(ImageManipulator.intToRGB(pixel)[2] - b) < bThreshold)) {
+				filteredImage[i] = 0x00FFFFFF;
+			} else {
+				filteredImage[i] = 0x00;
+			}
+		}
 	}
 
 	/**
@@ -207,8 +269,81 @@ public class ImageManipulator {
 		final int[] tmpImg = new int[width * height];
 		for (int y = 0; y < height; y++)
 			for (int x = 0; x < width; x++)
-				tmpImg[y * width + x] = img[(height - y - 1) * width + x];
+				tmpImg[(y * width) + x] = img[((height - y - 1) * width) + x];
 		return tmpImg;
+	}
+
+	public static int[] formGrayImageFromGrayMap(final byte[] grayMap) {
+		int r, g, b, grey;
+		final int[] res = new int[grayMap.length];
+		for (int i = 0; i < grayMap.length; i++) {
+			r = (int) (0.2989 * (grayMap[i]));
+			g = (int) (0.5870 * ((grayMap[i]) >> 8));
+			b = (int) (0.1140 * ((grayMap[i]) >> 16));
+			grey = r + g + b;
+			res[i] = ((grey + (grey << 8)) | (grey << 16));
+		}
+		return res;
+	}
+
+	public static short[] formGrayMapFromGrayImage(final int[] grayImage) {
+		int r, g, b, grey;
+		final short[] res = new short[grayImage.length];
+		for (int i = 0; i < grayImage.length; i++) {
+			r = (int) (0.2989 * (grayImage[i] & 0x000000FF));
+			g = (int) (0.5870 * ((grayImage[i] & 0x0000FF00) >> 8));
+			b = (int) (0.1140 * ((grayImage[i] & 0x00FF0000) >> 16));
+			grey = (r + g + b);
+			res[i] = (short) grey;
+		}
+		return res;
+	}
+
+	public static int formGrayValueFromGrayIntensity(final short grayValue) {
+		int res = 0;
+		res = ((grayValue + (grayValue << 8)) | (grayValue << 16));
+		return res;
+	}
+
+	public static Point[] getLinePoints(final Point pt1, final Point pt2) {
+		final int deltaY = pt1.y - pt2.y;
+		final int deltaX = pt1.x - pt2.x;
+		;
+
+		// get line equation
+		final float slope = deltaY / (float) deltaX;
+		final float c = pt1.y - (slope * pt1.x);
+
+		final int numPts = Math.abs(deltaY) > Math.abs(deltaX) ? Math
+				.abs(deltaY) : Math.abs(deltaX);
+		final Point[] pts = new Point[Math.abs(numPts) + 1];
+		int i = 0;
+		if (Math.abs(deltaY) > Math.abs(deltaX)) {
+			final int yInitial = pt1.y > pt2.y ? pt1.y : pt2.y;
+			final int yFinal = pt1.y > pt2.y ? pt2.y : pt1.y;
+			for (int y = yInitial; y >= yFinal; y--) {
+				int x = -1;
+				if (deltaX != 0)
+					x = (int) ((y - c) / slope);
+				else
+					x = pt1.x;
+				pts[i] = new Point(x, y);
+				i++;
+			}
+		} else {
+			final int xInitial = pt1.x > pt2.x ? pt1.x : pt2.x;
+			final int xFinal = pt1.x > pt2.x ? pt2.x : pt1.x;
+			for (int x = xInitial; x >= xFinal; x--) {
+				int y = -1;
+				if (deltaY != 0)
+					y = (int) ((slope * x) + c);
+				else
+					y = pt1.y;
+				pts[i] = new Point(x, y);
+				i++;
+			}
+		}
+		return pts;
 	}
 
 	/**
@@ -270,6 +405,71 @@ public class ImageManipulator {
 	}
 
 	/**
+	 * Converts a int[] RGB buffer to int[] RGB image.</br> i.e. [BRGB | GBRG |
+	 * RGBR] to [ 0RGB | 0RGB | 0RGB | 0RGB].
+	 * 
+	 * @param buf
+	 *            input int[] RGB buffer
+	 * @param iarr
+	 *            the output int[] RGB array
+	 * @return integer array RGB image
+	 */
+	public static int[] intRGBBuf2IntRGB(final int[] buf, final int[] iarr) {
+		final float factor = 1.3333333f;
+		final int bytes[] = new int[12];
+		for (int i = 0; i < buf.length; i += 3) {
+			bytes[0] = ((buf[i] & 0xFF000000) >> 24) & 0x000000FF;
+			bytes[1] = (buf[i] & 0x00FF0000) >> 16;
+			bytes[2] = (buf[i] & 0x0000FF00) >> 8;
+			bytes[3] = buf[i] & 0x000000FF;
+
+			bytes[4] = ((buf[i + 1] & 0xFF000000) >> 24) & 0x000000FF;
+			bytes[5] = (buf[i + 1] & 0x00FF0000) >> 16;
+			bytes[6] = (buf[i + 1] & 0x0000FF00) >> 8;
+			bytes[7] = buf[i + 1] & 0x000000FF;
+
+			bytes[8] = ((buf[i + 2] & 0xFF000000) >> 24) & 0x000000FF;
+			bytes[9] = (buf[i + 2] & 0x00FF0000) >> 16;
+			bytes[10] = (buf[i + 2] & 0x0000FF00) >> 8;
+			bytes[11] = buf[i + 2] & 0x000000FF;
+
+			final int dstIndex = Math.round(i * factor);
+			int r;
+			int g;
+			int b;
+
+			b = bytes[0];
+			r = bytes[1];
+			g = bytes[2];
+			iarr[dstIndex] = b | (g << 8) | (r << 16);
+
+			b = bytes[3];
+			g = bytes[4];
+			r = bytes[6];
+			iarr[dstIndex + 1] = b | (g << 8) | (r << 16);
+
+			b = bytes[5];
+			g = bytes[7];
+			r = bytes[8];
+			iarr[dstIndex + 2] = b | (g << 8) | (r << 16);
+
+			g = bytes[9];
+			b = bytes[10];
+			r = bytes[11];
+			iarr[dstIndex + 3] = b | (g << 8) | (r << 16);
+		}
+		return iarr;
+	}
+
+	public static int[] intToRGB(final int pixel) {
+		final int[] res = new int[3];
+		res[0] = ((pixel >> 16) & (255)); // R
+		res[1] = ((pixel >> 8) & (255)); // G
+		res[2] = (pixel & (255)); // B
+		return res;
+	}
+
+	/**
 	 * Loads an image file into a buffered image.
 	 * 
 	 * @param filePath
@@ -298,7 +498,7 @@ public class ImageManipulator {
 	 * @return Grayscale value
 	 */
 	public static byte rgb2GrayValue(final int r, final int g, final int b) {
-		return (byte) (0.2989 * r + 0.5870 * g + 0.1140 * b);
+		return (byte) ((0.2989 * r) + (0.5870 * g) + (0.1140 * b));
 	}
 
 	/**
@@ -315,7 +515,7 @@ public class ImageManipulator {
 			r = rgbByteArr[i + 2] & 0xff;
 			g = rgbByteArr[i + 1] & 0xff;
 			b = rgbByteArr[i] & 0xff;
-			grayArr[i / 3] = (byte) (0.2989 * r + 0.5870 * g + 0.1140 * b);
+			grayArr[i / 3] = (byte) ((0.2989 * r) + (0.5870 * g) + (0.1140 * b));
 		}
 		return grayArr;
 	}
@@ -334,7 +534,7 @@ public class ImageManipulator {
 			r = in[i] & (0x000000FF);
 			g = (in[i] & (0x0000FF00)) >> 8;
 			b = (in[i] & (0x00FF0000)) >> 16;
-			res[i] = (byte) (0.2989 * r + 0.5870 * g + 0.1140 * b);
+			res[i] = (byte) ((0.2989 * r) + (0.5870 * g) + (0.1140 * b));
 		}
 		return res;
 	}
@@ -346,7 +546,7 @@ public class ImageManipulator {
 	 *            RGB image integer array
 	 * @return Grayscale image integer array
 	 */
-	public static int[] rgbIntArray2GrayIntArray(final int[] in,int[] res) {
+	public static int[] rgbIntArray2GrayIntArray(final int[] in, final int[] res) {
 		int r, g, b, grey;
 		for (int i = 0; i < in.length; i++) {
 			/*
@@ -358,39 +558,7 @@ public class ImageManipulator {
 			g = (int) (0.5870 * ((in[i] & (0x0000FF00)) >> 8));
 			b = (int) (0.1140 * ((in[i] & (0x00FF0000)) >> 16));
 			grey = r + g + b;
-			res[i] = (grey + (grey << 8) | (grey << 16));
-		}
-		return res;
-	}
-
-	public static int[] formGrayImageFromGrayMap(byte[] grayMap) {
-		int r, g, b, grey;
-		final int[] res = new int[grayMap.length];
-		for (int i = 0; i < grayMap.length; i++) {
-			r = (int) (0.2989 * (grayMap[i]));
-			g = (int) (0.5870 * ((grayMap[i]) >> 8));
-			b = (int) (0.1140 * ((grayMap[i]) >> 16));
-			grey = r + g + b;
-			res[i] = (grey + (grey << 8) | (grey << 16));
-		}
-		return res;
-	}
-
-	public static int formGrayValueFromGrayIntensity(short grayValue) {
-		int res = 0;
-		res = (grayValue + (grayValue << 8) | (grayValue << 16));
-		return res;
-	}
-
-	public static short[] formGrayMapFromGrayImage(int[] grayImage) {
-		int r, g, b, grey;
-		final short[] res = new short[grayImage.length];
-		for (int i = 0; i < grayImage.length; i++) {
-			r = (int) (0.2989 * (grayImage[i] & 0x000000FF));
-			g = (int) (0.5870 * ((grayImage[i] & 0x0000FF00) >> 8));
-			b = (int) (0.1140 * ((grayImage[i] & 0x00FF0000) >> 16));
-			grey =  (r + g + b);
-			res[i] = (short) grey;
+			res[i] = ((grey + (grey << 8)) | (grey << 16));
 		}
 		return res;
 	}
@@ -416,10 +584,11 @@ public class ImageManipulator {
 	}
 
 	public static int[] subtractGreyImage(final int[] img1, final int[] img2) {
-		return subtractGreyImage(img1,img2,0);
+		return subtractGreyImage(img1, img2, 0);
 	}
-	
-	public static int[] subtractGreyImage(final int[] img1, final int[] img2,int threshold) {
+
+	public synchronized static int[] subtractGreyImage(final int[] img1,
+			final int[] img2, final int threshold) {
 		// if(subResult==null || subResult.length!=img1.length)
 		subResult = new int[img1.length];
 		assert img1.length == img2.length : "different image size!";
@@ -427,8 +596,8 @@ public class ImageManipulator {
 		for (int i = 0; i < img1.length; i++) {
 			sub = (img1[i] & 0x000000FF) - (img2[i] & 0x000000FF);
 			sub = sub < 0 ? sub * -1 : sub;
-			sub = sub | sub << 8 | sub << 16;
-			if((sub & 0x000000FF)>threshold)
+			sub = sub | (sub << 8) | (sub << 16);
+			if ((sub & 0x000000FF) > threshold)
 				subResult[i] = sub;
 			else
 				subResult[i] = 0;
@@ -445,9 +614,9 @@ public class ImageManipulator {
 		final int[] subData = new int[subWidth * subHeight];
 		for (int x = x1; x < x2; x++)
 			for (int y = y1; y < y2; y++) {
-				i = x + y * width;
+				i = x + (y * width);
 				sub = img1[i] - img2[i];
-				subData[x - x1 + (y - y1) * subWidth] = sub < 0 ? sub * -1
+				subData[(x - x1) + ((y - y1) * subWidth)] = sub < 0 ? sub * -1
 						: sub;
 			}
 		return null;
@@ -464,28 +633,11 @@ public class ImageManipulator {
 	public byte[] grayByteArray2RGBByteArray(final byte[] grayArr) {
 		final byte[] rgbarr = new byte[grayArr.length * 3];
 		int valgray;
-		for (int i = 0; i < grayArr.length * 3; i += 3) {
+		for (int i = 0; i < (grayArr.length * 3); i += 3) {
 			valgray = grayArr[i / 3];
 			rgbarr[i] = rgbarr[i + 1] = rgbarr[i + 2] = (byte) valgray;
 		}
 		return rgbarr;
-	}
-
-	public static int[] bgrIntArray2rgbIntArray(int[] in) {
-		int r, g, b;
-		final int[] res = new int[in.length];
-		for (int i = 0; i < in.length; i++) {
-			/*
-			 * r = in[i] & (0x000000FF); g = (in[i] & (0x0000FF00)) >> 8; b =
-			 * (in[i] & (0x00FF0000)) >> 16; res[i] = (int) (0.2989 * r + 0.5870
-			 * * g + 0.1140 * b);
-			 */
-			r = (int) ((in[i] & (0x000000FF)));
-			g = (int) (((in[i] & (0x0000FF00)) >> 8));
-			b = (int) (((in[i] & (0x00FF0000)) >> 16));
-			res[i] = b | (g << 8) | (r << 16);
-		}
-		return res;
 	}
 
 }

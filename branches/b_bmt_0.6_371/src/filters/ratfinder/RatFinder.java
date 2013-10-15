@@ -23,6 +23,7 @@ import java.util.Iterator;
 import java.util.concurrent.ArrayBlockingQueue;
 
 import utils.PManager.ProgramState;
+import utils.video.ImageManipulator.CentroidFinder;
 import filters.FilterConfigs;
 import filters.FilterData;
 import filters.Link;
@@ -38,17 +39,16 @@ import filters.ratfinder.markers.RectangularMarker;
  */
 public class RatFinder extends
 		VideoFilter<RatFinderFilterConfigs, RatFinderData> {
-	private static final int			CENTROID_HISTORY_SIZE			= 3;
-	public static final String			ID								= "filters.ratfinder";
-	private static final int			PATH_QUEUE_LENGTH				= 100;
-	private static final int			SMALLEST_WHITE_AREA				= 10;
-	protected final Point				centerPoint;
-	private final Point[]				centroidHistory					= new Point[CENTROID_HISTORY_SIZE];
 
-	private int							framesRemainingReliableCentroid	= 10;
+	public static final String			ID					= "filters.ratfinder";
+	private static final int			PATH_QUEUE_LENGTH	= 100;
+
+	protected final Point				centerPoint;
+
+	protected final CentroidFinder		centroidFinder;
+
 	private int							height;
 
-	private int[]						horiSum;
 	protected Marker					marker, marker2;
 
 	protected int[]						outData;
@@ -56,10 +56,6 @@ public class RatFinder extends
 	private BufferedImage				outputImage;
 
 	protected ArrayBlockingQueue<Point>	pathQueue;
-
-	private int							searchSideLength				= 600;
-	private int							tmpMax;
-	private int[]						vertSum;
 
 	private int							width;
 
@@ -77,6 +73,7 @@ public class RatFinder extends
 		super(name, linkIn, linkOut);
 		filterData = new RatFinderData();
 		centerPoint = filterData.getCenterPoint();
+		centroidFinder = new CentroidFinder();
 	}
 
 	@Override
@@ -94,16 +91,11 @@ public class RatFinder extends
 
 		this.linkOut.setData(outData);
 		specialConfiguration(configs);
-		searchSideLength = width / 4;
 
 		marker = new CrossMarker(50, 50, 5, Color.RED, width, height);
 
-		marker2 = new RectangularMarker(width, height, searchSideLength,
-				searchSideLength, Color.RED);
-
-		for (int i = 0; i < centroidHistory.length; i++)
-			centroidHistory[i] = new Point(-1, -1);
-		framesRemainingReliableCentroid = 10;
+		marker2 = new RectangularMarker(width, height, width / 4, width / 4,
+				Color.RED);
 		pathQueue = new ArrayBlockingQueue<Point>(PATH_QUEUE_LENGTH);
 
 		return super.configure(configs);
@@ -115,8 +107,8 @@ public class RatFinder extends
 	protected void drawMarkerOnImg() {
 		try {
 			marker.draw(outData, centerPoint.x, centerPoint.y);
-			marker2.draw(outData, centerPoint.x - searchSideLength / 2,
-					centerPoint.y - searchSideLength / 2);
+			marker2.draw(outData, centerPoint.x - (width / 8), centerPoint.y
+					- (width / 8));
 		} catch (final Exception e) {
 			System.err.print("Error in marker");
 			e.printStackTrace();
@@ -124,7 +116,7 @@ public class RatFinder extends
 	}
 
 	private void drawPathOnImg() {
-		if (framesRemainingReliableCentroid == 0) {
+		if (centroidFinder.isStableCentroid()) {
 			// update path queue
 			if (pathQueue.size() < PATH_QUEUE_LENGTH) {
 				pathQueue.add(new Point(centerPoint.x, centerPoint.y));
@@ -170,40 +162,6 @@ public class RatFinder extends
 		return ID;
 	}
 
-	private void lowPassFilterCentroidPosition() {
-
-		// history remains disabled till ex:10 frames elapse, this is to ensure
-		// the reliability of the centroid position (after ex:10 frames)
-		if (framesRemainingReliableCentroid == 0) {
-			if (centroidHistory[0].x == -1) { // history is not initialized yet
-				for (int i = 0; i < centroidHistory.length - 1; i++) {
-					centroidHistory[i].x = centerPoint.x;
-					centroidHistory[i].y = centerPoint.y;
-				}
-			} else {
-				int sumX = 0, sumY = 0;
-				for (final Point p : centroidHistory) {
-					sumX += p.x;
-					sumY += p.y;
-				}
-				final int factor = 5;
-				centerPoint.x = (centerPoint.x * factor + sumX)
-						/ (centroidHistory.length + factor);
-				centerPoint.y = (centerPoint.y * factor + sumY)
-						/ (centroidHistory.length + factor);
-
-				// update history
-				for (int i = 0; i < centroidHistory.length - 1; i++) {
-					centroidHistory[i].x = centroidHistory[i + 1].x;
-					centroidHistory[i].y = centroidHistory[i + 1].y;
-				}
-				centroidHistory[centroidHistory.length - 1].x = centerPoint.x;
-				centroidHistory[centroidHistory.length - 1].y = centerPoint.y;
-			}
-		} else
-			framesRemainingReliableCentroid--;
-	}
-
 	@Override
 	public VideoFilter<?, ?> newInstance(final String filterName) {
 		return new RatFinder(filterName, null, null);
@@ -218,7 +176,7 @@ public class RatFinder extends
 		if (configs.isEnabled()) {
 			// final long t1 = System.currentTimeMillis();
 			final int[] data = linkIn.getData();
-			updateCentroid(data);
+			centroidFinder.updateCentroid(data, centerPoint);
 			System.arraycopy(data, 0, outData, 0, data.length);
 			// final long t1 = System.currentTimeMillis();
 			drawMarkerOnImg();
@@ -234,67 +192,7 @@ public class RatFinder extends
 	}
 
 	protected void specialConfiguration(final FilterConfigs configs) {
-		horiSum = new int[configs.getCommonConfigs().getHeight()];
-		vertSum = new int[configs.getCommonConfigs().getWidth()];
-	}
-
-	/**
-	 * Updates the center point (ie: finds the location of the moving object).
-	 * 
-	 * @param binaryImage
-	 *            input image
-	 */
-	protected void updateCentroid(final int[] binaryImage) {
-
-		tmpMax = SMALLEST_WHITE_AREA;
-
-		int y1, y2;
-
-		if (centerPoint.y == 0) {
-			y1 = 0;
-			y2 = height;
-		} else {
-			y1 = (centerPoint.y - searchSideLength) < 0 ? 0 : centerPoint.y
-					- searchSideLength;
-			y2 = (centerPoint.y + searchSideLength) > height ? height
-					: centerPoint.y + searchSideLength;
-		}
-
-		for (int y = y1; y < y2; y++) { // Horizontal Sum
-			horiSum[y] = 0;
-			for (int x = 0; x < width; x++)
-				horiSum[y] += binaryImage[y * width + x] & 0xff;
-			if (horiSum[y] > tmpMax) {
-				centerPoint.y = y;
-				tmpMax = horiSum[y];
-			}
-		}
-
-		tmpMax = SMALLEST_WHITE_AREA;
-
-		int x1, x2;
-		if (centerPoint.x == 0) {
-			x1 = 0;
-			x2 = width;
-		} else {
-			x1 = (centerPoint.x - searchSideLength) < 0 ? 0 : centerPoint.x
-					- searchSideLength;
-			x2 = (centerPoint.x + searchSideLength) > width ? width
-					: centerPoint.x + searchSideLength;
-		}
-
-		for (int x = x1; x < x2; x++) { // Vertical Sum
-			vertSum[x] = 0;
-			for (int y = 0; y < height; y++)
-				vertSum[x] += binaryImage[y * width + x] & 0xff;
-			if (vertSum[x] > tmpMax) {
-				centerPoint.x = x;
-				tmpMax = vertSum[x];
-			}
-		}
-
-		// low pass filter on position
-		lowPassFilterCentroidPosition();
+		centroidFinder.initialize(width, height);
 	}
 
 	@Override

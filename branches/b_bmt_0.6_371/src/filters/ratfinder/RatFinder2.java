@@ -10,7 +10,7 @@
  * Public License for more details. You should have received a copy of the GNU
  * General Public License along with Behavioral Monitoring Tool. If not, see
  * <http://www.gnu.org/licenses/>.
- **************************************************************************/
+ **************************************************************************//*
 
 package filters.ratfinder;
 
@@ -76,9 +76,9 @@ public class RatFinder2 extends RatFinder {
 
 		int x = 0, y = 0;
 		while ((pivotX != xStart) || (pivotY != yStart)) {
-			/*
+			
 			 * Selecting the start angle "i"
-			 */
+			 
 			if (pivotX - pivotXOld == 1) {
 				if (pivotY - pivotYOld == -1)
 					startI = 4;
@@ -99,9 +99,9 @@ public class RatFinder2 extends RatFinder {
 				else if (pivotY - pivotYOld == 1)
 					startI = 0;
 
-			/*
+			
 			 * Selecting the next pivot point
-			 */
+			 
 
 			int trials = 0;
 			for (int i = (startI) % 8; i != (startI + 1) % 8; i = (i - 1 + 8) % 8) {
@@ -130,31 +130,31 @@ public class RatFinder2 extends RatFinder {
 		return 0;
 	}
 
-	/*
+	
 	 * (non-Javadoc)
 	 * @see utils.video.filters.RatFinder.RatFinder#drawMarkerOnImg(int[])
-	 */
+	 
 	@Override
 	protected void drawMarkerOnImg() {
 		// TODO Auto-generated method stub
 		// super.drawMarkerOnImg(binaryImage);
 	}
 
-	/*
+	
 	 * (non-Javadoc)
 	 * @see
 	 * utils.video.filters.RatFinder.RatFinder#specialConfiguration(utils.video
 	 * .filters.FilterConfigs)
-	 */
+	 
 	@Override
 	protected void specialConfiguration(final FilterConfigs configs) {
 		// TODO Auto-generated method stub
 	}
 
-	/*
+	
 	 * (non-Javadoc)
 	 * @see utils.video.filters.RatFinder.RatFinder#updateCentroid(int[])
-	 */
+	 
 	@Override
 	protected void updateCentroid(final int[] binaryImage) {
 		System.arraycopy(binaryImage, 0, outData, 0, binaryImage.length);
@@ -202,3 +202,4 @@ public class RatFinder2 extends RatFinder {
 	}
 
 }
+*/

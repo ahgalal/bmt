@@ -76,6 +76,8 @@ public class ExperimentExecUnitGroup extends ExecutionUnitGroup {
 			ui.click(new ComboItemLocator("Open Field"));
 		else if(expType==ExperimentType.FORCED_SWIMMING)
 			ui.click(new ComboItemLocator("Forced Swimming"));
+		else if(expType==ExperimentType.PARKINSON)
+			ui.click(new ComboItemLocator("Parkinson"));
 		ui.click(new LabeledTextLocator("Additional Notes:"));
 		ui.enterText("This Note is for the Experiment.");
 		ui.click(new ButtonLocator("&Next >"));
