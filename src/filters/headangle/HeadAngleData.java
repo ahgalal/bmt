@@ -15,6 +15,7 @@ public class HeadAngleData extends FilterData {
 	public final static String	dataID	= Constants.FILTER_ID
 												+ ".headangle.data";
 	private final Point			center;
+	private int angle;
 
 	public HeadAngleData() {
 		center = new Point();
@@ -31,5 +32,13 @@ public class HeadAngleData extends FilterData {
 	@Override
 	public String getId() {
 		return dataID;
+	}
+
+	public int getAngle() {
+		return angle;
+	}
+
+	public void setAngle(int angle) {
+		this.angle = angle;
 	}
 }
