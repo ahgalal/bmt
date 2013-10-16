@@ -44,6 +44,7 @@ public class HeadAngleFilter extends
 		filterData = new HeadAngleData();
 		blobFinder = new BlobFinder();
 		gui = new HeadAngleGUI(this);
+		filterData = new HeadAngleData();
 	}
 
 	@Override
@@ -63,13 +64,6 @@ public class HeadAngleFilter extends
 		earPosition1 = new Blob();
 		earPosition2 = new Blob();
 
-//		 colors = new RGB[] {
-//		 new RGB(246, 0, 0), // BP1
-//		 new RGB(0, 247, 6), // BP2
-//		 new RGB(0, 209, 247),// EAR1
-//		 new RGB(239, 247, 0)// EAR2
-//		 };
-
 		final Color bpColor1 = angleConfigs.getBpColor1();
 		final Color bpColor2 = angleConfigs.getBpColor2();
 		final Color earColor1 = angleConfigs.getEarColor1();
@@ -87,6 +81,13 @@ public class HeadAngleFilter extends
 							earColor2.getBlue())
 			// EAR2
 			};
+		
+		 colors = new RGB[] {
+		 new RGB(246, 0, 0), // BP1
+		 new RGB(0, 247, 6), // BP2
+		 new RGB(0, 209, 247),// EAR1
+		 new RGB(239, 247, 0)// EAR2
+		 };
 
 		thresholds = new RGB[] {
 				new RGB(20, 20, 20),
@@ -97,7 +98,7 @@ public class HeadAngleFilter extends
 		blobs = new Blob[] {
 				bodyPosition1, bodyPosition2, earPosition1, earPosition2
 		};
-
+		
 		return super.configure(configs);
 	}
 
@@ -134,11 +135,6 @@ public class HeadAngleFilter extends
 			blobFinder.updateBlobsCentroids(origImg, tmpProcessedData, colors,
 					blobs, thresholds);
 			
-			System.out.println(bodyPosition1.getCentroid());
-			System.out.println(bodyPosition2.getCentroid());
-			System.out.println(earPosition1.getCentroid());
-			System.out.println(earPosition2.getCentroid());
-
 			// // body point 1
 			// long tCentroid1 = System.currentTimeMillis();
 			// RGB thresholds2 = new RGB(5, 20, 20);
@@ -191,8 +187,10 @@ public class HeadAngleFilter extends
 				outputImageData[(pt.x - 1) + (pt.y * 640)] = 0x00FF0000;
 			}
 
+			Point bodyPoint1 = bodyPosition1.getCentroid();
+			Point bodyPoint2 = bodyPosition2.getCentroid();
 			final Point[] bodyLinePoints = ImageManipulator.getLinePoints(
-					bodyPosition1.getCentroid(), bodyPosition2.getCentroid());
+					bodyPoint1, bodyPoint2);
 			for (final Point pt : bodyLinePoints) {
 				outputImageData[pt.x + (pt.y * 640)] = 0x00FF0000;
 				outputImageData[pt.x + 1 + (pt.y * 640)] = 0x00FF0000;
@@ -200,10 +198,32 @@ public class HeadAngleFilter extends
 			}
 
 			getLinkOut().setData(outputImageData);
+			
+			double angle;
+			double bodyLineAngle;
+			double earsLineAngle;
+			double earsLineAngleShifted;
+			
+			bodyLineAngle = calculateLineAngle(bodyPoint1, bodyPoint2);
+			earsLineAngle = calculateLineAngle(earPosition1.getCentroid(), earPosition2.getCentroid());
+			
+			earsLineAngleShifted = earsLineAngle+90;
+			
+			angle = bodyLineAngle-earsLineAngleShifted;
+			filterData.setAngle((int) angle);
+			//System.out.println(angle);
 
 			final long t2 = System.currentTimeMillis();
 			System.out.println(t2 - t1);
 		}
+	}
+
+	private double calculateLineAngle(Point point1, Point point2) {
+		double bodyLineAngle;
+		double mBody = (point1.y - point2.y)/
+				(double)(point1.x - point2.x);
+		bodyLineAngle = Math.toDegrees(Math.atan(mBody));
+		return bodyLineAngle;
 	}
 
 	/*
@@ -225,5 +245,4 @@ public class HeadAngleFilter extends
 		// TODO Auto-generated method stub
 
 	}
-
 }
