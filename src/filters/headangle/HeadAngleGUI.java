@@ -22,6 +22,8 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Shell;
 
+import filters.FilterConfigs;
+
 import ui.PluggedGUI;
 import utils.PManager;
 import utils.PManager.ProgramState;
@@ -44,7 +46,12 @@ public class HeadAngleGUI extends PluggedGUI<HeadAngleFilter> {
 		disposeWidget(cmpstHeadAngle);
 		disposeWidget(xpndtmHeadAngle);
 	}
-
+	private Composite cmpstEar1;
+	private Composite cmpstEar2;
+	private Composite cmpstBody1;
+	private Composite cmpstBody2;
+	
+	
 	@Override
 	public void initialize(final Shell shell, final ExpandBar expandBar,
 			final Menu menuBar, final CoolBar coolBar, final Group grpGraphs) {
@@ -59,12 +66,49 @@ public class HeadAngleGUI extends PluggedGUI<HeadAngleFilter> {
 		final Label lblEar = new Label(cmpstHeadAngle, SWT.NONE);
 		lblEar.setText("Ear1");
 
-		final Composite cmpstEar1 = new Composite(cmpstHeadAngle, SWT.BORDER);
+		cmpstEar1 = new Composite(cmpstHeadAngle, SWT.BORDER);
 		final GridData gd_cmpstEar1 = new GridData(SWT.LEFT, SWT.CENTER, false,
 				false, 1, 1);
 		gd_cmpstEar1.heightHint = 25;
 		cmpstEar1.setLayoutData(gd_cmpstEar1);
-		cmpstEar1.addMouseListener(new MouseAdapter() {
+		cmpstEar1.addMouseListener(prepareComposite(cmpstEar1));
+
+		final Label lblEar_1 = new Label(cmpstHeadAngle, SWT.NONE);
+		lblEar_1.setText("Ear2");
+
+		cmpstEar2 = new Composite(cmpstHeadAngle, SWT.BORDER);
+		final GridData gd_cmpstEar2 = new GridData(SWT.LEFT, SWT.CENTER, false,
+				false, 1, 1);
+		gd_cmpstEar2.heightHint = 25;
+		cmpstEar2.setLayoutData(gd_cmpstEar2);
+		cmpstEar2.addMouseListener(prepareComposite(cmpstEar2));
+
+		final Label lblBody = new Label(cmpstHeadAngle, SWT.NONE);
+		lblBody.setText("Body1");
+
+		cmpstBody1 = new Composite(cmpstHeadAngle, SWT.BORDER);
+		final GridData gd_cmpstBody1 = new GridData(SWT.LEFT, SWT.CENTER,
+				false, false, 1, 1);
+		gd_cmpstBody1.heightHint = 25;
+		cmpstBody1.setLayoutData(gd_cmpstBody1);
+		cmpstBody1.addMouseListener(prepareComposite(cmpstBody1));
+
+		final Label lblBody_1 = new Label(cmpstHeadAngle, SWT.NONE);
+		lblBody_1.setText("Body2");
+
+		cmpstBody2 = new Composite(cmpstHeadAngle, SWT.BORDER);
+		final GridData gd_cmpstBody2 = new GridData(SWT.CENTER, SWT.CENTER,
+				false, false, 1, 1);
+		gd_cmpstBody2.heightHint = 25;
+		cmpstBody2.setLayoutData(gd_cmpstBody2);
+		cmpstBody2.addMouseListener(prepareComposite(cmpstBody2));
+
+		xpndtmHeadAngle.setHeight(xpndtmHeadAngle.getControl().computeSize(
+				SWT.DEFAULT, SWT.DEFAULT).y + 10);
+	}
+
+	private MouseAdapter prepareComposite(final Composite cmpst) {
+		return new MouseAdapter() {
 			@Override
 			public void mouseUp(final MouseEvent e) {
 				// change cursor to color picker
@@ -78,52 +122,31 @@ public class HeadAngleGUI extends PluggedGUI<HeadAngleFilter> {
 						final Point point = e.getPoint();
 						final RGB pixel = PManager.mainGUI
 								.getMainScreenPixelRGB(point);
+						final HeadAngleConfigs configs = (HeadAngleConfigs) owner.getConfigs();
 						Display.getDefault().syncExec(new Runnable() {
 
 							@Override
 							public void run() {
-								cmpstEar1.setBackground(new Color(Display
+								cmpst.setBackground(new Color(Display
 										.getDefault(), pixel.getR(), pixel
 										.getG(), pixel.getB()));
 								PManager.mainGUI.setMainScreenCursor(Cursor
 										.getDefaultCursor().getType());
+								
+								// update filter configuration
+								configs.setEarColor1(cmpstEar1.getBackground());
+								configs.setEarColor2(cmpstEar2.getBackground());
+								configs.setBpColor1(cmpstBody1.getBackground());
+								configs.setBpColor2(cmpstBody2.getBackground());
 							}
 						});
+						
+						owner.configure(configs);
 					}
 				};
 				PManager.mainGUI.addMouseListenerOnMainFrame(listener);
 			}
-		});
-
-		final Label lblEar_1 = new Label(cmpstHeadAngle, SWT.NONE);
-		lblEar_1.setText("Ear2");
-
-		final Composite cmpstEar2 = new Composite(cmpstHeadAngle, SWT.BORDER);
-		final GridData gd_cmpstEar2 = new GridData(SWT.LEFT, SWT.CENTER, false,
-				false, 1, 1);
-		gd_cmpstEar2.heightHint = 25;
-		cmpstEar2.setLayoutData(gd_cmpstEar2);
-
-		final Label lblBody = new Label(cmpstHeadAngle, SWT.NONE);
-		lblBody.setText("Body1");
-
-		final Composite cmpstBody1 = new Composite(cmpstHeadAngle, SWT.BORDER);
-		final GridData gd_cmpstBody1 = new GridData(SWT.LEFT, SWT.CENTER,
-				false, false, 1, 1);
-		gd_cmpstBody1.heightHint = 25;
-		cmpstBody1.setLayoutData(gd_cmpstBody1);
-
-		final Label lblBody_1 = new Label(cmpstHeadAngle, SWT.NONE);
-		lblBody_1.setText("Body2");
-
-		final Composite cmpstBody2 = new Composite(cmpstHeadAngle, SWT.BORDER);
-		final GridData gd_cmpstBody2 = new GridData(SWT.CENTER, SWT.CENTER,
-				false, false, 1, 1);
-		gd_cmpstBody2.heightHint = 25;
-		cmpstBody2.setLayoutData(gd_cmpstBody2);
-
-		xpndtmHeadAngle.setHeight(xpndtmHeadAngle.getControl().computeSize(
-				SWT.DEFAULT, SWT.DEFAULT).y + 10);
+		};
 	}
 
 	@Override

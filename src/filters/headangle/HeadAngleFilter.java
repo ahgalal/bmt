@@ -5,6 +5,8 @@ package filters.headangle;
 
 import java.awt.Point;
 
+import org.eclipse.swt.graphics.Color;
+
 import utils.PManager.ProgramState;
 import utils.video.ImageManipulator;
 import utils.video.ImageManipulator.Blob;
@@ -41,11 +43,12 @@ public class HeadAngleFilter extends
 		super(name, linkIn, linkOut);
 		filterData = new HeadAngleData();
 		blobFinder = new BlobFinder();
-		gui=new HeadAngleGUI(this);
+		gui = new HeadAngleGUI(this);
 	}
 
 	@Override
 	public boolean configure(final FilterConfigs configs) {
+		final HeadAngleConfigs angleConfigs = (HeadAngleConfigs) configs;
 		final CommonFilterConfigs commonConfigs = configs.getCommonConfigs();
 		final int height = commonConfigs.getHeight();
 		final int width = commonConfigs.getWidth();
@@ -60,12 +63,30 @@ public class HeadAngleFilter extends
 		earPosition1 = new Blob();
 		earPosition2 = new Blob();
 
-		colors = new RGB[] {
-				new RGB(246, 0, 0),
-				new RGB(0, 247, 6),
-				new RGB(0, 209, 247),
-				new RGB(239, 247, 0)
-		};
+//		 colors = new RGB[] {
+//		 new RGB(246, 0, 0), // BP1
+//		 new RGB(0, 247, 6), // BP2
+//		 new RGB(0, 209, 247),// EAR1
+//		 new RGB(239, 247, 0)// EAR2
+//		 };
+
+		final Color bpColor1 = angleConfigs.getBpColor1();
+		final Color bpColor2 = angleConfigs.getBpColor2();
+		final Color earColor1 = angleConfigs.getEarColor1();
+		final Color earColor2 = angleConfigs.getEarColor2();
+		if ((bpColor1 != null) && (bpColor2 != null) && (earColor1 != null)
+				&& (earColor2 != null))
+			colors = new RGB[] {
+					new RGB(bpColor1.getRed(), bpColor1.getGreen(),
+							bpColor1.getBlue()), // BP1
+					new RGB(bpColor2.getRed(), bpColor2.getGreen(),
+							bpColor2.getBlue()), // BP2
+					new RGB(earColor1.getRed(), earColor1.getGreen(),
+							earColor1.getBlue()),// EAR1
+					new RGB(earColor2.getRed(), earColor2.getGreen(),
+							earColor2.getBlue())
+			// EAR2
+			};
 
 		thresholds = new RGB[] {
 				new RGB(20, 20, 20),
@@ -112,6 +133,11 @@ public class HeadAngleFilter extends
 
 			blobFinder.updateBlobsCentroids(origImg, tmpProcessedData, colors,
 					blobs, thresholds);
+			
+			System.out.println(bodyPosition1.getCentroid());
+			System.out.println(bodyPosition2.getCentroid());
+			System.out.println(earPosition1.getCentroid());
+			System.out.println(earPosition2.getCentroid());
 
 			// // body point 1
 			// long tCentroid1 = System.currentTimeMillis();

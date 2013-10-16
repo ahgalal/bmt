@@ -49,12 +49,11 @@ public class ImageManipulator {
 				minY = p.y;
 			else if (p.y > maxY)
 				maxY = p.y;
+			centroid.x = (maxX + minX) / 2;
+			centroid.y = (maxY + minY) / 2;
 		}
 
 		public Point getCentroid() {
-			centroid.x = (maxX + minX) / 2;
-			centroid.y = (maxY + minY) / 2;
-
 			return centroid;
 		}
 
