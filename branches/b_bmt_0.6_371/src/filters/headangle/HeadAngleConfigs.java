@@ -1,5 +1,7 @@
 package filters.headangle;
 
+import java.awt.Point;
+
 import org.eclipse.swt.graphics.Color;
 
 import filters.CommonFilterConfigs;
@@ -11,6 +13,8 @@ public class HeadAngleConfigs extends FilterConfigs {
 	private Color bpColor2;
 	private Color earColor1;
 	private Color earColor2;
+	
+	private Point p1,p2;
 	
 	public HeadAngleConfigs(String name, String filterId,
 			CommonFilterConfigs commonConfigs) {
@@ -53,6 +57,22 @@ public class HeadAngleConfigs extends FilterConfigs {
 
 	public void setEarColor2(Color earColor2) {
 		this.earColor2 = earColor2;
+	}
+
+	public Point getP1() {
+		return p1;
+	}
+
+	public void setP1(Point p1) {
+		this.p1 = p1;
+	}
+
+	public Point getP2() {
+		return p2;
+	}
+
+	public void setP2(Point p2) {
+		this.p2 = p2;
 	}
 
 }

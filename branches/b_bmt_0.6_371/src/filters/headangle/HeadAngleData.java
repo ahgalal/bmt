@@ -15,6 +15,7 @@ public class HeadAngleData extends FilterData {
 	public final static String	dataID	= Constants.FILTER_ID
 												+ ".headangle.data";
 	private final Point			center;
+
 	private int angle;
 
 	public HeadAngleData() {

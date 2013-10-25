@@ -5,6 +5,7 @@ package modules.experiment;
 
 import modules.ModulesNamesRequirements;
 import modules.ModulesSetup;
+import modules.headmotion.HeadMotionModule;
 import modules.session.SessionModule;
 import modules.zones.ZonesModule;
 import filters.FiltersConnectionRequirements;
@@ -12,7 +13,6 @@ import filters.FiltersNamesRequirements;
 import filters.FiltersNamesRequirements.FilterTrigger;
 import filters.FiltersSetup;
 import filters.headangle.HeadAngleFilter;
-import filters.ratfinder.RatFinder;
 import filters.recorder.VideoRecorder;
 import filters.screendrawer.ScreenDrawer;
 import filters.source.SourceFilter;
@@ -76,6 +76,7 @@ public class ParkinsonExperiment extends Experiment {
 		final ModulesNamesRequirements modulesRequirements = new ModulesNamesRequirements();
 		modulesRequirements.addModule("ZonesModule", ZonesModule.moduleID);
 		modulesRequirements.addModule("SessionModule", SessionModule.moduleID);
+		modulesRequirements.addModule("HeadMotionModule", HeadMotionModule.moduleID);
 
 		modulesSetup = new ModulesSetup(modulesRequirements);
 	}
@@ -89,7 +90,7 @@ public class ParkinsonExperiment extends Experiment {
 		final String[] expParameters = new String[] {
 				Constants.FILE_ALL_ENTRANCE, Constants.FILE_CENTRAL_ENTRANCE,
 				Constants.FILE_CENTRAL_TIME, Constants.FILE_TOTAL_DISTANCE,
-				Constants.FILE_SESSION_TIME };
+				Constants.FILE_SESSION_TIME, Constants.FILE_HEAD_ANGLE };
 		setParametersList(expParameters);
 	}
 

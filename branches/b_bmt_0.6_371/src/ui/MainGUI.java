@@ -19,7 +19,6 @@ import java.awt.Color;
 import java.awt.Frame;
 import java.awt.Robot;
 import java.awt.event.MouseListener;
-import java.awt.image.BufferedImage;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.awt.SWT_AWT;
@@ -48,7 +47,6 @@ import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
 
 import utils.PManager;
-import utils.video.ImageManipulator;
 import utils.video.ImageManipulator.RGB;
 import control.ui.ControllerUI;
 import control.ui.CtrlMainGUI;
@@ -59,61 +57,67 @@ import control.ui.CtrlMainGUI;
  * @author Creative
  */
 public class MainGUI extends BaseUI {
-	private Frame		awtVideoMain;						// awt frame to
-																// display main
-																// screen data
-	private Frame		awtVideoSec;							// awt frame to
-																// display the
-																// processed
-																// image
-	private Button		btnStartStream;
-	private Button		btnPause;
-	private Button		btnStartTracking				= null;
-	private Button		btnStopStream;
-	private Button		btnStopTracking					= null;
-	private Composite	cmpstMain;
-	private Composite	cmpstSecondary					= null;
-	private Composite	cmpstStreaming;
-	private Composite	cmpstTracking;
+	private Frame				awtVideoMain;							// awt
+																		// frame
+																		// to
+																		// display
+																		// main
+																		// screen
+																		// data
+	private Frame				awtVideoSec;							// awt
+																		// frame
+																		// to
+	private Button				btnPause;
+	// display the
+	// processed
+	// image
+	private Button				btnStartStream;
+	private Button				btnStartTracking				= null;
+	private Button				btnStopStream;
+	private Button				btnStopTracking					= null;
+	private Composite			cmpstMain;
+	private Composite			cmpstSecondary					= null;
+	private Composite			cmpstStreaming;
+	private Composite			cmpstTracking;
 
-	private CtrlMainGUI	controller;
-	private CoolBar		coolBar;
-	private ExpandBar	expandBar;
-	private Group		grpStats						= null;
+	private CtrlMainGUI			controller;
+	private CoolBar				coolBar;
+	private ExpandBar			expandBar;
+	private final Group			grpGraphs;
 
-	private Group		grpVideo;
-	private Group		grpGraphs;
-	private Label		lblStatus						= null;
+	private Group				grpStats						= null;
+	private Group				grpVideo;
+	private Label				lblStatus						= null;
 
-	private Menu		menuBar							= null;
-	private MenuItem	mntmCameraSubMenu;
-	private MenuItem	mntmVideoFile;
+	private Menu				menuBar							= null;
+	private MenuItem			mntmCameraSubMenu;
+	private MenuItem			mntmVideoFile;
 	// data
-	private Menu		mnuEdit						= null;
-	private MenuItem	mnuEditItem					= null;
+	private Menu				mnuEdit							= null;
+	private MenuItem			mnuEditItem						= null;
 
-	private Menu		mnuExperiment					= null;
-	private MenuItem	mnuExperimentItem				= null;
-	private Menu		mnuFile						= null;
-	private MenuItem	mnuFileItem					= null;
-	private Menu		mnuHelp						= null;
+	private Menu				mnuExperiment					= null;
+	private MenuItem			mnuExperimentItem				= null;
+	private Menu				mnuFile							= null;
+	private MenuItem			mnuFileItem						= null;
+	private Menu				mnuHelp							= null;
 
-	private MenuItem	mnuHelpItem					= null;
-	private MenuItem	mnuitmEditExp;
-	private MenuItem	mnutmExperimentExporttoexcel	= null;
-	private MenuItem	mnutmExperimentLoadexp		= null;
-	private MenuItem	mnutmExperimentNewexp;
-	private MenuItem	mnutmFileExit					= null;
+	private MenuItem			mnuHelpItem						= null;
+	private MenuItem			mnuitmEditExp;
+	private MenuItem			mnutmExperimentExporttoexcel	= null;
+	private MenuItem			mnutmExperimentLoadexp			= null;
+	private MenuItem			mnutmExperimentNewexp;
+	private MenuItem			mnutmFileExit					= null;
 
-	private Menu		mnuVideo;
+	private Menu				mnuVideo;
 
-	private MenuItem	mnuVideoSource					= null;
+	private MenuItem			mnuVideoSource					= null;
 
-	private Shell		sShell;
+	private Scale				sclStreamPosition;
 
-	private Table		tblData						= null;
-	private StyledText txtConsole;
-	private Scale sclStreamPosition;
+	private Shell				sShell;
+	private Table				tblData							= null;
+	private final StyledText	txtConsole;
 
 	/**
 	 * Creates GUI components, and links this Shell with the parent Shell.
@@ -124,11 +128,21 @@ public class MainGUI extends BaseUI {
 		grpGraphs = new Group(sShell, SWT.NONE);
 		grpGraphs.setText("Graphs");
 		grpGraphs.setBounds(556, 524, 423, 152);
-		
-		txtConsole = new StyledText(sShell, SWT.BORDER | SWT.WRAP | SWT.V_SCROLL | SWT.MULTI);
+
+		txtConsole = new StyledText(sShell, SWT.BORDER | SWT.WRAP
+				| SWT.V_SCROLL | SWT.MULTI);
 		txtConsole.setBounds(10, 524, 540, 152);
 		txtConsole.setEditable(false);
-		txtConsole.setVisible(true); // TODO: reenable console when graphs are in a separate window
+		txtConsole.setVisible(true); // TODO: reenable console when graphs are
+										// in a separate window
+	}
+
+	public void addMouseListenerOnMainFrame(final MouseListener listener) {
+		awtVideoMain.addMouseListener(listener);
+	}
+
+	public void btnPauseStreamingEnable(final boolean enable) {
+		btnPause.setEnabled(enable);
 	}
 
 	/**
@@ -169,10 +183,6 @@ public class MainGUI extends BaseUI {
 	 */
 	public void btnStopStreamingEnable(final boolean enable) {
 		btnStopStream.setEnabled(enable);
-	}
-	
-	public void btnPauseStreamingEnable(final boolean enable) {
-		btnPause.setEnabled(enable);
 	}
 
 	/**
@@ -219,7 +229,7 @@ public class MainGUI extends BaseUI {
 		cmpstMain.setLayout(new GridLayout());
 		cmpstMain.setLocation(new Point(5, 15));
 		cmpstMain.setSize(new Point(640, 480));
-		
+
 		sclStreamPosition = new Scale(grpVideo, SWT.NONE);
 		sclStreamPosition.setBounds(5, 490, 640, 18);
 		createMainAWTFrame();
@@ -301,7 +311,8 @@ public class MainGUI extends BaseUI {
 		grpOptions.setBounds(985, 5, 159, 671);
 
 		expandBar = new ExpandBar(grpOptions, SWT.NONE);
-		expandBar.setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_WIDGET_BACKGROUND));
+		expandBar.setBackground(Display.getCurrent().getSystemColor(
+				SWT.COLOR_WIDGET_BACKGROUND));
 		expandBar.setBounds(10, 21, 139, 640);
 
 		// ////////////////////////////////////////////
@@ -333,13 +344,13 @@ public class MainGUI extends BaseUI {
 			}
 		});
 		btnStopStream.setText(ExternalStrings.get("MainGUI.StopStream"));
-		
+
 		btnPause = new Button(cmpstStreaming, SWT.NONE);
 		btnPause.setLocation(10, 64);
 		btnPause.setSize(109, 25);
 		btnPause.addSelectionListener(new SelectionAdapter() {
 			@Override
-			public void widgetSelected(SelectionEvent e) {
+			public void widgetSelected(final SelectionEvent e) {
 				controller.pauseResumeAction();
 			}
 		});
@@ -446,16 +457,7 @@ public class MainGUI extends BaseUI {
 	private void createMainAWTFrame() {
 		awtVideoMain = SWT_AWT.new_Frame(cmpstMain);
 		getAwtVideoMain().setVisible(true);
-		getAwtVideoMain().setSize(cmpstMain.getSize().x,
-				cmpstMain.getSize().y);
-	}
-	
-	public void addMouseListenerOnMainFrame(MouseListener listener){
-		awtVideoMain.addMouseListener(listener);
-	}
-	
-	public void removeMouseListenerOnMainFrame(MouseListener listener){
-		awtVideoMain.removeMouseListener(listener);
+		getAwtVideoMain().setSize(cmpstMain.getSize().x, cmpstMain.getSize().y);
 	}
 
 	/**
@@ -472,7 +474,7 @@ public class MainGUI extends BaseUI {
 	 * This method initializes sShell.
 	 */
 	private void createSShell() {
-		sShell = new Shell(/*SWT.APPLICATION_MODAL | */SWT.DIALOG_TRIM);
+		sShell = new Shell(/* SWT.APPLICATION_MODAL | */SWT.DIALOG_TRIM);
 		sShell.setText("Behavioral Monitoring Tool");
 		createExpandBar();
 		createCoolBar();
@@ -541,18 +543,16 @@ public class MainGUI extends BaseUI {
 		mnuEditItem.setMenu(mnuEdit);
 		mnuEditItem.setEnabled(false);
 
-
-		
-		MenuItem mntmAdvanced_1 = new MenuItem(mnuEdit, SWT.CASCADE);
+		final MenuItem mntmAdvanced_1 = new MenuItem(mnuEdit, SWT.CASCADE);
 		mntmAdvanced_1.setText("Advanced");
-		
-		Menu menu_1 = new Menu(mntmAdvanced_1);
+
+		final Menu menu_1 = new Menu(mntmAdvanced_1);
 		mntmAdvanced_1.setMenu(menu_1);
-		
-		MenuItem mntmFiltersSetup = new MenuItem(menu_1, SWT.NONE);
+
+		final MenuItem mntmFiltersSetup = new MenuItem(menu_1, SWT.NONE);
 		mntmFiltersSetup.addSelectionListener(new SelectionAdapter() {
 			@Override
-			public void widgetSelected(SelectionEvent e) {
+			public void widgetSelected(final SelectionEvent e) {
 				controller.showFiltersSetup();
 			}
 		});
@@ -642,11 +642,11 @@ public class MainGUI extends BaseUI {
 		mnuHelpItem.setText(ExternalStrings.get("MainGUI.Menu.Help")); //$NON-NLS-1$
 		mnuHelp = new Menu(mnuHelpItem);
 		mnuHelpItem.setMenu(mnuHelp);
-		
-		MenuItem mntmContents = new MenuItem(mnuHelp, SWT.NONE);
+
+		final MenuItem mntmContents = new MenuItem(mnuHelp, SWT.NONE);
 		mntmContents.addSelectionListener(new SelectionAdapter() {
 			@Override
-			public void widgetSelected(SelectionEvent e) {
+			public void widgetSelected(final SelectionEvent e) {
 				controller.mnutmHelpContentsAction();
 			}
 		});
@@ -704,6 +704,31 @@ public class MainGUI extends BaseUI {
 		return awtVideoSec;
 	}
 
+	public StyledText getConsoleText() {
+		return txtConsole;
+	}
+
+	public RGB getMainScreenPixelRGB(final java.awt.Point point) {
+
+		Robot robot = null;
+		try {
+			robot = new Robot();
+		} catch (final AWTException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		final int x = awtVideoMain.getLocationOnScreen().x + point.x;
+		final int y = awtVideoMain.getLocationOnScreen().y + point.y;
+		final Color pixelColor = robot.getPixelColor(x, y);
+		final int[] rgb = new int[] {
+				pixelColor.getRed(),
+				pixelColor.getGreen(),
+				pixelColor.getBlue()
+		};
+
+		return new RGB(rgb[0], rgb[1], rgb[2]);
+	}
+
 	public String getSelectedInputMode() {
 		if (mntmCameraSubMenu.getSelection())
 			return "CAM";
@@ -729,10 +754,6 @@ public class MainGUI extends BaseUI {
 	public Label getStatusLabel() {
 		return lblStatus;
 	}
-	
-	public StyledText getConsoleText() {
-		return txtConsole;
-	}
 
 	@Override
 	public void loadData(final String[] strArray) {
@@ -746,7 +767,7 @@ public class MainGUI extends BaseUI {
 	 *            ArrayList of available filters' gui
 	 */
 	public void loadPluggedGUI(final PluggedGUI<?>[] pGUIs) {
-		for (final PluggedGUI<?> pgui : pGUIs){
+		for (final PluggedGUI<?> pgui : pGUIs) {
 			pgui.initialize(sShell, expandBar, menuBar, coolBar, grpGraphs);
 			pgui.setInitialized(true);
 		}
@@ -755,6 +776,10 @@ public class MainGUI extends BaseUI {
 		coolBar.layout();
 		coolBar.setLocked(true);
 		coolBar.setVisible(false);
+	}
+
+	public void removeMouseListenerOnMainFrame(final MouseListener listener) {
+		awtVideoMain.removeMouseListener(listener);
 	}
 
 	public void setActive() {
@@ -774,28 +799,11 @@ public class MainGUI extends BaseUI {
 		mnuEditItem.setEnabled(loaded);
 	}
 
-	public void setStreamProgress(int position) {
-		sclStreamPosition.setSelection(position);
-	}
-	
-	public void setStreamLength(int totalLength) {
+	public void setStreamLength(final int totalLength) {
 		sclStreamPosition.setMaximum(totalLength);
 	}
 
-	public RGB getMainScreenPixelRGB(java.awt.Point point) {
-		
-		Robot robot = null;
-		try {
-			robot = new Robot();
-		} catch (AWTException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		int x = awtVideoMain.getLocationOnScreen().x + point.x;
-		int y= awtVideoMain.getLocationOnScreen().y + point.y;
-		Color pixelColor = robot.getPixelColor(x, y);
-		int[] rgb = new int[]{pixelColor.getRed(),pixelColor.getGreen(),pixelColor.getBlue()};
-		
-		return new RGB(rgb[0], rgb[1], rgb[2]);
+	public void setStreamProgress(final int position) {
+		sclStreamPosition.setSelection(position);
 	}
 }

@@ -20,6 +20,8 @@ import java.util.Iterator;
 import modules.ModulesNamesRequirements.ModuleRequirement;
 import modules.experiment.Experiment;
 import modules.experiment.ExperimentModule;
+import modules.headmotion.HeadMotionModule;
+import modules.headmotion.HeadMotionModuleConfigs;
 import modules.movementmeter.MovementMeterModule;
 import modules.movementmeter.MovementMeterModuleConfigs;
 import modules.rearing.RearingModule;
@@ -129,6 +131,7 @@ public class ModulesManager implements ConfigsListener {
 		installedModules.addModule(new MovementMeterModule(null, null));
 		installedModules.addModule(new SessionModule(null, null));
 		installedModules.addModule(new ZonesModule(null, null));
+		installedModules.addModule(new HeadMotionModule(null, null));
 
 		initializeConfigs();
 	}
@@ -423,11 +426,13 @@ public class ModulesManager implements ConfigsListener {
 		final ModuleConfigs zoneConfigs = new ZonesModuleConfigs("zoneConfigs",
 				ZonesModule.DEFAULT_HYSTRISES_VALUE, 0, 0);
 
+		final HeadMotionModuleConfigs headMotionConfigs = new HeadMotionModuleConfigs("HeadMotionModule");
 		configurationManager.reset();
 		configurationManager.addConfiguration(rearingConfigs, false);
 		configurationManager.addConfiguration(movementConfigs, false);
 		configurationManager.addConfiguration(sessionConfigs, false);
 		configurationManager.addConfiguration(zoneConfigs, false);
+		configurationManager.addConfiguration(headMotionConfigs, false);
 	}
 
 	/**
