@@ -31,6 +31,7 @@ public interface Constants {
 	String	FILE_GROUP_NAME			= "Group";
 	String	FILE_RAT_NUMBER			= "Number";
 	String	FILE_REARING_COUNTER	= "RRNG";
+	String	FILE_HEAD_ANGLE			= "HeadAngle";
 
 	String	FILE_SESSION_TIME		= "ST";
 	String	FILE_TOTAL_DISTANCE		= "Distance";
@@ -38,10 +39,11 @@ public interface Constants {
 	String	GUI_CENTRAL_ENTRANCE	= "Central Entrance";
 	String	GUI_CENTRAL_TIME		= "Central Time";
 	String	GUI_CURRENT_ZONE		= "Current Zone";
+	String	GUI_HEAD_ANGLE			= "Head angle";
 
-	String	FLOATING	= "Floating";
-	String	SWIMMING	= "Swimming";
-	String	CLIMBING	= "Climbing";
+	String	FLOATING				= "Floating";
+	String	SWIMMING				= "Swimming";
+	String	CLIMBING				= "Climbing";
 	/**
 	 * GUI Headers, used to Load data to GUI.
 	 */
@@ -75,14 +77,14 @@ public interface Constants {
 	 * Rat Header:.
 	 */
 	String	H_RAT					= "[Rat Info]";
-	
+
 	/**
 	 * ID constants
 	 */
-	String BMT_ID="bmt";
-	String MODULE_ID=BMT_ID+".module";
-	String FILTER_ID=BMT_ID+".filter";
-	String DATA_ID="data";
-	String EXPERIMENT_ID =MODULE_ID+ ".experiment";
+	String	BMT_ID					= "bmt";
+	String	MODULE_ID				= BMT_ID + ".module";
+	String	FILTER_ID				= BMT_ID + ".filter";
+	String	DATA_ID					= "data";
+	String	EXPERIMENT_ID			= MODULE_ID + ".experiment";
 
 }

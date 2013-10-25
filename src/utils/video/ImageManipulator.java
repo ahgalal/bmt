@@ -19,6 +19,8 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.imageio.ImageIO;
 
@@ -43,18 +45,42 @@ public class ImageManipulator {
 			// points.add(p);
 			if (p.x < minX)
 				minX = p.x;
-			else if (p.x > maxX)
+			if (p.x > maxX)
 				maxX = p.x;
 			if (p.y < minY)
 				minY = p.y;
-			else if (p.y > maxY)
+			if (p.y > maxY)
 				maxY = p.y;
 			centroid.x = (maxX + minX) / 2;
 			centroid.y = (maxY + minY) / 2;
 		}
+		
+		public int getMaxX(){
+			return maxX;
+		}
+		
+		public int getMaxY(){
+			return maxY;
+		}
+		
+		public int getMinX(){
+			return minX;
+		}
+		
+		public int getMinY(){
+			return minY;
+		}
 
 		public Point getCentroid() {
 			return centroid;
+		}
+		
+		public int getWidth(){
+			return maxX-minX;
+		}
+		
+		public int getHeight(){
+			return maxY-minY;
 		}
 
 		/*
@@ -64,27 +90,62 @@ public class ImageManipulator {
 		public void setCentroid(final Point centroid) {
 			this.centroid = centroid;
 		}
+		
+		@Override
+		public String toString() {
+			return "center: "+ getCentroid().toString() + " rect area: "+ (maxX - minX)*(maxY-minY) + " minX:"+minX + " maxX:"+maxX+ " minY:"+minY + " maxY:"+maxY;
+		}
 	}
 
 	public static class BlobFinder {
-		public static Collection<Blob> getBlobs(final int[] image) {
+		
+		// FIXME: performance enhancement
+		public static Collection<Blob> getBlobs(final int[] image,int width,int height,int xStart,int xEnd,int yStart,int yEnd) {
 			final HashMap<Integer, Blob> blobs = new HashMap<Integer, Blob>();
 			final int[] labels = new int[image.length];
 			int labelCounter = 1;
-
+			
+			int[][] labelTable = new int[40][40]; // FIXME: maximum of 20 labels only!, need to be dynamic
+			int[] labelTableIndices = new int[40];
+			
 			for (int i = 0; i < image.length; i++) {
 				final int pixel = image[i];
-				final int xPixel = i % 640;
-				final int yPixel = i / 640;
+				final int xPixel = i % width;
+				final int yPixel = i / width;
+				
+				if(xPixel < xStart || xPixel > xEnd || yPixel < yStart || yPixel > yEnd)
+					continue;
+				
 				if (pixel == 0x00FFFFFF) { // pixel is foreground
 					// check neighboring pixels' label
-					y_loop:
 					for (int yTmp = yPixel - 1; yTmp <= (yPixel + 1); yTmp++) {
 						for (int xTmp = xPixel - 1; xTmp <= (xPixel + 1); xTmp++) {
-							final int label = labels[xTmp + (yTmp * 640)];
-							if (label > 0) {
-								labels[i] = label;
-								break y_loop;
+							final int neighbourLabel = labels[xTmp + (yTmp * width)];
+							if (neighbourLabel > 0) {
+								int currentLabel =labels[i];
+								if(currentLabel==0)
+									labels[i] = neighbourLabel;
+								else{// this pixel has been labeled before
+									if(currentLabel != neighbourLabel){ // two blobs meeting
+										
+										//System.out.println("Adj. Labels: " + currentLabel + " & " + neighbourLabel);
+										int smallerLabel,largerLabel;
+										// mark labels as adjacent
+										if(currentLabel<neighbourLabel){
+											smallerLabel=currentLabel;
+											largerLabel=neighbourLabel;
+										}else{
+											smallerLabel=neighbourLabel;
+											largerLabel=currentLabel;
+										}
+										addLabelToLabelTable(labelTable,
+												labelTableIndices,
+												smallerLabel,
+												largerLabel);
+										labels[i] = smallerLabel;
+									}
+								}
+								//break y_loop;
 							}
 						}
 					}
@@ -104,9 +165,60 @@ public class ImageManipulator {
 					}
 					blob.addPoint(new Point(xPixel, yPixel));
 				}
+				
 			}
-
+			
+			for(int keyLabelIndex=labelCounter-1;keyLabelIndex>=1;keyLabelIndex--){
+				String adjLabels="";
+				for(int adjLabelIndex=1;adjLabelIndex<=labelTableIndices[keyLabelIndex];adjLabelIndex++){
+					int adjLabel = labelTable[keyLabelIndex][adjLabelIndex];
+					adjLabels+=adjLabel+",";
+				}
+				//System.out.println(keyLabelIndex + ": "+ adjLabels);
+			}
+			
+			Set<Integer> labelsToRemove = new HashSet<Integer>();
+			// merge blobs of adjacent labels
+			for(int keyLabelIndex=labelCounter-1;keyLabelIndex>=1;keyLabelIndex--){
+				int keyLabel = keyLabelIndex;
+				
+				// get key blob
+				Blob keyBlob = blobs.get(keyLabel);
+				
+				if(keyBlob.getHeight()==0 || keyBlob.getWidth()==0)
+					labelsToRemove.add(keyLabel);
+				
+				// merge adjacent blobs into key blob
+				for(int adjLabelIndex=1;adjLabelIndex<=labelTableIndices[keyLabelIndex];adjLabelIndex++){
+					int adjLabel = labelTable[keyLabelIndex][adjLabelIndex];
+					Blob adjBlob = blobs.get(adjLabel);
+					
+					keyBlob.addPoint(new Point(adjBlob.getMaxX(),adjBlob.getMaxY()));
+					keyBlob.addPoint(new Point(adjBlob.getMinX(),adjBlob.getMinY()));
+					labelsToRemove.add(adjLabel);
+					
+					//System.out.println("adj blob to be removed: " +adjLabel +" " +adjBlob );
+				}
+			}
+			
+			for(int i:labelsToRemove)
+				blobs.remove(i);
 			return blobs.values();
+		}
+
+		private static void addLabelToLabelTable(int[][] labelTable,
+				int[] labelTableIndices, int smallerLabel,
+				final int largerLabel) {
+			// check if largerLabel was added before as an adjacent label to smallerLabel
+			for(int alreadyAddedAdjacentLabelIndex=1;alreadyAddedAdjacentLabelIndex<=labelTableIndices[smallerLabel];alreadyAddedAdjacentLabelIndex++){
+				if(labelTable[smallerLabel][alreadyAddedAdjacentLabelIndex]==largerLabel)
+					return;
+			}
+			int index=labelTableIndices[smallerLabel]+1;
+			
+			labelTable[smallerLabel][index]=largerLabel;
+			labelTableIndices[smallerLabel]+=1;
+			//System.out.println("added: " + largerLabel + " to:" + smallerLabel + " at idx: "+index);
 		}
 
 		private final CentroidFinder	centroidFinder;
@@ -138,6 +250,8 @@ public class ImageManipulator {
 				}
 			}
 
+			// TODO: Performance Enhancement: create a method:
+			// centroidFinder.updateCentroid(filteredImage, centroids_to_update[], labels[])
 			for (int iColor = 0; iColor < colors.length; iColor++) {
 				centroidFinder.updateCentroid(filteredImage, blobs[iColor].getCentroid(),
 						iColor + 1);
@@ -147,7 +261,7 @@ public class ImageManipulator {
 
 	public static class CentroidFinder {
 		private static final int	CENTROID_HISTORY_SIZE	= 3;
-		private static final int	SMALLEST_WHITE_AREA		= 10;
+		private static final int	SMALLEST_WHITE_AREA		= 5;
 		private final Point[]		centroidHistory			= new Point[CENTROID_HISTORY_SIZE];
 		private int					framesRemainingReliableCentroid;
 		private int					height;
@@ -165,7 +279,7 @@ public class ImageManipulator {
 
 			for (int i = 0; i < centroidHistory.length; i++)
 				centroidHistory[i] = new Point(-1, -1);
-			searchSideLength = width / 4;
+			searchSideLength = width /*/ 4*/; // TODO
 			framesRemainingReliableCentroid = 10;
 
 		}
@@ -325,6 +439,11 @@ public class ImageManipulator {
 			this.g = g;
 			this.b = b;
 		}
+		
+		@Override
+		public String toString() {
+			return "R: " + getR() + ",G: " + getG()+",B: "+getB();
+		}
 	}
 
 	private static int[]	subResult;
@@ -411,13 +530,15 @@ public class ImageManipulator {
 	}
 
 	public static void filterImageRGB(final int[] origImg,
-			final int[] filteredImage, final int r, final int rThreshold,
-			final int g, final int gThreshold, final int b, final int bThreshold) {
+			final int[] filteredImage, final RGB color, RGB threshold) {
 		for (int i = 0; i < origImg.length; i++) {
 			final int pixel = origImg[i];
-			if ((Math.abs(ImageManipulator.intToRGB(pixel)[0] - r) < rThreshold)
-					&& (Math.abs(ImageManipulator.intToRGB(pixel)[1] - g) < gThreshold)
-					&& (Math.abs(ImageManipulator.intToRGB(pixel)[2] - b) < bThreshold)) {
+			int deltaR = Math.abs(ImageManipulator.intToRGB(pixel)[0] - color.getR());
+			int deltaG = Math.abs(ImageManipulator.intToRGB(pixel)[1] - color.getG());
+			int deltaB = Math.abs(ImageManipulator.intToRGB(pixel)[2] - color.getB());
+			if ((deltaR < threshold.getR())
+					&& (deltaG < threshold.getG())
+					&& (deltaB < threshold.getB())) {
 				filteredImage[i] = 0x00FFFFFF;
 			} else {
 				filteredImage[i] = 0x00;
@@ -476,41 +597,66 @@ public class ImageManipulator {
 		res = ((grayValue + (grayValue << 8)) | (grayValue << 16));
 		return res;
 	}
-
+	
 	public static Point[] getLinePoints(final Point pt1, final Point pt2) {
-		final int deltaY = pt1.y - pt2.y;
-		final int deltaX = pt1.x - pt2.x;
-		;
+		return getLinePoints(pt1, pt2, 0);
+	}
+
+	public static Point[] getLinePoints(final Point pt1, final Point pt2,double extendLineRatio) {
+		int deltaY = pt1.y - pt2.y;
+		int deltaX = pt1.x - pt2.x;
 
 		// get line equation
 		final float slope = deltaY / (float) deltaX;
 		final float c = pt1.y - (slope * pt1.x);
 
+		Point pt1Applied=pt1;
+		Point pt2Applied=pt2;
+		if(extendLineRatio>0){
+			if(Math.abs(deltaY) > Math.abs(deltaX)){
+				pt1Applied.y = (int) (pt1.y + (double)deltaY*extendLineRatio);
+				pt1Applied.x = (int) ((pt1Applied.y - c)/(double)slope); 
+				
+				pt2Applied.y = (int) (pt2.y - (double)deltaY*extendLineRatio);
+				pt2Applied.x = (int) ((pt2Applied.y - c)/(double)slope); 
+			}else{
+				pt1Applied.x = (int) (pt1.x + (double)deltaX*extendLineRatio);
+				pt1Applied.y = (int) (pt1Applied.x *(double)slope + c);
+				
+				pt2Applied.x = (int) (pt2.x - (double)deltaX*extendLineRatio);
+				pt2Applied.y = (int) (pt2Applied.x *(double)slope + c);
+			}
+			
+			deltaY = pt1Applied.y - pt2Applied.y;
+			deltaX = pt1Applied.x - pt2Applied.x;
+				
+		}
+		
 		final int numPts = Math.abs(deltaY) > Math.abs(deltaX) ? Math
 				.abs(deltaY) : Math.abs(deltaX);
 		final Point[] pts = new Point[Math.abs(numPts) + 1];
 		int i = 0;
 		if (Math.abs(deltaY) > Math.abs(deltaX)) {
-			final int yInitial = pt1.y > pt2.y ? pt1.y : pt2.y;
-			final int yFinal = pt1.y > pt2.y ? pt2.y : pt1.y;
+			final int yInitial = pt1Applied.y > pt2Applied.y ? pt1Applied.y : pt2Applied.y;
+			final int yFinal = pt1Applied.y > pt2Applied.y ? pt2Applied.y : pt1Applied.y;
 			for (int y = yInitial; y >= yFinal; y--) {
 				int x = -1;
 				if (deltaX != 0)
 					x = (int) ((y - c) / slope);
 				else
-					x = pt1.x;
+					x = pt1Applied.x;
 				pts[i] = new Point(x, y);
 				i++;
 			}
 		} else {
-			final int xInitial = pt1.x > pt2.x ? pt1.x : pt2.x;
-			final int xFinal = pt1.x > pt2.x ? pt2.x : pt1.x;
+			final int xInitial = pt1Applied.x > pt2Applied.x ? pt1Applied.x : pt2Applied.x;
+			final int xFinal = pt1Applied.x > pt2Applied.x ? pt2Applied.x : pt1Applied.x;
 			for (int x = xInitial; x >= xFinal; x--) {
 				int y = -1;
 				if (deltaY != 0)
 					y = (int) ((slope * x) + c);
 				else
-					y = pt1.y;
+					y = pt1Applied.y;
 				pts[i] = new Point(x, y);
 				i++;
 			}

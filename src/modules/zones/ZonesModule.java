@@ -209,8 +209,8 @@ public class ZonesModule extends
 	 * @return zone's number located at the pixel of x,y
 	 */
 	private int getZone(final int x, final int y) {
-		if ((x + (y * configs.getCommonConfigs().getWidth())) < zoneMap.length)
-			return zoneMap[x + (y * configs.getCommonConfigs().getWidth())];
+//		if ((x + (y * configs.getCommonConfigs().getWidth())) < zoneMap.length)
+//			return zoneMap[x + (y * configs.getCommonConfigs().getWidth())];
 		return -1;
 	}
 
