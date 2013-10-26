@@ -99,7 +99,7 @@ public class HeadAngleGUI extends PluggedGUI<HeadAngleFilter> {
 		lblBody_1.setText("Body2");
 
 		cmpstBody2 = new Composite(cmpstHeadAngle, SWT.BORDER);
-		final GridData gd_cmpstBody2 = new GridData(SWT.CENTER, SWT.CENTER,
+		final GridData gd_cmpstBody2 = new GridData(SWT.LEFT, SWT.CENTER,
 				false, false, 1, 1);
 		gd_cmpstBody2.heightHint = 25;
 		cmpstBody2.setLayoutData(gd_cmpstBody2);
@@ -108,7 +108,8 @@ public class HeadAngleGUI extends PluggedGUI<HeadAngleFilter> {
 		Button btnAreaOfInterest = new Button(cmpstHeadAngle, 0);
 		btnAreaOfInterest.setText("Set Arena");
 		final GridData gd_btnAreaOfInterest = new GridData(SWT.CENTER, SWT.CENTER,
-				true, false, 1, 1);
+				true,false , 2, 1);
+		gd_btnAreaOfInterest.heightHint = 25;
 		btnAreaOfInterest.setLayoutData(gd_btnAreaOfInterest);
 		
 		btnAreaOfInterest.addSelectionListener(new SelectionAdapter() {
