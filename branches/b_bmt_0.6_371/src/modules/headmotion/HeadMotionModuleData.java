@@ -50,7 +50,7 @@ public class HeadMotionModuleData extends ModuleData {
 		private void setFrequencies(int[] frequencies) {
 			this.frequencies = frequencies;
 		}
-		private HistogramSection[] getSections() {
+		public HistogramSection[] getSections() {
 			return sections;
 		}
 		private void setSections(HistogramSection[] sections) {

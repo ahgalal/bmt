@@ -3,6 +3,8 @@
  */
 package modules.experiment;
 
+import java.util.ArrayList;
+
 import modules.ModulesNamesRequirements;
 import modules.ModulesSetup;
 import modules.headmotion.HeadMotionModule;
@@ -87,10 +89,19 @@ public class ParkinsonExperiment extends Experiment {
 	 */
 	@Override
 	protected void initializeParams() {
-		final String[] expParameters = new String[] {
-				Constants.FILE_ALL_ENTRANCE, Constants.FILE_CENTRAL_ENTRANCE,
-				Constants.FILE_CENTRAL_TIME, Constants.FILE_TOTAL_DISTANCE,
-				Constants.FILE_SESSION_TIME, Constants.FILE_HEAD_ANGLE };
+		ArrayList<String> tmpParams = new ArrayList<String>();
+		tmpParams.add(Constants.FILE_ALL_ENTRANCE);
+		tmpParams.add(Constants.FILE_CENTRAL_ENTRANCE);
+		tmpParams.add(Constants.FILE_CENTRAL_TIME);
+		tmpParams.add(Constants.FILE_TOTAL_DISTANCE);
+		tmpParams.add(Constants.FILE_SESSION_TIME);
+		
+		// FIXME: architectural issue with modules contributing dynamic list of params
+		String[] headMotionParams = HeadMotionModule.getParams();
+		for(String param:headMotionParams)
+			tmpParams.add(param);
+		
+		final String[] expParameters = tmpParams.toArray(new String[0]);
 		setParametersList(expParameters);
 	}
 

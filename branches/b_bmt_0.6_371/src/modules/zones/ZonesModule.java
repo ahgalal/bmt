@@ -58,7 +58,7 @@ public class ZonesModule extends
 			Constants.FILE_ALL_ENTRANCE, Constants.FILE_CENTRAL_ENTRANCE,
 			Constants.FILE_CENTRAL_TIME, Constants.FILE_TOTAL_DISTANCE };
 	private final Point				oldPosition;
-	private final ArrayList<Point>	path;										// This
+	private final ArrayList<Point>	path;
 
 	private FilterData				ratFinderData;
 
@@ -209,8 +209,8 @@ public class ZonesModule extends
 	 * @return zone's number located at the pixel of x,y
 	 */
 	private int getZone(final int x, final int y) {
-//		if ((x + (y * configs.getCommonConfigs().getWidth())) < zoneMap.length)
-//			return zoneMap[x + (y * configs.getCommonConfigs().getWidth())];
+		if ((x + (y * configs.getCommonConfigs().getWidth())) < zoneMap.length)
+			return zoneMap[x + (y * configs.getCommonConfigs().getWidth())];
 		return -1;
 	}
 

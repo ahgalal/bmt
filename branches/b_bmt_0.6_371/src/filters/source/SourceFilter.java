@@ -15,6 +15,7 @@
 package filters.source;
 
 import utils.PManager.ProgramState;
+import utils.video.ImageManipulator;
 import filters.FilterConfigs;
 import filters.FilterData;
 import filters.Link;
@@ -57,6 +58,9 @@ public class SourceFilter extends
 	@Override
 	public void process() {
 		int[] frameData = configs.getFrameIntArray().getFrameData();
+		
+		ImageManipulator.adjustBrightness(frameData, 2.0);
+		
 		linkOut.setData(frameData);
 		filterData.setData(frameData);
 	}
