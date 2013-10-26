@@ -25,8 +25,6 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Shell;
 
-import filters.FilterConfigs;
-
 import ui.PluggedGUI;
 import utils.PManager;
 import utils.PManager.ProgramState;
@@ -75,6 +73,7 @@ public class HeadAngleGUI extends PluggedGUI<HeadAngleFilter> {
 		gd_cmpstEar1.heightHint = 25;
 		cmpstEar1.setLayoutData(gd_cmpstEar1);
 		cmpstEar1.addMouseListener(prepareComposite(cmpstEar1));
+		
 
 		final Label lblEar_1 = new Label(cmpstHeadAngle, SWT.NONE);
 		lblEar_1.setText("Ear2");
@@ -85,7 +84,7 @@ public class HeadAngleGUI extends PluggedGUI<HeadAngleFilter> {
 		gd_cmpstEar2.heightHint = 25;
 		cmpstEar2.setLayoutData(gd_cmpstEar2);
 		cmpstEar2.addMouseListener(prepareComposite(cmpstEar2));
-
+		
 		final Label lblBody = new Label(cmpstHeadAngle, SWT.NONE);
 		lblBody.setText("Body1");
 

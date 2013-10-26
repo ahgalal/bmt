@@ -39,113 +39,182 @@ public class ImageManipulator {
 		private int		minX		= 10000;
 		private int		minY		= 10000;
 
-		// private final ArrayList<Point> points = new ArrayList<Point>();
-
-		public void addPoint(final Point p) {
-			// points.add(p);
-			if (p.x < minX)
-				minX = p.x;
-			if (p.x > maxX)
-				maxX = p.x;
-			if (p.y < minY)
-				minY = p.y;
-			if (p.y > maxY)
-				maxY = p.y;
+		public void addPoint(int x,int y) {
+			if (x < minX)
+				minX = x;
+			if (x > maxX)
+				maxX = x;
+			if (y < minY)
+				minY = y;
+			if (y > maxY)
+				maxY = y;
 			centroid.x = (maxX + minX) / 2;
 			centroid.y = (maxY + minY) / 2;
+			if(centroid.x > 640 || centroid.x <0 ||centroid.y > 480 || centroid.y <0 )
+				System.out.println("ssssssssss");
+			
 		}
-		
-		public int getMaxX(){
-			return maxX;
-		}
-		
-		public int getMaxY(){
-			return maxY;
-		}
-		
-		public int getMinX(){
-			return minX;
-		}
-		
-		public int getMinY(){
-			return minY;
+
+		public int getArea() {
+			return (maxX - minX) * (maxY - minY);
 		}
 
 		public Point getCentroid() {
 			return centroid;
 		}
-		
-		public int getWidth(){
-			return maxX-minX;
-		}
-		
-		public int getHeight(){
-			return maxY-minY;
+
+		public int getHeight() {
+			return maxY - minY;
 		}
 
-		/*
-		 * public ArrayList<Point> getPoints() { return points; }
-		 */
+		public int getMaxX() {
+			return maxX;
+		}
+
+		public int getMaxY() {
+			return maxY;
+		}
+
+		public int getMinX() {
+			return minX;
+		}
+
+		public int getMinY() {
+			return minY;
+		}
+
+		public int getWidth() {
+			return maxX - minX;
+		}
 
 		public void setCentroid(final Point centroid) {
 			this.centroid = centroid;
 		}
-		
+
 		@Override
 		public String toString() {
-			return "center: "+ getCentroid().toString() + " rect area: "+ (maxX - minX)*(maxY-minY) + " minX:"+minX + " maxX:"+maxX+ " minY:"+minY + " maxY:"+maxY;
+			return "center: " + getCentroid().toString() + " rect area: "
+					+ getArea() + " minX:" + minX + " maxX:" + maxX + " minY:"
+					+ minY + " maxY:" + maxY;
+		}
+	}
+	
+	public static void intensirySlicing(int[] inImg,int[] outImg,RGB[] sliceColors,RGB[] sliceThresholds){
+		RGB pixelRGB=new RGB(0, 0, 0);
+		for(int pixelIndex =0;pixelIndex<inImg.length;pixelIndex++){
+			int pixel = inImg[pixelIndex];
+			intToRGB(pixel, pixelRGB);
+			outImg[pixelIndex] = 0x00;
+
+			for(int colorIndex=0;colorIndex<sliceColors.length;colorIndex++){
+				RGB color = sliceColors[colorIndex];
+				RGB threshold = sliceThresholds[colorIndex];
+				final int deltaR = Math.abs(pixelRGB.getR() - color.getR());
+				final int deltaG = Math.abs(pixelRGB.getG() - color.getG());
+				final int deltaB = Math.abs(pixelRGB.getB() - color.getB());
+				
+				
+				if(deltaR < threshold.getR()){
+					
+				}
+				if ((deltaR < threshold.getR()) && (deltaG < threshold.getG())
+						&& (deltaB < threshold.getB())) {
+					outImg[pixelIndex] = rgbToInt(color);
+				} 
+			}
 		}
 	}
 
 	public static class BlobFinder {
-		
+
+		private void addLabelToLabelTable(final int smallerLabel,
+				final int largerLabel) {
+			// check if largerLabel was added before as an adjacent label to
+			// smallerLabel
+			for (int alreadyAddedAdjacentLabelIndex = 1; alreadyAddedAdjacentLabelIndex <= labelTableIndices[smallerLabel]; alreadyAddedAdjacentLabelIndex++) {
+				if (labelTable[smallerLabel][alreadyAddedAdjacentLabelIndex] == largerLabel)
+					return;
+			}
+			final int index = labelTableIndices[smallerLabel] + 1;
+
+			labelTable[smallerLabel][index] = largerLabel;
+			labelTableIndices[smallerLabel] += 1;
+			// System.out.println("added: " + largerLabel + " to:" +
+			// smallerLabel + " at idx: "+index);
+		}
+
+		private final CentroidFinder	centroidFinder;
+
+		@SuppressWarnings("unused")
+		private int						width, height;
+
+		public BlobFinder() {
+			centroidFinder = new CentroidFinder();
+		}
+		final int[][] labelTable = new int[40][40]; // FIXME: maximum of 40
+		// labels only!, need to
+		// be dynamic
+		final int[] labelTableIndices = new int[40];
+
+		private void resetLabelTable(){
+			for(int i=0;i<labelTable.length;i++){
+				for(int j=0;j<labelTable[i].length;j++)
+					labelTable[i][j]=0;
+				labelTableIndices[i]=0;
+			}
+		}
 		// FIXME: performance enhancement
-		public static Collection<Blob> getBlobs(final int[] image,int width,int height,int xStart,int xEnd,int yStart,int yEnd) {
+		public Collection<Blob> getBlobs(
+				final int[] image,
+				final int xStart,
+				final int xEnd,
+				final int yStart,
+				final int yEnd) {
 			final HashMap<Integer, Blob> blobs = new HashMap<Integer, Blob>();
 			final int[] labels = new int[image.length];
 			int labelCounter = 1;
-			
-			int[][] labelTable = new int[40][40]; // FIXME: maximum of 20 labels only!, need to be dynamic
-			int[] labelTableIndices = new int[40];
-			
+
+			resetLabelTable();
+
 			for (int i = 0; i < image.length; i++) {
 				final int pixel = image[i];
 				final int xPixel = i % width;
 				final int yPixel = i / width;
-				
-				if(xPixel < xStart || xPixel > xEnd || yPixel < yStart || yPixel > yEnd)
+
+				if ((xPixel < xStart) || (xPixel > xEnd) || (yPixel < yStart)
+						|| (yPixel > yEnd))
 					continue;
-				
+
 				if (pixel == 0x00FFFFFF) { // pixel is foreground
 					// check neighboring pixels' label
 					for (int yTmp = yPixel - 1; yTmp <= (yPixel + 1); yTmp++) {
 						for (int xTmp = xPixel - 1; xTmp <= (xPixel + 1); xTmp++) {
-							final int neighbourLabel = labels[xTmp + (yTmp * width)];
+							final int neighbourLabel = labels[xTmp
+									+ (yTmp * width)];
 							if (neighbourLabel > 0) {
-								int currentLabel =labels[i];
-								if(currentLabel==0)
+								final int currentLabel = labels[i];
+								if (currentLabel == 0)
 									labels[i] = neighbourLabel;
-								else{// this pixel has been labeled before
-									if(currentLabel != neighbourLabel){ // two blobs meeting
-										
-										//System.out.println("Adj. Labels: " + currentLabel + " & " + neighbourLabel);
-										int smallerLabel,largerLabel;
+								else {// this pixel has been labeled before
+									//two blobs meeting
+									if (currentLabel != neighbourLabel) { 
+										 
+										// System.out.println("Adj. Labels: " +
+										// currentLabel + " & " +
+										// neighbourLabel);
+										int smallerLabel, largerLabel;
 										// mark labels as adjacent
-										if(currentLabel<neighbourLabel){
-											smallerLabel=currentLabel;
-											largerLabel=neighbourLabel;
-										}else{
-											smallerLabel=neighbourLabel;
-											largerLabel=currentLabel;
+										if (currentLabel < neighbourLabel) {
+											smallerLabel = currentLabel;
+											largerLabel = neighbourLabel;
+										} else {
+											smallerLabel = neighbourLabel;
+											largerLabel = currentLabel;
 										}
-										addLabelToLabelTable(labelTable,
-												labelTableIndices,
-												smallerLabel,
-												largerLabel);
+										addLabelToLabelTable(smallerLabel, largerLabel);
 										labels[i] = smallerLabel;
 									}
 								}
-								//break y_loop;
 							}
 						}
 					}
@@ -163,87 +232,71 @@ public class ImageManipulator {
 					} else {
 						blob = blobs.get(labels[i]);
 					}
-					blob.addPoint(new Point(xPixel, yPixel));
+					blob.addPoint(xPixel, yPixel);
 				}
-				
 			}
-			
-			for(int keyLabelIndex=labelCounter-1;keyLabelIndex>=1;keyLabelIndex--){
-				String adjLabels="";
-				for(int adjLabelIndex=1;adjLabelIndex<=labelTableIndices[keyLabelIndex];adjLabelIndex++){
-					int adjLabel = labelTable[keyLabelIndex][adjLabelIndex];
-					adjLabels+=adjLabel+",";
-				}
-				//System.out.println(keyLabelIndex + ": "+ adjLabels);
-			}
-			
-			Set<Integer> labelsToRemove = new HashSet<Integer>();
+
+//			for (int keyLabelIndex = labelCounter - 1; keyLabelIndex >= 1; keyLabelIndex--) {
+//				String adjLabels = "";
+//				for (int adjLabelIndex = 1; adjLabelIndex <= labelTableIndices[keyLabelIndex]; adjLabelIndex++) {
+//					final int adjLabel = labelTable[keyLabelIndex][adjLabelIndex];
+//					adjLabels += adjLabel + ",";
+//				}
+//				System.out.println(keyLabelIndex + ": "+ adjLabels);
+//			}
+
+			final Set<Integer> labelsToRemove = new HashSet<Integer>();
 			// merge blobs of adjacent labels
-			for(int keyLabelIndex=labelCounter-1;keyLabelIndex>=1;keyLabelIndex--){
-				int keyLabel = keyLabelIndex;
-				
+			for (int keyLabelIndex = labelCounter - 1; keyLabelIndex >= 1; keyLabelIndex--) {
+				final int keyLabel = keyLabelIndex;
+
 				// get key blob
-				Blob keyBlob = blobs.get(keyLabel);
-				
-				if(keyBlob.getHeight()==0 || keyBlob.getWidth()==0)
+				final Blob keyBlob = blobs.get(keyLabel);
+
+				if ((keyBlob.getHeight() == 0) || (keyBlob.getWidth() == 0))
 					labelsToRemove.add(keyLabel);
-				
+
 				// merge adjacent blobs into key blob
-				for(int adjLabelIndex=1;adjLabelIndex<=labelTableIndices[keyLabelIndex];adjLabelIndex++){
-					int adjLabel = labelTable[keyLabelIndex][adjLabelIndex];
-					Blob adjBlob = blobs.get(adjLabel);
-					
-					keyBlob.addPoint(new Point(adjBlob.getMaxX(),adjBlob.getMaxY()));
-					keyBlob.addPoint(new Point(adjBlob.getMinX(),adjBlob.getMinY()));
+				for (int adjLabelIndex = 1; adjLabelIndex <= labelTableIndices[keyLabelIndex]; adjLabelIndex++) {
+					final int adjLabel = labelTable[keyLabelIndex][adjLabelIndex];
+					final Blob adjBlob = blobs.get(adjLabel);
+
+					keyBlob.addPoint(adjBlob.getMaxX(), adjBlob
+							.getMaxY());
+					keyBlob.addPoint(adjBlob.getMinX(), adjBlob
+							.getMinY());
 					labelsToRemove.add(adjLabel);
-					
-					//System.out.println("adj blob to be removed: " +adjLabel +" " +adjBlob );
+
+					// System.out.println("adj blob to be removed: " +adjLabel
+					// +" " +adjBlob );
 				}
 			}
-			
-			for(int i:labelsToRemove)
+
+			for (final int i : labelsToRemove)
 				blobs.remove(i);
 			return blobs.values();
 		}
 
-		private static void addLabelToLabelTable(int[][] labelTable,
-				int[] labelTableIndices, int smallerLabel,
-				final int largerLabel) {
-			// check if largerLabel was added before as an adjacent label to smallerLabel
-			for(int alreadyAddedAdjacentLabelIndex=1;alreadyAddedAdjacentLabelIndex<=labelTableIndices[smallerLabel];alreadyAddedAdjacentLabelIndex++){
-				if(labelTable[smallerLabel][alreadyAddedAdjacentLabelIndex]==largerLabel)
-					return;
-			}
-			int index=labelTableIndices[smallerLabel]+1;
-			
-			labelTable[smallerLabel][index]=largerLabel;
-			labelTableIndices[smallerLabel]+=1;
-			//System.out.println("added: " + largerLabel + " to:" + smallerLabel + " at idx: "+index);
-		}
-
-		private final CentroidFinder	centroidFinder;
-
-		public BlobFinder() {
-			centroidFinder = new CentroidFinder();
-		}
-
 		public void initialize(final int width, final int height) {
+			this.width = width;
+			this.height = height;
 			centroidFinder.initialize(width, height);
 		}
 
 		public void updateBlobsCentroids(final int[] image,
 				final int[] filteredImage, final RGB[] colors,
 				final Blob[] blobs, final RGB[] thresholds) {
+			final RGB rgb = new RGB(0, 0, 0);
 			for (int i = 0; i < image.length; i++) {
 				final int pixel = image[i];
-				final int[] pixelRGB = ImageManipulator.intToRGB(pixel);
+				ImageManipulator.intToRGB(pixel, rgb);
 
 				for (int iColor = 0; iColor < colors.length; iColor++) {
-					if ((Math.abs(pixelRGB[0] - colors[iColor].getR()) < thresholds[iColor]
+					if ((Math.abs(rgb.getR() - colors[iColor].getR()) < thresholds[iColor]
 							.getR())
-							&& (Math.abs(pixelRGB[1] - colors[iColor].getG()) < thresholds[iColor]
+							&& (Math.abs(rgb.getG() - colors[iColor].getG()) < thresholds[iColor]
 									.getG())
-							&& (Math.abs(pixelRGB[2] - colors[iColor].getB()) < thresholds[iColor]
+							&& (Math.abs(rgb.getB() - colors[iColor].getB()) < thresholds[iColor]
 									.getB())) {
 						filteredImage[i] = iColor + 1;
 					}
@@ -251,10 +304,11 @@ public class ImageManipulator {
 			}
 
 			// TODO: Performance Enhancement: create a method:
-			// centroidFinder.updateCentroid(filteredImage, centroids_to_update[], labels[])
+			// centroidFinder.updateCentroid(filteredImage,
+			// centroids_to_update[], labels[])
 			for (int iColor = 0; iColor < colors.length; iColor++) {
-				centroidFinder.updateCentroid(filteredImage, blobs[iColor].getCentroid(),
-						iColor + 1);
+				centroidFinder.updateCentroid(filteredImage,
+						blobs[iColor].getCentroid(), iColor + 1);
 			}
 		}
 	}
@@ -279,7 +333,7 @@ public class ImageManipulator {
 
 			for (int i = 0; i < centroidHistory.length; i++)
 				centroidHistory[i] = new Point(-1, -1);
-			searchSideLength = width /*/ 4*/; // TODO
+			searchSideLength = width /* / 4 */; // TODO
 			framesRemainingReliableCentroid = 10;
 
 		}
@@ -439,10 +493,10 @@ public class ImageManipulator {
 			this.g = g;
 			this.b = b;
 		}
-		
+
 		@Override
 		public String toString() {
-			return "R: " + getR() + ",G: " + getG()+",B: "+getB();
+			return "R: " + getR() + ",G: " + getG() + ",B: " + getB();
 		}
 	}
 
@@ -530,14 +584,15 @@ public class ImageManipulator {
 	}
 
 	public static void filterImageRGB(final int[] origImg,
-			final int[] filteredImage, final RGB color, RGB threshold) {
+			final int[] filteredImage, final RGB color, final RGB threshold) {
+		final RGB rgb = new RGB(0, 0, 0);
 		for (int i = 0; i < origImg.length; i++) {
 			final int pixel = origImg[i];
-			int deltaR = Math.abs(ImageManipulator.intToRGB(pixel)[0] - color.getR());
-			int deltaG = Math.abs(ImageManipulator.intToRGB(pixel)[1] - color.getG());
-			int deltaB = Math.abs(ImageManipulator.intToRGB(pixel)[2] - color.getB());
-			if ((deltaR < threshold.getR())
-					&& (deltaG < threshold.getG())
+			ImageManipulator.intToRGB(pixel, rgb);
+			final int deltaR = Math.abs(rgb.getR() - color.getR());
+			final int deltaG = Math.abs(rgb.getG() - color.getG());
+			final int deltaB = Math.abs(rgb.getB() - color.getB());
+			if ((deltaR < threshold.getR()) && (deltaG < threshold.getG())
 					&& (deltaB < threshold.getB())) {
 				filteredImage[i] = 0x00FFFFFF;
 			} else {
@@ -597,12 +652,13 @@ public class ImageManipulator {
 		res = ((grayValue + (grayValue << 8)) | (grayValue << 16));
 		return res;
 	}
-	
+
 	public static Point[] getLinePoints(final Point pt1, final Point pt2) {
 		return getLinePoints(pt1, pt2, 0);
 	}
 
-	public static Point[] getLinePoints(final Point pt1, final Point pt2,double extendLineRatio) {
+	public static Point[] getLinePoints(final Point pt1, final Point pt2,
+			final double extendLineRatio) {
 		int deltaY = pt1.y - pt2.y;
 		int deltaX = pt1.x - pt2.x;
 
@@ -610,35 +666,40 @@ public class ImageManipulator {
 		final float slope = deltaY / (float) deltaX;
 		final float c = pt1.y - (slope * pt1.x);
 
-		Point pt1Applied=pt1;
-		Point pt2Applied=pt2;
-		if(extendLineRatio>0){
-			if(Math.abs(deltaY) > Math.abs(deltaX)){
-				pt1Applied.y = (int) (pt1.y + (double)deltaY*extendLineRatio);
-				pt1Applied.x = (int) ((pt1Applied.y - c)/(double)slope); 
-				
-				pt2Applied.y = (int) (pt2.y - (double)deltaY*extendLineRatio);
-				pt2Applied.x = (int) ((pt2Applied.y - c)/(double)slope); 
-			}else{
-				pt1Applied.x = (int) (pt1.x + (double)deltaX*extendLineRatio);
-				pt1Applied.y = (int) (pt1Applied.x *(double)slope + c);
-				
-				pt2Applied.x = (int) (pt2.x - (double)deltaX*extendLineRatio);
-				pt2Applied.y = (int) (pt2Applied.x *(double)slope + c);
+		Point pt1Applied = new Point(pt1);
+		Point pt2Applied = new Point(pt2);
+		if (extendLineRatio > 0) {
+			if (Math.abs(deltaY) > Math.abs(deltaX)) {
+				pt1Applied.y = (int) (pt1.y + (deltaY * extendLineRatio));
+				pt1Applied.x = (int) ((pt1Applied.y - c) / (double) slope);
+
+				pt2Applied.y = (int) (pt2.y - (deltaY * extendLineRatio));
+				pt2Applied.x = (int) ((pt2Applied.y - c) / (double) slope);
+			} else {
+				pt1Applied.x = (int) (pt1.x + (deltaX * extendLineRatio));
+				pt1Applied.y = (int) ((pt1Applied.x * (double) slope) + c);
+
+				pt2Applied.x = (int) (pt2.x - (deltaX * extendLineRatio));
+				pt2Applied.y = (int) ((pt2Applied.x * (double) slope) + c);
 			}
-			
+
 			deltaY = pt1Applied.y - pt2Applied.y;
 			deltaX = pt1Applied.x - pt2Applied.x;
-				
+
 		}
-		
+
 		final int numPts = Math.abs(deltaY) > Math.abs(deltaX) ? Math
 				.abs(deltaY) : Math.abs(deltaX);
+				
+				
+				
 		final Point[] pts = new Point[Math.abs(numPts) + 1];
 		int i = 0;
 		if (Math.abs(deltaY) > Math.abs(deltaX)) {
-			final int yInitial = pt1Applied.y > pt2Applied.y ? pt1Applied.y : pt2Applied.y;
-			final int yFinal = pt1Applied.y > pt2Applied.y ? pt2Applied.y : pt1Applied.y;
+			final int yInitial = pt1Applied.y > pt2Applied.y ? pt1Applied.y
+					: pt2Applied.y;
+			final int yFinal = pt1Applied.y > pt2Applied.y ? pt2Applied.y
+					: pt1Applied.y;
 			for (int y = yInitial; y >= yFinal; y--) {
 				int x = -1;
 				if (deltaX != 0)
@@ -649,8 +710,10 @@ public class ImageManipulator {
 				i++;
 			}
 		} else {
-			final int xInitial = pt1Applied.x > pt2Applied.x ? pt1Applied.x : pt2Applied.x;
-			final int xFinal = pt1Applied.x > pt2Applied.x ? pt2Applied.x : pt1Applied.x;
+			final int xInitial = pt1Applied.x > pt2Applied.x ? pt1Applied.x
+					: pt2Applied.x;
+			final int xFinal = pt1Applied.x > pt2Applied.x ? pt2Applied.x
+					: pt1Applied.x;
 			for (int x = xInitial; x >= xFinal; x--) {
 				int y = -1;
 				if (deltaY != 0)
@@ -680,6 +743,88 @@ public class ImageManipulator {
 			rgbarr[i] = valgray | (valgray << 8) | (valgray << 16);
 		}
 		return rgbarr;
+	}
+	
+	public static void adjustBrightness(int[] img,double factor){
+		final RGB rgb = new RGB(0, 0, 0);
+		final int nPixels = img.length;
+		for (int i = 0; i < nPixels; i++) {
+			intToRGB(img[i], rgb);
+
+			int r = rgb.getR();
+			int g = rgb.getG();
+			int b = rgb.getB();
+			r = (int) (r * (double) factor);
+			g = (int) (g * (double) factor);
+			b = (int) (b * (double) factor);
+			if (r > 255)
+				r = 255;
+			if (g > 255)
+				g = 255;
+			if (b > 255)
+				b = 255;
+			rgb.setR(r);
+			rgb.setG(g);
+			rgb.setB(b);
+			img[i] = rgbToInt(rgb);
+		}
+	}
+
+	// FIXME: not performance optimized
+	public static int[] histogramStetch(final int[] img) {
+
+		// form histogram
+		final double[] histR = new double[256];
+		final double[] histG = new double[256];
+		final double[] histB = new double[256];
+		final RGB rgb = new RGB(0, 0, 0);
+		final int nPixels = img.length;
+		for (int i = 0; i < nPixels; i++) {
+			intToRGB(img[i], rgb);
+
+			int r = rgb.getR();
+			int g = rgb.getG();
+			int b = rgb.getB();
+
+			histR[r]++;
+			histG[g]++;
+			histB[b]++;
+		}
+
+		// normalize histogram
+		for (int i = 0; i < 256; i++) {
+			histR[i] = histR[i] / nPixels;
+			histG[i] = histG[i] / nPixels;
+			histB[i] = histB[i] / nPixels;
+		}
+
+		// form cumulative histogram
+		for (int i = 0; i < 256; i++) {
+			double prevVal = i == 0 ? 0 : histR[i - 1];
+			histR[i] = histR[i] + prevVal;
+
+			prevVal = i == 0 ? 0 : histG[i - 1];
+			histG[i] = histG[i] + prevVal;
+
+			prevVal = i == 0 ? 0 : histB[i - 1];
+			histB[i] = histB[i] + prevVal;
+		}
+
+		// stretch histogram
+		for (int i = 0; i < nPixels; i++) {
+			intToRGB(img[i], rgb);
+			final int r = rgb.getR();
+			final int g = rgb.getG();
+			final int b = rgb.getB();
+
+			rgb.setR((int) (histR[r] * 255));
+			rgb.setG((int) (histG[g] * 255));
+			rgb.setB((int) (histB[b] * 255));
+
+			img[i] = rgbToInt(rgb);
+		}
+
+		return img;
 	}
 
 	/**
@@ -779,12 +924,10 @@ public class ImageManipulator {
 		return iarr;
 	}
 
-	public static int[] intToRGB(final int pixel) {
-		final int[] res = new int[3];
-		res[0] = ((pixel >> 16) & (255)); // R
-		res[1] = ((pixel >> 8) & (255)); // G
-		res[2] = (pixel & (255)); // B
-		return res;
+	public static void intToRGB(final int pixel, final RGB rgb) {
+		rgb.setR((pixel >> 16) & (255)); // R
+		rgb.setG((pixel >> 8) & (255)); // G
+		rgb.setB(pixel & (255)); // B
 	}
 
 	/**
@@ -878,6 +1021,14 @@ public class ImageManipulator {
 			grey = r + g + b;
 			res[i] = ((grey + (grey << 8)) | (grey << 16));
 		}
+		return res;
+	}
+
+	public static int rgbToInt(final RGB rgb) {
+		int res = 0;
+		res = ((rgb.getR() << 16) & (0x00FF0000)); // R
+		res = res | ((rgb.getG() << 8) & (0x0000FF00)); // G
+		res = res | (rgb.getB() & (0x000000FF)); // B
 		return res;
 	}
 
